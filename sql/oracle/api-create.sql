@@ -12,10 +12,10 @@ create or replace package portal
 as
 	function new (
 		portal_id		in portals.portal_id%TYPE default null,
-		name			in portals.name%TYPE default null,
+		name			in portals.name%TYPE default 'Untitled',
 		layout_id		in portals.layout_id%TYPE default null,
 		theme_id		in portals.theme_id%TYPE default null,
-		portal_template_p	in portals.portal_template_p%TYPE default null,
+		portal_template_p	in portals.portal_template_p%TYPE default 'f',
 		template_id		in portals.template_id%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal',
 		creation_date		in acs_objects.creation_date%TYPE 
@@ -37,10 +37,10 @@ create or replace package body portal
 as
 	function new (
 		portal_id		in portals.portal_id%TYPE default null,
-		name			in portals.name%TYPE default null,
+		name			in portals.name%TYPE default 'Untitled',
 		layout_id		in portals.layout_id%TYPE default null,
 		theme_id		in portals.theme_id%TYPE default null,
-		portal_template_p	in portals.portal_template_p%TYPE default null,
+		portal_template_p	in portals.portal_template_p%TYPE default 'f',
 		template_id		in portals.template_id%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal',
 		creation_date		in acs_objects.creation_date%TYPE 
@@ -71,11 +71,15 @@ as
 		insert into portals (portal_id, 
 				    name, 
 				    layout_id, 
-				    theme_id)
+				    theme_id,
+				    portal_template_p,
+				    template_id)
 		       values (v_portal_id,
-			       'Untitled',  
+			       name,  
 			       v_layout_id, 
-			       v_theme_id);
+			       v_theme_id,
+			       portal_template_p,
+			       template_id);
 
 		return v_portal_id;
 	end new;
