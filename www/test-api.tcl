@@ -12,20 +12,11 @@ ad_page_contract {
 set user_id [ad_conn user_id]
 
 # make a new portal
-set new_portal_id [portal_create_portal $user_id]
+set new_portal_id [portal::create_portal $user_id]
 
-# add an element
-set ds_name "null-datasource"
-set element_id [portal_add_element $new_portal_id $ds_name]
+# add an bboard PE with a fake instance id
+set instance_id "666"
 
-# get a def param
-set key "foo"
-set value [portal_get_element_param $element_id $key]
-
-ns_log Notice "AKS20: value: $value"
-# alter param
-set value "Just like honey"
-
-portal_set_element_param $element_id $key $value
+set element_id [bboard_portlet::add_self_to_page $new_portal_id $instance_id ]
 
 ns_returnredirect "index"
