@@ -82,8 +82,8 @@ ad_proc -public portal_delete_portal { portal_id } {
 ad_proc -public portal_add_element { portal_id ds_name } {
     Add an element anywhere to a portal given a datasource name
 
-    @return 1 on success
-    @param user_id
+    @return the id of the new element
+    @param portal_id ds_name
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
@@ -141,7 +141,51 @@ ad_proc -public portal_add_element { portal_id ds_name } {
     }
 
     # The caller must now set the necessary params or else!
+    return $new_element_id
+}
+
+
+ad_proc -public portal_set_element_param { element_id key value } {
+    Set an element param
+
+    @return 1 on success
+    @param element_id
+    @param key
+    @param value
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    db_dml upadate_parms "
+    update portal_element_parameters set value = :value
+    where element_id = :element_id and 
+    key = :key"
+
     return 1
+
+}
+
+
+ad_proc -public portal_get_element_param { element_id key } {
+    Get an element param. Returns the value of the param.
+
+    @return the value of the param
+    @param element_id
+    @param key
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    if { [db_0or1row get_parm "
+    select value
+    from portal_element_parameters 
+    where element_id = :element_id and 
+    key = :key"] } {
+	return $value
+    } else {
+	ad_return_complaint 1 "portal_get_element_param: Invalid element_id and/or key given."
+	ad_script_abort
+    }
 }
 
 
@@ -186,12 +230,9 @@ ad_proc -public portal_render_portal { portal_id } {
 	ad_script_abort
     }
 
-    set __adp_stub "/web/arjun/openacs-4/packages/new-portal/www/"
+    set __adp_stub "[full_portal_path]/www/"
     set code [template::adp_compile -string $template]
-    ns_log Notice "AKS19 code: $code"
     set output [template::adp_eval code]
-    ns_log Notice "AKS19 out: $output"
-
 
     if {![empty_string_p $output]} {
         set mime_type [template::get_mime_type]
@@ -199,14 +240,11 @@ ad_proc -public portal_render_portal { portal_id } {
 
 	ns_return 200 $mime_type "$header_preamble $output"
     }
-
-    
     return 
-
 }
 
 ad_proc -public portal_setup_element_src { portal_id } {
-    Setup the element src - hack
+    Setup the element src
 
     @return 
     @param element_id 
@@ -215,12 +253,11 @@ ad_proc -public portal_setup_element_src { portal_id } {
     @creation-date Sept 2001
 } {
     return "[portal_path]/www/render-element"
-
 }
 
 
 ad_proc -public portal_setup_element_list { portal_id } {
-    Setup the element list - hack
+    Setup the element list
 
     @return 
     @param element_id 
