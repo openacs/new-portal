@@ -33,7 +33,7 @@ ad_proc -public get_datasource_id { ds_name } {
     @return ds_id
     @creation-date Spetember 2001
 } { 
-    if {[db_0or1row get_ds_id_from_name "select datasource_id from portal_datasources where datasource_name = :ds_name"]} {
+    if {[db_0or1row get_ds_id_from_name "select datasource_id from portal_datasources where name = :ds_name"]} {
 	return $datasource_id
     } else {
 	return ""
@@ -228,7 +228,7 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     @creation-date 9/28/2001
 } {
 
-    set datasource_id [get_datasource_id $ds_name]
+    set ds_id [get_datasource_id $ds_name]
 
     # set up a unique prett_name for the PE
     if { [db_0or1row pe_prety_name_unique_check "select 1  
