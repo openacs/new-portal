@@ -39,5 +39,5 @@ ns_log notice  "AKS67: [$new_name]"
 set element(name) [$new_name]
 # return the appropriate template for that element.
 # AKS ???
-ad_return_template "layouts/mime-types/$element(mime_type_noslash)"
+ad_return_template "[portal::www_path]/layouts/mime-types/$element(mime_type_noslash)"
 
