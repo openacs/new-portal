@@ -60,7 +60,7 @@ create table portal_datasources (
 
 -- A default configuration for a ds will be stored here, to be copied
 -- to the portal_element_parameters table at PE creation (DS binding) time
-create table portal_datasource_default_parameters (
+create table portal_datasource_def_params (
 	parameter_id	integer
 			constraint p_ds_def_prms_prm_id_pk
 			primary key,
@@ -99,7 +99,7 @@ create table portal_supported_regions (
 	  immutable_p		char(1) not null
 				constraint p_spprtd_rgns_immtble_p_ck
 				check(immutable_p in ('t', 'f')),
-	  constraint p_spprtd_rgns_tmpl_id_rgn_pk primary key (template_id,region)
+	  constraint p_spprtd_rgns_tmpl_id_rgn_pk primary key (layout_id,region)
 );
 
 
@@ -122,6 +122,24 @@ create table portal_element_themes (
 );
 
 
+-- **** Portals ****
+
+-- Portals are essentially "containers" for PEs that bind to DSs.
+-- XXX Can parties have portals? Restrict to party check? 
+-- Roles and perms issues? package_id?
+create table portals (
+	portal_id	 	constraint p_portal_id_fk
+				references acs_objects(object_id)
+				constraint p_portal_id_pk
+				primary key,
+	name			varchar(200) default 'Untitled' not null,
+	layout_id		constraint p_template_id_fk
+				references portal_layouts
+				not null,
+	owner_id		constraint p_owner_id_fk
+				references persons(person_id)
+				on delete cascade
+);
 
 -- **** Portal Elements (PEs) ****
 
@@ -135,7 +153,8 @@ create table portal_element_themes (
 -- a PE for it.
 
 create table portal_element_map (
-	element_id		constraint p_element_map_element_id_pk
+	element_id		integer
+				constraint p_element_map_element_id_pk
 				primary key,
 	name			varchar(200) not null,
 	portal_id		constraint p_element_map_portal_id_fk
@@ -152,9 +171,9 @@ create table portal_element_map (
 	sort_key		integer	not null,
  	-- Two elements may not exist in the same place on a portal.
 	constraint p_element_map_pid_rgn_srt_un 
-	unique(portal_id,region,sort_key)
+	unique(portal_id,region,sort_key),
  	-- Two elements may not have the same name on a portal.
-	constraint p_element_map_pid_rgn_srt_un 
+	constraint p_element_map_pid_name_un 
 	unique(portal_id,name)
 );
 
@@ -163,27 +182,11 @@ create table portal_element_parameters (
 			constraint p_element_prms_prm_id_pk
 			primary key,
 	element_id	constraint p_element_prms_element_id_fk
-			references portal_elements on delete cascade
+			references portal_element_map on delete cascade
 			not null,
 	key		varchar(50) not null,
 	value		varchar(4000) 
 );
 
 
--- Portals are essentially "containers" for PEs that bind to DSs.
--- XXX Can parties have portals? Restrict to party check? 
--- Roles and perms issues? package_id?
-create table portals (
-	portal_id	 	constraint p_portal_id_fk
-				references acs_objects(object_id)
-				constraint p_portal_id_pk
-				primary key,
-	name			varchar(200) default 'Untitled' not null,
-	layout_id		constraint p_template_id_fk
-				references portal_templates
-				not null,
-	owner_id		constraint p_owner_id_fk
-				references persons(person_id)
-				on delete cascade,
-);
 
