@@ -369,8 +369,11 @@
 <fullquery name="portal::add_element_param_value.insert">      
   <querytext>
     insert into portal_element_parameters
-    (parameter_id, element_id, configured_p, key, value) values
-    (acs_object_id_seq.nextval, :element_id, 't', :key, :value)
+    (parameter_id, element_id, configured_p, key, value) 
+    select acs_object_id_seq.nextval, :element_id, 't', :key, :value
+        from dual
+        where not exists (select parameter_id from portal_element_parameters where 
+                          element_id= :element_id and key= :key and value= :value)
   </querytext>
 </fullquery> 
 
