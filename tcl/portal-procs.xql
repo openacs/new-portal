@@ -191,23 +191,6 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure_dispatch.revert_update">      
-  <querytext>
-  update portals
-  set theme_id = :theme_id
-  where portal_id = :portal_id
-  </querytext>
-</fullquery> 
-
-
-<fullquery name="portal::configure_dispatch.revert_update">      
-  <querytext>
-  update portals
-  set theme_id = :theme_id
-  where portal_id = :portal_id
-  </querytext>
-</fullquery> 
-
 <fullquery name="portal::configure_dispatch.update_theme">      
   <querytext>
   update portals
