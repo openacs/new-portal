@@ -202,24 +202,24 @@ ad_proc -public move_element {portal_id element_id sort_key region direction} {
 	}
     } elseif { $direction == "down"} {
 	# get the sort_key and id of the element below
-	db_1row move_element_get_prev_sort_key {
+	db_1row move_element_get_next_sort_key {
 	    select sort_key as other_sort_key,
-	    element_id as other_element_id
+	           element_id as other_element_id
 	    from (select sort_key, 
-	    element_id
-	    from portal_element_map
-	    where portal_id = :portal_id 
-	    and region = :region 
-	    and sort_key < :sort_key 
-	    order by sort_key desc
-	    ) where rownum = 1
+	                 element_id
+	          from portal_element_map
+	          where portal_id = :portal_id 
+	                and region = :region 
+	                and sort_key > :sort_key 
+	                order by sort_key
+	          ) where rownum = 1
 	}
     } else {
 	ad_return_complaint 1 \ 
 	"portal::move_element: Bad direction: $direction"
 	ad_script_abort
     }
-    
+
     # swap the sort keys
     db_transaction {
 
