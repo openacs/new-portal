@@ -41,21 +41,23 @@
 
 <fullquery name="portal::render.portal_select">      
   <querytext>
-    select  p.name, p.portal_id, p.theme_id, pl.filename as layout_template
-    from portals p, portal_pages pp, portal_layouts pl
-    where :portal_id = pp.portal_id 
-    and pp.portal_id = p.portal_id
-    and pp.layout_id = pl.layout_id
-    and pp.sort_key = :page_num
+    select p.name, pcp.portal_id, pl.filename as layout_template, 
+    p.theme_id as theme_id, pp.layout_id as layout_id
+    from portals p, portal_current_page pcp, portal_layouts pl, portal_pages pp
+    where pcp.page_id = :page_id
+    and pcp.portal_id = :portal_id
+    and p.portal_id = pcp.portal_id
+    and pp.page_id = pcp.page_id
+    and pl.layout_id = pp.layout_id
   </querytext>
 </fullquery> 
 
 <fullquery name="portal::render.element_select">      
   <querytext>
     select element_id, region, pem.sort_key
-    from portal_element_map pem, portal_pages pp
-    where pp.portal_id = :portal_id
-    and pp.page_id = pem.page_id
+    from portal_element_map pem, portal_current_page pcp
+    where pcp.portal_id = :portal_id
+    and pcp.page_id = pem.page_id
     and state != 'hidden'
     order by region, sort_key
   </querytext>
@@ -87,12 +89,13 @@
 
 <fullquery name="portal::configure.portal_select">      
   <querytext>
-    select  p.name, p.portal_id, pp.layout_id, pl.filename as template, sort_key as page_num
-    from portals p, portal_pages pp, portal_layouts pl
-    where :portal_id = pp.portal_id
-    and pp.portal_id = p.portal_id 
-    and pp.layout_id = pl.layout_id
-    and pp.sort_key = :page_num
+    select  p.name, pcp.portal_id, pp.layout_id, pl.filename as template
+    from portals p, portal_current_page pcp, portal_layouts pl, portal_pages pp
+    where pcp.page_id = :page_id
+    and pcp.portal_id = :portal_id
+    and p.portal_id = pcp.portal_id
+    and pp.page_id = pcp.page_id
+    and pl.layout_id = pp.layout_id
   </querytext>
 </fullquery> 
 
@@ -131,8 +134,9 @@
 <fullquery name="portal::configure_dispatch.toggle_pinned_select">
   <querytext>
     select state
-    from portal_element_map 
-    where portal_id = :portal_id 
+    from portal_element_map pem, portal_current_page pcp 
+    where pcp.portal_id = :portal_id 
+    and pem.page_id = pcp.page_id
     and element_id = :element_id
   </querytext>
 </fullquery> 
@@ -141,8 +145,7 @@
   <querytext>
     update portal_element_map
     set state = 'pinned'
-    where portal_id = :portal_id
-    and element_id = :element_id
+    where element_id = :element_id
   </querytext>
 </fullquery> 
 
@@ -150,8 +153,7 @@
   <querytext>
     update portal_element_map
     set state = 'full'
-    where portal_id = :portal_id
-    and element_id = :element_id
+    where element_id = :element_id
   </querytext>
 </fullquery> 
 

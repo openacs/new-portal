@@ -12,7 +12,7 @@ ad_page_contract {
     element_multi:multirow
 }
 
-set layout_id [portal::get_layout_id -page_num 0 $portal_id]
+# this template gets its vars from the layout template (e.g. simple2.adp)
 
 db_1row select_num_regions "
 select count(*) as num_regions
@@ -25,12 +25,13 @@ template::multirow create element_multi element_id name sort_key state hideable_
 
 db_foreach select_elements_by_region {
     select element_id, pem.pretty_name as name,  pem.sort_key, state
-     from portal_element_map pem, portal_pages pp
-     where
-       pp.portal_id = :portal_id 
-       and pem.page_id = pp.page_id
-       and region = :region 
-       and state != 'hidden'
+    from portal_element_map pem, portal_current_page pcp
+    where
+    pcp.portal_id = :portal_id 
+    and pcp.page_id = :page_id
+    and pem.page_id = pcp.page_id
+    and region = :region 
+    and state != 'hidden'
     order by sort_key } {
 
         set hideable_p [portal::get_element_param $element_id "hideable_p"]
@@ -43,10 +44,11 @@ db_foreach select_elements_by_region {
 
 db_1row select_all_noimm_count \
 "select count(*) as all_count
-from portal_element_map pem, portal_pages pp
+from portal_element_map pem, portal_pages pcp
 where
-pp.portal_id = :portal_id
-and pem.page_id = pp.page_id
+pcp.portal_id = :portal_id
+and pcp.page_id = :page_id
+and pem.page_id = pcp.page_id
 and state != 'hidden'
 and region not like 'i%'"
 
@@ -60,10 +62,11 @@ append show_html "<select name=element_id>"
 
 db_foreach hidden_elements {
     select element_id, name
-     from portal_element_map pem, portal_pages pp
+     from portal_element_map pem, portal_current_page pcp
      where
-       pp.portal_id = :portal_id 
-       and pp.page_id = pem.page_id
+       pcp.portal_id = :portal_id 
+       and pcp.page_id = :page_id
+       and pcp.page_id = pem.page_id
        and pem.state = 'hidden'
     order by name
 } {

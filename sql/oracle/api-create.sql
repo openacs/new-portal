@@ -90,7 +90,7 @@ as
                 
                 if v_current_page_count = 0 then
                    insert into portal_current_page
-                   (portal_id, page_id) values (portal_id, v_page_id);
+                   (portal_id, page_id) values (portal_page.new.portal_id, v_page_id);
                 else
                    update portal_current_page 
                    set page_id = v_page_id
@@ -107,7 +107,9 @@ as
 	)
 	is
 	begin
-                delete from portal_current_page where page_id = page_id;
+                delete from portal_current_page where page_id = portal_page.delete.page_id;
+                delete from portal_pages where page_id = portal_page.delete.page_id;
+                
                 acs_object.delete(page_id);
 	end delete;
 
@@ -235,7 +237,6 @@ as
                                from portal_pages 
                                where portal_id = portal.delete.portal_id) 
                   loop
-
                        -- delete this portal's pages
 		       portal_page.delete (
 		            page_id       => page.page_id

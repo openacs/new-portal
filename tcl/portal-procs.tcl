@@ -142,7 +142,7 @@ namespace eval portal {
     }
     
     ad_proc -public render { 
-        {-page_num 0}
+        {-page_id ""}
         {-hide_links_p "f"} 
         {-render_style "individual"}
         portal_id
@@ -161,9 +161,10 @@ namespace eval portal {
 	set master_template [ad_parameter master_template]
 	set css_path [ad_parameter css_path]
 	
-#        if {[empty_string_p $page_num]} {
-#            set page_num [get_current_page -portal_id $portal_id]
-#        }
+        # if no page_id set, render current
+        if {[empty_string_p $page_id]} {
+            set page_id [get_current_page -portal_id $portal_id]
+        }
 
 	# get the portal and layout
 	db_1row portal_select {} -column_array portal
@@ -195,7 +196,8 @@ namespace eval portal {
             element_src=\"@element_src@\"
             theme_id=@portal.theme_id@
             portal_id=@portal.portal_id@
-            hide_links_p=@hide_links_p@>"
+            hide_links_p=@hide_links_p@
+            page_id=@page_id@ layout_id=@portal.layout_id@>"
 	}
 	
 	# Necessary hack to work around the acs-templating system
@@ -259,7 +261,7 @@ namespace eval portal {
     
 
     ad_proc -public configure { 
-        {-page_num 0}
+        {-page_id ""}
         {-template_p "f"}
         portal_id
         return_url
@@ -273,6 +275,11 @@ namespace eval portal {
 	@return_url
 	@return A portal configuration page	
     } {
+
+        # if no page_id set, render current
+        if {[empty_string_p $page_id]} {
+            set page_id [get_current_page -portal_id $portal_id]
+        }
 
 	if { $template_p == "f" } {
             ad_require_permission $portal_id portal_read_portal
@@ -321,7 +328,7 @@ namespace eval portal {
         # XXXX page support 
 
         # fake some elements for the <list> in the template 
-        set layout_id [get_layout_id -page_num $page_num $portal_id]
+        set layout_id [get_layout_id -page_id $page_id $portal_id]
 
         db_foreach get_regions {}  {
             lappend fake_element_ids($region) $portal_id
@@ -358,7 +365,7 @@ namespace eval portal {
         <include src=\"@portal.template@\" element_list=\"@element_list@\" 
         action_string=@action_string@ portal_id=@portal_id@
         return_url=\"@return_url@\" element_src=\"@element_src@\"
-        hide_links_p=f>
+        hide_links_p=f page_id=@page_id@ layout_id=@layout_id@>
         "
 	# This hack is to work around the acs-templating system
 	set __adp_stub "[get_server_root][www_path]/."
