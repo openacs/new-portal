@@ -1,12 +1,6 @@
 # www/templates/simple2.tcl
 ad_page_contract {
     @cvs_id $Id$
-} {
-    {element_list:trim,optional ""}
-    {element_src:trim,optional ""}
-    {theme_id:integer,optional ""}
-    {action_string:trim,optional ""}
-
 } -properties {
     element_list:onevalue
     element_src:onevalue
@@ -14,5 +8,14 @@ ad_page_contract {
     theme_id:onevalue
 }
 
+if { ![info exists action_string]} {
+    set action_string ""
+}
+
+if { ![info exists theme_id]} {
+    set theme_id ""
+}
 
 portal::layout_elements $element_list
+
+ad_return_template
