@@ -162,10 +162,7 @@ create table portals (
 	name			varchar(200) default 'Untitled' not null,
 	layout_id		constraint p_template_id_fk
 				references portal_layouts
-				not null,
-	owner_id		constraint p_owner_id_fk
-				references parties(party_id)
-				on delete cascade
+				not null
 );
 
 -- **** Portal Elements (PEs) ****
