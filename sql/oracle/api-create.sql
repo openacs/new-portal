@@ -121,7 +121,7 @@ as
                 select (count(*) - 1) into v_page_count_from_0
                 from portal_pages
                 where portal_id = v_portal_id;
-
+                
                 for i in 0..v_page_count_from_0 loop
                   if i = v_sort_key then
                     delete from portal_pages where page_id = portal_page.delete.page_id;
@@ -262,7 +262,8 @@ as
 	begin
                   for page in (select page_id
                                from portal_pages 
-                               where portal_id = portal.delete.portal_id) 
+                               where portal_id = portal.delete.portal_id
+                               order by sort_key desc) 
                   loop
                        -- delete this portal's pages
 		       portal_page.delete (
