@@ -1,5 +1,4 @@
 <%
-
     #
     #  Copyright (C) 2001, 2002 OpenForce, Inc.
     #
@@ -15,23 +14,7 @@
     #  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
     #  details.
     #
-
 %>
 
 <master>
-<property name="title">Welcome to Portals</property>
-
-Portals in the system:
-<P>
-
-<if @users_portals:rowcount@ eq 0>
-    You have not configured any portals. 
-</if>
-<else>
-  <ul>
-    <multiple name=users_portals>
-      <li><a href="portal-show.tcl?portal_id=@users_portals.portal_id@">@users_portals.name@</a> 
-      <small>[<a href="portal-config?portal_id=@users_portals.portal_id@">edit</a>]</li></small>
-    </multiple>
-  </ul>
-</else>
+@html@

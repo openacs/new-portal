@@ -132,7 +132,7 @@ namespace eval portal {
 
     ad_proc -public  automount_point {} {
         packages such as dotlrn can automount the portal here
-    } { return "/portal"  }
+    } { return "portal"  }
 
     #
     # Main portal procs
@@ -1411,8 +1411,6 @@ namespace eval portal {
         @param portal_id
         @param ds_id
     } {
-        # XXX todo permissions on availabliliy procs
-        # ad_require_permission $portal_id portal_admin_portal
         set new_p_ds_id [db_nextval acs_object_id_seq]
         db_dml insert {} 
     }

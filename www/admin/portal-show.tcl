@@ -28,6 +28,6 @@ ad_page_contract {
 
 
 
-ns_return 200 text/html [portal::render $portal_id]
+set html "[portal::navbar -portal_id $portal_id] [portal::render $portal_id]"
 
 
