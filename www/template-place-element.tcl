@@ -8,6 +8,7 @@ ad_page_contract {
     region:onevalue
     action_string:onevalue
     portal_id:onevalue
+    return_url:onevalue
 }
 
 set layout_id [portal::get_layout_id $portal_id]
