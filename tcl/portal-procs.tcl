@@ -610,8 +610,7 @@ namespace eval portal {
                         
                         db_1row revert_get_source_page_info {}
 
-                        set target_page_id \
-                                [db_string revert_get_target_page_id {}]
+                        set target_page_id [db_string revert_get_target_page_id {}]
 
                         db_dml revert_page_update {}
 
@@ -958,7 +957,7 @@ namespace eval portal {
         {-portal_id:required}
         {-portlet_name:required}
         {-force_region ""}
-        {-page_id ""}
+        {-page_name ""}
         {-pretty_name ""}
     } {
         Add an element to a portal given a datasource name. Used for procs
@@ -970,10 +969,7 @@ namespace eval portal {
             set pretty_name $portlet_name
         }
 
-        if {[empty_string_p $page_id]} {
-            # neither page_num or page_id given, default to 0
-            set page_id [portal::get_page_id -portal_id $portal_id]
-        } 
+        set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
 
         # Balance the portal by adding the new element to the region
         # with the fewest number of elements, the first region w/ 0 elts,
@@ -1025,15 +1021,16 @@ namespace eval portal {
                 ad_return_complaint 1  "portal::add_element region $force_region not in layout $layout_id"
             }
         }
-        return [add_element_to_region \
-                    -page_id $page_id \
-                    -layout_id $layout_id \
-                    -pretty_name $pretty_name \
-                    $portal_id \
-                    $portlet_name \
-                    $min_region]
-    }
 
+        return [add_element_to_region \
+            -page_name $page_name \
+            -layout_id $layout_id \
+            -pretty_name $pretty_name \
+            $portal_id \
+            $portlet_name \
+            $min_region \
+        ]
+    }
 
     ad_proc -public remove_element {
         {-element_id ""}
@@ -1067,7 +1064,7 @@ namespace eval portal {
 
     ad_proc -private add_element_to_region { 
         {-layout_id:required}
-        {-page_id ""}
+        {-page_name ""}
         {-pretty_name ""}
         portal_id
         ds_name
@@ -1087,19 +1084,26 @@ namespace eval portal {
             set pretty_name $ds_name
         }
 
+        set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
         set ds_id [get_datasource_id $ds_name]        
 
         # First, check if this portal 1) has a portal template and
         # 2) that that template has an element of this DS in it. If 
         # so, copy stuff. If not, just insert normally. 
-        if { [db_0or1row get_template_info_select {}] == 1 } {
+        if {[db_0or1row get_template_info_select {}] == 1} {
 
                 set new_element_id [db_nextval acs_object_id_seq]
-                db_1row get_target_page_id {}
+                set target_page_id [get_page_id -portal_id $portal_id -page_name $page_name -sort_key $template_page_sort_key]
 
-                set bar [db_string foobar { select name from portal_element_map pem where pem.page_id = :target_page_id and pem.sort_key = :template_element_sk and pem.region = 1} -default NONE ] 
+                set bar [db_string foobar {
+                    select name
+                    from portal_element_map pem
+                    where pem.page_id = :target_page_id
+                    and pem.sort_key = :template_element_sk
+                    and pem.region = 1
+                } -default NONE] 
                 
-                # ns_log notice "aks5 $template_page_sort_key / $template_element_region  / $template_element_name / $template_element_sk / $bar" 
+                # ns_log notice "aks5 $template_page_sort_key / $template_element_region / $template_element_name / $template_element_sk / $bar" 
                 
                 db_dml template_insert {}
                 db_dml template_params_insert {}
@@ -1683,8 +1687,8 @@ namespace eval portal {
         {-portal_id:required}
         {-portlet_name:required}
         {-value_id:required}
-        {-key "instance_id"}
-        {-page_id ""}
+        {-key "package_id"}
+        {-page_name ""}
         {-pretty_name ""}
         {-extra_params ""}
         {-force_region ""}
@@ -1695,10 +1699,10 @@ namespace eval portal {
         it appends the value_id to the element's parameters with the 
         given key. Returns the element_id used.
 
-         @return element_id The new element's id
+        @return element_id The new element's id
         @param portal_id The page to add the portlet to
         @param portlet_name The name of the portlet to add
-        @param key the key for the value_id (defaults to instance_id)
+        @param key the key for the value_id (defaults to package_id)
         @param value_id the value of the key
         @param extra_params a list of extra key/value pairs to insert or append
     } {
@@ -1714,7 +1718,7 @@ namespace eval portal {
                         -portal_id $portal_id \
                         -portlet_name $portlet_name \
                         -pretty_name $pretty_name \
-                        -page_id $page_id \
+                        -page_name $page_name \
                         -force_region $force_region
                 ]
 
@@ -1736,17 +1740,16 @@ namespace eval portal {
                 set element_id [lindex $element_id_list 0]
 
                 # There are existing values which should NOT be overwritten
-                add_element_param_value -element_id $element_id \
-                        -key $key \
-                        -value $value_id
+                add_element_param_value -element_id $element_id -key $key -value $value_id
 
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params
 
                     for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
-                        add_element_param_value -element_id $element_id \
-                                -key [lindex $extra_params $x] \
-                                -value [lindex $extra_params [expr $x + 1]]
+                        add_element_param_value \
+                            -element_id $element_id \
+                            -key [lindex $extra_params $x] \
+                            -value [lindex $extra_params [expr $x + 1]]
                     }        
                 }
             }
@@ -1759,7 +1762,7 @@ namespace eval portal {
         {-portal_id:required} 
         {-portlet_name:required}
         {-value_id:required}
-        {-key "instance_id"}
+        {-key "package_id"}
         {-extra_params ""}
     } {
         A helper proc for portlet "remove_self_from_page" procs.
@@ -1772,7 +1775,7 @@ namespace eval portal {
 
         @param portal_id The portal page to act on
         @param portlet_name The name of the portlet to (maybe) remove 
-        @param key the key for the value_id (defaults to instance_id)
+        @param key the key for the value_id (defaults to package_id)
         @param value_id the value of the key
         @param extra_params a list of extra key/value pairs to remove
     } {
