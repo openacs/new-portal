@@ -48,6 +48,7 @@ ad_proc -public make_datasource_available {portal_id ds_id} {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 10/30/2001
 } {
+    ad_require_permission $portal_id portal_admin_portal
 
     set new_p_ds_id [db_nextval acs_object_id_seq]
 
@@ -67,6 +68,8 @@ ad_proc -public make_datasource_unavailable {portal_id ds_id} {
     @creation-date 10/30/2001
 } {
 
+    ad_require_permission $portal_id portal_admin_portal
+
     db_dml delete_from_portal_datasource_avail_map "
     delete from portal_datasource_avail_map
     where portal_id =  :portal_id
@@ -81,6 +84,8 @@ ad_proc -public toggle_datasource_availability {portal_id ds_id} {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 10/30/2001
 } {
+    ad_require_permission $portal_id portal_admin_portal
+    
     if { [db_0or1row datasource_avail_check "select 1  
     from portal_datasource_avail_map
     where portal_id = :portal_id and
