@@ -207,7 +207,7 @@ ad_proc -public render { portal_id } {
     @creation-date 9/28/2001
 } {
     
-    ad_require_permission $portal_id read
+    ad_require_permission $portal_id portal_read_portal
     set edit_p [ad_permission_p $portal_id portal_edit_portal]
     set master_template [ad_parameter master_template]
     set css_path [ad_parameter css_path]
