@@ -61,7 +61,6 @@ ad_proc -public delete_portal { portal_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-    # XXX - This dosen't work yet
     return [ db_exec_plsql delete_portal {
 	begin
 	portal.delete (portal_id => :portal_id);
