@@ -27,18 +27,20 @@ if { [portal_region_immutable_p $region] } {
 
 set master_template [ad_parameter master_template]
 
-template::multirow create element_ids element_id name description 
+template::multirow create datasources datasource_id name description 
 
 # XXX we really want to check if they can view these datasources in
 # the future something like # where
 # acs_permission.permission_p(element_id, :user_id, 'read') = 't' 
- # the barn door is open! Wronly
-# called elements for now, too. 
- db_foreach select_elements \
+# the barn door is open! 
+
+
+# Note: that on the template we call these "elements" as to not confuse the
+# user with jargon that they don't care about anyway
+ db_foreach select_datasources \
     "select datasource_id, name, description
-     from portal_datasources" \
-    -column_array element {
-    template::multirow append element_ids $element(element_id) $element(name) $element(description)
+     from portal_datasources"  -column_array datasource {
+    template::multirow append datasources $datasource(datasource_id) $datasource(name) $datasource(description)
 }
 
 ad_return_template
