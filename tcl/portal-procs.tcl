@@ -54,8 +54,8 @@ ad_proc -public portal_render_portal { portal_id } {
 
     @return Fully rendered portal or error message
     @param element_id The object-id for the element that you'd like to retrieve.
-    @author AKS
-    @creation-date
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
 } {
 
 db_0or1row select_portal_and_layout "
@@ -433,19 +433,19 @@ ad_proc -public portal_info { flag } {
     return $portal_info($flag)
 }
 
-ad_proc -private portal_get_template_id { portal_id } {
-    Get the template_id of a layout template for a portal.
+ad_proc -private portal_get_layout_id { portal_id } {
+    Get the layout_id of a layout template for a portal.
 
     @param portal_id The portal_id.
-    @return A template_id.
-    @creation-date 2/13/2001
-    @author Ian Baker (ibaker@arsdigita.com)
+    @return A layout_id.
+    @creation-date 9/28/2001
+    @author Arjun Sanyal (arjun@openforce.net)
 } {
-    db_1row get_template_id {
-	select template_id from portals where portal_id = :portal_id
+    db_1row get_layout_id {
+	select layout_id from portals where portal_id = :portal_id
     }
 
-    return $template_id
+    return $layout_id
 }
 
 ad_proc -private portal_get_regions { layout_id } {
