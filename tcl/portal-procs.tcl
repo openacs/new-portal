@@ -734,10 +734,6 @@ namespace eval portal {
 	set element(filename) "[www_path]/$element(filename)"
 	set element(resource_dir) "[mount_point]/$element(resource_dir)"
 
-	# set up the title, configuration and other links
-
-
-	
 	# get the element's params
 	db_foreach evaluate_element_params_select "
 	select key, value
@@ -788,12 +784,11 @@ namespace eval portal {
     
 
     ad_proc -public configure_element { element_id op return_url } {
-	Return a portal configuration page. 
-	All form targets point to file_stub-2.
-    
-	@param portal_id
-	@return_url
-	@return A portal configuration page	
+	Dispatch on the element_id and op requested
+
+	@param element_id
+	@param op
+	@param return_url
     } {
 	
 	if { [db_0or1row configure_element_select "select portal_id 
@@ -808,9 +803,7 @@ namespace eval portal {
 	
 	switch $op {
 	    "edit" { 
-		ad_return_complaint 1 "portal::configure_element 
-		edit called with $element_id $return_url
-		Not implimented yet"
+		configure_element_params $element_id $op $return_url
 	    }
 	    "shade" {  
 		set shaded_p [get_element_param $element_id "shaded_p"]
@@ -820,16 +813,83 @@ namespace eval portal {
 		} else {
 		    set_element_param $element_id "shaded_p" "f"
 		}
+		ad_returnredirect $return_url
 	    }
 	    "hide" {
 		db_dml configure_element_hide_update \
 			"update portal_element_map 
 		set state =  'hidden' 
 		where element_id = :element_id"
+		ad_returnredirect $return_url
 	    }
 	}
-	ad_returnredirect $return_url
+
     }
+
+
+
+    ad_proc -public configure_element_params { element_id op return_url } {
+	Get the html from from the element's edit proc
+
+	@return_url
+	@return An element configuration page	
+    } {
+	# Do perms by looking up the portal_id for this element
+	if {[db_0or1row configure_e_p_portal_select "
+	select portal_id 
+	from portal_element_map 
+	where element_id = :element_id"]} {
+	    ad_require_permission $portal_id portal_read_portal
+	    ad_require_permission $portal_id portal_edit_portal
+	} else {
+	    # no portal_id for this element
+	    ad_return_complaint 1 "portal:: configure_element_params\n
+	    This element_id has no portal associated with it!"
+	}
+
+	# Get the edit proc name - to be replaced with acs-sc soon - XXX
+	db_1row evaluate_element_datasource_select "
+	select edit_content
+	from portal_element_map pem, portal_datasources pd
+	where pem.element_id = :element_id
+	and pem.datasource_id = pd.datasource_id"
+
+	if { $edit_content == ""  } { 
+	    ad_return_complaint 1 "This element cannot be edited yet. Sorry"
+	}
+
+	# Get the chunk of html from the PE
+	set html [$edit_content $element_id]
+
+	# Set up some template vars, including the form target
+	set master_template [ad_parameter master_template]
+	set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+	set action_string [append target_stub "-2"]
+
+	# the <include> sources /www/place-element.tcl
+	set template "	
+	<master src=\"@master_template@\">
+	<b><a href=@return_url@>Return to your portal</a></b>
+	<p>
+	<form action=@action_string@>
+	<b>Edit this element's parameters:</b>
+	<P>
+	@html@ 
+	<P>
+	</form>
+	"
+	# This hack is to work around the acs-templating system
+	# ad_return_complaint 1 "foo"
+
+	set __adp_stub "[get_server_root][www_path]/."
+	set {master_template} \"master\" 
+	
+	set code [template::adp_compile -string $template]
+	set output [template::adp_eval code]
+	
+	return $output
+    }
+
     
     #
     # Datasource helper procs
