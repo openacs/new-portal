@@ -143,7 +143,6 @@ namespace eval portal {
     ad_proc -public render { 
         {-page_num 0}
         {-hide_links_p "f"} 
-        {-hide_links_p "f"} 
         {-render_style "individual"}
         portal_id
         {theme_id ""} 
@@ -161,6 +160,10 @@ namespace eval portal {
 	set master_template [ad_parameter master_template]
 	set css_path [ad_parameter css_path]
 	
+#        if {[empty_string_p $page_num]} {
+#            set page_num [get_current_page -portal_id $portal_id]
+#        }
+
 	# get the portal and layout
 	db_1row portal_select {} -column_array portal
 
@@ -302,6 +305,14 @@ namespace eval portal {
         }
         
         append theme_data "<input type=submit name=op value=\"Change Theme\">"
+
+        # set up the page creation stuff
+        set new_page_num [expr [page_count -portal_id $portal_id] + 1]
+
+        set page_data \
+                "<br>
+        <input type=text name=pretty_name value=\"Page $new_page_num\">
+        <input type=submit name=op value=\"Add Page\">"
 	    
         # get the portal.	    
         db_1row portal_select {} -column_array portal
@@ -334,6 +345,12 @@ namespace eval portal {
         <input type=hidden name=return_url value=@return_url@>
         <b>Change Theme:</b> 
         @theme_data@
+        </form>
+        <form method=post action=@action_string@>
+        <input type=hidden name=portal_id value=@portal_id@>
+        <input type=hidden name=return_url value=@return_url@>
+        <b>Add a new page:</b> 
+        @page_data@
         </form>
         <P>
         <b>Configure The Portal's Elements:</b>
@@ -415,6 +432,13 @@ namespace eval portal {
 		set theme_id [ns_set get $form theme_id] 
 		
 		db_dml update_theme {}
+	    }
+	    "Add Page" {
+		set pretty_name [ns_set get $form pretty_name]
+                if {[empty_string_p $pretty_name]} {
+                    ad_return_complaint 1 "You must enter a name for the new page."
+                }
+                page_create -pretty_name $pretty_name -portal_id $portal_id
 	    }
 	    "toggle_pinned" {
 		set element_id [ns_set get $form element_id]
@@ -530,26 +554,11 @@ namespace eval portal {
 	@param current boolean get the current page if true
 	@param sort_key - optional, defaults to page 0
     } {
-
         if {$current == "f"} {
-            set foo  [db_string get_page_id_select {}]
+            return [db_string get_page_id_select {}]
         } else {
-            set foo [db_string get_current_page_id_select {}]
+            return [db_string get_current_page_id_select {}]
         }
-
-        ns_log notice "aks6 foo is $foo"
-        return $foo
-    }
-
-    ad_proc -public page_count {
-        {-portal_id:required}
-    } {
-	1 when there's only one page
-
-	@param portal_id 
-	@param page_id 
-    } {
-        return [db_1row page_count_select {}]
     }
 
     ad_proc -public set_current_page {
@@ -561,9 +570,29 @@ namespace eval portal {
 	@param portal_id 
 	@param page_id 
     } {
-        db_dml set_current_page_update {}]
+        db_dml set_current_page_update {}
     }
 
+    ad_proc -public get_current_page {
+        {-portal_id:required}
+    } {
+        gets the current page id 
+
+	@param portal_id 
+    } {
+        return [get_page_id -current "t" -portal_id $portal_id]
+    }
+
+    ad_proc -public page_count {
+        {-portal_id:required}
+    } {
+	1 when there's only one page
+
+	@param portal_id 
+	@param page_id 
+    } {
+        return [db_string page_count_select {}]
+    }
 
     ad_proc -public get_page_pretty_name {
         {-page_id:required}
@@ -576,14 +605,13 @@ namespace eval portal {
     ad_proc -public page_create {
         {-pretty_name:required}
         {-portal_id:required}
-        {-layout_id:required}
     } {
         Appends a new blank page for the given portal_id. 
 
 	@return the id of the page
 	@param portal_id 
     } {
-        return [db_string page_create_insert {}]
+        return [db_exec_plsql page_create_insert {}]
     }
 
     ad_proc -public list_pages_tcl_list {
@@ -608,6 +636,7 @@ namespace eval portal {
         {-pre_html ""}
         {-post_html ""}
         {-separator "&nbsp;"}
+        {-return_url ""}
     } {
         Returns an html string of the pretty names of the pages in the 
         given portal. 
@@ -624,7 +653,18 @@ namespace eval portal {
             if {$page == $current_page_id} {
                 append html "[get_page_pretty_name -page_id $page]"
             } else {
-                append html "<a href=$link?page_id=$page>[get_page_pretty_name -page_id $page]</a>"
+                if {[empty_string_p $return_url]} {
+                    set url_length [string length [ns_conn url]]
+                    if {[string range [ns_conn url] [expr $url_length - 1] end] != "/"} {
+                        # if the url dosen't end in a /, set the return_url to the filename
+                        set return_url [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+                    } else {
+                        set return_url ""
+                    }
+                } 
+
+                append html "<a href=$link?portal_id=$portal_id&page_id=$page"
+                append html "&return_url=$return_url>[get_page_pretty_name -page_id $page]</a>"
             }
             append html $separator
         }

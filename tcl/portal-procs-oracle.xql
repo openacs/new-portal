@@ -98,8 +98,7 @@
     
     :1 := portal_page.new ( 
     pretty_name => :pretty_name,
-    portal_id => :portal_id,
-    layout_id => :layout_id,
+    portal_id => :portal_id
     );
 
     end;
