@@ -8,7 +8,7 @@
 
 <multiple name=users_portals>
     <if @users_portals:rowcount@ gt 0>
-    Goto portal <a href="show-portal.tcl?portal_id=@users_portals.portal_id@">@users_portals.name@</a>
+    Goto portal <b><a href="show-portal.tcl?portal_id=@users_portals.portal_id@">@users_portals.name@</a></b> (<b><a href="portal-ae.tcl?portal_id=@users_portals.portal_id@">edit</a></b>)
     </if>
     <br>
 </multiple>
