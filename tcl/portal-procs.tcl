@@ -82,6 +82,7 @@ namespace eval portal {
     #
 
     ad_proc -public create {
+	{-name "Untitled"} 
 	{-template_id ""} 
 	{-portal_template_p "f"} 
 	{-layout_name "'Simple 2-Column'"} 
@@ -106,6 +107,7 @@ namespace eval portal {
 	    begin
 	    
 	    :1 := portal.new ( 
+	    name => :name,
 	    layout_id => :layout_id,
 	    template_id => :template_id
 	    );
