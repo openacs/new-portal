@@ -17,10 +17,14 @@
               <tbody>
                 <tr>
                   <td align=left valign=middle width=88%  bgcolor="#eeeee7">
-			<font face="arial,helvetica,lucida" size="+1"><b>&nbsp; @name@</b></font></td>
-                  <td align=right width=7%><img src="@dir@/edit.png" alt="edit"></td>
-                  <td align=right width=7%><img src="@dir@/shade.png" alt="shade"></td>
-                  <td align=right width=7%><img src="@dir@/x.png" alt="hide"></td>
+			<font face="arial,helvetica,lucida" size="+1">
+				<a href=portlet-link-XXX><b>&nbsp; @name@</b></a></font></td>
+                  <td align=right width=7%>
+			<a href=configure><img border=0 src="@dir@/edit.png" alt="edit"></a></td>
+                  <td align=right width=7%>
+			<a href=configure-shade><img border=0 src="@dir@/shade.png" alt="shade"></a></td>
+                  <td align=right width=7%>
+			<a href=configure-hide><img border=0 src="@dir@/x.png" alt="hide"></a></td>
                 </tr>
               </tbody>
             </table>

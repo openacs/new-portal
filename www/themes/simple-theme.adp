@@ -5,7 +5,7 @@
         <table border=0 cellpadding=3 width=100% cellspacing=0>
 	  <tr>
             <td class="portal_header" bgcolor="#cc0000">
-              <font face="arial,helvetica"  size="+1" color="#cccccc">@name@</font>
+              <font face="arial,helvetica"  size="+1" color="#cccccc"><b>@name@</b></font>
             </td>
             <td align=right class="portal_header" bgcolor="#cc0000">
 		<!-- include title buttons here -->
