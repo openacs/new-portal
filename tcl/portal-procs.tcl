@@ -1779,13 +1779,14 @@ namespace eval portal {
         @param ds_id
         @return ds_name
     } {
-        if {[db_0or1row select {}]} {
+        if { ![catch {db_1row select {}} errmsg] } {
             return $name
         } else {
-            ns_log error "portal::get_datasource_name error! No datasource
-            by that name found!"
-            ad_return_complaint 1 "portal::get_datasource_name error! No datasource
-            by that name found!"
+            global errorInfo
+            set error_text "portal::get_datasource_name error! No datasource with id \"$ds_id\" found"
+            ns_log Error $error_text
+            ns_log Error "$errorInfo"
+            ad_return_complaint 1 $error_text
         }
     }
 
@@ -1795,13 +1796,14 @@ namespace eval portal {
         @param ds_name
         @return ds_id
     } {
-        if {[db_0or1row select {}]} {
+        if { ![catch {db_1row select {}} errmsg] } {
             return $datasource_id
         } else {
-            ns_log error "portal::get_datasource_id error! No datasource
-            by that name found!"
-            ad_return_complaint 1 "portal::get_datasource_id error! No datasource
-            by that name found!"
+            global errorInfo
+            set error_text "portal::get_datasource_name error! No datasource with name \"$ds_name\" found"
+            ns_log Error $error_text
+            ns_log Error "$errorInfo"
+            ad_return_complaint 1 $error_text
         }
     }
 
