@@ -1107,9 +1107,7 @@ namespace eval portal {
                 db_dml template_params_insert {}
 
         } else {
-            # no template, or the template dosen't have this DS,
-            # or I'm a template!
-
+            # no template, or the template dosen't have this D
             db_transaction {
                 set new_element_id [db_nextval acs_object_id_seq]
                 db_dml insert {}
@@ -1216,7 +1214,12 @@ namespace eval portal {
         @param key
         @param value
     } {        
+        #ns_log notice "aks80 set_element_param $element_id / $key / $value / [db_list_of_lists foo {
+        # select * from portal_element_parameters where element_id = :element_id}] "
+
         db_dml update {}
+
+        # ns_log notice "aks81 [get_element_param $element_id $key]"
         return 1
     }
 
