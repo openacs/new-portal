@@ -478,10 +478,17 @@ namespace eval portal {
             "move_to_page" {
 		set page_id [ns_set get $form page_id]
 		set element_id [ns_set get $form element_id]
-                
-                #ad_return_complaint 1 "$page_id/$element_id"
+                set curr_reg [db_string move_to_page_curr_select {}] 
+                set target_reg_num [db_string move_to_page_target_select {}] 
 
-                db_dml move_to_page {} 
+                if {$curr_reg > $target_reg_num} {
+                    # the new page dosent have this region, set to max region
+                    set region $target_reg_num
+                } else {
+                    set region $curr_reg
+                }
+
+                db_dml move_to_page_update {} 
 	    }
 	    "hide" {
 		set element_id_list [list]

@@ -67,6 +67,21 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::configure_dispatch.move_to_page_update">      
+  <querytext>
+    update portal_element_map
+    set page_id = :page_id, 
+    region = :region,
+    sort_key = (select nvl((select max(sort_key) + 1
+	                    from portal_element_map 
+                            where page_id = :page_id
+		            and region = :region), 
+                            1) 
+		 from dual)    
+    where element_id = :element_id
+  </querytext>
+</fullquery> 		
+
 <fullquery name="portal::add_element_to_region.insert">      
   <querytext>
     insert into portal_element_map

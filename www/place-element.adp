@@ -20,7 +20,7 @@
       </if>
     </if>
 
-
+    <if @num_regions@ gt 1>
 	<if @region@ eq 1>
 	<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@"><img border=0 src="@dir@/arrow-right.gif" alt="move right"></a>
 	</if>
@@ -30,6 +30,7 @@
 	</if>
 	<if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>
 	</if>
+    </if>
 
             <if @element_multi.hideable_p@ eq "t">
             [<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]    

@@ -104,11 +104,21 @@
     where element_id = :element_id
   </querytext>
 </fullquery> 
-<fullquery name="portal::configure_dispatch.move_to_page">      
+
+<fullquery name="portal::configure_dispatch.move_to_page_curr_select">      
   <querytext>
-    update portal_element_map
-    set page_id = :page_id
+    select region
+    from portal_element_map
     where element_id = :element_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.move_to_page_target_select">      
+  <querytext>
+    select count(*) 
+    from portal_pages pp, portal_supported_regions psr 
+    where pp.layout_id = psr.layout_id 
+    and pp.page_id = :page_id
   </querytext>
 </fullquery> 
 
