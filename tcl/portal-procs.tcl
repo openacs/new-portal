@@ -846,21 +846,30 @@ namespace eval portal {
 	} if_no_rows {
 	    # this element has no config, set up some defaults
 	    set config(shaded_p) "f"
+	    set config(shadeable_p) "f"
+	    set config(hideable_p) "f"
 	    set config(user_editable_p) "f"
 	}
 	
 	# do the callback for the ::show proc
 	# evaulate the datasource.
-	set element(content) \
+	if { [catch {	set element(content) \
 		[datasource_call \
-		$element(datasource_id) "Show" [list [array get config] ]] 
+		$element(datasource_id) "Show" [list [array get config] ]] } \
+		errmsg ] } {
+	    ns_log notice "portal::render_element show callback Error! $errmsg"	
+	}
 
-	# pass some ds info, and the shaded_p param to the element
 	set element(name) \
 		[datasource_call \
 		$element(datasource_id) "GetPrettyName" [list]] 
+
 	set element(link) [datasource_call $element(datasource_id) "Link" [list]]
+
+	# done with callbacks, now set config params
+	set element(shadeable_p) $config(shadeable_p) 
 	set element(shaded_p) $config(shaded_p) 
+	set element(hideable_p) $config(hideable_p) 
 	set element(user_editable_p) $config(user_editable_p)
 
 	# apply the path hack to the filename and the resourcedir
