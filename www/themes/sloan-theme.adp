@@ -21,7 +21,7 @@
 <table class="element" border=0 cellpadding="0" cellspacing="0" width="100%">
   <tr> 
     <td colspan=3 class="element-header-text">
-      <bold><%= [string toupper @name@] %></bold>
+      <bold>@name@</bold>
     </td>
   </tr>
   <tr><td colspan=3 class="dark-line" height="0"><img src="/resources/acs-subsite/spacer.gif"></td></tr>
