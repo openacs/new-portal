@@ -20,6 +20,8 @@
 -- @author arjun@openforce.net
 -- @version $Id$
 --
+-- initial port to postgres by Neophytos Demetriou (k2pts@cytanet.com.cy)
+--
 
 \i portal-core-create.sql
 \i objects-create.sql
