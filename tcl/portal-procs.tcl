@@ -462,7 +462,7 @@ namespace eval portal {
             <input type=hidden name=page_id value=$page_id>
             <input type=hidden name=return_url value=@return_url@#$page_id>
             <input type=hidden name=anchor value=$page_id>
-            <input type=submit name=op value=\"Rename Page\">
+            <input type=submit name=op value=\"[_ new-portal.Rename_Page]\">
             <input type=text name=pretty_name value=\"$page_name\">
             </form> 
 	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/graphics/spacer.gif\" height=1></td></tr>
