@@ -264,23 +264,22 @@ show errors
 create or replace package portal_datasource
 as
 	function new (
-		datasource_id		in portal_datasources.datasource_id%TYPE default null,
-		data_type		in portal_datasources.data_type%TYPE default null,
-		mime_type		in portal_datasources.mime_type%TYPE default null,
-		secure_p		in portal_datasources.secure_p%TYPE default null,
-		configurable_p		in portal_datasources.configurable_p%TYPE default null,
-		name			in portal_datasources.name%TYPE default null,
-		description		in portal_datasources.description%TYPE default null,
-		content			in portal_datasources.content%TYPE default null,
-		content_varchar		varchar default null,
---		package_key		apm_package_types.package_key%TYPE default null,
-		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
-		creation_date		in acs_objects.creation_date%TYPE 
-					default sysdate,
-		creation_user		in acs_objects.creation_user%TYPE 
-					default null,
-		creation_ip		in acs_objects.creation_ip%TYPE default null, 
-		context_id		in acs_objects.context_id%TYPE default null 
+		datasource_id	in portal_datasources.datasource_id%TYPE default null,
+		data_type	in portal_datasources.data_type%TYPE default null,
+		mime_type	in portal_datasources.mime_type%TYPE default null,
+		secure_p	in portal_datasources.secure_p%TYPE default null,
+		configurable_p	in portal_datasources.configurable_p%TYPE default null,
+		name		in portal_datasources.name%TYPE default null,
+		description	in portal_datasources.description%TYPE default null,
+		content		in portal_datasources.content%TYPE default null,
+		content_varchar	varchar default null,
+		object_type	in acs_object_types.object_type%TYPE default 'portal_datasource',
+		creation_date	in acs_objects.creation_date%TYPE 
+				default sysdate,
+		creation_user	in acs_objects.creation_user%TYPE 
+				default null,
+		creation_ip	in acs_objects.creation_ip%TYPE default null, 
+		context_id	in acs_objects.context_id%TYPE default null 
 	) return portal_datasources.datasource_id%TYPE;
 
 	procedure delete (
@@ -301,8 +300,9 @@ as
 		name			in portal_datasources.name%TYPE default null,
 		description		in portal_datasources.description%TYPE default null,
 		content			in portal_datasources.content%TYPE default null,
+		config_varchar		varchar default null,
+		config_content		in portal_datasources.config_content%TYPE default null,
 		content_varchar		varchar default null,
---		package_key		apm_package_types.package_key%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date		in acs_objects.creation_date%TYPE 
 					default sysdate,
@@ -312,8 +312,9 @@ as
 		context_id		in acs_objects.context_id%TYPE default null 
 	) return portal_datasources.datasource_id%TYPE
 	is
-		v_datasource_id portal_datasources.datasource_id%TYPE;
-		v_content_loc	portal_datasources.content%TYPE;
+		v_datasource_id		portal_datasources.datasource_id%TYPE;
+		v_content_loc		portal_datasources.content%TYPE;
+		v_config_content_loc	portal_datasources.config_content%TYPE;
 	begin
 		v_datasource_id := acs_object.new (
 			object_id	=> datasource_id,
@@ -330,6 +331,14 @@ as
 			dbms_lob.write(v_content_loc, length(new.content_varchar), 1, new.content_varchar);
 		else
 			v_content_loc := content;
+		end if;
+
+		if config_varchar is not null
+		then
+			dbms_lob.createtemporary(v_config_content_loc, TRUE);
+			dbms_lob.write(v_config_content_loc, length(new.config_content_varchar), 1, new.config_content_varchar);
+		else
+			v_config_content_loc := config_content;
 		end if;
 
 		insert into portal_datasources
@@ -353,3 +362,5 @@ as
 end portal_datasource;
 /
 show errors
+
+-- AKS XXX Do we need an API for datasource def params?
