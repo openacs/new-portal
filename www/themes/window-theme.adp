@@ -18,7 +18,7 @@
                 <tr>
                   <td align=left valign=middle width=88%  bgcolor="#eeeee7">
 			<font face="arial,helvetica,lucida" size="+1">
-				<a style="text-decoration: none" href=portlet-link-XXX><b>@name@</b></a></font></td>
+				<a style="text-decoration: none" href=@link@><b>@name@</b></a></font></td>
                   <td align=right width=7%>
 			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.png" alt="edit"></a></td>
                   <td align=right width=7%>

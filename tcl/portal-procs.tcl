@@ -757,6 +757,7 @@ namespace eval portal {
 	select
 	mime_type,
 	name,
+	link,
 	content
 	from portal_datasources
 	where datasource_id = $element(datasource_id) 
@@ -777,6 +778,9 @@ namespace eval portal {
 	# filesystem.
 	set element(mime_type) $datasource(mime_type)
 	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
+
+	# pass the ds link to the element
+	set element(link) $datasource(link)
 
 	return [array get element]
 
