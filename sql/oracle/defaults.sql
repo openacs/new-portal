@@ -124,7 +124,7 @@ end;
 -- XXX path for the content_varchar
 
 declare
-	datasource_id	portal_datasources.datasource_id%TYPE;
+	v_datasource_id	portal_datasources.datasource_id%TYPE;
 begin
 	v_datasource_id := portal_datasource.new (
 		data_type => 'raw',
