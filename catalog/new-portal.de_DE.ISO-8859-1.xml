@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <message_catalog package_key="new-portal" package_version="0.2d1" locale="de_DE" charset="ISO-8859-1">
 
-  <msg key="Add_Page">Seite Hinzufügen</msg>
+  <msg key="Add_Page">Seite hinzufügen</msg>
   <msg key="Bad_direction">Falsche Richtung:</msg>
-  <msg key="Bad_direction_1">Falsche Richtung!</msg>
+  <msg key="Bad_direction_1">Falsche Richtung</msg>
   <msg key="Change_Page_Layout">Seitenlayout ändern</msg>
   <msg key="Change_page_layout">Seitenlayout ändern:</msg>
-  <msg key="Change_Theme">Oberfläche ändern:</msg>
-  <msg key="Change_Theme_1">Oberfläche ändern</msg>
+  <msg key="Change_Theme">Oberflächendesign ändern:</msg>
+  <msg key="Change_Theme_1">Oberflächendesign ändern</msg>
   <msg key="Create_a_new_page">Neue Seite hinzufügen</msg>
   <msg key="deco_theme_description">eine Art-Deco-Oberfläche</msg>
   <msg key="deco_theme_name">Deco</msg>
   <msg key="Go_back">Zurück</msg>
   <msg key="lt_Add_This_Portlet_Here">Dieses Portlet hier hinzufügen</msg>
-  <msg key="lt_Error_bad_params_n___">Fehler, falsche Parameter! \n Bitte informieren Sie den System-Administrator /die System-Administatorin. Vielen Dank im Voraus.</msg>
+  <msg key="lt_Error_bad_params_n___">Fehler: Falsche Parameter. Bitte informieren Sie den Systemadministrator.</msg>
   <msg key="lt_No_Elements_on_this_p">Keine Elemente auf dieser Seite vorhanden</msg>
-  <msg key="lt_None_You_can_not_add_">Keine. Auf dieser Seite können keine Portlets hinzugefügt werden, weil sie schon alle in Verwendung sind.</msg>
-  <msg key="lt_Revert_the_entire_por">Zurücksetzen der Startseite in die Standardeinstellungen</msg>
-  <msg key="lt_You_must_enter_new_na">Sie müssen einen neuen Namen für die Seite eingeben.</msg>
+  <msg key="lt_None_You_can_not_add_">Es werden bereits alle auf dieser Seite verfügbaren Portlets verwendet.</msg>
+  <msg key="lt_Revert_the_entire_por">Layout des Gruppenportals auf die Standardeinstellungen zurücksetzen</msg>
+  <msg key="lt_You_must_enter_new_na">Geben Sie einen neuen Namen für die Seite ein.</msg>
   <msg key="Move_to_page">Verschieben nach</msg>
   <msg key="nada_theme_description">eine Oberfläche ohne Grafiken</msg>
   <msg key="nada_theme_name">Nichts</msg>
   <msg key="Page">Seite</msg>
   <msg key="Page_1">Seite:</msg>
-  <msg key="Remove_Empty_Page">Leere Seite Entfernen</msg>
+  <msg key="Remove_Empty_Page">Leere Seite entfernen</msg>
   <msg key="Rename_Page">Seite umbenennen </msg>
   <msg key="Revert">Zurücksetzen</msg>
   <msg key="simple_1column_layout_description">&amp;nbsp;</msg>
@@ -34,6 +34,7 @@
   <msg key="simple_3column_layout_name">Dreispaltig</msg>
   <msg key="simple_red_theme_description">eine einfache tabellenbasierte Oberfläche in Rot</msg>
   <msg key="simple_red_theme_name">Einfach</msg>
+  <msg key="sloan_theme_description">die von MIT Sloan verwendete Oberfläche</msg>
   <msg key="transaction_failed">Transaktion fehlgeschlagen</msg>
   <msg key="Unused_Portlets">Nicht verwendete Portlets</msg>
 </message_catalog>
