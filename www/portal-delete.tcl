@@ -20,6 +20,6 @@ delete from acs_permissions where object_id = $portal_id"
 db_dml delete_portal "
 delete from portals where portal_id = $portal_id"
 
-portal::delete_portal $portal_id
+portal::delete $portal_id
 
 ns_returnredirect "index"
