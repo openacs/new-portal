@@ -18,34 +18,20 @@
 
 %>
 
-<table class="element" border=0 cellpadding="0" cellspacing="0" width="100%">
-  <tr> 
-    <td colspan=3 class="element-header-text">
-      <bold>@name@</bold>
-    </td>
-  </tr>
-  <tr><td colspan=3 class="dark-line" height="0"><img src="/resources/acs-subsite/spacer.gif"></td></tr>
-  <tr>
-    <td class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif" width="1"></td>
-    <td class="element-text" width="100%">
-      <table cellspacing="0" cellpadding="0" class="element-content" width="100%">
-        <tr>
-          <td>
-            <table border="0" bgcolor="white" cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td class=element-text>
-                  <slave>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-    <td align="right" class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif" width="1"></td>
-  </tr>
-  <tr><td colspan=3 class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif"></td></tr>
-</table>
+<div class="portlet-wrap-shadow">
+  <div class="portlet-wrap-bl">
+     <div class="portlet-wrap-tr">
+        <div class="portlet">
+
+<h2>@name@</h2>
+<slave>
+
+	 </div> <!-- portlet -->
+      </div> <!-- portlet-wrap-tr -->
+   </div> <!-- portlet-wrap-bl -->
+</div> <!-- portlet-wrap-shadow -->
+        
+
 
 
 
