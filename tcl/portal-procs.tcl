@@ -431,7 +431,7 @@ namespace eval portal {
 
         append theme_chunk "<input type=submit name=op value=\"[_ new-portal.Change_Theme_1]\"></form>"
 	if {$allow_theme_change_p} {
-        append template "$theme_chunk"
+            append template "$theme_chunk"
 	}
 
         #
@@ -2316,4 +2316,3 @@ namespace eval portal {
     }
 
 }
-

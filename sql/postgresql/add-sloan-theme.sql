@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2001, 2002 OpenForce, Inc.
+--  Copyright (C) 2001, 2002 MIT
 --
 --  This file is part of dotLRN.
 --
@@ -15,11 +15,6 @@
 --
 
 --
--- The New Portal Package
--- copyright 2001, OpenForce, Inc.
--- distributed under the GNU GPL v2
---
--- Arjun Sanyal (arjun@openforce.net)
 -- $Id$
 --
 
