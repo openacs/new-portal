@@ -3,7 +3,7 @@
 <queryset>
 <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
 
-<fullquery name="portal::mapping::set.set_node_mapping">
+<fullquery name="portal::mapping::new.set_node_mapping">
 <querytext>
 declare
 begin
@@ -12,7 +12,7 @@ end;
 </querytext>
 </fullquery>
 
-<fullquery name="portal::mapping::unset.unset_node_mapping">
+<fullquery name="portal::mapping::del.unset_node_mapping">
 <querytext>
 declare
 begin

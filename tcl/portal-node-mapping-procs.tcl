@@ -18,33 +18,32 @@
 
 ad_library {
     Portal Node Mappings
-
+    
     @author Ben Adida (ben@openforce)
     @creation-date April 2002
-    @cvs-id $Id$
 }
 
 namespace eval portal::mapping {
 
-    ad_proc -public set {
+    ad_proc -public new {
         {-object_id:required}
         {-node_id:required}
     } {
         db_exec_plsql set_node_mapping {}
     }
-
-    ad_proc -public unset {
+    
+    ad_proc -public del {
         {-object_id:required}
     } {
         db_exec_plsql unset_node_mapping {}
     }
-
+    
     ad_proc -public get_node_id {
         {-object_id:required}
     } {
         return [db_string select_node_mapping {} -default ""]
     }
-
+    
     ad_proc -public get_url {
         {-object_id:required}
     } {
@@ -53,8 +52,8 @@ namespace eval portal::mapping {
         if {[empty_string_p $node_id]} {
             return $node_id
         }
-
+        
         return [site_nodes::get_url_from_node_id -node_id $node_id]
     }
-
+    
 }
