@@ -212,10 +212,12 @@ namespace eval portal {
     }
     
 
-    ad_proc -public configure { portal_id } {
+    ad_proc -public configure { portal_id return_url } {
 	Return a portal configuration page. 
 	All form targets point to file_stub-2.
     
+	@param portal_id
+	@return_url
 	@return A portal configuration page	
     } {
 	ad_require_permission $portal_id portal_read_portal
@@ -225,6 +227,7 @@ namespace eval portal {
 	set master_template [ad_parameter master_template]
 	set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
 	set action_string [append target_stub "-2"]
+	set name [get_name $portal_id]
 	
 	# XXX todo layout change
 	# get the layouts
@@ -277,6 +280,8 @@ namespace eval portal {
 	    # the <include> sources /www/place-element.tcl
 	    set template "	
 	    <master src=\"@master_template@\">
+	    <b>Return to <a href=@return_url@>@name@</a></b>
+	    <p>
 	    <form action=@action_string@>
 	    <b>Change Your Portal's Name:</b>
 	    <P>
