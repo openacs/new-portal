@@ -19,14 +19,6 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::create.layout_id_select">      
-  <querytext>
-    select layout_id from
-    portal_layouts where
-    name = :layout_name 
-  </querytext>
-</fullquery> 
-
 <fullquery name="portal::delete.delete_perms">      
   <querytext>
     delete from acs_permissions where object_id= :portal_id
@@ -526,6 +518,12 @@
 <fullquery name="portal::get_layout_id.get_layout_id_page_select">      
   <querytext>
     select layout_id from portal_pages where page_id = :page_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_layout_id.get_layout_id_name_select">      
+  <querytext>
+    select layout_id from portal_layouts where name = :layout_name 
   </querytext>
 </fullquery> 
 

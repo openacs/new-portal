@@ -96,7 +96,7 @@ namespace eval portal {
 	{-name "Untitled"} 
 	{-template_id ""} 
 	{-portal_template_p "f"} 
-	{-layout_name "Simple 2-Column"}
+	{-layout_name ""}
 	{-default_page_name ""}
 	{-context_id ""} 
 	user_id 
@@ -107,8 +107,14 @@ namespace eval portal {
 	@param user_id
 	@param layout_name optional
     } {
-	db_1row layout_id_select {}
-	return [ db_exec_plsql create_new_portal_and_perms {}]
+        # get the default layout_id - simple2
+        if {![empty_string_p $layout_name]} {
+            set layout_id [get_layout_id -layout_name $layout_name]
+        } else {
+            set layout_id [get_layout_id]
+        }
+
+	return [db_exec_plsql create_new_portal_and_perms {}]
     }
     
     ad_proc -public delete {
@@ -619,6 +625,7 @@ namespace eval portal {
 	@return the id of the page
 	@param portal_id 
     } {
+        set layout_id [get_layout_id]
         return [db_exec_plsql page_create_insert {}]
     }
 
@@ -1238,7 +1245,8 @@ namespace eval portal {
     ad_proc -private get_layout_id { 
         {-page_num ""}
         {-page_id ""}
-        portal_id
+        {-layout_name "Simple 2-Column"}
+        {portal_id ""}
     } {
 	Get the layout_id of a layout template for a portal page.
 	
@@ -1248,9 +1256,15 @@ namespace eval portal {
     } {
         if { ![empty_string_p $page_num] } {
             db_1row get_layout_id_num_select {}
-        } else {
+        } elseif { ![empty_string_p $page_id] } {
             db_1row get_layout_id_page_select {}
+        } elseif { ![empty_string_p $layout_name] } {
+            db_1row get_layout_id_name_select {}
+        } else {
+            ad_return_complaint 1 "portal::get_layout_id bad params!"
+            ns_log error "portal::get_layout_id bad params!"
         }
+ 
 	return $layout_id
     }    
     
