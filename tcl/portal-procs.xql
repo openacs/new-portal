@@ -198,7 +198,7 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_page_id.get_current_page_id_select">      
+<fullquery name="portal::get_page_id.get_page_id_from_name">      
   <querytext>
    select page_id
    from portal_pages

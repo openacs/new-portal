@@ -728,6 +728,7 @@ namespace eval portal {
         {-post_html ""}
         {-separator "&nbsp;"}
         {-return_url ""}
+        {-link_all 0}
     } {
         Returns an html string of the pretty names of the pages in the 
         given portal. 
@@ -741,7 +742,7 @@ namespace eval portal {
         set current_page_id [get_page_id -current "t" -portal_id $portal_id]
 
         foreach page [list_pages_tcl_list -portal_id $portal_id] {
-            if {$page == $current_page_id} {
+            if {$page == $current_page_id && !$link_all} {
                 append html "[get_page_pretty_name -page_id $page]"
             } else {
                 if {[empty_string_p $return_url]} {

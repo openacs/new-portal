@@ -94,7 +94,7 @@ as
                 else
                    update portal_current_page 
                    set page_id = v_page_id
-                   where portal_id = portal_id;
+                   where portal_id = portal_page.new.portal_id;
 
 --                   raise_application_error(-20000, 'aks1 just UPDATED portal_current_page with page_id ' || v_page_id || ' portal_id ' || portal_id || ' page count ' || v_current_page_count); 
                 end if;
