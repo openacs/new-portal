@@ -422,7 +422,8 @@ ad_proc -public configure { portal_id } {
     
     <P>
     
-    <form method=get action=\"portal-config-2\">
+    <form method=get action=\"@target_stub@-2\">
+    <input type=hidden name=portal_id value=@portal_id@>
     <%= [export_form_vars portal_id] %>
     <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">
     </form>
@@ -489,21 +490,26 @@ ad_proc -public configure { portal_id } {
 	return $output
     }
 
-ad_proc -public configure_dispatch { portal_id op query } {
+ad_proc -public configure_dispatch { portal_id query } {
     Dispatches the configuration operation. 
-    This is ugly to make your page pretty.
+    We get the target region number from the op.
     
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
-} {
+nope} {
     ad_require_permission $portal_id portal_read_portal
     ad_require_permission $portal_id portal_edit_portal
    
-    # remove the op and the portal_id from the query
+    # remove the portal_id from the query
     set query [string tolower $query]
     regsub {[&]*portal_id=\d+} $query "" query
-    regsub {[&]*op=\w+} $query "" query
 
+    # get then remove the op including an optional target_region
+    regexp {[&]*op([\d])?=([\w\+]+)} $query whole_op target_region op
+    regsub {[&]*op[\d]?=[\w\+]+} $query "" query
+
+    # replace the "+"'s with spaces
+    regsub -all {\+} $op " " op
     set op [string tolower $op]
 
     switch $op {
@@ -516,12 +522,17 @@ ad_proc -public configure_dispatch { portal_id op query } {
 	    regexp {[&]*sort_key=(\d+)} $query "" sort_key
 	    regexp {[&]*region=(\d+)} $query "" region
 	    regexp {[&]*direction=(\w+)} $query "" direction
-
-	    ns_log notice "aks95 $portal_id $element_id $sort_key $region $direction"
-	    portal::swap_element $portal_id $element_id $sort_key $region $direction
+	    portal::swap_element \
+		    $portal_id $element_id $sort_key $region $direction
 	}
-	"move" {
-	    set region [lindex $args 0]
+	"move all checked elements here" {
+
+	    set element_id_list [list]
+
+	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
+		lappend element_id_list $element_id
+		regsub {[&]*element_ids=\d+} $query ""  query
+	    }
 
 	    if {! [empty_string_p $element_id_list] } {
 		portal::move_elements $portal_id $element_id_list $region 
@@ -540,7 +551,7 @@ ad_proc -public configure_dispatch { portal_id op query } {
 	default {
 	    ns_log Warning \
 		    "portal::config_dispatch: op = $op, and that's not right!"
-	    ad_return_complaint 1  "portal::config_dispatch: bad op = $op"
+	    ad_return_complaint 1  "portal::config_dispatch: Bad Op! \n whole_op = $whole_op, tr = $target_region, op $op"
 	}
     }
 }
