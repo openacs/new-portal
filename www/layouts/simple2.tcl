@@ -6,6 +6,7 @@ ad_page_contract {
     element_src:onevalue
     action_string:onevalue
     theme_id:onevalue
+    return_url:onevalue
 }
 
 if { ![info exists action_string]} {
@@ -14,6 +15,10 @@ if { ![info exists action_string]} {
 
 if { ![info exists theme_id]} {
     set theme_id ""
+}
+
+if { ![info exists return_url]} {
+    set return_url ""
 }
 
 portal::layout_elements $element_list

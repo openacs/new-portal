@@ -672,11 +672,12 @@ namespace eval portal {
 	    set template "	
 	    <master src=\"@master_template@\">
 	    <p>
-	    <a href=$return_url>Go back</a>
+	    <a href=@return_url@>Go back</a>
 	    <form action=@action_string@>
 	    <P>	    
 	    <form method=post action=@action_string@>
 	    <input type=hidden name=portal_id value=@portal_id@>
+	    <input type=hidden name=return_url value=@return_url@>
 	    <b>Change Theme:</b>
 	    @theme_data@
 	    </form>
@@ -685,9 +686,8 @@ namespace eval portal {
 
 	    <b>Configure The Portal's Elements:</b>
 	    <include src=\"@portal.template@\" element_list=\"@element_list@\" 
-	    element_src=\"@element_src@\" action_string=@action_string@
-	    portal_id=@portal_id@>
-	    "
+	    element_src=\"@element_src@\" action_string=\"@action_string@\"
+	    portal_id=\"@portal_id@\" return_url=\"@return_url@\">  "
 	
 	#	 <form action=\"update_layout\">
 	#	 <if @layout_count@ gt 1>
