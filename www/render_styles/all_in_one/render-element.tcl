@@ -32,7 +32,7 @@ if { [catch {set element_data [portal::evaluate_element_raw $element_id] }  errm
     # be shown in the content of the portlet. This is for errors other
     # than with the "show" proc. 
     ns_log error "\n\n *** Error in portal/www/render_sytles/all_in_one/render-element.tcl \n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id\n\n"
-    ad_return -code error
+    ad_return -code error $errmsg
 } else {
     # all is ok
     array set element $element_data
