@@ -62,7 +62,7 @@ append show_html "<select name=element_id>"
 
 db_foreach hidden_elements {} {
     set show_avail_p 1
-    append show_html "<option value=$element_id>$name</option>\n"
+    append show_html "<option value=$element_id>$pretty_name</option>\n"
 }
 
 set imgdir "[portal::mount_point]/place-element-components"        

@@ -34,17 +34,34 @@
             <file type="data_model" db_type="oracle" path="sql/oracle/portal-core-drop.sql"/>
             <file type="data_model_create" db_type="oracle" path="sql/oracle/portal-create.sql"/>
             <file type="data_model_drop" db_type="oracle" path="sql/oracle/portal-drop.sql"/>
-            <file type="data_model" db_type="oracle" path="sql/oracle/portal-element-sc-create.sql"/>
+            <file type="data_model" db_type="oracle" path="sql/oracle/portal-node-mapping-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/api-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/api-drop.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/datasource-sc-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/datasource-sc-drop.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/defaults.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/objects-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/objects-drop.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-core-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-core-drop.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-create.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-drop.sql"/>
+            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-node-mapping-create.sql"/>
+            <file type="query_file" db_type="oracle" path="tcl/portal-node-mapping-procs-oracle.xql"/>
+            <file type="query_file" db_type="postgresql" path="tcl/portal-node-mapping-procs-postgresql.xql"/>
+            <file type="tcl_procs" path="tcl/portal-node-mapping-procs.tcl"/>
+            <file type="query_file" path="tcl/portal-node-mapping-procs.xql"/>
             <file type="query_file" db_type="oracle" path="tcl/portal-procs-oracle.xql"/>
+            <file type="query_file" db_type="postgresql" path="tcl/portal-procs-postgresql.xql"/>
             <file type="tcl_procs" path="tcl/portal-procs.tcl"/>
             <file type="query_file" path="tcl/portal-procs.xql"/>
             <file type="content_page" path="www/admin/index.adp"/>
             <file type="content_page" path="www/admin/index.tcl"/>
-            <file type="content_page" path="www/admin/master.adp"/>
-            <file type="content_page" path="www/admin/master.tcl"/>
+            <file type="content_page" path="www/admin/portal-admin-master.adp"/>
             <file type="content_page" path="www/admin/portal-config-2.tcl"/>
             <file type="content_page" path="www/admin/portal-config.adp"/>
             <file type="content_page" path="www/admin/portal-config.tcl"/>
+            <file type="content_page" path="www/admin/portal-show.adp"/>
             <file type="content_page" path="www/admin/portal-show.tcl"/>
             <file type="template" path="www/layouts/components/header3/example.adp"/>
             <file path="www/layouts/components/simple-element/close.gif"/>
@@ -65,19 +82,26 @@
             <file type="template" path="www/layouts/simple3.tcl"/>
             <file type="template" path="www/layouts/title-buttons.adp"/>
             <file type="template" path="www/layouts/title-buttons.tcl"/>
-            <file type="content_page" path="www/master.adp"/>
-            <file type="content_page" path="www/master.tcl"/>
             <file type="content_page" path="www/place-element-components/arrow-down.gif"/>
             <file type="content_page" path="www/place-element-components/arrow-left.gif"/>
             <file type="content_page" path="www/place-element-components/arrow-right.gif"/>
             <file type="content_page" path="www/place-element-components/arrow-up.gif"/>
+            <file type="content_page" path="www/place-element-other-page.adp"/>
+            <file type="content_page" path="www/place-element-other-page.tcl"/>
+            <file type="query_file" path="www/place-element-other-page.xql"/>
             <file type="content_page" path="www/place-element.adp"/>
             <file type="content_page" path="www/place-element.tcl"/>
+            <file type="query_file" path="www/place-element.xql"/>
             <file path="www/render-element.adp"/>
             <file type="content_page" path="www/render-element.tcl"/>
+            <file type="content_page" path="www/render_styles/all_in_one/render-element.adp"/>
+            <file type="content_page" path="www/render_styles/all_in_one/render-element.tcl"/>
+            <file type="content_page" path="www/render_styles/individual/render-element.adp"/>
+            <file type="content_page" path="www/render_styles/individual/render-element.tcl"/>
             <file path="www/spacer.gif"/>
             <file type="content_page" path="www/template-place-element.adp"/>
             <file type="content_page" path="www/template-place-element.tcl"/>
+            <file type="query_file" path="www/template-place-element.xql"/>
             <file type="content_page" path="www/themes/deco-theme.adp"/>
             <file type="content_page" path="www/themes/deco-theme/edit.gif"/>
             <file type="content_page" path="www/themes/deco-theme/shade.gif"/>
@@ -92,6 +116,7 @@
             <file type="content_page" path="www/themes/deco-theme/unshade.gif"/>
             <file type="content_page" path="www/themes/deco-theme/x.gif"/>
             <file type="content_page" path="www/themes/nada-theme.adp"/>
+            <file type="content_page" path="www/themes/raw-theme.adp"/>
             <file type="template" path="www/themes/simple-theme.adp"/>
             <file path="www/themes/simple-theme/e.gif"/>
             <file path="www/themes/simple-theme/edit.gif"/>

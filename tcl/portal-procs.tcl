@@ -1458,7 +1458,12 @@ namespace eval portal {
     }
 
 
-    ad_proc -public configure_element { element_id op return_url } {
+    ad_proc -public configure_element { 
+        {-noconn ""}
+        element_id 
+        op 
+        return_url 
+    } {
         Dispatch on the element_id and op requested
 
         @param element_id
@@ -1468,8 +1473,10 @@ namespace eval portal {
 
         if { [db_0or1row select {}] } {
             # passed in element_id is good, do they have perms?
-            ad_require_permission $portal_id portal_read_portal
-            ad_require_permission $portal_id portal_edit_portal
+            if {[empty_string_p $noconn]} {
+                ad_require_permission $portal_id portal_read_portal
+                ad_require_permission $portal_id portal_edit_portal
+            }
         } else {
             ad_returnredirect $return_url
         }
@@ -1525,7 +1532,10 @@ namespace eval portal {
             }
             "hide" {
                 db_dml hide_update {}
-                ad_returnredirect $return_url
+
+                if {![empty_string_p $return_url]} {
+                    ad_returnredirect $return_url
+                }
             }
         }
     }
@@ -1634,6 +1644,16 @@ namespace eval portal {
     } {
         set ds_id [get_datasource_id $ds_name]
         return [db_list select {}]
+    }
+
+    ad_proc -private get_element_id_by_pretty_name {
+        {-portal_id:required}
+        {-pretty_name:required}
+    } {
+        Get the element IDs with the given pn on the portal, returns 
+        the empty string if none is found
+    } {
+        return [db_string select {} -default ""]
     }
 
     ad_proc -private get_layout_region_count { 

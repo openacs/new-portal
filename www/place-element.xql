@@ -17,7 +17,7 @@ order by sort_key
 
 <fullquery name="hidden_elements">
 <querytext>
-select element_id, name
+select element_id, pem.pretty_name
 from portal_element_map pem, portal_pages pp
 where
 pp.portal_id = :portal_id 

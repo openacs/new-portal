@@ -658,6 +658,16 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::get_element_id_by_pretty_name.select">      
+  <querytext>
+    select element_id 
+    from portal_element_map pem, portal_pages pp
+    where pp.portal_id= :portal_id 
+    and pem.page_id = pp.page_id
+    and pem.pretty_name = :pretty_name
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::get_layout_region_count.select_region_count">      
   <querytext>
     select count(*) as region_count
