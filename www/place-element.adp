@@ -9,7 +9,6 @@
 <td align=center>
 
 <multiple name=element_multi>
-    <if @state@ ne "locked"><input type=checkbox name=element_ids value="@element_multi.element_id@"></if>
     @element_multi.name@
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
@@ -20,19 +19,27 @@
       </if>
     </if>
 (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>)
-    <br>
-</multiple>
 
-<br>
-
-<if @show_avail_p@ ne 0>
-@show_html@
-</select><input type=submit name="op" value="Show Here">
+    <if @state@ ne "locked">
+	<if @region@ eq 1>
+	(<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@">move right</a>)
+	</if>
+	<if @region@ gt 1 and @region@ lt @num_regions@>
+	(<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@">move left</a>)
+	(<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@">move right</a>)</if>
+	<if @region@ eq @num_regions@>(<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@">move left</a>)</if>
 </if>
 
 
-<if @region_count@ ne @all_count@ and @all_count@ gt 0>
-  <input type=submit name="op" value="Move All Checked Here"> <br>
+    <br>
+</multiple>
+
+
+
+<if @show_avail_p@ ne 0>
+<br>
+@show_html@
+</select><input type=submit name="op" value="Show Here">
 </if>
 
 </td>
