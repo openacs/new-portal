@@ -146,7 +146,7 @@ namespace eval portal {
 
         set page_name_list [list "Page 1"]
         set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
-	ns_log Warning "CREATING A NEW PORTAL"
+	
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
             set page_name_list [list]
@@ -733,9 +733,15 @@ namespace eval portal {
 		    db_foreach revert_get_source_elements {} {
 			# the element might not be on the target page...
 			set target_element_id \
-                            [db_string revert_get_target_element {}]
+                            [db_string revert_get_target_element {} -default {}]
 			
-			db_dml revert_element_update {}
+			# now, lets check if this is one new applet
+			# added, that was not originally mapped
+			# usually with custom portlets
+			
+			if ![empty_string_p $target_element_id] {
+			    db_dml revert_element_update {}
+			}
 		    }
 		}
         } elseif { ![empty_string_p [ns_set get $form "op_rename"]] } {

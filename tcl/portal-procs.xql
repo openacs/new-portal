@@ -183,11 +183,27 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::configure_dispatch.hide_all_element">
+    <fullquery name="portal::configure_dispatch.hide_all_elements">
         <querytext>
 		update portal_element_map		
 		set  state = 'hidden'
 		 where page_id = :target_page_id
+        </querytext>
+    </fullquery>
+
+
+    <fullquery name="portal::configure_dispatch.revert_get_source_elements">
+	<querytext>
+            select region,
+                   sort_key,
+                   state,
+                   pd.datasource_id as datasource_id,
+                   pd.name as name,
+                   pem.pretty_name as pretty_name
+            from portal_element_map pem,
+                 portal_datasources pd
+            where pem.page_id = :source_page_id
+            and pem.datasource_id = pd.datasource_id
         </querytext>
     </fullquery>
 
@@ -349,6 +365,7 @@
             and p.template_id = pp.portal_id
             and pp.page_id = pem.page_id
             and pem.datasource_id = :ds_id
+	    and pem.name <> 'static_portlet'
         </querytext>
     </fullquery>
 
@@ -635,6 +652,7 @@
             where portal_pages.portal_id = :portal_id
             and portal_element_map.datasource_id = :ds_id
             and portal_element_map.page_id = portal_pages.page_id
+	    order by portal_element_map.pretty_name
         </querytext>
     </fullquery>
 

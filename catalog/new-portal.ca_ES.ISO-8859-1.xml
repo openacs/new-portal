@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="ca_ES" charset="ISO-8859-1">
+
+  <msg key="Add_Page">Afegir pàgina </msg>
+  <msg key="Bad_direction">Direcció errònia: </msg>
+  <msg key="Bad_direction_1">Direcció errònia! </msg>
+  <msg key="Change_Page_Layout">Canviar la disposició de pàgina</msg>
+  <msg key="Change_page_layout">Canviar la disposició de pàgina:</msg>
+  <msg key="Change_Theme">Canviar el tema: </msg>
+  <msg key="Change_Theme_1">Canviar el tema</msg>
+  <msg key="Create_a_new_page">Crear una pàgina nova </msg>
+  <msg key="deco_theme_description">Art deco</msg>
+  <msg key="deco_theme_name">deco </msg>
+  <msg key="Go_back">Tornar enrere </msg>
+  <msg key="lt_Add_This_Portlet_Here">Afegir el portlet ací </msg>
+  <msg key="lt_Error_bad_params_n___">Error, paràmetres erronis! \n Per favor, informeu l'administrador del sistema d'aquest error. Gràcies </msg>
+  <msg key="lt_No_Elements_on_this_p">No hi ha portlets en aquesta pàgina </msg>
+  <msg key="lt_None_You_can_not_add_">Cap. No podeu afegir portlets a aquesta pàgina, ja que tots s'estan utilitzant. </msg>
+  <msg key="lt_Revert_the_entire_por">Tornar a la configuració per defecte </msg>
+  <msg key="lt_You_must_enter_new_na">Heu d'especificar un títol per a la pàgina. </msg>
+  <msg key="Move_to_page">Moure a la pàgina </msg>
+  <msg key="nada_theme_description">Sense gràfics. </msg>
+  <msg key="nada_theme_name">cap </msg>
+  <msg key="Page">Pàgina </msg>
+  <msg key="Page_1">Pàgina:</msg>
+  <msg key="Remove_Empty_Page">Eliminar la pàgina buida </msg>
+  <msg key="Rename_Page">Tornar a anomenar la pàgina </msg>
+  <msg key="Revert">Tornar a la configuració per defecte </msg>
+  <msg key="simple_1column_layout_description">Composició a 1 columna </msg>
+  <msg key="simple_1column_layout_name">senzilla a 1 columna </msg>
+  <msg key="simple_2column_layout_description">Composició senzilla a 2 columnes </msg>
+  <msg key="simple_2column_layout_name">Senzilla a 2 columnes </msg>
+  <msg key="simple_3column_layout_description">Composició senzilla a 3 columnes </msg>
+  <msg key="simple_3column_layout_name">Senzilla a 3 columnes </msg>
+  <msg key="simple_red_theme_description">Amb capçaleres roges </msg>
+  <msg key="simple_red_theme_name">senzill </msg>
+  <msg key="sloan_theme_description">Tema MIT Sloan </msg>
+  <msg key="sloan_theme_name">Sloan </msg>
+  <msg key="transaction_failed">Transacció fallida </msg>
+  <msg key="Unused_Portlets">Portlets disponibles </msg>
+</message_catalog>
