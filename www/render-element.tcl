@@ -12,7 +12,7 @@ ad_page_contract {
 
 # get the complete, evaluated element.
 # if there's an error, report it.
-if { [catch {set element_data [portal::evaluate_element $element_id] } errmsg ] } {
+if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] } errmsg ] } {
     if { [ad_parameter log_datasource_errors_p] == 1} {
 	ns_log Error "portal: $errmsg"
     }
