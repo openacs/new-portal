@@ -1,122 +1,137 @@
--- The data source (portlet) contract
--- copyright 2001, OpenForce, Inc.
--- distributed under the GNU GPL v2
+--  
+--  Copyright(C) 2001, 2002 OpenForce, Inc.
+--  
+--  This file is part of dotLRN.
+--      
+--  dotLRN is free software; you can redistribute it and/or modify it under the
+--  terms of the GNU General Public License as published by the Free Software
+--  Foundation; either version 2 of the License, or(at your option) any later
+--  version.
+--      
+--  dotLRN is distributed in the hope that it will be useful, but WITHOUT ANY
+--  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+--  FOR A PARTICULAR PURPOSE.  See the GNU General Public License foreign key more
+--  details.
+--      
+
 --
--- for Oracle 8/8i. (We're guessing 9i works, too).
+-- The data source(portlet) contract
 --
--- arjun@openforce.net
--- started November, 2001
+-- @author arjun@openforce.net
+-- @version $Id$
 --
--- $Id$
 
-	-- drop GetMyName	  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'GetMyName'
-	  );
+create function inline_0 ()
+returns integer as '
+begin
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.GetMyName.InputType'
-	  );
+    -- drop GetMyName	  
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''GetMyName''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.GetMyName.OutputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.GetMyName.InputType''
+    );
 
-	  -- drop GetPrettyName		  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'GetPrettyName'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.GetMyName.OutputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.GetPrettyName.InputType'
-	  );
+    -- drop GetPrettyName		  
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''GetPrettyName''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.GetPrettyName.OutputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.GetPrettyName.InputType''
+    );
 
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.GetPrettyName.OutputType''
+    );
 
-	  -- drop Link
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'Link'
-	  );
+    -- drop Link
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''Link''
+    );
 
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Link.InputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Link.InputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Link.OutputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Link.OutputType'
-	  );
+    -- Drop add_self_to_page	  
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''AddSelfToPage''
+    );
 
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.AddSelfToPage.InputType''
+    );
 
-	  -- Drop add_self_to_page	  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'AddSelfToPage'
-	  );
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.AddSelfToPage.InputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.AddSelfToPage.OutputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.AddSelfToPage.OutputType'
-	  );
+    -- Delete Show	  
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''Show''
+    );
 
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Show.InputType''
+    );
 
-	  -- Delete Show	  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'Show'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Show.OutputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Show.InputType'
-	  );
+    -- Delete Edit
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''Edit''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Show.OutputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Edit.InputType''
+    );
 
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.Edit.OutputType''
+    );
 
-	  -- Delete Edit
-	  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'Edit'
-	  );
+    -- RemoveSelfFromPage
+    perform acs_sc_operation__delete(
+        ''portal_datasource'',
+        ''RemoveSelfFromPage''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Edit.InputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.RemoveSelfFromPage.InputType''
+    );
 
-	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.Edit.OutputType'
-	  );
+    perform acs_sc_msg_type__delete(
+        ''portal_datasource.RemoveSelfFromPage.OutputType''
+    );
 
+    -- drop the contract 
+    perform acs_sc_contract__delete(
+        ''portal_datasource''
+    );
 
-	  -- rem RemoveSelfFromPage
-	  
-	  select acs_sc_operation__delete (
-		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'RemoveSelfFromPage'
-	  );
+    return 0;
 
-	  select acs_sc_msg_type__delete (
-	  /* msg_type_name */ 'portal_datasource.RemoveSelfFromPage.InputType'
-	  );
+end;' language 'plpgsql';
 
-	  select acs_sc_msg_type__delete (
-	  /* msg_type_name */ 'portal_datasource.RemoveSelfFromPage.OutputType'
-	  );
+select inline_0();
 
-
-	    -- drop the contract 
-	    select acs_sc_contract__delete (
-	    /* contract_name */ 'portal_datasource'
-	    );
-
+drop function inline_0();

@@ -1,311 +1,318 @@
--- The New Portal Package
--- copyright 2001, OpenForce, Inc.
--- distributed under the GNU GPL v2
 --
--- arjun@openforce.net
--- $Id$
+--  Copyright (C) 2001, 2002 OpenForce, Inc.
+--
+--  This file is part of dotLRN.
+--
+--  dotLRN is free software; you can redistribute it and/or modify it under the
+--  terms of the GNU General Public License as published by the Free Software
+--  Foundation; either version 2 of the License, or (at your option) any later
+--  version.
+--
+--  dotLRN is distributed in the hope that it will be useful, but WITHOUT ANY
+--  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+--  FOR A PARTICULAR PURPOSE.  See the GNU General Public License foreign key more
+--  details.
+--
+
+--
+-- The New Portal Package
+--
+-- @author arjun@openforce.net
+-- @version $Id$
 
 -- datasources
-
-select  acs_object_type__create_type ( 
-    /* object_type   */ 'portal_datasource',
-    /* pretty_name   */ 'Portal Data Source',
-    /* pretty_plural */ 'Portal Data Sources',
-    /* supertype     */ 'acs_object',
-    /* table_name    */ 'PORTAL_DATASOURCES',
-    /* id_column     */ 'DATASOURCE_ID',
-    /* package_name  */ 'portal_datasource',
-    /* abstract_p    */ 'f',
-    /* type_extension_table */ null,
-    /* name_method   */ null
-  ); 
+select acs_object_type__create_type (
+    'portal_datasource',
+    'Portal Data Source',
+    'Portal Data Sources',
+    'acs_object',
+    'PORTAL_DATASOURCES',
+    'DATASOURCE_ID',
+    'portal_datasource',
+    'f',
+    null,
+    null
+);
 
 -- datasource attributes
+select acs_attribute__create_attribute (
+    'portal_datasource',
+    'NAME',
+    'string',
+    'Name',
+    'Names',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_datasource', 
-    /* attribute_name */ 'NAME',  
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Name', 
-    /* pretty_plural  */ 'Names', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+select acs_attribute__create_attribute (
+    'portal_datasource',
+    'DESCRIPTION',
+    'string',
+    'Description',
+    'Descriptions',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_datasource', 
-    /* attribute_name */ 'DESCRIPTION',
-    /* datatype       */ 'string', 
-    /* pretty_name    */ 'Description', 
-    /* pretty_plural  */ 'Descriptions',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'  
-  ); 
-
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_datasource', 
-    /* attribute_name */ 'CONTENT', 
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Content', 
-    /* pretty_plural  */ 'Contents', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  );
-
-
+select acs_attribute__create_attribute (
+    'portal_datasource',
+    'CONTENT',
+    'string',
+    'Content',
+    'Contents',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
 -- portal_layouts
-  
 select  acs_object_type__create_type (
-    /* object_type   */ 'portal_layout',
-    /* pretty_name   */ 'Portal Layout',
-    /* pretty_plural */ 'Portal Layouts',
-    /* supertype     */ 'acs_object',
-    /* table_name    */ 'PORTAL_LAYOUTS',
-    /* id_column     */ 'LAYOUT_ID',
-    /* package_name  */ 'portal_layout',
-    /* abstract_p    */ 'f',
-    /* type_extension_table */ null,
-    /* name_method   */ null
-  );
-
+    'portal_layout',
+    'Portal Layout',
+    'Portal Layouts',
+    'acs_object',
+    'PORTAL_LAYOUTS',
+    'LAYOUT_ID',
+    'portal_layout',
+    'f',
+    null,
+    null
+);
 
 -- and its attributes
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_layout', 
-    /* attribute_name */ 'NAME',
-    /* datatype       */ 'string', 
-    /* pretty_name    */ 'Name', 
-    /* pretty_plural  */ 'Names', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
-
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_layout', 
-    /* attribute_name */ 'DESCRIPTION',
-    /* datatype       */ 'string', 
-    /* pretty_name    */ 'Description', 
-    /* pretty_plural  */ 'Descriptions', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
-
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_layout', 
-    /* attribute_name */ 'TYPE', 
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Type', 
-    /* pretty_plural  */ 'Types', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+select acs_attribute__create_attribute (
+    'portal_layout',
+    'NAME',
+    'string',
+    'Name',
+    'Names',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
 select acs_attribute__create_attribute (
-    /* object_type    */ 'portal_layout',
-    /* attribute_name */ 'FILENAME',
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Filename',
-    /* pretty_plural  */ 'Filenames',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+    'portal_layout',
+    'DESCRIPTION',
+    'string',
+    'Description',
+    'Descriptions',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
 select acs_attribute__create_attribute (
-    /* object_type    */ 'portal_layout',
-    /* attribute_name */ 'resource_dir',
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Resource Directory',
-    /* pretty_plural  */ 'Resource Directory',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+    'portal_layout',
+    'TYPE',
+    'string',
+    'Type',
+    'Types',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
--- portal_element_themes  
+select acs_attribute__create_attribute (
+    'portal_layout',
+    'FILENAME',
+    'string',
+    'Filename',
+    'Filenames',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
+
+select acs_attribute__create_attribute (
+    'portal_layout',
+    'resource_dir',
+    'string',
+    'Resource Directory',
+    'Resource Directory',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
+
+-- portal_element_themes
 select  acs_object_type__create_type (
-    /* object_type   */ 'portal_element_theme',
-    /* pretty_name   */ 'Portal Element Theme',
-    /* pretty_plural */ 'Portal Element Themes',
-    /* supertype     */ 'acs_object',
-    /* table_name    */ 'PORTAL_THEMES',
-    /* id_column     */ 'THEME_ID',
-    /* package_name  */ 'portal_themes',
-    /* abstract_p    */ 'f',
-    /* type_extension_table */ null,
-    /* name_method   */ null
-  );
+    'portal_element_theme',
+    'Portal Element Theme',
+    'Portal Element Themes',
+    'acs_object',
+    'PORTAL_THEMES',
+    'THEME_ID',
+    'portal_themes',
+    'f',
+    null,
+    null
+);
 
 -- and its attributes
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_element_theme', 
-    /* attribute_name */ 'NAME', 
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Name', 
-    /* pretty_plural  */ 'Names', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
-
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_element_theme', 
-    /* attribute_name */ 'DESCRIPTION', 
-    /* datatype       */ 'string', 
-    /* pretty_name    */ 'Description', 
-    /* pretty_plural  */ 'Descriptions',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
-
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal_element_theme', 
-    /* attribute_name */ 'TYPE', 
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Type', 
-    /* pretty_plural  */ 'Types', 
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+select acs_attribute__create_attribute (
+    'portal_element_theme',
+    'NAME',
+    'string',
+    'Name',
+    'Names',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
 select acs_attribute__create_attribute (
-    /* object_type    */ 'portal_element_theme',
-    /* attribute_name */ 'FILENAME',
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Filename',
-    /* pretty_plural  */ 'Filenames',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  ); 
+    'portal_element_theme',
+    'DESCRIPTION',
+    'string',
+    'Description',
+    'Descriptions',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
 select acs_attribute__create_attribute (
-    /* object_type    */ 'portal_element_theme',
-    /* attribute_name */ 'resource_dir',
-    /* datatype       */ 'string',
-    /* pretty_name    */ 'Resource Directory',
-    /* pretty_plural  */ 'Resource Directory',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  );
+    'portal_element_theme',
+    'TYPE',
+    'string',
+    'Type',
+    'Types',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
+select acs_attribute__create_attribute (
+    'portal_element_theme',
+    'FILENAME',
+    'string',
+    'Filename',
+    'Filenames',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
--- portal  
-select  acs_object_type__create_type ( 
-    /* object_type   */ 'portal', 
-    /* pretty_name   */ 'Portal', 
-    /* pretty_plural */ 'Portals', 
-    /* supertype     */ 'acs_object', 
-    /* table_name    */ 'PORTALS', 
-    /* id_column     */ 'PORTAL_ID',
-    /* package_name  */ 'portal',
-    /* abstract_p    */ 'f',
-    /* type_extension_table */ null,
-    /* name_method   */ null
-  ); 
+select acs_attribute__create_attribute (
+    'portal_element_theme',
+    'resource_dir',
+    'string',
+    'Resource Directory',
+    'Resource Directory',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
-select acs_attribute__create_attribute ( 
-    /* object_type    */ 'portal', 
-    /* attribute_name */ 'NAME', 
-    /* datatype       */ 'string', 
-    /* pretty_name    */ 'Name', 
-    /* pretty_plural  */ 'Names',
-    /* table_name     */ null,                
-    /* column_name    */ null,
-    /* default_value  */ null,
-    /* mix_n_values   */ 1,
-    /* max_n_values   */ 1,
-    /* sort_order     */ null,
-    /* storage        */ 'type_specific',
-    /* static_p       */ 'f'
-  );
+-- portal
+select  acs_object_type__create_type (
+    'portal',
+    'Portal',
+    'Portals',
+    'acs_object',
+    'PORTALS',
+    'PORTAL_ID',
+    'portal',
+    'f',
+    null,
+    null
+);
 
+select acs_attribute__create_attribute (
+    'portal',
+    'NAME',
+    'string',
+    'Name',
+    'Names',
+    null,
+    null,
+    null,
+    1,
+    1,
+    null,
+    'type_specific',
+    'f'
+);
 
--- portal_page  
-select acs_object_type__create_type (  
-    /* object_type   */ 'portal_page', 
-    /* pretty_name   */ 'Portal Page', 
-    /* pretty_plural */ 'Portal Pages',
-    /* supertype     */ 'acs_object', 
-    /* table_name    */ 'PORTAL_PAGES', 
-    /* id_column     */ 'page_id',
-    /* package_name  */ 'portal_page',
-    /* abstract_p    */ 'f',
-    /* type_extension_table */ null,
-    /* name_method   */ null
-  );
+-- portal_page
+select acs_object_type__create_type (
+    'portal_page',
+    'Portal Page',
+    'Portal Pages',
+    'acs_object',
+    'PORTAL_PAGES',
+    'page_id',
+    'portal_page',
+    'f',
+    null,
+    null
+);
