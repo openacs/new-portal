@@ -7,43 +7,11 @@
 -- $Id$
 --
 
--- populate the portal_mime_types table.
-insert
-    into portal_mime_types (name, pretty_name)
-    values ('text/html', 'HTML');
-
-insert
-    into portal_mime_types (name, pretty_name)
-    values ('text/plain', 'Plain Text');
-
-insert
-    into portal_mime_types (name, pretty_name)
-    values ('application/x-ats', 'ATS Template Ref');
-
--- populate the portal_data_types table.
---
--- the difference between tcl_proc and tcl_raw is that
--- it's possible to pass parameters to a procedure, so
--- element attributes can be sent to it.
-
-
--- the only datasource is the tcl proc, this is deprecated
-insert
-    into portal_data_types (name, pretty_name)
-    values ('tcl_proc', 'Tcl Procedure');
 
 -- ampersands break if I don't do this.
 set scan off
 
 -- Insert some default templates.
-
---- XXX fix directories 
---- layouts in www/layouts
---- ?? why /layouts/components? try to get rid of it
---- elements in www/elements
---- ds's in www/datasources
-
-
 declare
 	layout_id	portal_layouts.layout_id%TYPE;
 	theme_id	portal_element_themes.theme_id%TYPE;
@@ -97,11 +65,6 @@ begin
 		filename => 'themes/window-theme',
 		resource_dir => 'themes/window-theme');
 
--- used to just insert into portal_available_mime_type_map
-
---	portal_theme.add_type ( theme_id => theme_id, mime_type => 'text/html' );
---	portal_theme.add_type ( theme_id => theme_id, mime_type => 'text/plain' );
---	portal_theme.add_type ( theme_id => theme_id, mime_type => 'application/x-ats' );
 end;
 /
 
