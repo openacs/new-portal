@@ -860,15 +860,28 @@ namespace eval portal {
 	    ns_log notice "portal::render_element show callback Error! $errmsg"	
 	}
 
+	ns_log notice "aks18 [array get config]"
+
 	set element(name) \
 		[datasource_call \
 		$element(datasource_id) "GetPrettyName" [list]] 
 
+	ns_log notice "aks17 [array get config]"
+
 	set element(link) [datasource_call $element(datasource_id) "Link" [list]]
 
 	# done with callbacks, now set config params
+
+	ns_log notice "aks15 [array get config]"
+
 	set element(shadeable_p) $config(shadeable_p) 
+
+	ns_log notice "aks16"
+
 	set element(shaded_p) $config(shaded_p) 
+
+	ns_log notice "aks14"
+
 	set element(hideable_p) $config(hideable_p) 
 	set element(user_editable_p) $config(user_editable_p)
 
@@ -888,7 +901,8 @@ namespace eval portal {
 	@param return_url
     } {
 	
-	if { [db_0or1row configure_element_select "select portal_id 
+	if { [db_0or1row configure_element_select \
+		"select portal_id, datasource_id
 	from portal_element_map 
 	where element_id = :element_id"] } {
 	    # passed in element_id is good, do they have perms?
@@ -900,7 +914,45 @@ namespace eval portal {
 	
 	switch $op {
 	    "edit" { 
-		configure_element_params $element_id $op $return_url
+		
+		# Get the edit html by callback
+		# Notice that the "edit" proc takes only the element_id
+		set html_string [datasource_call $datasource_id "Edit" \
+			[list $element_id]]		
+
+		if { $html_string == ""  } { 
+		    ns_log Error "portal::configure_element op = edit, but
+		    portlet's edit proc returned null string"
+		    
+		    ad_returnredirect $return_url
+		}
+		
+		# Set up some template vars, including the form target
+		set master_template [ad_parameter master_template]
+		set target_stub \
+			[lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+		set action_string [append target_stub "-2"]
+
+		# the <include> sources /www/place-element.tcl
+		set template "	
+		<master src=\"@master_template@\">
+		<b><a href=@return_url@>Return to your portal</a></b>
+		<p>
+		<form action=@action_string@>
+		<b>Edit this element's parameters:</b>
+		<P>
+		@html_string@ 
+		<P>
+		</form>
+		"
+		set __adp_stub "[get_server_root][www_path]/."
+		set {master_template} \"master\" 
+		
+		set code [template::adp_compile -string $template]
+		set output [template::adp_eval code]
+		
+		return $output
+		
 	    }
 	    "shade" {  
 		set shaded_p [get_element_param $element_id "shaded_p"]
@@ -925,66 +977,7 @@ namespace eval portal {
 
 
 
-    ad_proc -public configure_element_params { element_id op return_url } {
-	Get the html from from the element's edit proc
 
-	@return_url
-	@return An element configuration page	
-    } {
-	# Do perms by looking up the portal_id for this element
-	if {[db_0or1row configure_e_p_portal_select "
-	select portal_id 
-	from portal_element_map 
-	where element_id = :element_id"]} {
-	    ad_require_permission $portal_id portal_read_portal
-	    ad_require_permission $portal_id portal_edit_portal
-	} else {
-	    # no portal_id for this element
-	    ad_return_complaint 1 "portal:: configure_element_params\n
-	    This element_id has no portal associated with it!"
-	}
-
-	# Get the edit proc name - to be replaced with acs-sc soon - XXX
-	db_1row evaluate_element_datasource_select "
-	select edit_content
-	from portal_element_map pem, portal_datasources pd
-	where pem.element_id = :element_id
-	and pem.datasource_id = pd.datasource_id"
-
-	if { $edit_content == ""  } { 
-	    ad_return_complaint 1 "This element cannot be edited yet. Sorry"
-	}
-
-	# Get the chunk of html from the PE
-	set html [$edit_content $element_id]
-
-	# Set up some template vars, including the form target
-	set master_template [ad_parameter master_template]
-	set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-	set action_string [append target_stub "-2"]
-
-	# the <include> sources /www/place-element.tcl
-	set template "	
-	<master src=\"@master_template@\">
-	<b><a href=@return_url@>Return to your portal</a></b>
-	<p>
-	<form action=@action_string@>
-	<b>Edit this element's parameters:</b>
-	<P>
-	@html@ 
-	<P>
-	</form>
-	"
-	# This hack is to work around the acs-templating system
-	# ad_return_complaint 1 "foo"
-
-	set __adp_stub "[get_server_root][www_path]/."
-	set {master_template} \"master\" 
-	
-	set code [template::adp_compile -string $template]
-	set output [template::adp_eval code]
-	
-	return $output
     }
 
     
