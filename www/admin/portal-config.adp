@@ -32,16 +32,3 @@
 <include src="/packages/static-portlet/www/static-admin-portlet" package_id="@portal_id@" template_portal_id="@portal_id@" return_url="@return_url@">
 
 
-<a name="revert"> </a><h2>Revert</h2>
-
-<form name="op_revert" method=post action=revert-portal>
-	<input type=hidden name=referer value=@return_url@>
-	<input type=hidden name=portal_id value=@portal_id@>
-
-	Revert to the default portal arrangement.
-
-<center>
-<input type=submit name="op_revert" value="Revert">
-</form></center>
-
-</if>

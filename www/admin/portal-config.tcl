@@ -34,8 +34,13 @@ set rendered_page [portal::configure \
         -template_p f \
         $portal_id ""
 ]
-
-
 set name [portal::get_name $portal_id]
 set return_url "$page_url?portal_id=$portal_id"
+
+
+
+
+
+
+
 
