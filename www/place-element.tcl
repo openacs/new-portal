@@ -74,5 +74,8 @@ db_foreach hidden_elements {
     append show_html "<option value=$element_id>$name</option>\n"
 }
 
+
+set dir "[portal::mount_point]/place-element-components"
+
 append show_html ""
         
