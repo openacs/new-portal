@@ -24,7 +24,7 @@ namespace eval portal {
             portal_layouts where
             name = $layout_name "
 	
-    # insert the portal and grant permission on it.    
+    # insert the portal and grant user-level permission on it.    
     return [ db_exec_plsql insert_portal {
 	begin
 	    
@@ -36,19 +36,13 @@ namespace eval portal {
 	acs_permission.grant_permission ( 
 	object_id => :1,
 	grantee_id => :user_id,
-	privilege => 'read' 
+	privilege => 'portal_read_portal' 
 	);
 	
 	acs_permission.grant_permission ( 
 	object_id => :1,
 	grantee_id => :user_id,
-	privilege => 'write'
-	);
-	    
-	acs_permission.grant_permission ( 
-	object_id => :1,
-	grantee_id => :user_id,
-	privilege => 'admin'
+	privilege => 'portal_edit_portal'
 	);
 	end;
     }]
@@ -212,10 +206,9 @@ ad_proc -public render { portal_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-    set user_id [ad_conn user_id]
-    #set admin_p [ad_permission_p $package_id admin]
-    #set write_p [ad_permission_p $package_id write]
-    #set read_p [ad_permission_p $package_id read]
+    
+    ad_require_permission $portal_id read
+    set edit_p [ad_permission_p $portal_id portal_edit_portal]
     set master_template [ad_parameter master_template]
     set css_path [ad_parameter css_path]
    
