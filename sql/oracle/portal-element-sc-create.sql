@@ -1,6 +1,4 @@
-
---
--- The portal element (aka portlet or PE) contract
+-- The data source (portlet) contract
 -- copyright 2001, OpenForce, Inc.
 -- distributed under the GNU GPL v2
 --
@@ -10,15 +8,13 @@
 -- started November, 2001
 --
 
--- This is the service contract for PEs
-
 declare
 	sc_dotlrn_contract integer;
 	foo integer;
 begin
 	sc_dotlrn_contract := acs_sc_contract.new (
-		  contract_name => 'portal_element',
-		  contract_desc => 'Portal Element interface'
+		  contract_name => 'portal_datasource',
+		  contract_desc => 'Portal Datasource interface'
 	);
 
 	-- Get my name - not to be confused with the pretty_name
@@ -41,7 +37,6 @@ begin
 		  'portal_element.MyName.InputType',
 		  'portal_element.MyName.OutputType'
 	);
-
 
 	-- Get a pretty name
 	foo := acs_sc_msg_type.new (
@@ -67,9 +62,10 @@ begin
 
 	-- Tell the portal element  to add itself to a portal page
 	-- add_self_to_page
+	-- The "args" string is an ns_set of extra arguments 
 	foo := acs_sc_msg_type.new(
 		  msg_type_name => 'portal_element.AddSelfToPage.InputType',
-		  msg_type_spec => 'page_id:integer,instance_id:integer'
+		  msg_type_spec => 'page_id:integer,instance_id:integer,args:string'
 	);
 
 	foo := acs_sc_msg_type.new(
@@ -82,7 +78,7 @@ begin
 		  'AddSelfToPage',
 		  'Tells the given portal element to add itself to the given page',
 		  'f', -- not cacheable
-		  2,   -- n_args
+		  3,   -- n_args
 		  'portal_element.AddSelfToPage.InputType',
 		  'portal_element.AddSelfToPage.OutputType'
 	);
