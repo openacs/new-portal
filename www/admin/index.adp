@@ -30,8 +30,8 @@ Portals in the system:
 <else>
   <ul>
     <multiple name=users_portals>
-      <li><a href="portal-show.tcl?portal_id=@users_portals.portal_id@">@users_portals.name@</a> 
-      <small>[<a href="portal-config?portal_id=@users_portals.portal_id@">edit</a>]</li></small>
+      <li><a href="portal-show.tcl?portal_id=@users_portals.portal_id@&referer=index">@users_portals.name@</a> 
+      <small>[<a href="portal-config?portal_id=@users_portals.portal_id@&referer=index">edit</a>]</li></small>
     </multiple>
   </ul>
 </else>
