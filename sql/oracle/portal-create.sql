@@ -8,5 +8,7 @@
 -- $Id$
 --
 
-@portal-core-create.sql
-@objects-create.sql
+@@ portal-core-create.sql
+@@ objects-create.sql
+@@ api-create
+@@ defaults
