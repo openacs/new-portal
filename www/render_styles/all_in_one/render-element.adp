@@ -10,6 +10,6 @@
 <property name="hide_links_p">@hide_links_p@</property>
 
 <ul>
-<li>@element.name@
+<li><b>@element.name@</b><br>
 @element.content@
 </ul>
