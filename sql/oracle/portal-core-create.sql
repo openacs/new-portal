@@ -125,8 +125,9 @@ create table portal_element_themes (
 -- **** Portals ****
 
 -- Portals are essentially "containers" for PEs that bind to DSs.
--- XXX Can parties have portals? Restrict to party check? 
--- Roles and perms issues? package_id?
+-- Parties have, optionally have portals 
+-- Restrict to party check? 
+-- Roles and perms issues? 
 create table portals (
 	portal_id	 	constraint p_portal_id_fk
 				references acs_objects(object_id)
@@ -137,7 +138,7 @@ create table portals (
 				references portal_layouts
 				not null,
 	owner_id		constraint p_owner_id_fk
-				references persons(person_id)
+				references parties(party_id)
 				on delete cascade
 );
 
