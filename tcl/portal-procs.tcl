@@ -1790,8 +1790,7 @@ namespace eval portal {
         if {[db_0or1row select {}]} {
             return $datasource_id
         } else {
-            ns_log error "portal::get_datasource_id error! No datasource
-            by that name found!"
+            ns_log error "portal::get_datasource_id error! No datasource by that name found!"
             ad_return_complaint 1 "portal::get_datasource_id error! No datasource
             by that name found!"
         }
