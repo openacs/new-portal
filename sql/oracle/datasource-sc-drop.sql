@@ -31,33 +31,33 @@ declare
 	op_id integer;
 begin
 	
-	-- drop MyName
+	-- drop GetMyName
 	  op_id := acs_sc_operation.get_id (
 		  contract_name => 'portal_datasource',
-		  operation_name => 'MyName'
+		  operation_name => 'GetMyName'
 	  );
 	  
 	  acs_sc_operation.delete (
 		  operation_id => op_id,
 		  contract_name => 'portal_datasource',
-		  operation_name => 'MyName'
+		  operation_name => 'GetMyName'
 	  );
 
 	  msg_type_id := acs_sc_msg_type.get_id (
-		  msg_type_name => 'portal_datasource.MyName.InputType'
+		  msg_type_name => 'portal_datasource.GetMyName.InputType'
 	  );
 
 	  acs_sc_msg_type.delete (
-		  msg_type_name => 'portal_datasource.MyName.InputType',
+		  msg_type_name => 'portal_datasource.GetMyName.InputType',
 		  msg_type_id => msg_type_id
 	  );
 
 	  msg_type_id := acs_sc_msg_type.get_id (
-		  msg_type_name => 'portal_datasource.MyName.OutputType'
+		  msg_type_name => 'portal_datasource.GetMyName.OutputType'
 	  );
 
 	  acs_sc_msg_type.delete (
-		  msg_type_name => 'portal_datasource.MyName.OutputType',
+		  msg_type_name => 'portal_datasource.GetMyName.OutputType',
 		  msg_type_id => msg_type_id
 	  );
 
