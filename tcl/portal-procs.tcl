@@ -183,14 +183,14 @@ namespace eval portal {
 	    set template "<master src=\"@master_template@\">
 	    <property name=\"title\">@portal.name@</property>"
 	} else {
-	    set element_src "[www_path]/render-element"
-	    set template "<master src=\"@master_template@\">
-	    <property name=\"title\">@portal.name@</property>
-	    <include src=\"@portal.layout_template@\" 
-	    element_list=\"@element_list@\"
-	    element_src=\"@element_src@\"
-	    theme_id=@portal.theme_id@
-	    portal_id=@portal.portal_id@
+            set element_src "[www_path]/render_styles/${render_style}/render-element"
+            set template "<master src=\"@master_template@\">
+            <property name=\"title\">@portal.name@</property>
+            <include src=\"@portal.layout_template@\" 
+            element_list=\"@element_list@\"
+            element_src=\"@element_src@\"
+            theme_id=@portal.theme_id@
+            portal_id=@portal.portal_id@
             hide_links_p=@hide_links_p@>"
 	}
 	
@@ -825,6 +825,64 @@ namespace eval portal {
 	set element(filename) "[www_path]/$element(filename)"
         # notice no "/" after mount point
 	set element(resource_dir) "[mount_point]$element(resource_dir)"
+
+	return [array get element]
+    }
+
+
+    ad_proc -private evaluate_element_raw { element_id } {
+        Just call show on the element
+	
+	@param element_id
+	@return A string containing the fully-rendered content for $element_id.
+    } {
+
+	# get the element data and theme
+	db_1row element_select {} -column_array element 
+
+	# get the element's params
+	db_foreach params_select {} {
+	    lappend config($key) $value
+	} if_no_rows {
+	    # this element has no config, set up some defaults
+	    set config(shaded_p) "f"
+	    set config(shadeable_p) "f"
+	    set config(hideable_p) "f"
+	    set config(user_editable_p) "f"
+	    set config(link_hideable_p) "f"
+	}
+	
+	# do the callback for the ::show proc
+	# evaulate the datasource.
+	if { [catch {	set element(content) \
+		[datasource_call \
+		$element(datasource_id) "Show" [list [array get config] ]] } \
+		errmsg ] } {
+	    ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"	
+            ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
+	}
+
+	set element(name) \
+		[datasource_call \
+		$element(datasource_id) "GetPrettyName" [list]] 
+
+	set element(link) \
+                [datasource_call $element(datasource_id) "Link" [list]]
+
+	# done with callbacks, now set config params
+	set element(shadeable_p) $config(shadeable_p) 
+	set element(shaded_p) $config(shaded_p) 
+	set element(hideable_p) $config(hideable_p) 
+	set element(user_editable_p) $config(user_editable_p)
+	set element(link_hideable_p) $config(link_hideable_p)
+
+        # THE HACK - BEN OVERRIDES TO RAW
+        set element(filename) "themes/raw-theme"
+
+	# apply the path hack to the filename and the resourcedir
+	set element(filename) "[www_path]/$element(filename)"
+        # notice no "/" after mount point
+	# set element(resource_dir) "[mount_point]$element(resource_dir)"
 
 	return [array get element]
     }

@@ -360,6 +360,24 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::evaluate_element_raw.element_select">      
+  <querytext>
+    select pem.element_id,
+    pem.datasource_id,
+    pem.state
+    from portal_element_map pem
+    where pem.element_id = :element_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::evaluate_element_raw.params_select">      
+  <querytext>
+    select key, value
+    from portal_element_parameters
+    where element_id = :element_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::configure_element.select">      
   <querytext>
     select portal_id, datasource_id
