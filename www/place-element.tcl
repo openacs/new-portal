@@ -43,6 +43,7 @@ db_1row select_all_noimm_count \
 from portal_element_map
 where
 portal_id = :portal_id
+and state != 'hidden'
 and region not like 'i%'"
 
 # Set up the form target
