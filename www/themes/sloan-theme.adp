@@ -1,8 +1,8 @@
 <%
 
     #
-    #  Copyright (C) 2001, 2002 OpenForce, Inc.
-    #
+   #  Copyright (C) 2001, 2002 MIT
+   #
     #  This file is part of dotLRN.
     #
     #  dotLRN is free software; you can redistribute it and/or modify it under the
