@@ -41,6 +41,8 @@ if { $mode == "add" } {
 # element_ids to add elements to which he doesn't have access to his
 # portal, isn't an issue since permission on the elements must be
 # checked every time they're loaded anyway.
+#
+# - AKS: we are not going the route above.
 set element_id_list [join $element_ids ","]
 
 if { $mode == "remove" && ! [empty_string_p $element_id_list] } {
@@ -71,8 +73,25 @@ if { $mode == "move" && ! [empty_string_p $element_id_list] } {
 	#
 	# in case you're wondering, the second subselect causes rownums to
 	# be assigned _after_ the order by is applied.
-	db_exec_plsql move_elements_insert ""	
-	db_dml move_elements_delete ""
+
+	# XXX - AKS - I'm baffled here
+	db_exec_plsql move_elements_insert "
+	begin
+	insert into portal_element_map (sort_key, region, portal_id, element_id)
+	    select
+	        nvl((select max(sort_key) 
+	             from portal_element_map 
+	             where region = :region)
+	        , 1) + rownum, 
+	        :region, 
+	        :portal_id, 
+	        element_id
+	     from (select element_id 
+	           from portal_element_map m 
+	           where $where 
+	           order by region,sort_key)
+	end;"	
+	db_dml move_elements_delete "delete from portal_element_map m where $where"
     }
 }
 
