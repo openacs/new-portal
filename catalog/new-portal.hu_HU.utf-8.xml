@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="0.2d1" locale="hu_HU" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.0.3" locale="hu_HU" charset="utf-8">
 
+  <msg key="Add_Page">Oldal hozzáadása</msg>
+  <msg key="Create_a_new_page">Új oldal készítése</msg>
+  <msg key="Go_back">Vissza</msg>
+  <msg key="Move_to_page">Áttesz erre az oldalra</msg>
+  <msg key="Page">Oldal</msg>
   <msg key="Page_1">Oldal:</msg>
+  <msg key="Rename_Page">Oldal átnevezése</msg>
+  <msg key="Revert">Visszaállítás</msg>
 </message_catalog>
