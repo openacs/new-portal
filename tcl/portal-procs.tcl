@@ -130,18 +130,16 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     :region,  
     nvl((select max(sort_key) + 1 from portal_element_map where region = :region), 1))" 
 	
-    db_foreach get_def_params "
-    select config_required_p, configured_p, key, value
-    from portal_datasource_def_params
-    where datasource_id = :ds_id" {
-	set new_param_id [db_nextval acs_object_id_seq]
-	db_dml insert_into_params "
-	insert into portal_element_parameters
-	(parameter_id, element_id, config_required_p, configured_p, key, value)
-	values
-	(:new_param_id, :new_element_id, :config_required_p, :configured_p, :key, :value)"
-    }
-
+    db_dml insert_into_params "
+    insert into portal_element_parameters
+    (parameter_id, element_id, config_required_p, configured_p, key, value)
+    select acs_object_id_seq.nextval, 
+    :new_element_id, 
+    config_required_p, 
+    configured_p, 
+    key, 
+    value
+    from portal_datasource_def_params where datasource_id= :ds_id"
     # The caller must now set the necessary params or else!
     return $new_element_id
 }
