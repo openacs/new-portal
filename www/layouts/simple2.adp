@@ -29,11 +29,12 @@
           action_string=@action_string@ 
           theme_id=@theme_id@ 
           region="1"
-           portal_id=@portal_id@ 
-           return_url=@return_url@ 
-           hide_links_p=@hide_links_p@ 
-           page_id=@page_id@ 
-           layout_id=@layout_id@><br>
+          portal_id=@portal_id@ 
+          edit_p=@edit_p@
+          return_url=@return_url@ 
+          hide_links_p=@hide_links_p@ 
+          page_id=@page_id@ 
+          layout_id=@layout_id@><br>
         </list>
       </td>
       <td valign=top width="50%">
@@ -44,6 +45,7 @@
           theme_id=@theme_id@ 
           region="2" 
           portal_id=@portal_id@ 
+          edit_p=@edit_p@
           return_url=@return_url@ 
           hide_links_p=@hide_links_p@ 
           page_id=@page_id@ 

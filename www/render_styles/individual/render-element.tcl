@@ -26,7 +26,10 @@ ad_page_contract {
     region:onevalue
 }
 
-if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] }  errmsg ]  } { 
+# we get element_id, action_string, theme_id, region, portal_id,
+# edit_p, return_url, hide_links_p, page_id, and layout_id from the layout_template
+
+if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -edit_p $edit_p $element_id $theme_id] }  errmsg ]  } { 
     # An uncaught error happened when trying to evaluate the element.
     # If the error is in the element's "show" proc, the error will
     # be shown in the content of the portlet. This is for errors other

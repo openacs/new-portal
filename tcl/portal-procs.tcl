@@ -31,15 +31,20 @@ namespace eval portal {
     #
 
     ad_proc -public datasource_call {
+        {-datasource_name ""}
         ds_id
         op
         list_args
     } {
         Call a particular ds op
     } {
-        ns_log notice "portal::datasource_call op= $op ds_id = $ds_id"
-        return [acs_sc_call \
-                portal_datasource $op $list_args [get_datasource_name $ds_id]]
+        if {[empty_string_p $datasource_name]} {
+            set datasource_name [get_datasource_name $ds_id]
+        }
+        
+        ns_log notice "portal::datasource_call op=$op ds_id=$ds_id ds_name=$datasource_name"
+        
+        return [acs_sc_call portal_datasource $op $list_args $datasource_name]
     }
 
     ad_proc -public list_datasources {
@@ -229,12 +234,10 @@ namespace eval portal {
         @return Fully rendered portal as an html string
         @param portal_id
     } {
-
         ad_require_permission $portal_id portal_read_portal
-
         set edit_p [ad_permission_p $portal_id portal_edit_portal]
+
         set master_template [ad_parameter master_template]
-        set css_path [ad_parameter css_path]
 
         # if no page_num set, render page 0
         if {[empty_string_p $page_id] && [empty_string_p $page_num]} {
@@ -273,8 +276,10 @@ namespace eval portal {
             element_src=\"@element_src@\"
             theme_id=@portal.theme_id@
             portal_id=@portal.portal_id@
+            edit_p=@edit_p@
             hide_links_p=@hide_links_p@
-            page_id=@page_id@ layout_id=@portal.layout_id@>"
+            page_id=@page_id@ 
+            layout_id=@portal.layout_id@>"
         }
 
         # Necessary hack to work around the acs-templating system
@@ -1114,13 +1119,15 @@ namespace eval portal {
         }
     }
 
-    ad_proc -private evaluate_element { element_id theme_id } {
+    ad_proc -private evaluate_element { 
+        {-portal_id:required}
+        {-edit_p:required}
+        element_id
+        theme_id 
+    } {
         Combine the datasource, template, etc.  Return a chunk of HTML.
 
-        @param element_id
-        @param theme_id
         @return A string containing the fully-rendered content for $element_id.
-        @param element_id 
     } {
 
         # get the element data and theme
@@ -1138,11 +1145,7 @@ namespace eval portal {
             set config(link_hideable_p) "f"
         }
 
-        # If user has no permissions to edit this portal, cancel out
-        # some of the config parameters
-        set portal_id [db_string select_portal_id {}]
-
-        if {![ad_permission_p $portal_id portal_edit_portal]} {
+        if {!$edit_p} {
             set config(shadeable_p) "f"
             set config(hideable_p) "f"
             set config(user_editable_p) "f"
@@ -1156,6 +1159,7 @@ namespace eval portal {
         # evaulate the datasource.
         if { [catch { set element(content) \
                         [datasource_call \
+                          -datasource_name $element(ds_name) \
                           $element(datasource_id) \
                           "Show" \
                           [list [array get config]]
@@ -1165,7 +1169,7 @@ namespace eval portal {
              ] \
             } {
         
-        ns_log error "aks86 *** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+        ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
         
         set element(content)  " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n" 

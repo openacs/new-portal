@@ -30,6 +30,7 @@
           theme_id=@theme_id@ 
           region="1" 
           portal_id=@portal_id@ 
+          edit_p=@edit_p@
           return_url=@return_url@ 
           hide_links_p=@hide_links_p@
           page_id=@page_id@ 
