@@ -31,28 +31,30 @@
 
 <p align=left>
 
-<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide this element</a>
+Action: <a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide this element</a>
 
 <BR>
 
 <if @state@ ne "locked">
-Moveable: unlocked (set lock)
+Locked? unlocked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@">set lock</a>)
 </if>
-<else>Moveable: locked (unlock)
+<else>Locked? locked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@">unlock</a>)
 </else>
 
 <BR>
 
 <if @hideable_p@ eq "t">
-Hideable: (set unhideable)
+Hideable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@">don't allow hiding</a>)
 </if>
-<else>Not hideable: (set hideable)
+<else>Hideable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@">allow hiding</a>)
 </else>
 
+<BR>
+
 <if @shadeable_p@ eq "t">
-Shadeable: (set un-shadeable)
+Shadeable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@">don't allow shading</a>)
 </if>
-<else>Not shadeable: (set shadeable)
+<else>Shadeable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@">allow shading</a>)
 </else>
 
 <br>
