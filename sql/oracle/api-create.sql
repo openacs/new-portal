@@ -179,8 +179,13 @@ as
 		);
 
                 if template_id is null then	       
-                   select max(theme_id) into v_theme_id from portal_element_themes;
 
+                   if portal.new.theme_id is null then
+                      select max(theme_id) into v_theme_id from portal_element_themes;
+                   else 
+                        v_theme_id := portal.new.theme_id;
+                   end if;
+                   
                    if layout_id is null then
                      select min(layout_id) into v_layout_id from portal_layouts;
                    else 

@@ -81,12 +81,11 @@
 
 <fullquery name="portal::configure.portal_select">      
   <querytext>
-    select  p.name, pcp.portal_id, pp.layout_id, pl.filename as template
-    from portals p, portal_current_page pcp, portal_layouts pl, portal_pages pp
-    where pcp.page_id = :page_id
-    and pcp.portal_id = :portal_id
-    and p.portal_id = pcp.portal_id
-    and pp.page_id = pcp.page_id
+    select  p.name, p.portal_id,  pl.filename as template, pp.pretty_name as page_name
+    from portals p, portal_layouts pl, portal_pages pp
+    where  pp.portal_id = :portal_id
+    and pp.page_id = :page_id
+    and pp.portal_id = p.portal_id
     and pl.layout_id = pp.layout_id
   </querytext>
 </fullquery> 
@@ -532,6 +531,13 @@
     select 1 from portals where portal_id = :portal_id
   </querytext>
 </fullquery> 
+
+<fullquery name="portal::get_theme_id_from_name.get_theme_id_from_name_select">      
+  <querytext>
+    select theme_id from portal_element_themes where name = :theme_name
+  </querytext>
+</fullquery> 
+
 
 
 </queryset>

@@ -52,6 +52,12 @@
 </select><input type=submit name="op" value="Show Here">
 </if>
 
+<if @other_page_avail_p@ ne 0>
+<br>
+@other_page_html@
+</select><input type=submit name="op" value="Show On Other Page">
+</if>
+
 </td>
 </tr>
 </table>

@@ -97,6 +97,7 @@ namespace eval portal {
 	{-template_id ""} 
 	{-portal_template_p "f"} 
 	{-layout_name ""}
+        {-theme_name ""}
 	{-default_page_name ""}
 	{-context_id ""} 
 	user_id 
@@ -113,6 +114,14 @@ namespace eval portal {
         } else {
             set layout_id [get_layout_id]
         }
+
+        # get the default theme name from param, if no theme given
+        if {[empty_string_p $theme_name]} {
+            set theme_name [ad_parameter default_theme_name]
+        } 
+
+        set theme_id [get_theme_id_from_name -theme_name $theme_name]
+
 
 	return [db_exec_plsql create_new_portal_and_perms {}]
     }
@@ -274,6 +283,8 @@ namespace eval portal {
     } {
 	Return a portal or portal template configuration page. 
 	All form targets point to file_stub-2.
+
+        XXX BRUTALLY REFACTOR ME
     
 	@param page_num the page of the portal to config, def 0
 	@param template_p is this portal a template?
@@ -281,12 +292,6 @@ namespace eval portal {
 	@return_url
 	@return A portal configuration page	
     } {
-
-        # if no page_id set, render current
-        if {[empty_string_p $page_id]} {
-            set page_id [get_current_page -portal_id $portal_id]
-        }
-
 	if { $template_p == "f" } {
             ad_require_permission $portal_id portal_read_portal
             ad_require_permission $portal_id portal_edit_portal
@@ -328,29 +333,19 @@ namespace eval portal {
         <input type=text name=pretty_name value=\"Page $new_page_num\">
         <input type=submit name=op value=\"Add Page\">"
 	    
-        # get the portal.	    
-        db_1row portal_select {} -column_array portal
 
         # XXXX page support 
-
-        # fake some elements for the <list> in the template 
-        set layout_id [get_layout_id -page_id $page_id $portal_id]
-
-        db_foreach get_regions {}  {
-            lappend fake_element_ids($region) $portal_id
-        }
-
-        set element_list [array get fake_element_ids]
-
         if { $template_p == "f" } {
             set element_src "[portal::www_path]/place-element"
         }  else {
             set element_src "[portal::www_path]/template-place-element"
         }
         
+        set portal_name [get_name $portal_id]
+
         set template "	
         <master src=\"@master_template@\">
-        <b>Configuring @portal.name@</b>
+        <b>Configuring @portal_name@</b>
         <p>
         <a href=@return_url@>Go back</a>
         <P>
@@ -366,13 +361,54 @@ namespace eval portal {
         <b>Add a new page:</b> 
         @page_data@
         </form>
-        <P>
-        <b>Configure The Portal's Elements:</b>
-        <include src=\"@portal.template@\" element_list=\"@element_list@\" 
-        action_string=@action_string@ portal_id=@portal_id@
-        return_url=\"@return_url@\" element_src=\"@element_src@\"
-        hide_links_p=f page_id=@page_id@ layout_id=@layout_id@>
-        "
+        <P>"
+
+        set list_of_page_ids [list $page_id]
+
+        if {[empty_string_p $page_id]} {
+            set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
+        }
+
+        foreach page_id $list_of_page_ids {
+
+            # get the portal.	    
+            db_1row portal_select {} -column_array portal
+
+            # get the numer of elements in this region
+            set element_count [db_string portal_element_count_select "
+            select count(*) 
+            from portal_element_map
+            where page_id = :page_id"]
+                            
+
+            # fake some elements for the <list> in the template 
+            set layout_id [get_layout_id -page_id $page_id $portal_id]
+            
+            db_foreach get_regions {}  {
+                lappend fake_element_ids($region) $portal_id
+            }
+            
+            set element_list [array get fake_element_ids]
+            
+            if {$element_count == 0} {
+                append template "
+                <b>Page $portal(page_name) has no Elements</b><P>"
+            } else {
+                append template "
+                <b>Configure Page $portal(page_name)'s Elements
+                <P>
+                Debug: element_list $element_list, layout_id $layout_id
+                <P>
+                :</b>
+                <include src=\"$portal(template)\" element_list=\"$element_list\" 
+                action_string=@action_string@ portal_id=@portal_id@
+                return_url=\"@return_url@\" element_src=\"@element_src@\"
+                hide_links_p=f page_id=$page_id layout_id=$layout_id>
+                "
+            }
+        }
+
+
 	# This hack is to work around the acs-templating system
 	set __adp_stub "[get_server_root][www_path]/."
 	set {master_template} \"master\" 
@@ -617,6 +653,7 @@ namespace eval portal {
     }
 
     ad_proc -public page_create {
+        {-layout_name ""}
         {-pretty_name:required}
         {-portal_id:required}
     } {
@@ -625,7 +662,13 @@ namespace eval portal {
 	@return the id of the page
 	@param portal_id 
     } {
-        set layout_id [get_layout_id]
+        # get the layout_id
+        if {![empty_string_p $layout_name]} {
+            set layout_id [get_layout_id -layout_name $layout_name]
+        } else {
+            set layout_id [get_layout_id]
+        }
+
         return [db_exec_plsql page_create_insert {}]
     }
 
@@ -750,15 +793,12 @@ namespace eval portal {
             set min_region 0
 
             foreach region $region_list {
-            ns_log notice "aks40 $region / $force_region"
                 if {$force_region == $region} {
                     set min_region $region
                     break
                 }
             }
             
-            ns_log notice "aks40 min region $min_region"
-
             if {$min_region == 0} {
                 # the region asked for was not in the list
                 ns_log error "portal::add_element region $force_region not in layout $layout_id"
@@ -1466,5 +1506,20 @@ namespace eval portal {
             return $output
         }
     }
+
+    ad_proc -public get_theme_id_from_name { 
+        {-theme_name:required}
+    } {
+        self explanatory
+    } {
+	if { [db_0or1row get_theme_id_from_name_select {} ]} { 
+	    return $theme_id
+	} else { 
+            ns_log error "portal::get_theme_id_from_name_select bad theme_id!"
+            ad_return_complaint 1 "portal::get_theme_id_from_name_select bad theme_id!"
+	}
+        
+    }
+
 
 }
