@@ -14,13 +14,14 @@
 #  details.
 #
 
-# www/templates/simple2.tcl
+# new-portal/www/layouts/simple2.tcl
+
 ad_page_contract {
     This is a simple 2 column layout called from portal::render and the like. 
     It laysout the elements with portal::layout_elements and hands off rendering
-    of hte individual portlets to the template in the "element_src" var
+    of the individual portlets to the template in the "element_src" var
 
-    @cvs_id $Id$
+    @version $Id$
 } -properties {
     element_list:onevalue
     element_src:onevalue
@@ -29,15 +30,15 @@ ad_page_contract {
     return_url:onevalue
 }
 
-if { ![info exists action_string]} {
+if {![exists_and_not_null action_string]} {
     set action_string ""
 }
 
-if { ![info exists theme_id]} {
+if {![exists_and_not_null theme_id]} {
     set theme_id ""
 }
 
-if { ![info exists return_url]} {
+if {![exists_and_not_null return_url]} {
     set return_url ""
 }
 

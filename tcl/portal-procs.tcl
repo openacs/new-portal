@@ -21,7 +21,7 @@ ad_library {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date Sept 2001
-    @cvs-id $Id$
+    @version $Id$
 }
 
 namespace eval portal {
