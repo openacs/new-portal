@@ -86,14 +86,14 @@ begin
 -- Now, some element themes.
 
 	theme_id := portal_element_theme.new (
-		name => 'Simple table-based element theme',
-		description => 'A simple element theme.',
+		name => 'simple',
+		description => 'A simple red box theme',
 		filename => 'themes/simple-theme',
-		resource_dir => 'themes/simple-theme/simple-theme');
+		resource_dir => 'themes/simple-theme');
 
 	theme_id := portal_element_theme.new (
-		name => 'Funky theme with icons',
-		description => 'Funky theme with icons',
+		name => 'window',
+		description => 'An Art Deco-esque theme',
 		filename => 'themes/window-theme',
 		resource_dir => 'themes/window-theme');
 
