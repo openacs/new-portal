@@ -351,7 +351,7 @@ namespace eval portal {
         Return a portal or portal template configuration page. 
         All form targets point to file_stub-2.
 
-        XXX BRUTALLY REFACTOR ME
+        XXX REFACTOR ME
 
         @param page_num the page of the portal to config, def 0
         @param template_p is this portal a template?
@@ -359,19 +359,16 @@ namespace eval portal {
         @return_url
         @return A portal configuration page        
     } {
-        if { $template_p == "f" } {
-            ad_require_permission $portal_id portal_read_portal
-            ad_require_permission $portal_id portal_edit_portal
-        } else {
-            ad_require_permission $portal_id portal_admin_portal
-        }
+        set edit_p [permission::permission_p -object_id $portal_id -privilege portal_edit_portal]
 
+        if {!$edit_p} {
+            ad_require_permission $portal_id portal_admin_portal
+            set edit_p 1
+        }
 
         # Set up some template vars, including the form target
         set master_template [ad_parameter master_template]
-        set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-        set action_string [append target_stub "-2"]
-        set name [get_name $portal_id]
+        set action_string [generate_action_string]
 
         # get the themes, template::multirow is not working here
         set theme_count 0
@@ -459,7 +456,7 @@ namespace eval portal {
                 <include src=\"$portal(template)\" element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
-                hide_links_p=f page_id=$page_id layout_id=$layout_id>
+                hide_links_p=f page_id=$page_id layout_id=$layout_id edit_p=@edit_p@>
                 "
             }
 
@@ -1300,9 +1297,7 @@ namespace eval portal {
 
                 # Set up some template vars, including the form target
                 set master_template [ad_parameter master_template]
-                set target_stub \
-                        [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-                set action_string [append target_stub "-2"]
+                set action_string [generate_action_string]
 
                 # the <include> sources /www/place-element.tcl
                 set template "        
@@ -1419,11 +1414,27 @@ namespace eval portal {
     # Misc procs
     #
 
+    ad_proc -private generate_action_string {
+    } {
+        Portal configuration pages need this to set up 
+        the target for the generated links. It's just the 
+        current location with "-2" appended to the name of the
+        page.
+    } {
+        return "[lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]-2"
+    }
+
     ad_proc -private get_element_ids_by_ds {portal_id ds_name} {
         Get element IDs for a particular portal and a datasource name
     } {
         set ds_id [get_datasource_id $ds_name]
         return [db_list select {}]
+    }
+
+    ad_proc -private get_layout_region_count { 
+        {-layout_id:required}
+    } {
+        return [db_1row select_region_count {}]
     }
 
     ad_proc -private get_layout_id { 

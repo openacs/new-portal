@@ -34,6 +34,8 @@
 
 <br>
 
+<!-- refactor with other? -->
+
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
         <a href="@target_stub@-2?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&sort_key=@element_multi.sort_key@&direction=up&return_url=@return_url@"><img border=0 src="@dir@/arrow-up.gif" alt="move up"></a>
@@ -55,6 +57,8 @@
         <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>     
         </if>
     </if>
+
+<!-- refactor with other? -->
 
 <p align=left>
 
@@ -114,4 +118,3 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
 
 
 
-<!-- place-element.adp end -->

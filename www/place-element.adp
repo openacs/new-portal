@@ -37,26 +37,28 @@
 
     <if @element_multi.state@ ne "pinned">
 
-      <small>[<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]</small>
+    <!-- hide link and arrows begin - refactor with tempate? -->
+
+      <small>[<a href="@action_string@?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]</small>
 
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
-        <a href="@target_stub@-2?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&direction=up&page_id=@element_multi.page_id@"><img border=0 src="@dir@/arrow-up.gif" alt="move up"></a>
+        <a href="@action_string@?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&direction=up&page_id=@page_id@"><img border=0 src="@imgdir@/arrow-up.gif" alt="move up"></a>
       </if>
       <if @element_multi:rowcount@ gt @element_multi.rownum@>
-        <a href="@target_stub@-2?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&direction=down&page_id=@element_multi.page_id@"><img border=0 src="@dir@/arrow-down.gif" alt="move down"></a>
+        <a href="@action_string@?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&direction=down&page_id=@page_id@"><img border=0 src="@imgdir@/arrow-down.gif" alt="move down"></a>
       </if>
     </if>
 
     <if @num_regions@ gt 1>
 	<if @region@ eq 1>
-	<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@"><img border=0 src="@dir@/arrow-right.gif" alt="move right"></a>
+	<a href="@action_string@?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@"><img border=0 src="@imgdir@/arrow-right.gif" alt="move right"></a>
 	</if>
 	<if @region@ gt 1 and @region@ lt @num_regions@>
-	<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>
-	<a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@"><img border=0 src="@dir@/arrow-right.gif" alt="move right"></a>
+	<a href="@action_string@?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@imgdir@/arrow-left.gif" alt="move left"></a>
+	<a href="@action_string@?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@"><img border=0 src="@imgdir@/arrow-right.gif" alt="move right"></a>
 	</if>
-	<if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>
+	<if @region@ eq @num_regions@><a href="@action_string@?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@imgdir@/arrow-left.gif" alt="move left"></a>
 	</if>
     </if>
 
@@ -64,16 +66,20 @@
 
     </if>
 
+    <!-- hide link and arrows end -->
+
 </form>
 
     <include src=place-element-other-page &="element_multi" 
-             target_stub=@target_stub@
              portal_id=@portal_id@
-             page_id=@element_multi.page_id@
+             page_id=@page_id@
              action_string=@action_string@>
 </multiple>
 
 </if>
+
+
+<!-- refactor show with template? -->
 
 <if @show_avail_p@ ne 0>
 <form method=post action=@action_string@>
@@ -86,10 +92,10 @@
 <input type=submit name="op" value="Show Here">
 </if>
 
+<!-- refactor show with template? -->
+
 </td>
 </tr>
 </table>
 
 </form>
-
-<!-- place-element.adp end -->

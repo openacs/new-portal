@@ -547,6 +547,14 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::get_layout_region_count.select_region_count">      
+  <querytext>
+    select count(*) as region_count
+    from portal_supported_regions
+    where layout_id = :layout_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::get_layout_id.get_layout_id_num_select">      
   <querytext>
     select layout_id from portal_pages where portal_id = :portal_id and sort_key = :page_num
