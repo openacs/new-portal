@@ -1,14 +1,27 @@
 <master src="@master_template@">
-<property name="title">Edit Portal</property>
+<property name="title">Edit Portal: @portal.name@</property>
 
 Change Name:
 <P>
- <input type="text" name="name" value="@name@">
+<input type="text" name="name" value="@portal.name@">
 
 <center>
 <form action="update_name">
 <%= [export_form_vars portal_id ] %>
 <input type=submit value="Update Name">
+</form>
+</center>
+
+
+<form method=get action="element-layout-2">
+<%= [export_form_vars portal_id ] %>
+<include src="@portal.template@" element_list="@element_list@" element_src="@element_src@">
+</form>
+
+<center>
+<form method=get action="revert">
+<%= [export_form_vars portal_id ] %>
+<input type=submit value="Revert To The Default">
 </form>
 </center>
 
@@ -52,15 +65,3 @@ Change Layout:
 </center>
 </form>
 
-
-<form method=get action="element-layout-2">
-<%= [export_form_vars portal_id ] %>
-<include src="@portal.template@" element_list="@element_list@" element_src="@element_src@">
-</form>
-
-<center>
-<form method=get action="revert">
-<%= [export_form_vars portal_id ] %>
-<input type=submit value="Revert To The Default">
-</form>
-</center>
