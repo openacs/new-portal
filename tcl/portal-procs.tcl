@@ -174,6 +174,80 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     return $new_element_id
 }
 
+ad_proc -public move_element {portal_id element_id sort_key region direction} {
+    Moves a PE in the direction indicated by swapping it with its neighbor
+
+    @param portal_id 
+    @param element_id 
+    @param sort_key of the element to be moved
+    @param region
+    @param direction either up or down
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    if { $direction == "up" } {
+	# get the sort_key and id of the element above
+	db_1row move_element_get_prev_sort_key {
+	    select sort_key as other_sort_key, 
+	           element_id as other_element_id
+	    from (select sort_key,
+	                 element_id 
+	          from portal_element_map
+	          where portal_id = :portal_id 
+	                and region = :region 
+	                and sort_key < :sort_key 
+	                order by sort_key desc
+	          ) where rownum = 1
+	}
+    } elseif { $direction == "down"} {
+	# get the sort_key and id of the element below
+	db_1row move_element_get_prev_sort_key {
+	    select sort_key as other_sort_key,
+	    element_id as other_element_id
+	    from (select sort_key, 
+	    element_id
+	    from portal_element_map
+	    where portal_id = :portal_id 
+	    and region = :region 
+	    and sort_key < :sort_key 
+	    order by sort_key desc
+	    ) where rownum = 1
+	}
+    } else {
+	ad_return_complaint 1 \ 
+	"portal::move_element: Bad direction: $direction"
+	ad_script_abort
+    }
+    
+    # swap the sort keys
+    db_transaction {
+
+	# because of the uniqueness constraint on sort_keys we
+	# need to set a dummy key, then do the swap
+
+	db_1row swap_get_dummy \
+		"select acs_object_id_seq.nextval as dummy_sort_key from dual"
+
+	# Set the element to be moved to the dummy key
+	db_dml swap_sort_keys_1 \
+		"update portal_element_map set sort_key = :dummy_sort_key 
+	        where element_id = :element_id"
+	
+	# Set the other_element's sort_key to the right value
+	db_dml swap_sort_keys_2 \
+		"update portal_element_map set sort_key = :sort_key 
+	         where element_id = :other_element_id"
+
+	# Set the element to be moved's sort_key to the right value
+	db_dml swap_sort_keys_3 \
+		"update portal_element_map set sort_key = :other_sort_key 
+	         where element_id = :element_id"
+    } on_error {
+	ad_return_complaint 1 "portal::move_element: transaction failed"
+    }
+}    
+
 ad_proc -public set_element_param { element_id key value } {
     Set an element param
 
