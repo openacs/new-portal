@@ -79,7 +79,7 @@ select define_function_args('portal_page__delete','page_id');
 create function portal_page__delete(integer)
 returns integer as '
 declare
-    p_page_id                       integer;
+    p_page_id                       alias for $1;
     v_portal_id                     portal_pages.portal_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
     v_curr_sort_key                 portal_pages.sort_key%TYPE;
