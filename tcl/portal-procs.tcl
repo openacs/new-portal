@@ -612,11 +612,8 @@ namespace eval portal {
 
 	db_transaction {
 	    # because of the uniqueness constraint on sort_keys we
-	    # need to set a dummy key, then do the swap. yes, this
-            # can probably be done with one fancy update that
-            # dosen't abuse the acs_object_id_seq
-
-            set dummy_sort_key [db_nextval acs_object_id_seq]
+	    # need to set a dummy key, then do the swap. 
+            set dummy_sort_key [db_nextval portal_element_map_sk_seq]
 
 	    # Set the element to be moved to the dummy key
 	    db_dml swap_sort_keys_1 {}
@@ -711,10 +708,7 @@ namespace eval portal {
 	
 	@author ben@openforce
     } {
-	db_dml insert_param_value "
-	insert into portal_element_parameters
-	(parameter_id, element_id, configured_p, key, value) values
-	(acs_object_id_seq.nextval, :element_id, 't', :key, :value)"
+	db_dml insert {}
     }
 
     ad_proc -private remove_element_param_value {
@@ -724,11 +718,7 @@ namespace eval portal {
     } {
 	removes a value for a param
     } {
-	db_dml delete_param_value "
-	delete from portal_element_parameters where
-	element_id= :element_id and
-	key= :key and
-	value= :value"
+	db_dml delete {}
     }
 
     ad_proc -private remove_all_element_param_values {
@@ -737,10 +727,7 @@ namespace eval portal {
     } {
 	removes a value for a param
     } {
-	db_dml delete_param_value "
-	delete from portal_element_parameters where
-	element_id= :element_id and
-	key= :key"
+	db_dml delete {}
     }
 
     ad_proc -private get_element_param { element_id key } {
@@ -751,11 +738,7 @@ namespace eval portal {
 	@param key
     } {
 	
-	if { [db_0or1row get_element_param_select "
-	select value
-	from portal_element_parameters 
-	where element_id = :element_id and 
-	key = :key"] } {
+	if { [db_0or1row select {}] } {
 	    return $value
 	} else {
 	    ad_return_complaint \
@@ -773,25 +756,11 @@ namespace eval portal {
 	@param element_id 
     } {
 
-	set query "
-	select pem.element_id,
-	pem.datasource_id,
-	pem.state,
-	pet.filename as filename, 
-	pet.resource_dir as resource_dir
-	from portal_element_map pem, portal_element_themes pet
-	where pet.theme_id = :theme_id
-	and pem.element_id = :element_id "
-
 	# get the element data and theme
-	db_1row evaluate_element_element_select $query -column_array element 
+	db_1row element_select {} -column_array element 
 
 	# get the element's params
-	db_foreach evaluate_element_params_select "
-	select key, value
-	from portal_element_parameters
-	where
-	element_id = :element_id" {
+	db_foreach params_select {} {
 	    lappend config($key) $value
 	} if_no_rows {
 	    # this element has no config, set up some defaults
@@ -840,10 +809,7 @@ namespace eval portal {
 	@param return_url
     } {
 	
-	if { [db_0or1row configure_element_select \
-		"select portal_id, datasource_id
-	from portal_element_map 
-	where element_id = :element_id"] } {
+	if { [db_0or1row select {}] } {
 	    # passed in element_id is good, do they have perms?
 	    ad_require_permission $portal_id portal_read_portal
 	    ad_require_permission $portal_id portal_edit_portal
@@ -852,8 +818,7 @@ namespace eval portal {
 	}
 	
 	switch $op {
-	    "edit" { 
-		
+	    "edit" { 		
 		# Get the edit html by callback
 		# Notice that the "edit" proc takes only the element_id
 		set html_string [datasource_call $datasource_id "Edit" \
@@ -904,10 +869,7 @@ namespace eval portal {
 		ad_returnredirect $return_url
 	    }
 	    "hide" {
-		db_dml configure_element_hide_update \
-			"update portal_element_map 
-		set state =  'hidden' 
-		where element_id = :element_id"
+		db_dml hide_update {}
 		ad_returnredirect $return_url
 	    }
 	}
@@ -923,9 +885,7 @@ namespace eval portal {
 	@param ds_id
 	@return ds_name
     } { 
-	if {[db_0or1row get_datasource_name_select \
-	"select name from portal_datasources 
-	where datasource_id = :ds_id"]} {
+	if {[db_0or1row select {}]} {
 	    return $name
 	} else {
 	    return ""
@@ -938,9 +898,7 @@ namespace eval portal {
 	@param ds_name
 	@return ds_id
     } { 
-	if {[db_0or1row get_datasource_id_select \
-	"select datasource_id from portal_datasources 
-	where name = :ds_name"]} {
+	if {[db_0or1row get_datasource_id_select {}]} {
 	    return $datasource_id
 	} else {
 	    return ""
@@ -956,11 +914,7 @@ namespace eval portal {
 	# XXX todo permissions on availabliliy procs
 	# ad_require_permission $portal_id portal_admin_portal
 	set new_p_ds_id [db_nextval acs_object_id_seq]
-	db_dml make_datasource_available_insert "
-	insert into portal_datasource_avail_map
-	(portal_datasource_id, portal_id, datasource_id)
-	values
-	(:new_p_ds_id, :portal_id, :ds_id)"
+	db_dml insert {} 
     }
     
     ad_proc -private make_datasource_unavailable {portal_id ds_id} {
@@ -969,12 +923,8 @@ namespace eval portal {
 	@param portal_id
 	@param ds_id
     } {
-	
 	#    ad_require_permission $portal_id portal_admin_portal
-	db_dml make_datasource_unavailable_delete "
-	delete from portal_datasource_avail_map
-	where portal_id =  :portal_id
-	and datasource_id = :ds_id"
+	db_dml delete {}
     }
     
     ad_proc -private toggle_datasource_availability {portal_id ds_id} {
@@ -985,10 +935,7 @@ namespace eval portal {
     } {
 	ad_require_permission $portal_id portal_admin_portal
 	
-	if { [db_0or1row toggle_datasource_availability_select "select 1  
-	from portal_datasource_avail_map
-	where portal_id = :portal_id and
-	datasource_id = :ds_id"] } {
+	if { [db_0or1row select {}] } {
 	    [make_datasource_unavailable $portal_id $ds_id]
 	} else {
 	    [make_datasource_available $portal_id $ds_id]
@@ -1003,11 +950,7 @@ namespace eval portal {
 	Get element IDs for a particular portal and a datasource name
     } {
 	set ds_id [get_datasource_id $ds_name]
-	
-	return [db_list select_element_ids \
-		"select element_id from portal_element_map
-	where portal_id= :portal_id 
-	and datasource_id= :ds_id"]
+	return [db_list select {}]
     }
     
     ad_proc -private get_layout_id { portal_id } {
@@ -1016,10 +959,7 @@ namespace eval portal {
 	@param portal_id The portal_id.
 	@return A layout_id.
     } {
-	db_1row get_layout_id_select {
-	    select layout_id from portals where portal_id = :portal_id
-	}
-	
+	db_1row select {}
 	return $layout_id
     }    
     
@@ -1029,7 +969,7 @@ namespace eval portal {
 	@return 1 on success, 0 on failure
 	@param a portal_id
     } {
-	if { [db_0or1row exists_p_select "select 1 from portals where portal_id = :portal_id"]} { 
+	if { [db_0or1row select {} ]} { 
 	    return 1
 	} else { 
 	    return 0 
