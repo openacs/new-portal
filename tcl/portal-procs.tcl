@@ -812,7 +812,8 @@ namespace eval portal {
 	element_id = :element_id" {
 	    lappend config($key) $value
 	} if_no_rows {
-	    array set config {}
+	    # this element has no config, set up some defaults
+	    set config(shaded_p) "f"
 	}
 	
 	# shove the listified config into the element array
@@ -848,7 +849,7 @@ namespace eval portal {
 	# pass the ds link, and the shaded_p param to the element
 	set element(link) $datasource(link)
 	set element(shaded_p) $config(shaded_p)
-	
+
 	return [array get element]
 
     }
