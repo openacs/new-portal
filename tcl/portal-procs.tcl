@@ -473,6 +473,7 @@ ad_proc -public configure { portal_id } {
 
     # Set up the form target
     set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+    set action_string [append target_stub "-2"]
 
     # AKS XXX layout change
     # get the layouts
@@ -507,6 +508,9 @@ ad_proc -public configure { portal_id } {
 	where p.layout_id = t.layout_id and p.portal_id = :portal_id
     " -column_array portal
 
+    # AKS: I'm slowly fixing all these kludgy hacks. Your patience is
+    # requested. Thank you for choosing the new portal package.
+
     # fake some elements so that the <list> in the template has
     # something to do.
     foreach region [ portal::get_regions $portal(layout_id) ] {
@@ -516,12 +520,11 @@ ad_proc -public configure { portal_id } {
     
     set element_list [array get fake_element_ids]
     set element_src "[portal::www_path]/place-element"
-    
 
     # the <include> sources /www/place-element.tcl
     set template "	
     <master src=\"@master_template@\">
-    <form action=\"@target_stub@-2\">
+    <form action=@action_string@>
     <b>Change Your Portal's Name:</b>
     <P>
     <input type=\"text\" name=\"new_name\" value=\"@portal.name@\">
@@ -533,21 +536,13 @@ ad_proc -public configure { portal_id } {
 
 
     <b>Configure The Portal's Elements:</b>
-    <form method=get action=\"@target_stub@-2\">
-    <input type=hidden name=portal_id value=@portal_id@>
-    <%= [export_form_vars portal_id] %>
-    <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">
-    <center>
-    <input type=submit name=\"op@region@\" value=\"Remove All Checked\"> 
-    </center>
-    </form>
+    <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\" action_string=@action_string@>
     
     <b>Undo Your Changes:</b>
     <form method=get action=\"@target_stub@-2\">
     <input type=hidden name=portal_id value=@portal_id@>
     <%= [export_form_vars portal_id ] %>
     <input type=submit name=op value=\"Revert To Default\">
-    </form>
 "
 
 #
@@ -603,6 +598,113 @@ ad_proc -public configure { portal_id } {
 	
 	return $output
     }
+
+ad_proc -public configure_dispatch_ns_set { portal_id form } {
+    Dispatches the configuration operation. 
+    We get the target region number from the op.
+    
+    @param portal_id
+    @param formdata an ns_set with all the formdata
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+nope} {
+
+    ad_require_permission $portal_id portal_read_portal
+    ad_require_permission $portal_id portal_edit_portal
+
+    set op [ns_set get $form op]
+
+    switch $op {
+	"Rename" { 
+	    portal::update_name $portal_id [ns_set get $form new_name]
+	}
+	"swap" {  
+	    portal::swap_element $portal_id \
+		    [ns_set get $form element_id] \
+		    [ns_set get $form sort_key] \
+		    [ns_set get $form region] \
+		    [ns_set get $form direction]
+	}
+	"Move All Checked Here" {
+
+	    set element_id_list [list]
+
+	    # iterate through the set, destructive!
+	    while { [expr [ns_set find $form "element_id"] + 1 ]  } {
+		lappend element_id_list [ns_set get $form "element_id"]
+		ns_set delkey $form "element_id"
+	    }
+
+	    if {! [empty_string_p $element_id_list] } {
+		portal::move_elements \
+			$portal_id $element_id_list $target_region 
+	    } else {
+		ns_returnredirect \
+			"portal-config.tcl?[export_url_vars portal_id]"
+	    }
+	} 
+	"add here" {
+
+	    ad_return_complaint 1 "$op, [ns_set get $form element_id] [ns_set get $form sort_key] [ns_set get $form region] [ns_set get $form direction]"
+
+
+	    regexp {[&]*element_id=(\d+)} $query "" element_id
+
+	    db_transaction {
+		# The new element's sk will be the last in the region
+		db_dml set_element_region_and_sk \
+			"update portal_element_map 
+		         set region = :target_region, 
+		         sort_key = (select nvl((select max(sort_key) + 1
+		                                 from portal_element_map 
+		                                 where portal_id = :portal_id 
+		                                 and region = :target_region), 
+		                                 1) 
+		                     from dual)
+		                     where element_id = :element_id"
+
+		db_dml unhide_element \
+			"update portal_element_map 
+		set state = 'full' 
+		where element_id = :element_id"
+	    }
+		
+	}
+	"remove all checked" {
+
+	    set element_id_list [list]
+
+	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
+		lappend element_id_list $element_id
+		regsub {[&]*element_ids=\d+} $query ""  query
+	    }
+
+	    if {! [empty_string_p $element_id_list] } {
+		foreach element_id $element_id_list {
+		    db_dml hide_element \
+			    "update portal_element_map 
+		             set state =  'hidden' 
+		             where element_id = :element_id"
+		}
+	    } else {
+		ns_returnredirect \
+			"portal-config.tcl?[export_url_vars portal_id]"
+	    }
+	}
+	"revert to default" {
+	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
+	}
+	"update_layout" {
+	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
+	}
+	default {
+	    ns_log Warning \
+		    "portal::config_dispatch: op = $op, and that's not right!"
+	    ad_return_complaint 1  "portal::config_dispatch: Bad Op! \n whole_op = $whole_op, tr = $target_region, op $op"
+	}
+    }
+}
+
 
 ad_proc -public configure_dispatch { portal_id query } {
     Dispatches the configuration operation. 
@@ -786,8 +888,8 @@ ad_proc -public evaluate_element { element_id } {
 
     @return A string containing the fully-rendered content for $element_id.
     @param element_id The object-id for the element that you'd like to retrieve.
-    @author Ian Baker (ibaker@arsdigita.com)
-    @creation-date December 2000
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date October 2001
 } {
  
     # the caching in here needs to be completely redone.  It totally sucks.
