@@ -34,6 +34,8 @@
   <msg key="simple_3column_layout_name">단순한 3열 레이아웃</msg>
   <msg key="simple_red_theme_description">단순한 빨간색 테이블 기반 테마</msg>
   <msg key="simple_red_theme_name">단순한</msg>
+  <msg key="sloan_theme_description">MIT Sloan 테마</msg>
+  <msg key="sloan_theme_name">Sloan</msg>
   <msg key="transaction_failed">트랜젝션 실패</msg>
   <msg key="Unused_Portlets">사용되지 않은 포틀릿</msg>
 </message_catalog>

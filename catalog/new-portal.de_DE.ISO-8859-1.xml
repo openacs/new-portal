@@ -35,6 +35,7 @@
   <msg key="simple_red_theme_description">eine einfache tabellenbasierte Oberfläche in Rot</msg>
   <msg key="simple_red_theme_name">Einfach</msg>
   <msg key="sloan_theme_description">die von MIT Sloan verwendete Oberfläche</msg>
+  <msg key="sloan_theme_name">MIT Sloan</msg>
   <msg key="transaction_failed">Transaktion fehlgeschlagen</msg>
   <msg key="Unused_Portlets">Nicht verwendete Portlets</msg>
 </message_catalog>
