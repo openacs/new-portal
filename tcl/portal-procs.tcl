@@ -58,14 +58,34 @@ namespace eval portal {
     # Special Hacks
     #
 
-    # Work around for template::util::url_to_file 
-    ad_proc -private  www_path {} {
-	Returns the path of the www dir of the portal package
-    } { return "/packages/new-portal/www"  }
+    # The mangement is not responsible for the results of multi-mounting
 
-    # Work around for template::util::url_to_file 
-    ad_proc -private  mount_point {} {
-	Returns the mount point - XXX fixme
+    ad_proc -private  package_key {} {
+	Returns the package_key
+    } { 
+        return "new-portal"
+    }
+
+    # Work around for template::util::url_to_file
+    ad_proc -private  www_path {} {
+	Returns the path of the www dir of the portal package. We
+        need this for stupid template tricks.
+    } { 
+        return "/packages/[package_key]/www"
+    }
+
+    ad_proc -public  mount_point {} {
+	Returns the mount point of the portal package. 
+        Sometimes we need to know this for like <include>ing 
+        templates from tcl
+    } { 
+        return [site_nodes::get_info -return param \
+                -param url \
+                -package_key [package_key]]
+    }
+
+    ad_proc -public  automount_point {} {
+        packages such as dotlrn can automount the portal here
     } { return "/portal"  }
     
     #
@@ -189,7 +209,7 @@ namespace eval portal {
 	but a template::multirow isn't really well suited to data of this
 	shape. It'll setup a set of variables, $var_stub_1 - $var_stub_8
 	and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
-	belong in that region.
+	belong in that region. - Ian Baker
 
 	AKS: XXX improve me
 	
@@ -387,19 +407,19 @@ namespace eval portal {
 		
 		db_dml update_theme {}
 	    }
-	    "toggle_lock" {
+	    "toggle_pinned" {
 		set element_id [ns_set get $form element_id]
 
-		if {[db_string toggle_lock_select {}] == "full"} {
+		if {[db_string toggle_pinned_select {}] == "full"} {
 		    
-                    db_dml toggle_lock_update_1 {}
+                    db_dml toggle_pinned_update_pin {}
 
-                    # "locked" implies not user hideable, shadable
+                    # "pinned" implies not user hideable, shadable
 		    set_element_param $element_id "hideable_p" "f"
 		    set_element_param $element_id "shadeable_p" "f"
                     
 		} else {
-		    db_dml toggle_lock_update_2 {}
+		    db_dml toggle_pinned_update_unpin {}
 		}
 	    }
 	    "toggle_hideable" {

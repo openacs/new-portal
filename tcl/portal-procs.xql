@@ -123,7 +123,7 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure_dispatch.toggle_lock_select">
+<fullquery name="portal::configure_dispatch.toggle_pinned_select">
   <querytext>
     select state
     from portal_element_map 
@@ -132,16 +132,16 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure_dispatch.toggle_lock_update_1">
+<fullquery name="portal::configure_dispatch.toggle_pinned_update_pin">
   <querytext>
     update portal_element_map
-    set state = 'locked'
+    set state = 'pinned'
     where portal_id = :portal_id
     and element_id = :element_id
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure_dispatch.toggle_lock_update_2">
+<fullquery name="portal::configure_dispatch.toggle_pinned_update_unpin">
   <querytext>
     update portal_element_map
     set state = 'full'
@@ -243,7 +243,7 @@
           where portal_id = :portal_id 
           and region = :region 
           and sort_key < :sort_key
-          and state != 'locked'
+          and state != 'pinned'
           order by sort_key desc) where rownum = 1
   </querytext>
 </fullquery> 
@@ -256,7 +256,7 @@
           where portal_id = :portal_id 
           and region = :region 
           and sort_key > :sort_key 
-          and state != 'locked'
+          and state != 'pinned'
           order by sort_key) where rownum = 1 
   </querytext>
 </fullquery> 

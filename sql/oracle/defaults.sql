@@ -55,15 +55,21 @@ begin
 
 	theme_id := portal_element_theme.new (
 		name => 'simple',
-		description => 'A simple red box theme',
+		description => 'A simple red table-based theme',
 		filename => 'themes/simple-theme',
 		resource_dir => 'themes/simple-theme');
 
 	theme_id := portal_element_theme.new (
-		name => 'window',
-		description => 'An Art Deco-esque theme',
-		filename => 'themes/window-theme',
-		resource_dir => 'themes/window-theme');
+		name => 'deco',
+		description => 'An Art Deco theme',
+		filename => 'themes/deco-theme',
+		resource_dir => 'themes/deco-theme');
+
+	theme_id := portal_element_theme.new (
+		name => 'nada',
+		description => 'The un-theme. No graphics.',
+		filename => 'themes/nada-theme',
+		resource_dir => 'themes/nada-theme');
 
 end;
 /

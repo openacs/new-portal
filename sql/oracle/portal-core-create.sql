@@ -161,6 +161,11 @@ create table portals (
 -- No securtiy checks are done here. If you can view and bind to a DS you have
 -- a PE for it.
 
+-- this sequence is only used for swapping sort keys so that we
+-- don't abuse the acs_object_id_seq
+create sequence portal_element_map_sk_seq start with 1;
+
+
 create table portal_element_map (
 	element_id		integer
 				constraint p_element_map_element_id_pk
@@ -179,7 +184,7 @@ create table portal_element_map (
 	state			varchar(6) default 'full'
 				constraint p_element_map_state
 				check(state in ('full', 'shaded', 'hidden', 
-					        'locked')),
+					        'pinned')),
  	-- Two elements may not exist in the same place on a portal.
 	constraint p_element_map_pid_rgn_srt_un 
 	unique(portal_id,region,sort_key),
