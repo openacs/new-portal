@@ -1,4 +1,4 @@
--- The "New" Portal Package
+-- The New Portal Package
 -- copyright 2001, OpenForce, Inc.
 -- distributed under the GNU GPL v2
 --
@@ -10,21 +10,23 @@
 create table portal_mime_types (
 	name		varchar(200)
 			constraint p_mime_types_name_pk primary key,
-	pretty_name	varchar(200),
+	pretty_name	varchar(200)
 );
 
+-- Hmm. we might want an extra layer of security here.
 create table portal_data_types (
 	name		varchar(200)
 			constraint p_data_types_name_pk primary key,
-	pretty_name	varchar(200) not null,
+	pretty_name	varchar(200)
 );
 
--- XXX Fix me. The central issue here is how to model the DS's
--- metadata, args, etc.  acs-service-contract?  On the issue of
--- default configs for PE's, the DS should hold this somehow
+
+-- XXX A central unresolved issue here is how to model the DS's
+-- metadata, args, etc.  acs-service-contract?
 
 -- Some datasources need to be restricted and some do not.  The way we
--- will handle this is a check at PE creation (DS binding) time.
+-- will handle this is a check at PE creation (DS binding) time, and
+-- of course, checks on the portal_id sent in.
 create table portal_datasources (
 	datasource_id		constraint p_datasources_datasource_id_fk
 				references acs_objects(object_id)
@@ -43,7 +45,7 @@ create table portal_datasources (
 	configurable_p		char(1) default 'f'
 				constraint p_elements_configurable_p_ck
 				check(configurable_p in ('t', 'f')),
-	name			varchar(200),
+	name			varchar(200) not null,
 	description		varchar(4000),
 	-- these may go when acs-service-contract arrives
 	content			clob,
@@ -52,10 +54,26 @@ create table portal_datasources (
 	constraint p_name_package_key_un unique(package_key,name)
 );
 
+
+-- A default configuration for a ds will be stored here, to be copied
+-- to the portal_element_parameters table at PE creation (DS binding) time
+create table portal_datasource_default_parameters (
+	parameter_id	integer
+			constraint p_ds_def_prms_prm_id_pk
+			primary key,
+	datasource_id	constraint p_ds_def_prms_element_id_fk
+			references portal_datasources on delete cascade
+			not null,
+	key		varchar(50) not null,
+	value		varchar(4000)
+);
+
+
 -- **** Portal Layouts ****
 
 -- Layouts are the template for the portal page. i.e. 2 cols, 3 cols,
 -- etc. They are globally available. No secret layouts!
+-- Considering db storage.
 create table portal_layouts (
 	layout_id		constraint p_layouts_layout_id_fk
 				references acs_objects(object_id)
@@ -66,10 +84,21 @@ create table portal_layouts (
 				unique
 				not null,
 	description		varchar(4000),
-	filename		varchar(4000) not null,
+	filename		varchar(4000),
 	resource_dir		varchar(4000)
 );
 
+create table portal_supported_regions (
+	  layout_id		constraint p_spprtd_rgns_layout_id_fk
+				references portal_layouts
+				on delete cascade
+				not null,
+	  region		varchar(20),
+	  immutable_p		char(1)
+				constraint p_spprtd_rgns_immtble_p_ck
+				check(immutable_p in ('t', 'f')),
+	  constraint p_spprtd_rgns_tmpl_id_rgn_pk primary key (template_id,region)
+);
 
 
 -- **** Portal Element Themes ****
@@ -87,18 +116,18 @@ create table portal_element_themes (
 				unique
 				not null,
 	description		varchar(4000),
-	storage			varchar(20)
-				constraint p_e_themes_type_ck
-				check(storage in ('db', 'fs')),
+--	storage			varchar(20)
+--				constraint p_e_themes_type_ck
+--				check(storage in ('db', 'fs')),
+--	db_storage		varchar(4000)
 	filename		varchar(4000),
-	resource_dir		varchar(4000), 
-	db_storage		varchar(4000)
+	resource_dir		varchar(4000)
 );
 
 
--- XXX configs
 
 -- **** Portal Elements (PEs) ****
+
 
 -- PE are fully owned by one and only one portal. They are not
 -- "objects" that live on after their portal is gone. One way to think
@@ -106,12 +135,20 @@ create table portal_element_themes (
 -- theme, a config, a region, etc. 
 --
 -- No securtiy checks are done here. If you can view and bind to a DS you have
--- a PE.
+-- a PE for it.
+
+
+-- XXX constraints 
+-- unique(element_id, portal_id)
+-- PE name uniqueness (per-portal)
 
 create table portal_element_map (
 	element_id		constraint p_element_map_element_id_pk
 				primary key,
 	name			varchar(200) not null,
+	portal_id		constraint p_element_map_portal_id_fk
+				references portals on delete cascade
+				not null,
 	datasource_id		constraint p_element_map_datasource_id_fk
 				references portal_datasources
 				on delete cascade
@@ -119,90 +156,42 @@ create table portal_element_map (
 	theme_id		constraint p_element_map_theme_id_fk
 				references portal_element_themes
 				not null,
-	portal_id		constraint p_element_map_portal_id_fk
-				references portals on delete cascade
-				not null,
-				not null,
-	region varchar(20)	not null,
-	sort_key integer	not null,
-	-- Two elements may not exist in the same place on a portal.
-	-- It would probably work, but it would just be stupid.
+	region			varchar(20) not null,
+	sort_key		integer	not null,
 	constraint p_element_map_pid_rgn_srt_un unique(portal_id,region,sort_key)
 );
 
+
+create table portal_element_parameters (
+	parameter_id	integer
+			constraint p_element_prms_prm_id_pk
+			primary key,
+	element_id	constraint p_element_prms_element_id_fk
+			references portal_elements on delete cascade
+			not null,
+	key		varchar(50) not null,
+	value		varchar(4000) 
+);
+
+
 -- Portals are essentially "containers" for PEs that bind to DSs.
--- XXX Can parties have portals?
+-- XXX Can parties have portals? Restrict to party check? 
+-- Roles and perms issues?
 create table portals (
 	portal_id	 	constraint p_portal_id_fk
 				references acs_objects(object_id)
 				constraint p_portal_id_pk
 				primary key,
 	name			varchar(200) default 'Untitled' not null,
-        -- the layout template.
 	layout_id		constraint p_template_id_fk
 				references portal_templates
-				not null
-	-- nobody owns a portal except for a person (parties create
-	-- their own package instances).  I didn't like this about the
-	-- old portals data model, but it does make sense.  If this is
-	-- null then it's the "default portal" and is -- owned by
-	-- nobody.  If this comment confuses you, email me. -ib
-
+				not null,
 	owner_id		constraint p_owner_id_fk
 				references persons(person_id)
 				on delete cascade,
-	-- it's only possible to own one personal version of any portal.  This constraint may
-        -- someday be relaxed if it turns out that there's a need to.
 	constraint p_owner_package_un unique(package_id,owner_id)
 );
 
 -- INDEX owner_id
 -- INDEX package_id
-
-
--- p_page = portal page
--- pe = portal element i.e. a "box" on a p_page
--- "->" arrows point to a "to-one" relationship
-
--- p_page_id sequence
-
--- p_page table
--- name varchar
--- acs_object?
--- restrict_to_party_p
--- owning_party
--- fk(layout)
--- perms?
-
--- pe table
--- perms?
-
--- layout table
-
--- pe_configs table
--- config_id pk
--- portal_id?
-
--- pe_parameters table
--- this is needed for default configs not associated with no p_page
--- param_id pk
--- config_id refs(pe_configs)
--- key
--- value
-
--- datasource table
--- configureable_p?
--- default_config_id refs(portal_element_configs)
-1
-
-
--- pe <-> datasource map
-
--- p_page <-> pe mapping table, with config_id
--- unique(p_page, pe), index
-
--- config_id <- attr table
-
-
-
 
