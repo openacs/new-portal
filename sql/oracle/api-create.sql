@@ -51,8 +51,8 @@ create or replace package body portal
 as
 	function new (
 		portal_id		in portals.portal_id%TYPE default null,
-		layout_id		in portals.layout_id%TYPE default null,
 		name			in portals.name%TYPE default null,
+		layout_id		in portals.layout_id%TYPE default null,
 		owner_id		in persons.person_id%TYPE default 0,
 		object_type		in acs_object_types.object_type%TYPE default 'portal',
 		creation_date		in acs_objects.creation_date%TYPE 
@@ -74,15 +74,8 @@ as
 			context_id	=> context_id
 		);
 
-		insert into portals (
-			portal_id, 
-			layout_id, 
-			name, 
-			owner_id
-		) values (
-			v_portal_id,
-			layout_id,
-			name,
+		insert into portals (portal_id, layout_id, name, owner_id) 
+			     values (v_portal_id, layout_id, name,
 			decode(owner_id, 0, NULL, owner_id)
 		);
 
