@@ -30,6 +30,22 @@ namespace eval portal {
     # acs-service-contract procs
     #
 
+
+    ad_proc -private log_time {str} {
+        global old_time
+        set time "[expr [expr [clock clicks] + 1000000000] / 1000]"
+
+        if {![info exists old_time]} {
+            set diff "--"
+        } else {
+            set diff [expr "$time - $old_time"]
+        }
+        
+        set old_time $time
+
+        ns_log Notice "DEBUG-TIME: $time ($diff) - $str"
+    }
+
     ad_proc -public datasource_call {
         {-datasource_name ""}
         ds_id
@@ -43,8 +59,11 @@ namespace eval portal {
         }
         
         ns_log notice "portal::datasource_call op=$op ds_id=$ds_id ds_name=$datasource_name"
-        
-        return [acs_sc_call portal_datasource $op $list_args $datasource_name]
+
+        log_time "aks2A before ds call"        
+        set result [acs_sc_call portal_datasource $op $list_args $datasource_name]
+        log_time "aks2A after ds call"        
+        return $result
     }
 
     ad_proc -public list_datasources {
@@ -101,7 +120,7 @@ namespace eval portal {
         return "/packages/[package_key]/www"
     }
 
-    ad_proc -public  mount_point {} {
+    ad_proc -private mount_point_no_cache {} {
         Returns the mount point of the portal package. 
         Sometimes we need to know this for like <include>ing 
         templates from tcl
@@ -109,6 +128,12 @@ namespace eval portal {
         return [site_nodes::get_info -return param \
                 -param url \
                 -package_key [package_key]]
+    }
+
+    ad_proc -public mount_point {} {
+        caches the mount point
+    } {
+        return [util_memoize portal::mount_point_no_cache]
     }
 
     ad_proc -public  automount_point {} {
@@ -252,6 +277,7 @@ namespace eval portal {
         # theme_id override  
         if { $theme_id != "" } { set portal(theme_id) $theme_id }
 
+        log_time "entering element_select"
         db_foreach element_select {} -column_array entry {
             # put the element IDs into buckets by region...
             lappend element_ids($entry(region)) $entry(element_id)
@@ -735,8 +761,6 @@ namespace eval portal {
         @return the id of the page
         @param portal_id 
     } {
-        ns_log notice "aks91 $pretty_name, $layout_name"
-
         # get the layout_id
         if {![empty_string_p $layout_name]} {
             set layout_id [get_layout_id -layout_name $layout_name]
@@ -1127,8 +1151,12 @@ namespace eval portal {
         @return A string containing the fully-rendered content for $element_id.
     } {
 
+        log_time "aks1 portal::evaluate_element START"
+
         # get the element data and theme
         db_1row element_select {} -column_array element 
+
+        log_time "ben1 portal::evaluate_element after element_select"
 
         # get the element's params
         db_foreach params_select {} {
@@ -1152,6 +1180,8 @@ namespace eval portal {
         # setting editable to false
         set config(user_editable_p) "f"
 
+        log_time "aks2 portal::evaluate_element about to call Show"
+
         # do the callback for the ::show proc
         # evaulate the datasource.
         if { [catch { set element(content) \
@@ -1173,6 +1203,8 @@ namespace eval portal {
         
     }
     
+    log_time "aks3 portal::evaluate_element done with call to Show"
+
     # trim the element's content
     set element(content) [string trim $element(content)]
 
@@ -1188,6 +1220,8 @@ namespace eval portal {
 
         set element(link) \
                 [datasource_call $element(datasource_id) "Link" [list]]
+        
+        log_time "ben3 portal::evalute_element not quite END"
 
         # done with callbacks, now set config params
         set element(shadeable_p) $config(shadeable_p) 
@@ -1199,7 +1233,11 @@ namespace eval portal {
         # apply the path hack to the filename and the resourcedir
         set element(filename) "[www_path]/$element(filename)"
         # notice no "/" after mount point
+        log_time "ben3 portal::evalute_element not quite END v2"
         set element(resource_dir) "[mount_point]$element(resource_dir)"
+
+
+        log_time "aks3 portal::evaluate_element END"
 
         return [array get element]
     }
