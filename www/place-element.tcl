@@ -53,3 +53,6 @@ from portal_element_map
 where
 portal_id = :portal_id
 and region not like 'i%'"
+
+# Set up the form target
+set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
