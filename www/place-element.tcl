@@ -22,18 +22,20 @@ set portal_id $element_id
 # get the elements for this region.
 set region_count 0
 template::multirow create element_multi element_id name sort_key state
-db_foreach select_elements_by_region \
-    "select element_id, name, sort_key, state
+db_foreach select_elements_by_region {
+    select element_id, name, sort_key, state
      from portal_element_map
      where
        portal_id = :portal_id 
        and region = :region 
        and state != 'hidden'
-     order by sort_key" 
-{
-    template::multirow append element_multi $element_id $name $sort_key $state
-    incr region_count
-}
+    order by sort_key } {
+	template::multirow append element_multi \
+		$element_id $name $sort_key $state
+	incr region_count
+    }
+
+
 
 
 db_1row select_all_noimm_count \
@@ -57,11 +59,10 @@ db_foreach datasource_avail {
     where pdam.portal_id = :portal_id
     and pd.datasource_id = pdam.datasource_id
     and pd.datasource_id  in (
-    select datasource_id
-    from portal_element_map
-    where portal_id = :portal_id
-    and state = 'hidden')
-)
+      select datasource_id
+      from portal_element_map
+      where portal_id = :portal_id
+      and state = 'hidden')
     order by name
 } {
     set add_avail_p 1

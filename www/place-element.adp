@@ -17,7 +17,6 @@
     <br>
 </multiple>
 
-<if @immutable_p@ ne 1>
 <br>
 
 <if @add_avail_p@ ne 0>
@@ -28,16 +27,6 @@
 
 <if @region_count@ ne @all_count@ and @all_count@ gt 0>
   <input type=submit name="op@region@" value="Move All Checked Here"> <br>
-</if>
-
-</if>
-
-
-
-<if @would_be_immutable_p@ eq 1>
-<p>
-<b>This region may not be edited by normal users.</b>
-</p>
 </if>
 
 </td>
