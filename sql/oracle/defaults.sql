@@ -72,7 +72,7 @@ begin
 	layout_id := portal_layout.new (
 		name => 'Simple 2-Column',
 		description => 'A simple 2-column layout',
-		filename => 'www/layouts/simple2',
+		filename => 'layouts/simple2',
 		resource_dir => 'www/layouts/components/simple2');
 
 -- the supported regions for that layout.
@@ -122,46 +122,46 @@ end;
 -- create a very simple  ds.
 
 -- XXX path for the content_varchar
-
-declare
-	v_datasource_id	portal_datasources.datasource_id%TYPE;
-begin
-	v_datasource_id := portal_datasource.new (
-		data_type => 'raw',
-		mime_type => 'application/x-ats',
-		name => 'null-datasource',
-		description => 'NULL DS for testing',
-		content_varchar => '/packages/new-portal/www/datasources/null/null',
-		configurable_p => 't'
-	);
-	
-	-- some test default params
-	portal_datasource.set_def_param (
-		datasource_id => v_datasource_id,
-		config_required_p => 'f',
-		configured_p => 'f',
-		key => 'foo',
-		value => 'bar'
-	);
-end;
-/
-
-commit;
-
-
--- test ds
-declare
-	datasource_id	portal_datasources.datasource_id%TYPE;
-begin
-	datasource_id := portal_datasource.new (
-		data_type => 'raw',
-		mime_type => 'application/x-ats',
-		name => 'Portal Connector',
-		description => 'Connects the current portal with others at the same level on the site-map.',
-		content_varchar => '/packages/new-portal/www/datasources/connector/connector'
-	);
-
-end;
-/
-
-commit;
+---
+---declare
+---	   v_datasource_id	portal_datasources.datasource_id%TYPE;
+---begin
+---	   v_datasource_id := portal_datasource.new (
+---		   data_type => 'raw',
+---		   mime_type => 'application/x-ats',
+---		   name => 'null-datasource',
+---		   description => 'NULL DS for testing',
+---		   content_varchar => '/packages/new-portal/www/datasources/null/null',
+---		   configurable_p => 't'
+---	   );
+---	   
+---	   -- some test default params
+---	   portal_datasource.set_def_param (
+---		   datasource_id => v_datasource_id,
+---		   config_required_p => 'f',
+---		   configured_p => 'f',
+---		   key => 'foo',
+---		   value => 'bar'
+---	   );
+---end;
+---/
+---
+---commit;
+---
+---
+----- test ds
+---declare
+---	   datasource_id	portal_datasources.datasource_id%TYPE;
+---begin
+---	   datasource_id := portal_datasource.new (
+---		   data_type => 'raw',
+---		   mime_type => 'application/x-ats',
+---		   name => 'Portal Connector',
+---		   description => 'Connects the current portal with others at the same level on the site-map.',
+---		   content_varchar => '/packages/new-portal/www/datasources/connector/connector'
+---	   );
+---
+---end;
+---/
+---
+---commit;
