@@ -55,6 +55,7 @@
   <querytext>
     update portal_element_map
     set region = :region,
+    page_id = :page_id,
     sort_key = (select nvl((select max(pem.sort_key) + 1
 	                    from portal_element_map pem, portal_pages pp
 	                    where pp.portal_id = :portal_id 

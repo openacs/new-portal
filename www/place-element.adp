@@ -1,8 +1,7 @@
-
-<!-- place-element.adp begin -->
 <form method=post action=@action_string@>
 <input type=hidden name=portal_id value=@portal_id@>
 <input type=hidden name=region value=@region@>
+<input type=hidden name=page_id value=@page_id@>
 
 <table border=1 width="100%">
 <tr>
@@ -52,7 +51,8 @@
 <if @show_avail_p@ ne 0>
 <br>
 @show_html@
-</select><input type=submit name="op" value="Show Here">
+</select>
+<input type=submit name="op" value="Show Here">
 </if>
 
 </td>

@@ -464,6 +464,7 @@ namespace eval portal {
 	    "Show Here" {
 		set region [ns_set get $form region]
 		set element_id [ns_set get $form element_id]
+		set page_id [ns_set get $form page_id]
 		
 		db_transaction {
 		    # The new element's sk will be the last in the region
