@@ -622,16 +622,25 @@ namespace eval portal {
 	@param current boolean get the current page if true
 	@param sort_key - optional, defaults to page 0
     } {
-        if {$current == "f"} {
-            return [db_string get_page_id_select {}]
+        if {![empty_string_p $page_name]} {
+            return [db_string get_page_id_from_name {} -default ""]
         } else {
-            if {![empty_string_p $page_name]} {
-                return [db_string get_page_id_from_name {} -default ""]
+            if {$current == "f"} {
+                return [db_string get_page_id_select {}]
             } else {
-                return [db_string get_current_page_id_select {}]
+                # aks hack - bug - we sometimes lose the current page
+                if {[db_0or1row get_current_page_id_select {}] == 0} {
+                    set page_id [db_string get_page_id_select {}]
+                    db_dml aks_hack_current_page_insert {
+                        insert into portal_current_page 
+                        (portal_id, page_id) values (:portal_id, :page_id)
+                    }
+                    return $page_id
+                }
             }
         }
     }
+    
 
     ad_proc -public set_current_page {
         {-portal_id:required}
