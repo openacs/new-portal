@@ -24,7 +24,7 @@
   <input type=submit name="remove_@region@" value="Remove All Checked Elements"> <br>
 </if>
 <if @region_count@ ne @all_count@ and @all_count@ gt 0>
-  <input type=submit name="move_@region@" value="Move All Checked Elements Here"> <br>
+  <input type=submit name="op@region@" value="Move All Checked Elements Here"> <br>
 </if>
 
 <input type=submit name="add_@region@" value="Add A New Element Here">
