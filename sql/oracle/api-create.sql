@@ -252,6 +252,7 @@ show errors
 create or replace package portal_datasource
 as
 	function new (
+		datasource_id	in portal_datasources.datasource_id%TYPE default null,	
 		name		in portal_datasources.name%TYPE default null,
 		description	in portal_datasources.description%TYPE default null,
 		configurable_p	in portal_datasources.configurable_p%TYPE default null,		
@@ -284,6 +285,7 @@ show errors
 create or replace package body portal_datasource
 as
 	function new (
+		datasource_id		in portal_datasources.datasource_id%TYPE default null,	
 		name			in portal_datasources.name%TYPE default null,
 		description		in portal_datasources.description%TYPE default null,
 		configurable_p		in portal_datasources.configurable_p%TYPE default null,
@@ -292,6 +294,7 @@ as
 		creation_user		in acs_objects.creation_user%TYPE default null,
 		creation_ip		in acs_objects.creation_ip%TYPE default null, 
 		context_id		in acs_objects.context_id%TYPE default null 
+
 	) return portal_datasources.datasource_id%TYPE
 	is
 		v_datasource_id		portal_datasources.datasource_id%TYPE;
@@ -307,7 +310,7 @@ as
 
 
 		insert into portal_datasources
-			(datssource_id, name, description, configurable_p)
+			(datasource_id, name, description, configurable_p)
 		values
 			(v_datasource_id, name, description, configurable_p); 
 
