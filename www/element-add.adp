@@ -12,6 +12,12 @@ Elements that you aren't currently using:<br>
 </multiple>
 </select>
 
+<p>
+What should this element be named:<br>
+<b>Name:</b> <input type="text" name="name" value="Untitled-1">
+</p>
+
+
 <table border=0>
 <tr>
 <td>
@@ -20,7 +26,7 @@ Elements that you aren't currently using:<br>
 </td>
 <td>
   <form method=get action="element-layout">
-  <%= [export_form_vars portal_id region] %>
+  <%= [export_form_vars portal_id region name] %>
   <input type=submit value="Cancel">
   </form>
 </td>
