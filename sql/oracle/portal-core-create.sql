@@ -51,27 +51,37 @@ create table portal_datasources (
 	name			varchar(200) not null,
 	description		varchar(4000),
 	-- these may go when acs-service-contract arrives
-	content			clob,
-	package_key		constraint p_datasources_package_key_fk
-				references apm_package_types(package_key) on delete cascade,
-	constraint p_name_package_key_un unique(package_key,name)
+	content			clob
 );
 
 
 -- A default configuration for a ds will be stored here, to be copied
 -- to the portal_element_parameters table at PE creation (DS binding) time
+-- 
+-- Config semantics:
+-- true: cfg_req, cfg_p - A static config is given for all PEs, can
+--	 be changed later
+-- true: cfg_req false: cfg_p - PE must be configured before use
+-- false: cfg_req true: cfg_p - An optional default cfg given
+-- both false: Configuration optional w. no default suggested
 create table portal_datasource_def_params (
-	parameter_id	integer
-			constraint p_ds_def_prms_prm_id_pk
-			primary key,
-	datasource_id	constraint p_ds_def_prms_element_id_fk
-			references portal_datasources on delete cascade
-			not null,
+	parameter_id		integer
+				constraint p_ds_def_prms_prm_id_pk
+				primary key,
+	datasource_id		constraint p_ds_def_prms_element_id_fk
+				references portal_datasources on delete cascade
+				not null,
+	config_required_p	char(1) default 'f'
+				constraint p_ds_def_prms_cfg_req_p_ck
+				check(config_required_p in ('t', 'f')),
+	configured_p		char(1) default 'f'
+				constraint p_ds_def_prms_configured_p_ck
+				check(configured_p in ('t', 'f')),
 	key		varchar(50) not null,
 	value		varchar(4000)
 );
 
-
+elements_configurable
 -- **** Portal Layouts ****
 
 -- Layouts are the template for the portal page. i.e. 2 cols, 3 cols,
@@ -179,14 +189,20 @@ create table portal_element_map (
 );
 
 create table portal_element_parameters (
-	parameter_id	integer
-			constraint p_element_prms_prm_id_pk
-			primary key,
-	element_id	constraint p_element_prms_element_id_fk
-			references portal_element_map on delete cascade
-			not null,
-	key		varchar(50) not null,
-	value		varchar(4000) 
+	parameter_id		integer
+				constraint p_element_prms_prm_id_pk
+				primary key,
+	element_id		constraint p_element_prms_element_id_fk
+				references portal_element_map on delete cascade
+				not null,
+	config_required_p	char(1) default 'f'
+				constraint p_element_prms_cfg_req_p_ck
+				check(config_required_p in ('t', 'f')),
+	configured_p		char(1) default 'f'
+				constraint p_element_prms_configured_p_ck
+				check(configured_p in ('t', 'f')),
+	key			varchar(50) not null,
+	value			varchar(4000) 
 );
 
 
