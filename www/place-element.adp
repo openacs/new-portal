@@ -8,8 +8,14 @@
 <td align=center>
 
 <multiple name=element_multi>
-    @element_multi.name@
+  
+<hr>
+
+  @element_multi.name@
+
     <if @element_multi.state@ ne "pinned">
+
+      <small>[<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]</small>
 
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
@@ -32,25 +38,27 @@
 	</if>
     </if>
 
-            <if @element_multi.hideable_p@ eq "t">
-            [<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]    
-            </if>
+      </if>
+
     </if>
 
-    <br>
+</form>
 
     <include src=place-element-other-page &="element_multi" 
              target_stub=@target_stub@
              portal_id=@portal_id@
-             page_id=@element_multi.page_id@>
-    <br>
-
+             page_id=@element_multi.page_id@
+             action_string=@action_string@>
 </multiple>
 
 </if>
 
 <if @show_avail_p@ ne 0>
-<br>
+<form method=post action=@action_string@>
+<input type=hidden name=portal_id value=@portal_id@>
+<input type=hidden name=region value=@region@>
+<input type=hidden name=page_id value=@page_id@>
+
 @show_html@
 </select>
 <input type=submit name="op" value="Show Here">

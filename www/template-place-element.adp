@@ -7,6 +7,9 @@
 <td align=left>
 
 <multiple name=element_multi>
+<hr>
+
+
 @element_multi.name@ - @element_multi.description@
 
 <br>
@@ -61,27 +64,27 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
 <else>User Shadeable? No [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">allow shading</a>]
 </else>
 
-<br>
+</form>
 
     <include src=place-element-other-page &="element_multi" 
              target_stub=@target_stub@
              portal_id=@portal_id@
-             page_id=@element_multi.page_id@>
-    <br>
-<P>
+             page_id=@element_multi.page_id@
+             action_string=@action_string@>
+
 
 </multiple>
 
-
-
 <if @show_avail_p@ ne 0>
-<br>
+<form method=post action=@action_string@>
+
 @show_html@
 </select><input type=submit name="op" value="Show Here">
 <input type=hidden name=portal_id value=@portal_id@>
 <input type=hidden name=page_id value=@page_id@>
 <input type=hidden name=region value=@region@>
 <input type=hidden name=return_url value=@return_url@>
+</form>
 
 </if>
 
@@ -89,6 +92,6 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
 </tr>
 </table>
 
-</form>
+
 
 <!-- place-element.adp end -->

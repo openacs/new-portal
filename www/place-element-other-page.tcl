@@ -1,5 +1,7 @@
 # moving to other pages
-template::multirow create pages page_id pretty_name
+set element_id $element_multi(element_id)
+
+template::multirow create pages page_id pretty_name element_id
 set other_page_avail_p 0
 
 db_foreach other_pages_select {

@@ -391,26 +391,16 @@ namespace eval portal {
 
         set template "        
         <master src=\"@master_template@\">
-        <b>Configuring @portal_name@</b>
         <p>
-        <a href=@return_url@>Go back</a>
+        <big><a href=@return_url@>Go back</a></big>
         <P>
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
-        <b>Change Theme:</b> 
+        <big>Change Theme:</big> 
         @theme_data@
         </form>
-        <form method=post action=@action_string@>
-        <input type=hidden name=portal_id value=@portal_id@>
-        <input type=hidden name=return_url value=@return_url@>
-        <b>Add a new page:</b> 
-        @page_data@
-        </form>
-        <P>
-        <BR>
-        <BR>
-        <b>Configure Page Elements:</b>"
+        <P>"
 
         set list_of_page_ids [list $page_id]
 
@@ -441,10 +431,10 @@ namespace eval portal {
 
             if {$element_count == 0} {
                 append template "
-                <P>Page <b>$portal(page_name)</b> has no Elements"
+                <P> <b>$portal(page_name)</b> has no Elements"
             } else {
                 append template "
-                <P>Page <b>$portal(page_name)</b>
+                <P> <b>$portal(page_name)</b> Page
                 <include src=\"$portal(template)\" element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
@@ -455,6 +445,16 @@ namespace eval portal {
             # clear out the region array
             array unset fake_element_ids
         }
+
+
+        append template "
+        <form method=post action=@action_string@>
+        <input type=hidden name=portal_id value=@portal_id@>
+        <input type=hidden name=return_url value=@return_url@>
+        <b>Add a new page:</b> 
+        @page_data@
+        </form>
+        <P>"
 
 
         # This hack is to work around the acs-templating system
@@ -512,6 +512,21 @@ namespace eval portal {
                 }                
             }
             "move_to_page" {
+                set page_id [ns_set get $form page_id]
+                set element_id [ns_set get $form element_id]
+                set curr_reg [db_string move_to_page_curr_select {}] 
+                set target_reg_num [db_string move_to_page_target_select {}] 
+
+                if {$curr_reg > $target_reg_num} {
+                    # the new page dosent have this region, set to max region
+                    set region $target_reg_num
+                } else {
+                    set region $curr_reg
+                }
+
+                db_dml move_to_page_update {} 
+            }
+            "Move to page" {
                 set page_id [ns_set get $form page_id]
                 set element_id [ns_set get $form element_id]
                 set curr_reg [db_string move_to_page_curr_select {}] 
@@ -1437,6 +1452,7 @@ namespace eval portal {
     ad_proc -public add_element_or_append_id { 
         {-portal_id:required}
         {-page_id ""}
+        {-pretty_name ""}
         {-portlet_name:required}
         {-value_id:required}
         {-key "instance_id"}
@@ -1463,7 +1479,8 @@ namespace eval portal {
             db_transaction {
 
                 # Tell portal to add this element to the page
-                set element_id [add_element -page_id $page_id $portal_id $portlet_name]
+                set element_id [add_element -pretty_name $pretty_name \
+                        -page_id $page_id $portal_id $portlet_name]
 
                 # There is already a value for the param which is overwritten
                 set_element_param $element_id $key $value_id
