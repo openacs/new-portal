@@ -81,7 +81,7 @@ create table portal_datasource_def_params (
 	value		varchar(4000)
 );
 
-elements_configurable
+
 -- **** Portal Layouts ****
 
 -- Layouts are the template for the portal page. i.e. 2 cols, 3 cols,
