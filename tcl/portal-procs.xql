@@ -621,6 +621,15 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::datasource_available_p.select">      
+  <querytext>
+    select count(*) 
+    from portal_datasource_avail_map 
+    where datasource_id = :datasource_id 
+    and portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::make_datasource_unavailable.delete">      
   <querytext>
     delete from portal_datasource_avail_map
