@@ -1192,6 +1192,64 @@ namespace eval portal {
 	
     }
     
+    ad_proc -private get_element_param_list {
+	{-element_id:required}
+	{-key:required}
+    } {
+	Get the list of parameter values for a particular element
+
+	@author ben@openforce
+    } {
+	return [db_list select_param_values {
+	    select value
+	    from portal_element_parameters
+	    where element_id= :element_id and
+	    key= :key
+	}
+	]
+    }
+	
+    ad_proc -private add_element_param_value {
+	{-element_id:required}
+	{-key:required}
+	{-value:required}
+    } {
+	This adds a value for a param (instead of resetting a single value)
+	
+	@author ben@openforce
+    } {
+	db_dml insert_param_value "
+	insert into portal_element_parameters
+	(parameter_id, element_id, configured_p, key, value) values
+	(acs_object_id_seq.nextval, :element_id, 't', :key, :value)"
+    }
+
+    ad_proc -private remove_element_param_value {
+	{-element_id:required}
+	{-key:required}
+	{-value:required}
+    } {
+	removes a value for a param
+    } {
+	db_dml delete_param_value "
+	delete from portal_element_parameters where
+	element_id= :element_id and
+	key= :key and
+	value= :value"
+    }
+
+    ad_proc -private remove_all_element_param_values {
+	{-element_id:required}
+	{-key:required}
+    } {
+	removes a value for a param
+    } {
+	db_dml delete_param_value "
+	delete from portal_element_parameters where
+	element_id= :element_id and
+	key= :key"
+    }
+
     ad_proc -private get_element_param { element_id key } {
 	Get an element param. Returns the value of the param.
 
