@@ -16,11 +16,13 @@
 # tcl/portal-procs.tcl
 
 ad_library {
+
     Portal.
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date Sept 2001
     @version $Id$
+
 }
 
 namespace eval portal {
@@ -28,21 +30,6 @@ namespace eval portal {
     #
     # acs-service-contract procs
     #
-
-    ad_proc -private log_time {str} {
-        global old_time
-        set time "[expr [expr [clock clicks] + 1000000000] / 1000]"
-
-        if {![info exists old_time]} {
-            set diff "--"
-        } else {
-            set diff [expr "$time - $old_time"]
-        }
-
-        set old_time $time
-
-        ns_log Notice "DEBUG-TIME: $time ($diff) - $str"
-    }
 
     ad_proc -public datasource_call {
         {-datasource_name ""}
@@ -86,12 +73,11 @@ namespace eval portal {
         }
     }
 
-
     #
     # Special Hacks
     #
 
-    # The mangement is not responsible for the results of multi-mounting
+    # The management is not responsible for the results of multi-mounting
 
     ad_proc -private package_key {} {
         Returns the package_key
@@ -356,7 +342,6 @@ namespace eval portal {
         db_dml update {}
     }
 
-
     ad_proc -public configure {
         {-referer ""}
         {-template_p f}
@@ -371,9 +356,11 @@ namespace eval portal {
         @param portal_id
         @return_url
     } {
+
         #
         # check perms
         #
+
         set edit_p [permission::permission_p \
             -object_id $portal_id \
             -privilege portal_edit_portal]
@@ -386,6 +373,7 @@ namespace eval portal {
         #
         # Set up some whole page stuff
         #
+
         set master_template [ad_parameter master_template]
         set action_string [generate_action_string]
         if { $template_p == "f" } {
@@ -404,6 +392,7 @@ namespace eval portal {
         #
         # Begin creating the template
         #
+
         set template "
         <master src=\"@master_template@\">
         <p>
@@ -413,6 +402,7 @@ namespace eval portal {
         #
         # Theme selection chunk
         #
+
         set theme_chunk "
             <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
@@ -443,6 +433,7 @@ namespace eval portal {
         #
         # Per-page template chunks
         #
+
         set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
         foreach page_id $list_of_page_ids {
@@ -456,6 +447,7 @@ namespace eval portal {
             #
             # Page rename chunk
             #
+
             set page_name_chunk "
             <a name=$page_id></a>
             <form method=post action=@action_string@>
@@ -530,6 +522,7 @@ namespace eval portal {
                 #
                 # Layout change chunk - only shown when there are no visible elements on the page
                 #
+
                 set layout_chunk ""
 
                 foreach layout [get_layout_info] {
@@ -595,6 +588,7 @@ namespace eval portal {
         #
         # Revert page chunk
         #
+
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
             append template "
             <br>
@@ -609,6 +603,7 @@ namespace eval portal {
         #
         # Templating system hacks
         #
+
         set __adp_stub "[get_server_root][www_path]/."
         set {master_template} \"master\"
 
@@ -826,10 +821,10 @@ namespace eval portal {
         }
     }
 
-
     #
     # portal template procs - util and configuration
     #
+
     ad_proc -private get_portal_template_id {
         portal_id
     } {
@@ -866,7 +861,6 @@ namespace eval portal {
     } {
         configure_dispatch -template_p "t" $portal_id $form
     }
-
 
     #
     # Page Procs
@@ -1541,7 +1535,6 @@ namespace eval portal {
         return [array get element]
     }
 
-
     ad_proc -private evaluate_element_raw { element_id } {
         Just call show on the element
 
@@ -1600,7 +1593,6 @@ namespace eval portal {
 
         return [array get element]
     }
-
 
     ad_proc -public configure_element {
         {-noconn ""}
@@ -1885,7 +1877,6 @@ namespace eval portal {
             return 0
         }
     }
-
 
     ad_proc -public add_element_parameters {
         {-portal_id:required}
@@ -2205,4 +2196,5 @@ namespace eval portal {
 
         append html "  </tr>\n</table>\n"
     }
+
 }
