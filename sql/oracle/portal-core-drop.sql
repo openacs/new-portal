@@ -9,6 +9,7 @@
 -- Reverse order from the creation script
 
 
+drop table portal_datasource_avail_map;
 drop table portal_element_parameters;
 drop table portal_element_map;
 drop table portals;
