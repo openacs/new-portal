@@ -569,7 +569,7 @@ namespace eval portal {
 	}
     }
 
-    ad_proc -public template_configure { portal_id } {
+    ad_proc -public template_configure { portal_id return_url } {
 	Return a portal configuration page. 
 	All form targets point to file_stub-2.
     
@@ -672,9 +672,9 @@ namespace eval portal {
 	    set template "	
 	    <master src=\"@master_template@\">
 	    <p>
+	    <a href=$return_url>Go back</a>
 	    <form action=@action_string@>
-	    <P>
-	    
+	    <P>	    
 	    <form method=post action=@action_string@>
 	    <input type=hidden name=portal_id value=@portal_id@>
 	    <b>Change Theme:</b>
