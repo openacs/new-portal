@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="0.2d1" locale="nl_NL" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.0.3" locale="nl_NL" charset="ISO-8859-1">
 
   <msg key="Add_Page">Toevoegen Pagina</msg>
   <msg key="Bad_direction">Onjuiste richting:</msg>
@@ -21,7 +21,7 @@ Bedankt.</msg>
   <msg key="lt_Revert_the_entire_por">Terugzetten van het gehele portaal naar de standaardinstelling</msg>
   <msg key="lt_You_must_enter_new_na">Er moet een nieuwe naam voor de pagina worden ingevoerd</msg>
   <msg key="Move_to_page">Verplaats naar Pagina</msg>
-  <msg key="nada_theme_description">Non-Thema. Geen grafische elementen.</msg>
+  <msg key="nada_theme_description">Non thema. Geen grafische elementen.</msg>
   <msg key="nada_theme_name">Niets</msg>
   <msg key="Page">Pagina</msg>
   <msg key="Page_1">Pagina:</msg>
