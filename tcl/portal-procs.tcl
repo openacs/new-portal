@@ -361,7 +361,10 @@ namespace eval portal {
         <b>Add a new page:</b> 
         @page_data@
         </form>
-        <P>"
+        <P>
+        <BR>
+        <BR>
+        <b>Configure Page Elements:</b>"
 
         set list_of_page_ids [list $page_id]
 
@@ -392,20 +395,19 @@ namespace eval portal {
             
             if {$element_count == 0} {
                 append template "
-                <b>Page $portal(page_name) has no Elements</b><P>"
+                <P>Page <b>$portal(page_name)</b> has no Elements"
             } else {
                 append template "
-                <b>Configure Page $portal(page_name)'s Elements
-                <P>
-                Debug: element_list $element_list, layout_id $layout_id
-                <P>
-                </b>
+                <P>Page <b>$portal(page_name)</b> Elements</>
                 <include src=\"$portal(template)\" element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
                 hide_links_p=f page_id=$page_id layout_id=$layout_id>
                 "
             }
+            
+            # clear out the region array
+            array unset fake_element_ids
         }
 
 

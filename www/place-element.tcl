@@ -77,6 +77,7 @@ db_foreach hidden_elements {
 
 # moving to other pages
 template::multirow create pages page_id pretty_name
+set other_page_avail_p 0
 
 db_foreach other_pages_select {
     select page_id, pretty_name

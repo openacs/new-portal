@@ -32,25 +32,23 @@
 	<if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>
 	</if>
 
-        <BR>
-
-        <if @element_multi.hideable_p@ eq "t">
-        <small>[<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]</small>
-        </if>
-
-        <if @other_page_avail_p@ ne 0>
-        <small><multiple name=pages>
-        [<a href="@target_stub@-2?portal_id=@portal_id@&op=move_to_page&element_id=@element_multi.element_id@&page_id=@pages.page_id@">move to @pages.pretty_name@</a>]    
-        </multiple>
-</small>
-        </if>
+            <if @element_multi.hideable_p@ eq "t">
+            [<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]    
+            </if>
     </if>
 
-
     <br>
+
+    <if @other_page_avail_p@ ne 0>
+      <multiple name=pages>
+        <small>[<a href="@target_stub@-2?portal_id=@portal_id@&op=move_to_page&element_id=@element_multi.element_id@&page_id=@pages.page_id@">move to @pages.pretty_name@</a>]</small>
+      </multiple>
+   </if>
+
+
 </multiple>
 
-
+</if>
 
 <if @show_avail_p@ ne 0>
 <br>
