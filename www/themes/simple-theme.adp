@@ -1,13 +1,13 @@
 <!-- Portal Element '@name@' begin -->
-<table class="element" border=0 cellpadding=0 cellspacing=0 width="100%">
+<table class="element" border=0 cellpadding=1 cellspacing=0 width="100%">
 <tr> 
   <td class="element-header-text">
     <if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
-      <b>@name@</b>
+      <big><strong>@name@</strong></b>
     </if>
     <else>
       <!-- set up the link; a workaround for now-->
-        <b>@name@</b>
+      <big><strong>@name@</strong></big>
     </else>
   </td>
   
@@ -42,7 +42,7 @@
 <table border=0 bgcolor=black cellpadding=1 cellspacing=0 width=100%>
 <tr>
 <td>
-<table border=0 bgcolor=white cellpadding=1 cellspacing=0 width=100%>
+<table border=0 bgcolor=white cellpadding=2 cellspacing=0 width=100%>
 <tr>
 <td>
 
