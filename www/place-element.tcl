@@ -11,23 +11,12 @@ ad_page_contract {
     portal_id:onevalue
 }
 
-
-
-# this is actually the portal_id.  It's passed as element_id to make
-# the template designer's job a little easier (one less thing to pass,
-# since it's seldom used anyway) perhaps it should be named something
-# that can represent both values...?  
-
-# AKS: XXX fixme 
-set portal_id $element_id
-
 set layout_id [portal::get_layout_id $portal_id]
 
 db_1row select_num_regions "
 select count(*) as num_regions
 from portal_supported_regions
 where layout_id = :layout_id"
-
 
 # get the elements for this region.
 set region_count 0
