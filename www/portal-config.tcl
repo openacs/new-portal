@@ -1,7 +1,7 @@
-# www/element-layout.tcl
+# www/portal-config.tcl
 
 ad_page_contract {
-    A page that does everything.
+    Main configuration page for a portal
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 10/20/2001
