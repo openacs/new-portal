@@ -53,6 +53,7 @@ as
 	is
 		v_portal_id portals.portal_id%TYPE;
 		v_theme_id portals.theme_id%TYPE;
+		v_layout_id portal_layouts.layout_id%TYPE;
 	begin
 		v_portal_id := acs_object.new (
 			object_id	=> portal_id,
@@ -65,6 +66,7 @@ as
 
 
 		select max(theme_id) into v_theme_id from portal_element_themes;
+		select min(layout_id) into v_layout_id from portal_layouts;
 
 		insert into portals (portal_id, 
 				    name, 
@@ -72,7 +74,7 @@ as
 				    theme_id)
 		       values (v_portal_id,
 			       'Untitled',  
-			       layout_id, 
+			       v_layout_id, 
 			       v_theme_id);
 
 		return v_portal_id;
