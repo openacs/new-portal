@@ -21,15 +21,15 @@ where layout_id = :layout_id"
 
 # get the elements for this region.
 set region_count 0
-template::multirow create element_multi element_id name sort_key state hideable_p
+template::multirow create element_multi element_id name sort_key state hideable_p page_id 
 
 db_foreach select_elements_by_region {
-    select element_id, pem.pretty_name as name,  pem.sort_key, state
+    select element_id, pem.pretty_name as name,  pem.sort_key, state, pem.page_id as page_id
     from portal_element_map pem, portal_pages pp
     where
     pp.portal_id = :portal_id 
-    and pp.page_id = :page_id
     and pem.page_id = pp.page_id
+    and pp.page_id = :page_id
     and region = :region 
     and state != 'hidden'
     order by sort_key } {
@@ -37,7 +37,7 @@ db_foreach select_elements_by_region {
         set hideable_p [portal::get_element_param $element_id "hideable_p"]
         
 	template::multirow append element_multi \
-		$element_id $name $sort_key $state $hideable_p
+		$element_id $name $sort_key $state $hideable_p $page_id
 	incr region_count
     }
 
@@ -47,7 +47,6 @@ db_1row select_all_noimm_count \
 from portal_element_map pem, portal_pages pcp
 where
 pcp.portal_id = :portal_id
-and pcp.page_id = :page_id
 and pem.page_id = pcp.page_id
 and state != 'hidden'
 and region not like 'i%'"
@@ -65,32 +64,12 @@ db_foreach hidden_elements {
      from portal_element_map pem, portal_pages pp
      where
        pp.portal_id = :portal_id 
-       and pp.page_id = :page_id
        and pp.page_id = pem.page_id
        and pem.state = 'hidden'
     order by name
 } {
     set show_avail_p 1
     append show_html "<option value=$element_id>$name</option>\n"
-}
-
-
-# moving to other pages
-template::multirow create pages page_id pretty_name
-set other_page_avail_p 0
-
-db_foreach other_pages_select {
-    select page_id, pretty_name
-     from portal_pages pp
-     where
-       pp.portal_id = :portal_id 
-       and pp.page_id != :page_id
-    order by sort_key
-} {
-    set other_page_avail_p 1
-
-    template::multirow append pages \
-            $page_id $pretty_name
 }
 
 set dir "[portal::mount_point]/place-element-components"        
