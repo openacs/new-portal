@@ -206,7 +206,8 @@ namespace eval portal {
 	    <include src=\"@portal.layout_template@\" 
 	    element_list=\"@element_list@\"
 	    element_src=\"@element_src@\"
-	    theme_id=@portal.theme_id@>"
+	    theme_id=@portal.theme_id@
+	    portal_id=@portal.portal_id@>"
 	}
 	
 	# Necessary hack to work around the acs-templating system
@@ -384,7 +385,8 @@ namespace eval portal {
 	    
 	    <b>Configure The Portal's Elements:</b>
 	    <include src=\"@portal.template@\" element_list=\"@element_list@\" 
-	    element_src=\"@element_src@\" action_string=@action_string@>
+	    element_src=\"@element_src@\" action_string=@action_string@
+	    portal_id=@portal_id@>
 	    
 	    
 	    <form method=post action=@action_string@>
