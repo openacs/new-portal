@@ -12,13 +12,13 @@ ad_page_contract {
 # XXX permisson read filter on ds_id?
 
 set ds_id $datasource_id
-set layout_id [portal_get_layout_id $portal_id]
+set layout_id [portal::get_layout_id $portal_id]
 
 # this is required to execute the query that initializes the
 # datastructures used by portal_region_immutable_p
-portal_get_regions $layout_id
+portal::get_regions $layout_id
 
-if { [portal_region_immutable_p $region] && ! [portal_default_p $portal_id] } {
+if { [portal::region_immutable_p $region] } {
     ad_return_complaint 1 "You don't have permission to edit this region."
     return
 }

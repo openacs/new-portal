@@ -18,10 +18,10 @@ if { ! [regexp {[\?&](add|move|remove)_(i?\d+)} [ad_conn query] match mode regio
     ad_return_complaint 1 "No mode.  (region $region, mode $mode, match $match, query [ad_conn query])"
 } else { ns_log Notice "AKS: mode is $mode" }
 
-set layout_id [portal_get_layout_id $portal_id]
-portal_get_regions $layout_id
+set layout_id [portal::get_layout_id $portal_id]
+portal::get_regions $layout_id
 
-if { [portal_region_immutable_p $region] } {
+if { [portal::region_immutable_p $region] } {
     ad_return_complaint 1 "You don't have permission to manipulate this region."
     return
 }

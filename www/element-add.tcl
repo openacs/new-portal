@@ -14,13 +14,13 @@ set user_id [ad_conn user_id]
 # descriptions and stuff.  (at least, on the JavaScript-heavy version)
 # also, a "show me all the elements, even the ones I'm using" button.
 
-set layout_id [portal_get_layout_id $portal_id]
+set layout_id [portal::get_layout_id $portal_id]
 
 # this is required to execute the query that initializes the
 # datastructures used by portal_region_immutable_p
-portal_get_regions $layout_id
+portal::get_regions $layout_id
 
-if { [portal_region_immutable_p $region] } {
+if { [portal::region_immutable_p $region] } {
     ad_return_complaint 1 "You don't have permission to edit this region."
     return
 }
