@@ -119,7 +119,7 @@ show errors;
 begin  
   acs_object_type.create_type (
     supertype     => 'acs_object',
-    object_type   => 'portal_element_themes',
+    object_type   => 'portal_element_theme',
     pretty_name   => 'Portal Element Theme',
     pretty_plural => 'Portal Element Themes',
     table_name    => 'PORTAL_THEMES',
