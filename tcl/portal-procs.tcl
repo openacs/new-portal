@@ -1146,21 +1146,29 @@ namespace eval portal {
     }
 
     ad_proc -public show_proc_helper { 
+        {-template_src ""}
         {-package_key:required}
         {-config_list:required}
     } {
         hides ugly templating calls for portlet "show" procs
     } {
-        
-        # some stupid upvar tricks to get them set right
-        upvar __pk foo
-        set foo $package_key
+       
+        if { $template_src == ""} {
+            set template_src $package_key
+        }
 
-        upvar __cflist bar
-        set bar $config_list
+        # some stupid upvar tricks to get them set right
+        upvar __ts ts
+        set ts $template_src
+
+        upvar __pk pk
+        set pk $package_key
+
+        upvar __cflist cflist
+        set cflist $config_list
 
         uplevel 1 {
-            set template "<include src=\"$__pk\" cf=\"$__cflist\">"
+            set template "<include src=\"$__ts\" cf=\"$__cflist\">"
             set __adp_stub "[get_server_root]/packages/$__pk/www/."
             set code [template::adp_compile -string $template]	
             set output [template::adp_eval code]
