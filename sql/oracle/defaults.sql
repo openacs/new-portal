@@ -139,7 +139,7 @@ begin
 	portal_datasource.set_def_param (
 		datasource_id => v_datasource_id,
 		config_required_p => 'f',
-		configured_p => 'f'
+		configured_p => 'f',
 		key => 'foo',
 		value => 'bar'
 	);
