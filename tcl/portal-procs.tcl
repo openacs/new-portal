@@ -61,6 +61,9 @@ ad_proc -public delete_portal { portal_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
+    # remove permissions (this sucks - ben)
+    db_dml remove_permissions "delete from acs_permissions where object_id= :portal_id"
+
     return [ db_exec_plsql delete_portal {
 	begin
 	portal.delete (portal_id => :portal_id);
@@ -82,6 +85,18 @@ ad_proc -public add_element { portal_id ds_name } {
     # portal_get_regions [portal_get_layout_id $portal_id]
     # AKS: for now _always_ insert the new PE into region 1
     return [add_element_to_region $portal_id $ds_name 1]
+}
+
+ad_proc -public remove_element {element_id} {
+    Remove an element from a portal
+} {
+    db_transaction {
+	# Remove parameters
+	db_dml remove_params "delete from portal_element_parameters where element_id= :element_id"
+
+	# Remove map
+	db_dml remove_map "delete from portal_element_map where element_id= :element_id"
+    }
 }
 
 ad_proc -public add_element_to_region { portal_id ds_name region } {
@@ -522,6 +537,19 @@ ad_proc -private get_elements { portal_id } {
     
     return $entries
 }
+
+ad_proc -private get_element_ids_by_ds {portal_id ds_name} {
+    Get element IDs for a particular portal and a datasource name
+} {
+    # get the ds_id from the ds_name
+    db_1row ds_name_select "select datasource_id as ds_id
+    from portal_datasources 
+    where name = :ds_name"
+
+    return [db_list select_element_ids "select element_id from portal_element_map 
+    where portal_id= :portal_id and datasource_id= :ds_id"]
+}
+
 
 ad_proc -private get_layout_id { portal_id } {
     Get the layout_id of a layout template for a portal.
