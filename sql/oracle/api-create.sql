@@ -7,22 +7,6 @@
 -- $Id$
 --
 --
--- XXX - Just a bare-bones API for now, needs work
--- 
-
--- func for creating a PE (copying from DS defaults)
---			  -- copy the portal_element_map entries
---			  insert into portal_element_map
---				  (portal_id, element_id, region, sort_key)
---			  select new.v_portal_id, m.element_id, m.region, m.sort_key
---			  from portal_element_map m
---			  where portal_id = new.parent_portal_id;
---
-
--- funcs in portal_element (not an acs_object in my DM)
---	procedure make_available (
---	procedure move (
-
 
 create or replace package portal
 as
@@ -72,9 +56,13 @@ as
 			context_id	=> context_id
 		);
 
-		insert into portals (portal_id, layout_id, name) 
-			     values (v_portal_id, layout_id, 'Untitled');
-
+		insert into portals (portal_id, layout_id, name, theme_id) 
+		       values (v_portal_id, 
+			       layout_id, 
+			       'Untitled', 
+			       nvl((select max(theme_id) from portal_element_themes), 1) 
+			       );
+`
 		return v_portal_id;
 	end new;
 
@@ -261,8 +249,6 @@ create or replace package portal_datasource
 as
 	function new (
 		datasource_id	in portal_datasources.datasource_id%TYPE default null,
-		data_type	in portal_datasources.data_type%TYPE default null,
-		mime_type	in portal_datasources.mime_type%TYPE default null,
 		secure_p	in portal_datasources.secure_p%TYPE default null,
 		configurable_p	in portal_datasources.configurable_p%TYPE default null,
 		name		in portal_datasources.name%TYPE default null,
@@ -301,8 +287,6 @@ create or replace package body portal_datasource
 as
 	function new (
 		datasource_id		in portal_datasources.datasource_id%TYPE default null,
-		data_type		in portal_datasources.data_type%TYPE default null,
-		mime_type		in portal_datasources.mime_type%TYPE default null,
 		secure_p		in portal_datasources.secure_p%TYPE default null,
 		configurable_p		in portal_datasources.configurable_p%TYPE default null,
 		name			in portal_datasources.name%TYPE default null,
@@ -346,8 +330,6 @@ as
 
 		insert into portal_datasources
 			(datasource_id,
-			data_type,
-			mime_type,
 			name,
 			link,
 			description,
@@ -358,8 +340,6 @@ as
 			config_path)
 		values
 			(v_datasource_id,
-			data_type,
-			mime_type,
 			name,
 			link,
 			description,
