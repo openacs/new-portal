@@ -5,6 +5,22 @@
 -- arjun@openforce.net
 -- $Id$
 
+-- **** PRIVILEGES ****
+begin
+
+    -- multi portal admin privs
+    acs_privilege.create_privilege('portal_create_portal');
+    acs_privilege.create_privilege('portal_delete_portal');
+
+    -- privs on a single portal
+    acs_privilege.create_privilege('portal_read_portal');
+    acs_privilege.create_privilege('portal_edit_portal');
+    acs_privilege.create_privilege('portal_admin_portal');
+
+end;
+/
+show errors
+
 -- **** DATASOURCES ****
 
 create table portal_mime_types (
