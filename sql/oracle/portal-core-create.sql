@@ -223,4 +223,27 @@ create table portal_element_parameters (
 );
 
 
+-- This table maps the datasources that are available for portals to
+-- bind to (i.e. creating a PE). This table is required since some DSs
+-- will not make sense for every portal. A "current time" DS will make
+-- sense for every portal, but a bboard DS may not, and we don't want
+-- to confuse everyone with DSs that don't make sense for the given
+-- portal
+
+create table portal_datasource_avail_map (
+	portal_datasource_id	integer
+				constraint p_ds_a_map_p_ds_id_pk
+				primary key,
+	portal_id		constraint p_ds_a_map_portal_id_fk
+				references portals on delete cascade
+				not null,
+	datasource_id		constraint p_ds_a_map_datasource_id_fk
+				references portal_datasources
+				on delete cascade
+				not null,
+ 	-- DSs are unique per-portal
+	constraint p_ds_a_map_pid_ds_un 
+	unique(portal_id,datasource_id)
+);
+
 
