@@ -33,7 +33,8 @@ foreach ds_id $ds_ids {
     configured_p = 'f'"] } {
 	# needs to be configured, redirect to config page
 	# everything that this page needs along the way
-	ad_returnredirect "element-config?[export_url_vars portal_id name region ds_ids]"	
+	set ds_to_configure $ds_id
+	ad_returnredirect "element-config?[export_url_vars portal_id name region ds_ids ds_to_configure]"	
     }
 }
 
