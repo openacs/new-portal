@@ -972,14 +972,7 @@ namespace eval portal {
 		ad_returnredirect $return_url
 	    }
 	}
-
     }
-
-
-
-
-    }
-
     
     #
     # Datasource helper procs
