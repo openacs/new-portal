@@ -111,7 +111,7 @@ namespace eval portal {
 	    name => :name,
 	    layout_id => :layout_id,
 	    template_id => :template_id,
-	    portal_template_p => :portal_template_p
+	    portal_template_p => :portal_template_p,
 	    context_id => :context_id
 	    );
 	    
