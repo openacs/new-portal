@@ -6,10 +6,10 @@
 
 <table border=1 width="100%">
 <tr>
-<td align=center>
+<td align=left>
 
 <multiple name=element_multi>
-    @element_multi.name@
+    @element_multi.name@ - @element_multi.description@
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
         <a href="@target_stub@-2?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&sort_key=@element_multi.sort_key@&direction=up"><img border=0 src="@dir@/finger-up.gif" alt="move up"></a>
@@ -31,7 +31,7 @@
 
 <p align=left>
 
-Action: <a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide this element</a>
+Action: (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide this element</a>)
 
 <BR>
 
