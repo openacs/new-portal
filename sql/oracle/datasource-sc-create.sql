@@ -167,8 +167,8 @@ begin
 		  'Makes this PE UNavailable to this portal page',
 		  'f', -- not cacheable
 		  1,   -- n_args
-		  'portal_datasource.MakeSelfAvailable.InputType',
-		  'portal_datasource.MakeSelfAvailable.OutputType'
+		  'portal_datasource.MakeSelfUnvailable.InputType',
+		  'portal_datasource.MakeSelfUnaailable.OutputType'
 	);
 
 
