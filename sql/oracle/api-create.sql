@@ -273,7 +273,7 @@ as
 		description		in portal_datasources.description%TYPE default null,
 		content			in portal_datasources.content%TYPE default null,
 		content_varchar		varchar default null,
-		package_key		apm_package_types.package_key%TYPE default null,
+--		package_key		apm_package_types.package_key%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date		in acs_objects.creation_date%TYPE 
 					default sysdate,
@@ -302,7 +302,7 @@ as
 		description		in portal_datasources.description%TYPE default null,
 		content			in portal_datasources.content%TYPE default null,
 		content_varchar		varchar default null,
-		package_key		apm_package_types.package_key%TYPE default null,
+--		package_key		apm_package_types.package_key%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date		in acs_objects.creation_date%TYPE 
 					default sysdate,
@@ -334,10 +334,10 @@ as
 
 		insert into portal_datasources
 			(datasource_id, data_type,
-			mime_type, name, description, secure_p, configurable_p, content, package_key)
+			mime_type, name, description, secure_p, configurable_p, content)
 		values
 			(v_datasource_id, data_type,
-			mime_type, name, description, secure_p, configurable_p, v_content_loc, package_key); 
+			mime_type, name, description, secure_p, configurable_p, v_content_loc); 
 
 		return v_datasource_id;
 	end new;
