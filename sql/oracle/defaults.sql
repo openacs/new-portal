@@ -56,6 +56,8 @@ set scan off
 
 -- Insert some default templates.
 
+--- XXX todo fix me not done yet
+
 declare
 	template_id	portal_templates.template_id%TYPE;
 begin
