@@ -6,17 +6,19 @@ ad_page_contract {
     @creation-date 9/28/2001
     @cvs_id $Id$
 } -properties {
-    element_id:onevalue
     region:onevalue
+    action_string:onevalue
+    portal_id:onevalue
 }
 
-set my_url [ad_conn url]
+
 
 # this is actually the portal_id.  It's passed as element_id to make
 # the template designer's job a little easier (one less thing to pass,
 # since it's seldom used anyway) perhaps it should be named something
 # that can represent both values...?  
 
+# AKS: XXX fixme 
 set portal_id $element_id
 
 # get the elements for this region.
@@ -34,8 +36,6 @@ db_foreach select_elements_by_region {
 		$element_id $name $sort_key $state
 	incr region_count
     }
-
-
 
 
 db_1row select_all_noimm_count \
