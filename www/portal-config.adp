@@ -1,7 +1,5 @@
 <master src="@master_template@">
-<property name="title">Edit Portal: @portal.name@</property>
-
-
+<property name="title">Edit Portal: <a href=portal-show?&portal_id=@portal_id@>@portal.name@</a></property>
 
 <form action="portal-update-name">
 Change Name:
