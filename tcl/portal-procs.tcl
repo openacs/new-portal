@@ -535,7 +535,8 @@ nope} {
 	    }
 
 	    if {! [empty_string_p $element_id_list] } {
-		portal::move_elements $portal_id $element_id_list $region 
+		portal::move_elements \
+			$portal_id $element_id_list $target_region 
 	    } else {
 		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
 	    }
