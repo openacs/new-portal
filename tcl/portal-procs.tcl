@@ -65,8 +65,30 @@ ad_proc -public delete { portal_id } {
     }]
 }
 
+ad_proc -public get_name { portal_id } {
+    Get the name of this portal
+
+    @param portal_id
+    @return the name of the portal or null
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    # check permissions
+    ad_require_permission $portal_id portal_read_portal
+
+    if {[portal::exists_p $portal_id]} {
+	db_1row get_name \
+		"select name from portals where portal_id = :portal_id" 
+    } else {
+	set name ""
+    }
+    
+    return $name
+}
+
 ad_proc -public update_name { portal_id new_name } {
-    Update the name of this portal
+    Update the name of this
+ portal
 
     @param portal_id
     @param new_name
@@ -78,8 +100,7 @@ ad_proc -public update_name { portal_id new_name } {
     ad_require_permission $portal_id portal_read_portal
     ad_require_permission $portal_id portal_edit_portal
 
-    # remove permissions (this sucks - ben)
-    db_dml remove_permissions "update portals set name = :new_name where portal_id = :portal_id"
+    db_dml update_name "update portals set name = :new_name where portal_id = :portal_id"
 
 }
 
@@ -216,7 +237,7 @@ ad_proc -public swap_element {portal_id element_id sort_key region direction} {
 	}
     } else {
 	ad_return_complaint 1 \ 
-	"portal::move_element: Bad direction: $direction"
+	"portal::swap_element: Bad direction: $direction"
 	ad_script_abort
     }
 
@@ -325,11 +346,212 @@ ad_proc -public get_element_param { element_id key } {
 }
 
 
+ad_proc -public configure { portal_id } {
+    Return a portal configuration page. All form targets point to
+    file_stub-2.
+    
+    @return A portal configuration page
+    
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    ad_require_permission $portal_id portal_read_portal
+    ad_require_permission $portal_id portal_edit_portal
+    
+    # Set up some template vars
+    set master_template [ad_parameter master_template]
+
+    # Set up the form target
+    set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+
+    # AKS XXX layout change
+    # get the layouts
+    set layout_count 0
+    template::multirow create layouts layout_id name \
+	    description filename resource_dir checked
+    
+    db_foreach get_layouts "
+    select 
+    layout_id, 
+    name, 
+    description, 
+    filename, 
+    resource_dir, 
+    ' ' as checked
+    from portal_layouts 
+    order by name "  {
+	set resource_dir "$resource_dir"
+	template::multirow append layouts $layout_id $name \
+		$description $filename $resource_dir $checked
+	incr layout_count
+    }
+    
+    # get the portal.
+    db_1row select_portal "
+	select
+	p.portal_id,
+	p.name,
+	t.filename as template,
+	t.layout_id
+	from portals p, portal_layouts t
+	where p.layout_id = t.layout_id and p.portal_id = :portal_id
+    " -column_array portal
+
+    # fake some elements so that the <list> in the template has
+    # something to do.
+    foreach region [ portal::get_regions $portal(layout_id) ] {
+	# pass the portal_id along here instead of the element_id.
+	lappend fake_element_ids($region) $portal_id
+    }
+    
+    set element_list [array get fake_element_ids]
+    set element_src "[portal::www_path]/place-element"
+    
+    
+    set template "	
+    <master src=\"@master_template@\">
+    <form action=\"@target_stub@-2\">
+    Change Name:
+    <P>
+    <input type=\"text\" name=\"new_name\" value=\"@portal.name@\">
+    <center>
+    <input type=hidden name=portal_id value=@portal_id@>
+    <input type=submit name=\"op\" value=\"Rename\">
+    </form>
+    </center>
+    
+    <P>
+    
+    <form method=get action=\"portal-config-2\">
+    <%= [export_form_vars portal_id] %>
+    <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">
+    </form>
+    
+    <center>
+    <form method=get action=\"revert\">
+    <%= [export_form_vars portal_id ] %>
+    <input type=submit value=\"Revert To The Default\">
+    </form>
+    </center>
+"
+
+#
+#	 <form action=\"update_layout\">
+#	 <if @layout_count@ gt 1>
+#	 <p>
+#	 Change Layout:
+#	 <br>
+#	 
+#	 <table border=0>
+#	 <tr>
+#	 
+#	 <multiple name=\"layouts\">
+#	 <td>
+#	 <table border=0>
+#	 <tr>
+#	 <td>
+#	 <input type=radio name=layout_id value=\"@layouts.layout_id@\" 
+#	 <if @layout_id@ eq @layouts.layout_id@>checked</if>>
+#	 <b>@layouts.name@</b><br>
+#	 <table border=0 align=center>
+#	 <tr><td>
+#	 <include src=\"@layouts.resource_dir@/example\" 
+#	 resource_dir=\"@layouts.resource_dir@\">
+#	 </td></tr>
+#	 </table>
+#	 <font size=-1>
+#	 @layouts.description@
+#	 </font>
+#	 </td>
+#	 </tr>
+#	 </table>
+#	 </td>
+#	 </multiple>
+#	 
+#	 </tr>
+#	 </table>
+#	 </p>
+#	 </if>
+#	 
+#	 <center>
+#	 <input type=submit value=\"Update Layout\">
+#	 </center>
+#	 </form>
+
+	
+	# This hack is to work around the acs-templating system
+	set __adp_stub "[get_server_root][www_path]/."
+	set {master_template} \"master\" 
+
+	set code [template::adp_compile -string $template]
+	set output [template::adp_eval code]
+	
+	return $output
+    }
+
+ad_proc -public configure_dispatch { portal_id op query } {
+    Dispatches the configuration operation. 
+    This is ugly to make your page pretty.
+    
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    ad_require_permission $portal_id portal_read_portal
+    ad_require_permission $portal_id portal_edit_portal
+   
+    # remove the op and the portal_id from the query
+    set query [string tolower $query]
+    regsub {[&]*portal_id=\d+} $query "" query
+    regsub {[&]*op=\w+} $query "" query
+
+    set op [string tolower $op]
+
+    switch $op {
+	"rename" { 
+	    regsub {[&]*new_name=} $query "" new_name
+	    portal::update_name $portal_id $new_name
+	}
+	"swap" {  
+	    regexp {[&]*element_id=(\d+)} $query "" element_id
+	    regexp {[&]*sort_key=(\d+)} $query "" sort_key
+	    regexp {[&]*region=(\d+)} $query "" region
+	    regexp {[&]*direction=(\w+)} $query "" direction
+
+	    ns_log notice "aks95 $portal_id $element_id $sort_key $region $direction"
+	    portal::swap_element $portal_id $element_id $sort_key $region $direction
+	}
+	"move" {
+	    set region [lindex $args 0]
+
+	    if {! [empty_string_p $element_id_list] } {
+		portal::move_elements $portal_id $element_id_list $region 
+	    } else {
+		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
+	    }
+	} 
+	"add" {
+	}
+	"remove" {
+	}
+	"revert" {
+	}
+	"update_layout" {
+	}
+	default {
+	    ns_log Warning \
+		    "portal::config_dispatch: op = $op, and that's not right!"
+	    ad_return_complaint 1  "portal::config_dispatch: bad op = $op"
+	}
+    }
+}
+
+
 ad_proc -public render { portal_id } {
     Get a portal by id. If it's not found, say so.
 
-    @return Fully rendered portal or error message
-    @param element_id The object-id for the element that you'd like to retrieve.
+    @return Fully rendered portal as an html string
+    @param portal_id
+
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
@@ -385,13 +607,6 @@ ad_proc -public render { portal_id } {
     set code [template::adp_compile -string $template]
     set output [template::adp_eval code]
 
-#    if {![empty_string_p $output]} {
-#	 set mime_type [template::get_mime_type]
-#	 set header_preamble [template::get_mime_header_preamble $mime_type]
-#
-#	 ns_return 200 $mime_type "$header_preamble $output"
-#    }
-#    
     return $output
 
 }
