@@ -626,13 +626,15 @@ nope} {
 		portal::move_elements \
 			$portal_id $element_id_list $target_region 
 	    } else {
-		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
+		ns_returnredirect \
+			"portal-config.tcl?[export_url_vars portal_id]"
 	    }
 	} 
 	"add a new element here" {
-
-
-	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
+	    db_dml unhide_element \
+		    "update portal_element_map 
+	            set state = 'full' 
+	            where element_id = :element_id"
 	}
 	"remove all checked" {
 
@@ -644,13 +646,15 @@ nope} {
 	    }
 
 	    if {! [empty_string_p $element_id_list] } {
-		
 		foreach element_id $element_id_list {
-		    # XXX fixme
-		    remove_element $element_id
+		    db_dml hide_element \
+			    "update portal_element_map 
+		             set state =  'hidden' 
+		             where element_id = :element_id"
 		}
 	    } else {
-		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
+		ns_returnredirect \
+			"portal-config.tcl?[export_url_vars portal_id]"
 	    }
 	}
 	"revert to default" {
