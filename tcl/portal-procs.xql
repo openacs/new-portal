@@ -679,6 +679,12 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::get_theme_id_from_name.get_theme_id_from_name_select">      
+    <querytext>
+        select theme_id from portal_element_themes where name = :theme_name
+    </querytext>
+</fullquery> 
+
 <fullquery name="portal::get_theme_id.get_theme_id_select">
   <querytext>
     select theme_id from portals where portal_id = :portal_id
