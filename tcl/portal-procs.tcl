@@ -106,8 +106,7 @@ namespace eval portal {
 	@param user_id
 	@param layout_name optional
     } {
-	# XXX todo permissions should be portal_create_portal	
-	db_1row layout_id_select {}
+	db_1row min_layout_id_select {}
 	return [ db_exec_plsql create_new_portal_and_perms {}]
     }
     
@@ -142,11 +141,12 @@ namespace eval portal {
     }
     
     ad_proc -public render { 
+        {-page_num 0}
+        {-hide_links_p "f"} 
         {-hide_links_p "f"} 
         {-render_style "individual"}
         portal_id
         {theme_id ""} 
-
     } {
 	Get a portal by id. If it's not found, say so.
 	FIXME: right now the render style is totally ignored (ben)
@@ -164,7 +164,7 @@ namespace eval portal {
 	# get the portal and layout
 	db_1row portal_select {} -column_array portal
 
-	# theme_id override
+	# theme_id override  
 	if { $theme_id != "" } { set portal(theme_id) $theme_id }
 
 	db_foreach element_select {} -column_array entry {
@@ -216,8 +216,6 @@ namespace eval portal {
 	and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
 	belong in that region. - Ian Baker
 
-	AKS: XXX improve me
-	
 	@param element_id_list An [array get]'d array, keys are regions, \
 		values are lists of element_ids.
 	@param var_stub A name upon which to graft the bits that will be \
@@ -257,6 +255,7 @@ namespace eval portal {
     
 
     ad_proc -public configure { 
+        {-page_num 0}
         {-template_p "f"}
         portal_id
         return_url
@@ -264,6 +263,8 @@ namespace eval portal {
 	Return a portal or portal template configuration page. 
 	All form targets point to file_stub-2.
     
+	@param page_num the page of the portal to config, def 0
+	@param template_p is this portal a template?
 	@param portal_id
 	@return_url
 	@return A portal configuration page	
@@ -305,8 +306,10 @@ namespace eval portal {
         # get the portal.	    
         db_1row portal_select {} -column_array portal
 
+        # XXXX page support 
+
         # fake some elements for the <list> in the template 
-        set layout_id [get_layout_id $portal_id]
+        set layout_id [get_layout_id -page_num $page_num $portal_id]
 
         db_foreach get_regions {}  {
             lappend fake_element_ids($region) $portal_id
@@ -329,13 +332,13 @@ namespace eval portal {
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
-        <b>Change Theme:</b>
+        <b>Change Theme:</b> 
         @theme_data@
         </form>
         <P>
         <b>Configure The Portal's Elements:</b>
         <include src=\"@portal.template@\" element_list=\"@element_list@\" 
-        action_string=@action_string@ portal_id=@portal_id@ 
+        action_string=@action_string@ portal_id=@portal_id@
         return_url=\"@return_url@\" element_src=\"@element_src@\"
         hide_links_p=f>
         "
@@ -508,11 +511,135 @@ namespace eval portal {
         configure_dispatch -template_p "t" $portal_id $form 
     }
     
+    
+    #
+    # Page Procs
+    #
+
+    ad_proc -public get_page_id {
+        {-portal_id:required}
+        {-sort_key "0"}
+        {-current "f"}
+    } {
+        Gets the id of the page with the given portal_id and sort_key
+        if no sort_key is given returns the first page of the portal
+        which is always there. 
+
+	@return the id of the page
+	@param portal_id 
+	@param current boolean get the current page if true
+	@param sort_key - optional, defaults to page 0
+    } {
+
+        if {$current == "f"} {
+            set foo  [db_string get_page_id_select {}]
+        } else {
+            set foo [db_string get_current_page_id_select {}]
+        }
+
+        ns_log notice "aks6 foo is $foo"
+        return $foo
+    }
+
+    ad_proc -public page_count {
+        {-portal_id:required}
+    } {
+	1 when there's only one page
+
+	@param portal_id 
+	@param page_id 
+    } {
+        return [db_1row page_count_select {}]
+    }
+
+    ad_proc -public set_current_page {
+        {-portal_id:required}
+        {-page_id:required}
+    } {
+        Sets the current page id 
+
+	@param portal_id 
+	@param page_id 
+    } {
+        db_dml set_current_page_update {}]
+    }
+
+
+    ad_proc -public get_page_pretty_name {
+        {-page_id:required}
+    } {
+        Gets the pn
+    } {
+        return [db_string get_page_pretty_name_select {}]
+    }
+
+    ad_proc -public page_create {
+        {-pretty_name:required}
+        {-portal_id:required}
+        {-layout_id:required}
+    } {
+        Appends a new blank page for the given portal_id. 
+
+	@return the id of the page
+	@param portal_id 
+    } {
+        return [db_string page_create_insert {}]
+    }
+
+    ad_proc -public list_pages_tcl_list {
+        {-portal_id:required}
+    } {
+        Returns a tcl list of the page_ids for the given portal_id
+
+	@return tcl list of the pages
+	@param portal_id 
+    } {
+        set foo [list]
+       
+        db_foreach list_pages_tcl_list_select {} {
+            lappend foo $page_id
+        } 
+        return $foo
+    }
+
+    ad_proc -public list_pages {
+        {-portal_id:required}
+        {-link ""}
+        {-pre_html ""}
+        {-post_html ""}
+        {-separator "&nbsp;"}
+    } {
+        Returns an html string of the pretty names of the pages in the 
+        given portal. 
+
+	@return the id of the page
+	@param portal_id 
+	@param link the relative link to set for hrefs
+        @param current_page_link f means that there is no link for the current page
+    } {
+        set html $pre_html
+        set current_page_id [get_page_id -current "t" -portal_id $portal_id]
+
+        foreach page [list_pages_tcl_list -portal_id $portal_id] {
+            if {$page == $current_page_id} {
+                append html "[get_page_pretty_name -page_id $page]"
+            } else {
+                append html "<a href=$link?page_id=$page>[get_page_pretty_name -page_id $page]</a>"
+            }
+            append html $separator
+        }
+        
+        return [append html $post_html]
+        
+    }
+
     #
     # Element Procs
     #
 
     ad_proc -public add_element { 
+        {-page_id ""}
+        {-page_num ""}
         portal_id
         ds_name
     } {
@@ -521,14 +648,23 @@ namespace eval portal {
 	
 	@return the id of the new element
 	@param portal_id 
+	@param page_num the number of the portal page to add to, def 0 
 	@param ds_name
     } {
+        if { [empty_string_p $page_num] && [empty_string_p $page_id] } {
+            # neither page_num or page_id given, default to 0
+            set page_id [portal::get_page_id -portal_id $portal_id -sort_key 0]
+        } 
+
 	# Balance the portal by adding the new element to the region
 	# with the fewest number of elements, the first region w/ 0 elts,
 	# or, if all else fails, the first region
 	set min_num 99999
 	set min_region 0
-	set layout_id [get_layout_id $portal_id]
+
+        # get the layout for some page?
+        ns_log notice "aks36  add_element args  $page_num/$page_id"
+        set layout_id [get_layout_id -page_id $page_id $portal_id]
 	
 	db_foreach get_regions {} {
 	    lappend region_list $region
@@ -548,8 +684,16 @@ namespace eval portal {
 	    } 
 	}
 	
-	if { $min_region == 0 } { set min_region 1 }
-	return [add_element_to_region $portal_id $ds_name $min_region]
+	if { $min_region == 0 } { 
+            set min_region 1
+        }
+
+
+
+        return [add_element_to_region \
+                    -page_id $page_id \
+                    -layout_id $layout_id \
+                    $portal_id $ds_name $min_region]
     }
 
 
@@ -562,6 +706,8 @@ namespace eval portal {
     }
 
     ad_proc -private add_element_to_region { 
+        {-layout_id:required}
+        {-page_id ""}
         portal_id
         ds_name
         region
@@ -573,16 +719,17 @@ namespace eval portal {
 	@param ds_name
     } {
 
-	set ds_id [get_datasource_id $ds_name]
+	set ds_id [get_datasource_id $ds_name]        
 
-	# First, check if this portal has a portal template and
-	# that that template has an element of this DS in it. If 
+	# First, check if this portal 1) has a portal template and
+	# 2) that that template has an element of this DS in it. If 
 	# so, copy stuff. If not, just insert normally. 
 
 	if { [db_0or1row check_new {}] == 1 } {
 
             db_transaction {
                 set new_element_id [db_nextval acs_object_id_seq]
+                db_dml template_page_insert {}
                 db_dml template_insert {}
                 db_dml template_params_insert {}
             }
@@ -1040,13 +1187,22 @@ namespace eval portal {
 	return [db_list select {}]
     }
     
-    ad_proc -private get_layout_id { portal_id } {
-	Get the layout_id of a layout template for a portal.
+    ad_proc -private get_layout_id { 
+        {-page_num ""}
+        {-page_id ""}
+        portal_id
+    } {
+	Get the layout_id of a layout template for a portal page.
 	
+	@param page_num the page of the portal to look at, def page 0
 	@param portal_id The portal_id.
 	@return A layout_id.
     } {
-	db_1row select {}
+        if { ![empty_string_p $page_num] } {
+            db_1row get_layout_id_num_select {}
+        } else {
+            db_1row get_layout_id_page_select {}
+        }
 	return $layout_id
     }    
     
@@ -1158,8 +1314,6 @@ namespace eval portal {
 	db_transaction {
 	    foreach element_id $element_ids {
 
-                ns_log notice "aks30 $element_id, $key, $value_id"
-
 		remove_element_param_value -element_id $element_id \
                         -key $key \
                         -value $value_id
@@ -1168,9 +1322,6 @@ namespace eval portal {
                     check_key_value_list $extra_params
 
                     for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
-
-                        ns_log notice "aks31 $element_id, [lindex $extra_params $x] 
-                                 [lindex $extra_params [expr $x + 1]]"
 
                         remove_element_param_value -element_id $element_id \
                                 -key [lindex $extra_params $x] \

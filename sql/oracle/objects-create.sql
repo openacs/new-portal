@@ -206,3 +206,19 @@ begin
 end; 
 / 
 show errors;
+
+
+-- portal_page
+begin  
+  acs_object_type.create_type ( 
+    supertype     => 'acs_object', 
+    object_type   => 'portal_page', 
+    pretty_name   => 'Portal Page', 
+    pretty_plural => 'Portal Pages', 
+    table_name    => 'PORTAL_PAGES', 
+    id_column     => 'page_id',
+    package_name  => 'portal_page'
+  ); 
+end;
+/
+show errors;

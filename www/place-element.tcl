@@ -12,7 +12,7 @@ ad_page_contract {
     element_multi:multirow
 }
 
-set layout_id [portal::get_layout_id $portal_id]
+set layout_id [portal::get_layout_id -page_num 0 $portal_id]
 
 db_1row select_num_regions "
 select count(*) as num_regions
@@ -24,10 +24,11 @@ set region_count 0
 template::multirow create element_multi element_id name sort_key state hideable_p
 
 db_foreach select_elements_by_region {
-    select element_id, pretty_name as name,  sort_key, state
-     from portal_element_map pem
+    select element_id, pem.pretty_name as name,  pem.sort_key, state
+     from portal_element_map pem, portal_pages pp
      where
-       portal_id = :portal_id 
+       pp.portal_id = :portal_id 
+       and pem.page_id = pp.page_id
        and region = :region 
        and state != 'hidden'
     order by sort_key } {
@@ -42,9 +43,10 @@ db_foreach select_elements_by_region {
 
 db_1row select_all_noimm_count \
 "select count(*) as all_count
-from portal_element_map
+from portal_element_map pem, portal_pages pp
 where
-portal_id = :portal_id
+pp.portal_id = :portal_id
+and pem.page_id = pp.page_id
 and state != 'hidden'
 and region not like 'i%'"
 
@@ -58,9 +60,10 @@ append show_html "<select name=element_id>"
 
 db_foreach hidden_elements {
     select element_id, name
-     from portal_element_map pem
+     from portal_element_map pem, portal_pages pp
      where
-       pem.portal_id = :portal_id 
+       pp.portal_id = :portal_id 
+       and pp.page_id = pem.page_id
        and pem.state = 'hidden'
     order by name
 } {

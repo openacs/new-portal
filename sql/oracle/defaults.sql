@@ -17,15 +17,6 @@ declare
 	theme_id	portal_element_themes.theme_id%TYPE;
 begin
 
--- two-column layout, without a header.
-	layout_id := portal_layout.new (
-		name => 'Simple 1-Column',
-		description => 'A simple 1-column layout',
-		filename => 'layouts/simple1',
-		resource_dir => 'layouts/components/simple1');
-
--- the supported regions for that layout.
-	portal_layout.add_region (layout_id => layout_id, region => '1');
 
 -- two-column layout, without a header.
 	layout_id := portal_layout.new (
@@ -37,6 +28,16 @@ begin
 -- the supported regions for that layout.
 	portal_layout.add_region (layout_id => layout_id, region => '1');
 	portal_layout.add_region (layout_id => layout_id, region => '2');
+
+-- one-column layout, without a header.
+	layout_id := portal_layout.new (
+		name => 'Simple 1-Column',
+		description => 'A simple 1-column layout',
+		filename => 'layouts/simple1',
+		resource_dir => 'layouts/components/simple1');
+
+-- the supported regions for that layout.
+	portal_layout.add_region (layout_id => layout_id, region => '1');
 
 -- same as above, only, three columns.
 	layout_id := portal_layout.new (

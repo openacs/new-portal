@@ -19,11 +19,10 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::create.layout_id_select">      
+<fullquery name="portal::create.min_layout_id_select">      
   <querytext>
-    select layout_id from
-    portal_layouts where
-    name = $layout_name 
+    select min(layout_id) as layout_id from
+    portal_layouts 
   </querytext>
 </fullquery> 
 
@@ -41,18 +40,21 @@
 
 <fullquery name="portal::render.portal_select">      
   <querytext>
-    select portal_id, portals.name, theme_id, filename as layout_template
-    from portals, portal_layouts
-    where portals.layout_id = portal_layouts.layout_id 
-    and portal_id = :portal_id
+    select  p.name, p.portal_id, p.theme_id, pl.filename as layout_template
+    from portals p, portal_pages pp, portal_layouts pl
+    where :portal_id = pp.portal_id 
+    and pp.portal_id = p.portal_id
+    and pp.layout_id = pl.layout_id
+    and pp.sort_key = :page_num
   </querytext>
 </fullquery> 
 
 <fullquery name="portal::render.element_select">      
   <querytext>
-    select element_id, region, sort_key
-    from portal_element_map
-    where portal_id = :portal_id
+    select element_id, region, pem.sort_key
+    from portal_element_map pem, portal_pages pp
+    where pp.portal_id = :portal_id
+    and pp.page_id = pem.page_id
     and state != 'hidden'
     order by region, sort_key
   </querytext>
@@ -84,10 +86,12 @@
 
 <fullquery name="portal::configure.portal_select">      
   <querytext>
-    select p.portal_id, p.name, t.filename as template, t.layout_id
-    from portals p, portal_layouts t
-    where p.layout_id = t.layout_id 
-    and p.portal_id = :portal_id
+    select  p.name, p.portal_id, pp.layout_id, pl.filename as template, sort_key as page_num
+    from portals p, portal_pages pp, portal_layouts pl
+    where :portal_id = pp.portal_id
+    and pp.portal_id = p.portal_id 
+    and pp.layout_id = pl.layout_id
+    and pp.sort_key = :page_num
   </querytext>
 </fullquery> 
 
@@ -168,6 +172,56 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::get_page_id.get_page_id_select">      
+  <querytext>
+   select page_id
+   from portal_pages
+   where portal_id = :portal_id 
+   and sort_key = :sort_key
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::page_count.page_count_select">      
+  <querytext>
+   select count(*)
+   from portal_pages
+   where portal_id = :portal_id 
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::set_current_page.set_current_page_update">      
+  <querytext>
+   update portal_current_page
+   set page_id = :page_id
+   where portal_id = :portal_id 
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_page_id.get_current_page_id_select">      
+  <querytext>
+   select page_id
+   from portal_current_page
+   where portal_id = :portal_id 
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_page_pretty_name.get_page_pretty_name_select">      
+  <querytext>
+   select pretty_name
+   from portal_pages
+   where page_id = :page_id 
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::list_pages_tcl_list.list_pages_tcl_list_select">      
+  <querytext>
+   select page_id
+   from portal_pages
+   where portal_id = :portal_id 
+   order by sort_key
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::add_element.get_regions">      
   <querytext>
     select region
@@ -179,9 +233,10 @@
 <fullquery name="portal::add_element.region_count">      
   <querytext>
     select count(*) as count
-    from portal_element_map
-    where portal_id = :portal_id
-    and region = :region
+    from portal_element_map pem, portal_pages pp
+    where pp.portal_id = :portal_id
+    and pem.region = :region
+    and pp.page_id = pem.page_id
   </querytext>
 </fullquery> 
 
@@ -194,22 +249,36 @@
 
 <fullquery name="portal::add_element_to_region.check_new">      
   <querytext>
-     select template_id
-     from portals p, portal_element_map pem
+     select 1 
+     from portals p, portal_element_map pem, portal_pages pp
      where p.portal_id = :portal_id
-     and p.template_id = pem.portal_id
+     and p.template_id = pp.portal_id
+     and pp.portal_id = pem.page_id
      and pem.datasource_id = :ds_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::add_element_to_region.template_page_insert">      
+  <querytext>
+    insert into portal_pages
+    (element_id, name, pretty_name, page_id, datasource_id, region,  sort_key, state)
+    select :new_element_id, name, pretty_name, :page_id, :ds_id, region, sort_key, state
+    from portals p, portal_element_map pem, portal_pages pp
+    where pem.page_id = pp.page_id
+    and pp.portal_id = :template_id
+    and pem.datasource_id = :ds_id
   </querytext>
 </fullquery> 
 
 <fullquery name="portal::add_element_to_region.template_insert">      
   <querytext>
     insert into portal_element_map
-    (element_id, name, pretty_name, portal_id, datasource_id, region,  sort_key, state)
-    select :new_element_id, name, pretty_name, :portal_id, :ds_id, region, sort_key, state
-    from portal_element_map
-    where portal_id = :template_id
-    and datasource_id= :ds_id
+    (element_id, name, pretty_name, page_id, datasource_id, region,  sort_key, state)
+    select :new_element_id, name, pretty_name, :page_id, :ds_id, region, sort_key, state
+    from portals p, portal_element_map pem, portal_pages pp
+    where pem.page_id = pp.page_id
+    and pp.portal_id = :template_id
+    and pem.datasource_id = :ds_id
   </querytext>
 </fullquery> 
 
@@ -220,9 +289,10 @@
     select acs_object_id_seq.nextval, :new_element_id, config_required_p, configured_p, key, value
     from portal_element_parameters
     where element_id = (select element_id
-                        from portal_element_map
-                        where portal_id = :template_id
-                        and datasource_id = :ds_id)
+                        from portal_element_map pem, portal_pages pp
+                        where pem.page_id = pp.page_id 
+                        and pp.portal_id = :template_id
+                        and pem.datasource_id = :ds_id)
 </querytext>
 </fullquery> 
 
@@ -381,8 +451,9 @@
 <fullquery name="portal::configure_element.select">      
   <querytext>
     select portal_id, datasource_id
-    from portal_element_map 
+    from portal_element_map pem, portal_pages pp
     where element_id = :element_id
+    and pem.page_id = pp.page_id
   </querytext>
 </fullquery> 
 
@@ -434,15 +505,22 @@
 
 <fullquery name="portal::get_element_ids_by_ds.select">      
   <querytext>
-    select element_id from portal_element_map
-    where portal_id= :portal_id 
+    select element_id from portal_element_map pem, portal_pages pp
+    where pp.portal_id= :portal_id 
     and datasource_id= :ds_id
+    and pem.page_id = pp.page_id
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_layout_id.select">      
+<fullquery name="portal::get_layout_id.get_layout_id_num_select">      
   <querytext>
-    select layout_id from portals where portal_id = :portal_id
+    select layout_id from portal_pages where portal_id = :portal_id and sort_key = :page_num
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_layout_id.get_layout_id_page_select">      
+  <querytext>
+    select layout_id from portal_pages where page_id = :page_id
   </querytext>
 </fullquery> 
 

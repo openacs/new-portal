@@ -53,9 +53,10 @@
   <querytext>
     update portal_element_map
     set region = :region,
-    sort_key = (select nvl((select max(sort_key) + 1
-	                    from portal_element_map 
-	                    where portal_id = :portal_id 
+    sort_key = (select nvl((select max(pem.sort_key) + 1
+	                    from portal_element_map pem, portal_pages pp
+	                    where pp.portal_id = :portal_id 
+                            and pp.page_id = pem.page_id
 		            and region = :region), 
                             1) 
 		 from dual)
@@ -66,11 +67,11 @@
 <fullquery name="portal::add_element_to_region.insert">      
   <querytext>
     insert into portal_element_map
-    (element_id, name, pretty_name, portal_id, datasource_id, region, sort_key)
+    (element_id, name, pretty_name, page_id, datasource_id, region, sort_key)
     values
-    (:new_element_id, :ds_name, :ds_name, :portal_id, :ds_id, :region,  
+    (:new_element_id, :ds_name, :ds_name, :page_id, :ds_id, :region,  
     nvl((select max(sort_key) + 1 
-         from portal_element_map 
+         from portal_element_map
          where region = :region), 1))
   </querytext>
 </fullquery> 
@@ -79,16 +80,32 @@
   <querytext>
     update portal_element_map 
     set region = :target_region, 
-    sort_key = (select nvl((select max(sort_key) + 1
-	                    from portal_element_map 
-	                    where portal_id = :portal_id 
-	                    and region = :target_region), 
+    sort_key = (select nvl((select max(pem.sort_key) + 1
+	                    from portal_element_map pem, portal_pages pp
+	                    where pp.portal_id = :portal_id
+                            and pp.page_id = pem.page_id
+                            and region = :target_region), 
                            1) 
                 from dual)
     where element_id = :element_id
   </querytext>
 </fullquery> 		
 
+<fullquery name="portal::page_create.page_create_insert">
+<querytext>
+
+    begin
+    
+    :1 := portal_page.new ( 
+    pretty_name => :pretty_name,
+    portal_id => :portal_id,
+    layout_id => :layout_id,
+    );
+
+    end;
+
+</querytext>
+</fullquery>
 
 
 

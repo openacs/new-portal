@@ -135,9 +135,6 @@ create table portals (
 				constraint p_portal_id_pk
 				primary key,
 	name			varchar(200) default 'Untitled' not null,
-	layout_id		constraint portal_layout_id_fk
-				references portal_layouts
-				not null,
 	theme_id		constraint portal_theme_id_fk
 				references portal_element_themes
 				not null,
@@ -148,6 +145,39 @@ create table portals (
 	-- Not null, if I have a template
 	template_id		constraint portal_template_id_fk
 				references portals
+);
+
+-- **** (Portal) Pages ****
+-- Support for multi-page portals (think my.yahoo.com)
+create table portal_pages (
+	page_id                 constraint portal_pages_page_id_fk
+				references acs_objects(object_id)
+				constraint portal_pages_page_id_pk
+				primary key,
+	pretty_name		varchar(200) default 'Untitled Page' not null,
+	portal_id		constraint portal_pages_portal_id_fk
+				references portals
+                                not null,
+	layout_id		constraint portal_pages_layout_id_fk
+				references portal_layouts
+				not null,
+	sort_key		integer	not null,
+ 	-- Two pages on one portal canot have the same sort key
+	constraint portal_pages_srt_key_un 
+	unique(portal_id,sort_key)
+);
+
+-- what's the current page for this portal?
+create table portal_current_page (
+	portal_id		constraint portal_cur_page_portal_id_fk
+				references portals
+                                on delete cascade
+                                not null,
+	page_id                 constraint portal_cur_page_id_fk
+				references portal_pages
+                                not null,
+	constraint portal_curr_page_un
+	unique(portal_id,page_id)
 );
 
 -- **** Portal Elements (PEs) ****
@@ -173,8 +203,9 @@ create table portal_element_map (
 				primary key,
 	name			varchar(200) not null,
 	pretty_name		varchar(200) not null,
-	portal_id		constraint p_element_map_portal_id_fk
-				references portals on delete cascade
+	page_id                 constraint p_element_map_page_id_fk
+				references portal_pages
+                                on delete cascade
 				not null,
 	datasource_id		constraint p_element_map_datasource_id_fk
 				references portal_datasources
@@ -188,10 +219,10 @@ create table portal_element_map (
 					        'pinned')),
  	-- Two elements may not exist in the same place on a portal.
 	constraint p_element_map_pid_rgn_srt_un 
-	unique(portal_id,region,sort_key),
+	unique(page_id,region,sort_key),
  	-- Two elements may not have the same pretty name on a portal.
 	constraint p_element_map_pid_name_un 
-	unique(portal_id,pretty_name)
+	unique(page_id,pretty_name)
 );
 
 create table portal_element_parameters (
