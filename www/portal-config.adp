@@ -15,7 +15,7 @@ Change Name:
 
 <P>
 
-<form method=get action="element-layout-2">
+<form method=get action="portal-config-2">
 <%= [export_form_vars portal_id ] %>
 <include src="@portal.template@" element_list="@element_list@" element_src="@element_src@">
 </form>
