@@ -14,42 +14,23 @@ ad_page_contract {
 
 # this template gets its vars from the layout template (e.g. simple2.adp)
 
-db_1row select_num_regions "
-select count(*) as num_regions
-from portal_supported_regions
-where layout_id = :layout_id"
+db_1row select_num_regions {}
 
 # get the elements for this region.
 set region_count 0
 template::multirow create element_multi element_id name sort_key state hideable_p page_id 
 
-db_foreach select_elements_by_region {
-    select element_id, pem.pretty_name as name,  pem.sort_key, state, pem.page_id as page_id
-    from portal_element_map pem, portal_pages pp
-    where
-    pp.portal_id = :portal_id 
-    and pem.page_id = pp.page_id
-    and pp.page_id = :page_id
-    and region = :region 
-    and state != 'hidden'
-    order by sort_key } {
+db_foreach select_elements_by_region {} {
 
-        set hideable_p [portal::get_element_param $element_id "hideable_p"]
-        
-	template::multirow append element_multi \
-		$element_id $name $sort_key $state $hideable_p $page_id
-	incr region_count
-    }
+    set hideable_p [portal::get_element_param $element_id "hideable_p"]
+    
+    template::multirow append element_multi \
+	    $element_id $name $sort_key $state $hideable_p $page_id
+    incr region_count
+}
 
 
-db_1row select_all_noimm_count \
-"select count(*) as all_count
-from portal_element_map pem, portal_pages pcp
-where
-pcp.portal_id = :portal_id
-and pem.page_id = pcp.page_id
-and state != 'hidden'
-and region not like 'i%'"
+db_1row select_all_noimm_count {}
 
 # Set up the form target
 set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
@@ -59,15 +40,7 @@ set new_package_id [db_nextval acs_object_id_seq]
 
 append show_html "<select name=element_id>"
 
-db_foreach hidden_elements {
-    select element_id, name
-     from portal_element_map pem, portal_pages pp
-     where
-       pp.portal_id = :portal_id 
-       and pp.page_id = pem.page_id
-       and pem.state = 'hidden'
-    order by name
-} {
+db_foreach hidden_elements {} {
     set show_avail_p 1
     append show_html "<option value=$element_id>$name</option>\n"
 }
