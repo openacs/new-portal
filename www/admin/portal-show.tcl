@@ -24,10 +24,11 @@ ad_page_contract {
     @cvs-id $Id$
 } {
     portal_id:naturalnum,notnull
+    {page_num 0}
 }
 
 
-
-set html "[portal::navbar -portal_id $portal_id] [portal::render $portal_id]"
+set name "[portal::get_name $portal_id]"
+set html "[portal::navbar -portal_id $portal_id] [portal::render -page_num $page_num $portal_id]"
 
 

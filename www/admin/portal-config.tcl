@@ -35,5 +35,4 @@ if {[portal::template_p $portal_id]} {
 }
 
 set rendered_page [portal::configure -template_p $template_p $portal_id "index"]
-
-ad_return_template
+set name [portal::get_name $portal_id]
