@@ -894,6 +894,7 @@ namespace eval portal {
     #
 
     ad_proc -public get_page_id {
+        {-create:boolean}
         {-portal_id:required}
         {-page_name ""}
         {-sort_key "0"}
@@ -906,15 +907,26 @@ namespace eval portal {
         @param portal_id
         @param sort_key - optional, defaults to page 0
     } {
-        if {![empty_string_p $page_name]} {
+        if { ![empty_string_p $page_name] } {
+            # Get page by page_name
+
             set page_id [db_string get_page_id_from_name {} -default ""]
-            if {[empty_string_p $page_id]} {
-                # there is no page by that name in the portal, return page 0
-                return [get_page_id -portal_id $portal_id]
+
+            if { [empty_string_p $page_id] } {
+                if { $create_p } {
+                    # there is no page by that name in the portal, create it
+                    return [portal::page_create \
+                            -portal_id $portal_id \
+                            -pretty_name $page_name]
+                } else {
+                    # Call ourselves with portal_id and sort_key 0 to get the first page
+                    return [get_page_id -portal_id $portal_id -sort_key 0]
+                }
             } else {
                 return $page_id
             }
         } else {
+            # Get page by sort key
             return [db_string get_page_id_select {}]
         }
     }
@@ -1063,7 +1075,7 @@ namespace eval portal {
             set pretty_name $portlet_name
         }
 
-        set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
+        set page_id [get_page_id -create -portal_id $portal_id -page_name $page_name]
 
         # Balance the portal by adding the new element to the region
         # with the fewest number of elements, the first region w/ 0 elts,
