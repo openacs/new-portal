@@ -181,7 +181,8 @@
   <querytext>
     select region, sort_key, state, 
            pd.datasource_id as datasource_id,
-           pd.name as name
+           pd.name as name,
+           pem.pretty_name as pretty_name
     from portal_element_map pem, 
          portal_datasources pd                            
     where pem.page_id = :source_page_id
@@ -196,6 +197,7 @@
     where pp.portal_id = :portal_id
     and pem.page_id = pp.page_id
     and pem.datasource_id = :datasource_id    
+    and pem.pretty_name = :pretty_name
   </querytext>
 </fullquery> 
 
