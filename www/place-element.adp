@@ -9,7 +9,9 @@
 
 <multiple name=element_multi>
   
-<hr>
+<if @element_multi.rownum@ gt 1>
+  <hr>
+</if>
 
   @element_multi.name@
 
