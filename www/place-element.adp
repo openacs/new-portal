@@ -32,7 +32,9 @@
 	<if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@"><img border=0 src="@dir@/arrow-left.gif" alt="move left"></a>
 	</if>
 
-[<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]    
+            <if @element_multi.hideable_p@ eq "t">
+            [<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@">hide</a>]    
+            </if>
     </if>
 
 
