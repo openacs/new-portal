@@ -48,7 +48,7 @@ ad_proc -public make_datasource_available {portal_id ds_id} {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 10/30/2001
 } {
-    ad_require_permission $portal_id portal_admin_portal
+#    ad_require_permission $portal_id portal_admin_portal
 
     set new_p_ds_id [db_nextval acs_object_id_seq]
 
@@ -56,7 +56,7 @@ ad_proc -public make_datasource_available {portal_id ds_id} {
     insert into portal_datasource_avail_map
     (portal_datasource_id, portal_id, datasource_id)
     values
-    (:new_element_id, :portal_id, :ds_id)"
+    (:new_p_ds_id, :portal_id, :ds_id)"
 }
 
 ad_proc -public make_datasource_unavailable {portal_id ds_id} {
@@ -68,12 +68,12 @@ ad_proc -public make_datasource_unavailable {portal_id ds_id} {
     @creation-date 10/30/2001
 } {
 
-    ad_require_permission $portal_id portal_admin_portal
+#    ad_require_permission $portal_id portal_admin_portal
 
     db_dml delete_from_portal_datasource_avail_map "
     delete from portal_datasource_avail_map
     where portal_id =  :portal_id
-          and datasource_id = :datasource_id"
+          and datasource_id = :ds_id"
 }
 
 ad_proc -public toggle_datasource_availability {portal_id ds_id} {
@@ -491,35 +491,37 @@ ad_proc -public configure { portal_id } {
     set element_list [array get fake_element_ids]
     set element_src "[portal::www_path]/place-element"
     
-    
+
     # the <include> sources /www/place-element.tcl
     set template "	
     <master src=\"@master_template@\">
     <form action=\"@target_stub@-2\">
-    Change Name:
+    <b>Change Your Portal's Name:</b>
     <P>
     <input type=\"text\" name=\"new_name\" value=\"@portal.name@\">
-    <center>
     <input type=hidden name=portal_id value=@portal_id@>
     <input type=submit name=\"op\" value=\"Rename\">
     </form>
-    </center>
     
     <P>
-    
+
+
+    <b>Configure The Portal's Elements:</b>
     <form method=get action=\"@target_stub@-2\">
     <input type=hidden name=portal_id value=@portal_id@>
     <%= [export_form_vars portal_id] %>
     <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">
+    <center>
+    <input type=submit name=\"op@region@\" value=\"Remove All Checked\"> 
+    </center>
     </form>
     
-    <center>
+    <b>Undo Your Changes:</b>
     <form method=get action=\"@target_stub@-2\">
     <input type=hidden name=portal_id value=@portal_id@>
     <%= [export_form_vars portal_id ] %>
     <input type=submit name=op value=\"Revert To Default\">
     </form>
-    </center>
 "
 
 #
@@ -611,7 +613,7 @@ nope} {
 	    portal::swap_element \
 		    $portal_id $element_id $sort_key $region $direction
 	}
-	"move all checked elements here" {
+	"move all checked here" {
 
 	    set element_id_list [list]
 
@@ -628,10 +630,28 @@ nope} {
 	    }
 	} 
 	"add a new element here" {
+
+
 	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
 	}
-	"remove all checked elements" {
-	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
+	"remove all checked" {
+
+	    set element_id_list [list]
+
+	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
+		lappend element_id_list $element_id
+		regsub {[&]*element_ids=\d+} $query ""  query
+	    }
+
+	    if {! [empty_string_p $element_id_list] } {
+		
+		foreach element_id $element_id_list {
+		    # XXX fixme
+		    remove_element $element_id
+		}
+	    } else {
+		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
+	    }
 	}
 	"revert to default" {
 	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
@@ -673,29 +693,29 @@ ad_proc -public render { portal_id } {
     set element_list [array get element_ids]
 
     if { [empty_string_p $element_list] } {
-	ad_return_complaint 1 \
-		"This portal has no elements.
-	You might want to <a href=\"element-layout?[export_url_vars portal_id]\">edit</a> it."
-	ad_script_abort
+
+	# The portal has no elements, show anyway (they can configure)
+	set template "<master src=\"@master_template@\">
+	<property name=\"title\">@portal.name@</property>"
+    } else {
+	set element_src "[www_path]/render-element"
+
+	set template "<master src=\"@master_template@\">
+	<property name=\"title\">@portal.name@</property>
+	<include src=\"@portal.layout_template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
     }
-
-    set element_src "[www_path]/render-element"
-
-    set template "<master src=\"@master_template@\">
-<property name=\"title\">@portal.name@</property>
-<include src=\"@portal.layout_template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
-
-    db_0or1row select_portal_and_layout "
-    select
-    p.portal_id,
-    p.name,
-    p.owner_id,
-    t.filename as layout_template,
-    't' as portal_read_p,
-    't' as layout_read_p
-    from portals p, portal_layouts t
-    where p.layout_id = t.layout_id 
-  and p.portal_id = :portal_id" -column_array portal
+	
+	db_0or1row select_portal_and_layout "
+	select
+	p.portal_id,
+	p.name,
+	p.owner_id,
+	t.filename as layout_template,
+	't' as portal_read_p,
+	't' as layout_read_p
+	from portals p, portal_layouts t
+	where p.layout_id = t.layout_id 
+	and p.portal_id = :portal_id" -column_array portal
 
     if { ! [exists_p $portal_id] } {
 	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
