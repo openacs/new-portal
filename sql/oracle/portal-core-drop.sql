@@ -17,5 +17,3 @@ drop table portal_supported_regions;
 drop table portal_layouts;
 drop table portal_datasource_def_params;
 drop table portal_datasources;
-drop table portal_data_types;
-drop table portal_mime_types;
