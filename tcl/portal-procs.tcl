@@ -106,6 +106,7 @@ namespace eval portal {
         {-theme_name ""}
         {-default_page_name ""}
         {-context_id ""} 
+        {-csv_list ""}
         user_id 
     } {
         Create a new portal for the passed in user id. 
@@ -114,6 +115,26 @@ namespace eval portal {
         @param user_id
         @param layout_name optional
     } {
+        # if we have a cvs list in the form "page_name1, layout1;
+        # page_name2, layout2...", we get the required first page_name
+        # and first page layout from it, overriding any other params
+
+        if {![empty_string_p $csv_list]} {
+            set page_name_and_layout_list [split $csv_list ";"]
+            set page_name_list [list]
+            set layout_name_list [list]
+
+            # seperate name and layout
+            foreach item $page_name_and_layout_list {
+                lappend page_name_list [lindex [split $item ","] 0]
+                lappend layout_name_list [lindex [split $item ","] 1]
+            }
+
+            set default_page_name [lindex $page_name_list 0]
+            set layout_name [lindex $layout_name_list 0]
+        }
+
+
         # get the default layout_id - simple2
         if {![empty_string_p $layout_name]} {
             set layout_id [get_layout_id -layout_name $layout_name]
@@ -128,8 +149,23 @@ namespace eval portal {
 
         set theme_id [get_theme_id_from_name -theme_name $theme_name]
 
+        db_transaction {
+            # create the portal and the first page
+            set portal_id [db_exec_plsql create_new_portal_and_perms {}]
 
-        return [db_exec_plsql create_new_portal_and_perms {}]
+            if {![empty_string_p $csv_list]} {
+                # if there are more pages in the csv_list, create them
+                for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
+                    portal::page_create -portal_id $portal_id \
+                            -pretty_name [lindex $page_name_list $i] \
+                            -layout_name [lindex $layout_name_list $i]
+                }
+            }
+
+        }
+
+
+        return $portal_id
     }
 
     ad_proc -public delete {
@@ -1088,12 +1124,18 @@ namespace eval portal {
 
         # do the callback for the ::show proc
         # evaulate the datasource.
-        if { [catch {        set element(content) \
-                [datasource_call \
-                $element(datasource_id) "Show" [list [array get config] ]] } \
-                errmsg ] } {
-            ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
-            ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
+        if { [catch { set element(content) \
+                        [datasource_call \
+                          $element(datasource_id) \
+                          "Show" \
+                          [list [array get config]]
+                        ]\
+                    } \
+                errmsg \
+             ] \
+            } {
+                ns_log error "aks86 *** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+                ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
         }
 
         # We use the actual pretty name from the DB (ben)
@@ -1154,7 +1196,9 @@ namespace eval portal {
                 $element(datasource_id) "Show" [list [array get config] ]] } \
                 errmsg ] } {
             ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+            ad_return -error
             ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
+
         }
 
         set element(name) \
