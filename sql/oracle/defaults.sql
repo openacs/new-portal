@@ -73,7 +73,7 @@ begin
 		name => 'Simple 2-Column',
 		description => 'A simple 2-column layout',
 		filename => 'layouts/simple2',
-		resource_dir => 'www/layouts/components/simple2');
+		resource_dir => 'layouts/components/simple2');
 
 -- the supported regions for that layout.
 	portal_layout.add_region (layout_id => layout_id, region => '1');
