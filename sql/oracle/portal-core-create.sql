@@ -30,12 +30,6 @@ create table portal_datasources (
 				references acs_objects(object_id)
 				constraint p_datasources_datasource_id_pk
 				primary key,
-	data_type		constraint p_datasources_data_type_fk
-				references portal_data_types(name)
-				not null,
-	mime_type		constraint p_datasources_mime_type_fk
-				references portal_mime_types(name)
-				not null,
 	-- lame flag until real metadata arrives
 	secure_p		char(1) default 'f'
 				constraint p_datasources_secure_p_ck
