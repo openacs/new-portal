@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="new-portal" package_version="0.2d1" locale="AR_LB" charset="utf-8">
+
+  <msg key="Add_Page">أضفْ صفحةً</msg>
+  <msg key="Bad_direction">إتّجاه سّيّئ:</msg>
+  <msg key="Bad_direction_1">إتّجاه سّيّئ!</msg>
+  <msg key="Change_Page_Layout">تغيير تخطيطُ الصفحةِ</msg>
+  <msg key="Change_page_layout">تغيير تخطيطُ الصفحةِ:</msg>
+  <msg key="Change_Theme">غيّر السمة:</msg>
+  <msg key="Change_Theme_1">غيّر السمة</msg>
+  <msg key="Create_a_new_page">أخلق صفحةً جديدةً</msg>
+  <msg key="deco_theme_description">سمة فنِّ الزخرفة</msg>
+  <msg key="deco_theme_name">الزخرفةُ</msg>
+  <msg key="Go_back">إرجَعْ</msg>
+  <msg key="lt_Add_This_Portlet_Here">أضفْ هذا بورتليت هنا</msg>
+  <msg key="lt_Error_bad_params_n___">خطأ، برميترات سيئة!\n رجاءً أشعرْ مدير النظامِ على هذا الخطأ. شكراً لكم</msg>
+  <msg key="lt_No_Elements_on_this_p">لا عناصرَ على هذه الصفحةِ</msg>
+  <msg key="lt_None_You_can_not_add_">لا شيئ. أنت لا تستطيع إضافة أيّ بورتليتس الى هذه الصفحة لأنهم جميعا قيدالإستعمال.</msg>
+  <msg key="lt_Revert_the_entire_por">أرجعْ كامل بوابة الإنترنت إلى الترتيبِ الأصلي</msg>
+  <msg key="lt_You_must_enter_new_na">أنت يَجِبُ أَنْ تَدْخلَ اسمَ جديدَ للصفحةِ.</msg>
+  <msg key="Move_to_page">تحرّكْ لصفحة</msg>
+  <msg key="nada_theme_description">بدون سمة. لا رُسومات.</msg>
+  <msg key="nada_theme_name">ندى</msg>
+  <msg key="Page">صفحة</msg>
+  <msg key="Page_1">صفحة:</msg>
+  <msg key="Remove_Empty_Page">أزل الصّفحة الفارغة</msg>
+  <msg key="Rename_Page">أعد تسمية الصّفحة</msg>
+  <msg key="Revert">تراجَعْ</msg>
+  <msg key="simple_1column_layout_description">تخطيط ذو عامود بسيط</msg>
+  <msg key="simple_1column_layout_name">عامود بسيط</msg>
+  <msg key="simple_2column_layout_description">تخطيط ذو عامودان بسيطان</msg>
+  <msg key="simple_2column_layout_name">عامودان بسيطان</msg>
+  <msg key="simple_3column_layout_description">تخطيط ذو ثلاثة أعمدة بسيطة</msg>
+  <msg key="simple_3column_layout_name">ثلاثة أعمدة بسيطة</msg>
+  <msg key="simple_red_theme_description">سمة بسيطة على أساس جدول أحمر</msg>
+  <msg key="simple_red_theme_name">بسيط</msg>
+  <msg key="transaction_failed">فَشلتْ المُعَامَلَة</msg>
+  <msg key="Unused_Portlets">بورتليتس الغير المستعملون</msg>
+</message_catalog>

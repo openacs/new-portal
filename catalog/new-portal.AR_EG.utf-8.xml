@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="new-portal" package_version="0.2d1" locale="AR_EG" charset="utf-8">
+
+  <msg key="Add_Page">أضفْ صفحةً</msg>
+  <msg key="Bad_direction">:اتّجاه سّيّئ</msg>
+  <msg key="Change_Page_Layout">تغيير تخطيطُ الصفحةِ</msg>
+  <msg key="Change_page_layout">:تغيير تخطيطُ الصفحةِ</msg>
+  <msg key="Create_a_new_page">أخلق صفحةً جديدةً</msg>
+  <msg key="deco_theme_name">الزخرفةُ</msg>
+  <msg key="Go_back">ارجع</msg>
+  <msg key="lt_Add_This_Portlet_Here">أضفْ هذا بورتليت هنا</msg>
+  <msg key="lt_No_Elements_on_this_p">لا عناصرَ على هذه الصفحةِ</msg>
+  <msg key="lt_None_You_can_not_add_">لا شيئ. أنت لا تستطيع إضافة أيّ بورتليتس الى هذه الصفحة لأنهم جميعا قيدالإستعمال</msg>
+  <msg key="lt_You_must_enter_new_na">.أنت يَجِبُ أَنْ تَدْخلَ اسمَ جديدَ للصفحةِ</msg>
+  <msg key="Move_to_page">تحرّكْ لصفحة</msg>
+  <msg key="Page">صفحة</msg>
+  <msg key="Remove_Empty_Page">أزل الصّفحة الفارغة</msg>
+  <msg key="Rename_Page">أعد تسمية الصّفحة</msg>
+  <msg key="Revert">تراجَعْ</msg>
+  <msg key="simple_red_theme_name">بسيط</msg>
+  <msg key="transaction_failed">فَشلتْ المُعَامَلَة</msg>
+  <msg key="Unused_Portlets">بورتليتس الغير المستعملون 
+ 
+ 
+</msg>
+</message_catalog>
