@@ -3,7 +3,7 @@
 
 
 <if @users_portals:rowcount@ eq 0>
-    You have not configured any portals. <a href="portal-ae">Create a portal</a> now	
+    You have not configured any portals. <a href="test-api">Create a portal</a> now	
 </if>
 
 <multiple name=users_portals>
@@ -14,5 +14,5 @@
 </multiple>
 
 <if @users_portals:rowcount@ gt 0>
-    <a href="portal-ae">Create another portal</a>
+    <a href="test-api">Create another portal</a>
 </if>
