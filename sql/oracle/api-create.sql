@@ -309,7 +309,7 @@ as
 		link			in portal_datasources.link%TYPE default null,
 		description		in portal_datasources.description%TYPE default null,
 		content			in portal_datasources.content%TYPE default null,
-		edit_content		in portal_datasources.content%TYPE default null,
+		edit_content		in portal_datasources.edit_content%TYPE default null,
 		config_path		in portal_datasources.config_path%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date		in acs_objects.creation_date%TYPE 
