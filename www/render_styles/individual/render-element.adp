@@ -31,5 +31,5 @@
 <property name="link_hideable_p">@element.link_hideable_p@</property>
 <property name="hide_links_p">@hide_links_p@</property>
 
-@element.content@
+@element.content;noquote@
 </if>

@@ -25,7 +25,7 @@
 
 <a href=@page_url@?&portal_id=@portal_id@&referer=@referer@&anchor=#custom>Manage Custom Portlets</a>
 
-@rendered_page@
+@rendered_page;noquote@
 <hr>
 
 <a name="custom"><h2></a>Custom Portlets</h2> - Note custom portlets for portal templates are very fragile right now. Only use this during system set up before any portlets have been created with this template.  Better solution coming soon.

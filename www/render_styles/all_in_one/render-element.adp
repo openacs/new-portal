@@ -31,5 +31,5 @@
 
 <ul>
 <li><b>@element.name@</b><br>
-@element.content@
+@element.content;noquote@
 </ul>
