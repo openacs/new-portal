@@ -12,6 +12,6 @@ ad_page_contract {
 
 
 
-array set portal [portal::render_portal $portal_id]
+portal::render_portal $portal_id
 
 
