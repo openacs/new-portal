@@ -30,8 +30,8 @@ begin
 
     -- two-column layout, without a header.
     layout_id := portal_layout__new(
-        ''Simple 2-Column'',
-        ''A simple 2-column layout'',
+        ''#new-portal.simple_2column_layout_name#'',
+        ''#new-portal.simple_2column_layout_description#'',
         ''layouts/simple2'',
         ''layouts/components/simple2''
     );
@@ -42,8 +42,8 @@ begin
 
     -- one-column layout, without a header.
     layout_id := portal_layout__new(
-        ''Simple 1-Column'',
-        ''A simple 1-column layout'',
+        ''#new-portal.simple_1column_layout_name#'',
+        ''#new-portal.simple_1column_layout_description#'',
         ''layouts/simple1'',
         ''layouts/components/simple1''
     );
@@ -53,8 +53,8 @@ begin
 
     -- same as above, only, three columns.
     layout_id := portal_layout__new(
-        ''Simple 3-Column'',
-        ''A simple 3-column layout'',
+        ''#new-portal.simple_3column_layout_name#'',
+        ''#new-portal.simple_3column_layout_description#'',
         ''layouts/simple3'',
         ''layouts/components/simple3''
     );
@@ -65,22 +65,22 @@ begin
 
     -- Now, some element themes.
     theme_id := portal_element_theme__new(
-        ''simple'',
-        ''A simple red table-based theme'',
+        ''#new-portal.simple_red_theme_name#'',
+        ''#new-portal.simple_red_theme_description#'',
         ''themes/simple-theme'',
         ''themes/simple-theme''
     );
 
     theme_id := portal_element_theme__new(
-        ''nada'',
-        ''The un-theme. No graphics.'',
+        ''#new-portal.nada_theme_name#'',
+        ''#new-portal.nada_theme_description#'',
         ''themes/nada-theme'',
         ''themes/nada-theme''
     );
 
     theme_id := portal_element_theme__new(
-        ''deco'',
-        ''An Art Deco theme'',
+        ''#new-portal.deco_theme_name#'',
+        ''#new-portal.deco_theme_description#'',
         ''themes/deco-theme'',
         ''themes/deco-theme''
     );

@@ -29,7 +29,7 @@
 <multiple name=element_multi>
 <center>  
 <table class="portlet-config" cellpadding=0 cellspacing=0 border="0" bground="white" width="95%">
-    <tr><td class="element-header-text">@element_multi.name@</td>
+    <tr><td class="element-header-text"><%= [lang::util::localize "@element_multi.name@"] %></td>
     <td align=right>	
 
     <if @element_multi.state@ ne "pinned">

@@ -2,7 +2,7 @@
 <center>
 <table class="z_light" cellpadding=0 cellspacing=0 border="0" bground="white" width="95%">
     <tr><td>
-<h5>Unused Portlets</h5>
+<h5>#new-portal.Unused_Portlets#</h5>
 </td></tr>
 <tr><td>
 <if @show_avail_p@ ne 0>
@@ -15,10 +15,10 @@
 <input type=hidden name=anchor value=@page_id@>
 @show_html@
 </select>
-<input type=submit name="submit" value="Add This Portlet Here">
+<input type=submit name="submit" value="#new-portal.lt_Add_This_Portlet_Here#">
 </if>
 <else>
-<i>None. You can not add any portlets to this page because they are all in use.</i>
+<i>#new-portal.lt_None_You_can_not_add_#</i>
 </else>
 </center>
 </form>

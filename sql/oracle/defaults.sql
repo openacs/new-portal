@@ -31,8 +31,8 @@ begin
 
     -- two-column layout, without a header.
     layout_id := portal_layout.new(
-        name => 'Simple 2-Column',
-        description => 'A simple 2-column layout',
+        name => '#new-portal.simple_2column_layout_name#',
+        description => '#new-portal.simple_2column_layout_description#',
         filename => 'layouts/simple2',
         resource_dir => 'layouts/components/simple2'
     );
@@ -43,8 +43,8 @@ begin
 
     -- one-column layout, without a header.
     layout_id := portal_layout.new(
-        name => 'Simple 1-Column',
-        description => 'A simple 1-column layout',
+        name => '#new-portal.simple_1column_layout_name#',
+        description => '#new-portal.simple_1column_layout_description#',
         filename => 'layouts/simple1',
         resource_dir => 'layouts/components/simple1'
     );
@@ -54,8 +54,8 @@ begin
 
     -- same as above, only, three columns.
     layout_id := portal_layout.new(
-        name => 'Simple 3-Column',
-        description => 'A simple 3-column layout',
+        name => '#new-portal.simple_3column_layout_name#',
+        description => '#new-portal.simple_3column_layout_description#',
         filename => 'layouts/simple3',
         resource_dir => 'layouts/components/simple3'
     );
@@ -66,22 +66,22 @@ begin
 
     -- Now, some element themes.
     theme_id := portal_element_theme.new(
-        name => 'simple',
-        description => 'A simple red table-based theme',
+        name => '#new-portal.simple_red_theme_name#',
+        description => '#new-portal.simple_red_theme_description#',
         filename => 'themes/simple-theme',
         resource_dir => 'themes/simple-theme'
     );
 
     theme_id := portal_element_theme.new(
-        name => 'nada',
-        description => 'The un-theme. No graphics.',
+        name => '#new-portal.nada_theme_name#',
+        description => '#new-portal.nada_theme_description#',
         filename => 'themes/nada-theme',
         resource_dir => 'themes/nada-theme'
     );
 
     theme_id := portal_element_theme.new(
-        name => 'deco',
-        description => 'An Art Deco theme',
+        name => '#new-portal.deco_theme_name#',
+        description => '#new-portal.deco_theme_description#',
         filename => 'themes/deco-theme',
         resource_dir => 'themes/deco-theme'
     );

@@ -21,7 +21,7 @@
 <hr>
 Portal: <strong>@name@</strong>
 <P>
-<a href=@referer@>Go back</a>
+<a href=@referer@>#new-portal.Go_back#</a>
 <hr>
 
 <slave>

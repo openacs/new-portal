@@ -145,7 +145,7 @@ namespace eval portal {
         # and first page layout from it, overriding any other params
 
         set page_name_list [list "Page 1"]
-        set layout_name_list [list "Simple 2-Column"]
+        set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
 
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
@@ -385,7 +385,7 @@ namespace eval portal {
         }
 
         if {[empty_string_p $referer]} {
-            set return_text "<a href=@return_url@>Go back</a>"
+            set return_text "<a href=@return_url@>[_ new-portal.Go_back]</a>"
         } else {
             set return_text ""
             set return_url $referer
@@ -1933,7 +1933,7 @@ namespace eval portal {
     ad_proc -private get_layout_id {
         {-page_num ""}
         {-page_id ""}
-        {-layout_name "Simple 2-Column"}
+        {-layout_name "#new-portal.simple_2column_layout_name#"}
         {portal_id ""}
     } {
         Get the layout_id of a layout template for a portal page.

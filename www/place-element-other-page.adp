@@ -25,10 +25,10 @@
 <if @other_page_avail_p@ ne 0>
   <input type=hidden name=element_id value=@element_id@>
   <input type=hidden name=anchor value=@page_id@>
-  <input type=submit name="op" value="Move to page">
+  <input type=submit name="op" value="#new-portal.Move_to_page#">
   <select name=page_id>
   <multiple name=pages>
-  <option value=@pages.page_id@>@pages.pretty_name@</option>
+  <option value=@pages.page_id@><%= [lang::util::localize "@pages.pretty_name@"] %></option>
   </multiple>
   </select>
 
