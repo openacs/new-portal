@@ -22,18 +22,12 @@ show errors
 
 -- **** DATASOURCES ****
 
--- Some datasources need to be restricted and some do not.  The way we
--- will handle this is a check at PE creation (DS binding) time, and
--- of course, checks on the portal_id sent in.
 create table portal_datasources (
 	datasource_id		constraint p_datasources_datasource_id_fk
 				references acs_objects(object_id)
 				constraint p_datasources_datasource_id_pk
 				primary key,
 	description		varchar(4000),
-	configurable_p		char(1) default 'f'
-				constraint p_elements_configurable_p_ck
-				check(configurable_p in ('t', 'f')),
 	name			varchar(200) not null
 );
 

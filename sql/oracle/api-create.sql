@@ -255,7 +255,6 @@ as
 		datasource_id	in portal_datasources.datasource_id%TYPE default null,	
 		name		in portal_datasources.name%TYPE default null,
 		description	in portal_datasources.description%TYPE default null,
-		configurable_p	in portal_datasources.configurable_p%TYPE default null,		
 		object_type	in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date	in acs_objects.creation_date%TYPE 
 				default sysdate,
@@ -288,7 +287,6 @@ as
 		datasource_id		in portal_datasources.datasource_id%TYPE default null,	
 		name			in portal_datasources.name%TYPE default null,
 		description		in portal_datasources.description%TYPE default null,
-		configurable_p		in portal_datasources.configurable_p%TYPE default null,
 		object_type		in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date		in acs_objects.creation_date%TYPE default sysdate,
 		creation_user		in acs_objects.creation_user%TYPE default null,
@@ -310,9 +308,9 @@ as
 
 
 		insert into portal_datasources
-			(datasource_id, name, description, configurable_p)
+			(datasource_id, name, description)
 		values
-			(v_datasource_id, name, description, configurable_p); 
+			(v_datasource_id, name, description); 
 
 		return v_datasource_id;
 	end new;
