@@ -7,7 +7,6 @@
 
 -- **** PRIVILEGES ****
 begin
-
     -- multi portal admin privs
     acs_privilege.create_privilege('portal_create_portal');
     acs_privilege.create_privilege('portal_delete_portal');
@@ -22,26 +21,6 @@ end;
 show errors
 
 -- **** DATASOURCES ****
-
-create table portal_mime_types (
-	name		varchar(200)
-			constraint p_mime_types_name_pk primary key,
-	pretty_name	varchar(200)
-);
-
--- secure_p is for an extra layer of security. See defualts.sql
-create table portal_data_types (
-	name		varchar(200)
-			constraint p_data_types_name_pk primary key,
-	pretty_name	varchar(200),
-	secure_p	char(1) default 'f'
-			constraint p_data_types_secure_p_ck
-			check(secure_p in ('t', 'f'))
-);
-
-
--- XXX A central unresolved issue here is how to model the DS's
--- metadata, args, etc.  acs-service-contract?
 
 -- Some datasources need to be restricted and some do not.  The way we
 -- will handle this is a check at PE creation (DS binding) time, and
@@ -158,13 +137,16 @@ create table portal_element_themes (
 -- Restrict to party check? 
 -- Roles and perms issues? 
 create table portals (
-	portal_id	 	constraint p_portal_id_fk
+	portal_id	 	constraint portal_portal_id_fk
 				references acs_objects(object_id)
 				constraint p_portal_id_pk
 				primary key,
 	name			varchar(200) default 'Untitled' not null,
-	layout_id		constraint p_template_id_fk
+	layout_id		constraint portal_template_id_fk
 				references portal_layouts
+				not null,
+	theme_id		constraint portal_theme_id_fk
+				references portal_element_themes
 				not null
 );
 
@@ -191,9 +173,6 @@ create table portal_element_map (
 	datasource_id		constraint p_element_map_datasource_id_fk
 				references portal_datasources
 				on delete cascade
-				not null,
-	theme_id		constraint p_element_map_theme_id_fk
-				references portal_element_themes
 				not null,
 	region			varchar(20) not null,
 	sort_key		integer	not null,
