@@ -143,12 +143,14 @@ namespace eval portal {
     
     ad_proc -public render { 
         {-hide_links_p "f"} 
+        {-render_style "individual"}
         portal_id
         {theme_id ""} 
 
     } {
 	Get a portal by id. If it's not found, say so.
-	
+	FIXME: right now the render style is totally ignored (ben)
+
 	@return Fully rendered portal as an html string
 	@param portal_id
     } {
