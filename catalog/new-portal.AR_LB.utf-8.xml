@@ -28,10 +28,10 @@
   <msg key="Revert">تراجَعْ</msg>
   <msg key="simple_1column_layout_description">تخطيط ذو عامود بسيط</msg>
   <msg key="simple_1column_layout_name">عامود بسيط</msg>
-  <msg key="simple_2column_layout_description">تخطيط ذو عامودان بسيطان</msg>
+  <msg key="simple_2column_layout_description">تخطيط ذو عامودان بسيط</msg>
   <msg key="simple_2column_layout_name">عامودان بسيطان</msg>
-  <msg key="simple_3column_layout_description">تخطيط ذو ثلاثة أعمدة بسيطة</msg>
-  <msg key="simple_3column_layout_name">ثلاثة أعمدة بسيطة</msg>
+  <msg key="simple_3column_layout_description">تخطيط ذو ثلاثة أعمدةٍ بسيطةٍ</msg>
+  <msg key="simple_3column_layout_name">ثلاثة أعمدةٍ بسيطةٍ</msg>
   <msg key="simple_red_theme_description">سمة بسيطة على أساس جدول أحمر</msg>
   <msg key="simple_red_theme_name">بسيط</msg>
   <msg key="transaction_failed">فَشلتْ المُعَامَلَة</msg>

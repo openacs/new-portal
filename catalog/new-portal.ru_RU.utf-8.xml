@@ -10,7 +10,6 @@
   <msg key="deco_theme_description">В стиле Art Deco</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Назад</msg>
-  <msg key="lt_Add_This_Portlet_Here">Добавить Портлет Здесь</msg>
   <msg key="lt_No_Elements_on_this_p">На этой странице никаких элементов нет</msg>
   <msg key="lt_None_You_can_not_add_">Нет. Вы не можете ничего добавить к этой странице, поскольку неиспользованных портлетов не осталось.</msg>
   <msg key="lt_Revert_the_entire_por">Вернуть все как было</msg>
