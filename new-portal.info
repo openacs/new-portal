@@ -6,6 +6,7 @@
     <pretty-plural>New Portals</pretty-plural>
     <initial-install-p>f</initial-install-p>
     <singleton-p>t</singleton-p>
+    <auto-mount>portal</auto-mount>
 
     <version name="0.1a" url="http://dotlrn.openforce.net/new-portal-0.1a.apm">
     <database-support>
