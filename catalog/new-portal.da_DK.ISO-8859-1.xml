@@ -18,7 +18,7 @@
   <msg key="lt_None_You_can_not_add_">Ingen. Du kan ikke tilføje en portlet til denne side, fordi de allerede er i brug.</msg>
   <msg key="lt_Revert_the_entire_por">Konfigurér hele portalen, så der vendes tilbage til standardopsætningen</msg>
   <msg key="lt_You_must_enter_new_na">Du skal skrive et nyt navn til denne side.</msg>
-  <msg key="Move_to_page">Flyt siden</msg>
+  <msg key="Move_to_page">Flyt til</msg>
   <msg key="nada_theme_description">Ikke-temaet. Ingen grafik.</msg>
   <msg key="nada_theme_name">intet</msg>
   <msg key="Page">Side</msg>
