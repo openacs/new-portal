@@ -1,14 +1,14 @@
 
 <!-- Element: '@name@' begin (text+html) -->
 <table border="0" width="100%" cellpadding="0" cellspacing="0" >
-<tr> <td width="11" height="11" background="@dir@/tbl-tleft.png"><img src="@dir@/tbl-tleft.png" alt=" " width="11" height="11"></td>
-<td width="100%" align="center" valign="top" background="@dir@/tbl-top.png"><img src="@dir@/tbl-top.png" alt=" " width="1" height="11"></td>
-<td width="11" background="@dir@/tbl-tright.png"><img src="@dir@/tbl-tright.png" alt=" " width="11" height="11"></td>
+<tr> <td width="11" height="11" background="@dir@/tbl-tleft.gif"><img src="@dir@/tbl-tleft.gif" alt=" " width="11" height="11"></td>
+<td width="100%" align="center" valign="top" background="@dir@/tbl-top.gif"><img src="@dir@/tbl-top.gif" alt=" " width="1" height="11"></td>
+<td width="11" background="@dir@/tbl-tright.gif"><img src="@dir@/tbl-tright.gif" alt=" " width="11" height="11"></td>
 </tr>
 
 <!-- Title/button bar begin -->
 <tr>
-<td height="15" background="@dir@/tbl-left.png" rowspan="2"><img src="@dir@/tbl-left.png" alt=" " width="11" height="1"></td>
+<td height="15" background="@dir@/tbl-left.gif" rowspan="2"><img src="@dir@/tbl-left.gif" alt=" " width="11" height="1"></td>
 <td>
 
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -20,22 +20,22 @@
 		<if @user_editable_p@ eq "t">	
                   <td align=right width=7%>
 
-			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.png" alt="edit"></a></td>
+			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.gif" alt="edit"></a></td>
 		</if>
 
 		<if @shadeable_p@ eq "t">		
                   <td align=right width=7%>
 		    <a href=configure-element?element_id=@element_id@&op=shade>
 		    <if @shaded_p@ eq "f">	
-		    <img border=0 src="@dir@/shade.png" alt="shade"></a></td>
+		    <img border=0 src="@dir@/shade.gif" alt="shade"></a></td>
 		    </if><else>
-		    <img border=0 src="@dir@/unshade.png" alt="shade"></a></td>
+		    <img border=0 src="@dir@/unshade.gif" alt="unshade"></a></td>
 		    </else>
 		</if>
 
 		<if @hideable_p@ eq "t">		
                   <td align=right width=7%>
-			<a href=configure-element?element_id=@element_id@&op=hide><img border=0 src="@dir@/x.png" alt="hide"></a></td>
+			<a href=configure-element?element_id=@element_id@&op=hide><img border=0 src="@dir@/x.gif" alt="hide"></a></td>
 		</if>
 
                 </tr>
@@ -48,7 +48,7 @@
 
 
 
-<td background="@dir@/tbl-right.png" rowspan="2"><img src="@dir@/tbl-right.png" alt=" " width="11" height="1"></td>
+<td background="@dir@/tbl-right.gif" rowspan="2"><img src="@dir@/tbl-right.gif" alt=" " width="11" height="1"></td>
 </tr>
 <tr>
 <td align="left" valign="middle" bgcolor="#ffffff">
@@ -62,9 +62,9 @@
 </td>
 </tr>
 <tr>
-<td height="11" background="@dir@/tbl-bleft.png"><img src="@dir@/tbl-bleft.png" alt=" " width="11" height="11"></td>
-<td align="center" valign="top" background="@dir@/tbl-bottom.png"><img src="@dir@/tbl-bottom.png" alt=" " width="1" height="11"></td>
-<td background="@dir@/tbl-bright.png"><img src="@dir@/tbl-bright.png" alt=" " width="11" height="11"></td>
+<td height="11" background="@dir@/tbl-bleft.gif"><img src="@dir@/tbl-bleft.gif" alt=" " width="11" height="11"></td>
+<td align="center" valign="top" background="@dir@/tbl-bottom.gif"><img src="@dir@/tbl-bottom.gif" alt=" " width="1" height="11"></td>
+<td background="@dir@/tbl-bright.gif"><img src="@dir@/tbl-bright.gif" alt=" " width="11" height="11"></td>
 </tr>
 </table>
 
