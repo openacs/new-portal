@@ -261,9 +261,8 @@ namespace eval portal {
 
 	    # get the current theme
 	    db_1row configure_portal_curr_theme_select "
-	    select distinct
-	    theme_id as cur_theme_id
-	    from portal_element_map
+	    select theme_id as cur_theme_id
+	    from portals
 	    where portal_id = :portal_id
 	    " 
 	    db_foreach configure_theme_select "
@@ -280,7 +279,7 @@ namespace eval portal {
 		    append theme_data "<label><input type=radio name=theme_id 
 		    value=$theme_id>$name - $description</label><br>"
 		}   
-}
+	    }
 
 	    append theme_data "<input type=submit name=op value=\"Update Theme\">"
 	    
@@ -309,28 +308,6 @@ namespace eval portal {
 	    set element_list [array get fake_element_ids]
 	    set element_src "[portal::www_path]/place-element"
 
-#	       <multiple name=themes>
-#	       <td>
-#		 <table border=0>
-#		 <tr>
-#		 <td>
-#		   <input type=radio name=theme_id value=@themes.theme_id@
-#		   <if @theme_id@ eq @themes.theme_id@>checked</if>>
-#		   <b>@themes.name@</b><br>
-#		     <table border=0 align=center>
-#		      <tr><td>
-#		      <include src=\"@themes.resource_dir@/example\" 
-#		       resource_dir=\"@themes.resource_dir@\"> 
-#		       </td></tr>
-#		       </table>
-#
-#		 <font size=-1>@themes.description@</font>
-#		 </td>
-#		 </tr>
-#		 </table>
-#	       </td>
-#	       </multiple>
-#	 
 	    # the <include> sources /www/place-element.tcl
 	    set template "	
 	    <master src=\"@master_template@\">
@@ -492,7 +469,7 @@ namespace eval portal {
 		set theme_id [ns_set get $form theme_id] 
 		
 		db_dml configure_dispatch_update_theme \
-			"update portal_element_map 
+			"update portals 
 		set theme_id = :theme_id
 		where portal_id = :portal_id"
 	    }
@@ -606,7 +583,6 @@ namespace eval portal {
 	pretty_name,
 	portal_id,
 	datasource_id,
-	theme_id, 
 	region, 
 	sort_key)
 	values
@@ -615,7 +591,6 @@ namespace eval portal {
 	:pretty_name,
 	:portal_id, 
 	:ds_id, 
-	nvl((select max(theme_id) from portal_element_themes), 1), 
 	:region,  
 	nvl((select max(sort_key) + 1 
 	     from portal_element_map 
@@ -780,40 +755,27 @@ namespace eval portal {
 	}
     }
 
-    ad_proc -private evaluate_element { element_id {theme_id ""} } {
+    ad_proc -private evaluate_element { element_id theme_id } {
 	Combine the datasource, template, etc.  Return a chunk of HTML.
 	
+	@param element_id
+	@param theme_id
 	@return A string containing the fully-rendered content for $element_id.
 	@param element_id 
     } {
 	
-	if { $theme_id != "" } {
-	    set query "
-	    select pem.element_id, 
-	    pem.name, 
-	    pem.datasource_id,
-	    pem.theme_id,
-	    pem.state,
-	    pet.description,
-	    pet.filename, 
-	    pet.resource_dir
-	    from portal_element_map pem, portal_element_themes pet
-	    where pet.theme_id = :theme_id
-	    and pem.element_id = :element_id "
-	} else {
-	    set query "
-	    select pem.element_id, 
-	    pem.name, 
-	    pem.datasource_id,
-	    pem.theme_id,
-	    pem.state,
-	    pet.description,
-	    pet.filename, 
-	    pet.resource_dir
-	    from portal_element_map pem, portal_element_themes pet
-	    where pem.theme_id = pet.theme_id
-	    and pem.element_id = :element_id "	    
-	}
+	set query "
+	select pem.element_id, 
+	pem.name, 
+	pem.datasource_id,
+	pem.theme_id,
+	pem.state,
+	pet.description,
+	pet.filename, 
+	pet.resource_dir
+	from portal_element_map pem, portal_element_themes pet
+	where pet.theme_id = :theme_id
+	and pem.element_id = :element_id "
 	
 	# get the element data and theme
 	db_1row evaluate_element_element_select $query -column_array element 
@@ -840,7 +802,6 @@ namespace eval portal {
 	# get the datasource
 	db_1row evaluate_element_datasource_select "
 	select
-	mime_type,
 	name,
 	link,
 	content
@@ -859,11 +820,6 @@ namespace eval portal {
 	    $errmsg"
 	}
 	
-	# this is sometimes used when interacting with templates in the
-	# filesystem.
-	set element(mime_type) $datasource(mime_type)
-	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
-
 	# pass the ds link, and the shaded_p param to the element
 	set element(link) $datasource(link)
 	set element(shaded_p) $config(shaded_p)
