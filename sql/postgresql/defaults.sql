@@ -52,18 +52,6 @@ begin
 	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''2'');
 	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''3'');
 
--- three columns with a header.
-	layout_id := portal_layout__new (
-		/* name */ ''3-column w/ Header'',
-		/* description */ ''A 3-column layout with a header area.'',
-		/* filename */ ''layouts/header3'',
-		/* resource_dir */ ''layouts/components/header3'');
-
-	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''1'');
-	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''2'');
-	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''3'');
-	perform portal_layout__add_region (/* layout_id */ layout_id, /* region */ ''i1'', /* immutable_p */ ''t'');
-
 -- Now, some element themes.
 
 	theme_id := portal_element_theme__new (
