@@ -34,7 +34,7 @@ append show_html "<select name=element_id>"
 
 foreach element [portal::hidden_elements_list_not_cached -portal_id $portal_id] {
     set show_avail_p 1
-    append show_html "<option value=[lindex $element 0]>[lindex $element 1]</option>\n"
+    append show_html "<option value=\"[ad_quotehtml [lindex $element 0]]\">[ad_quotehtml [lang::util::localize [lindex $element 1]]]</option>\n"
 }
 
 set imgdir "[portal::mount_point]/place-element-components"        

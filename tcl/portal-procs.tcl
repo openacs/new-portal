@@ -650,7 +650,6 @@ namespace eval portal {
         @param portal_id the portal to edit
         @param formdata an ns_set with all the formdata
     } {
-
         set edit_p \
                 [permission::permission_p \
                 -object_id $portal_id \
