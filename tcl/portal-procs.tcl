@@ -1,3 +1,4 @@
+#
 #  Copyright (C) 2001, 2002 OpenForce, Inc.
 #
 #  This file is part of dotLRN.
@@ -1436,6 +1437,28 @@ namespace eval portal {
         }
     }
 
+    ad_proc -private get_element_id_from_unique_param {
+        {-portal_id:required}
+        {-key:required}
+        {-value:required}
+    } {
+        If you know that on a given portal there is a _unique_ element
+        identified by a parameter value and you want to find said element,
+        this is your proc. Will error out if the param is not found (poor-man's
+        ASSERT)
+    } {
+        return [db_string select {
+          select portal_element_map.element_id
+          from portal_element_map, portal_element_parameters
+          where portal_element_map.page_id in (select page_id
+                                               from portal_pages
+                                               where portal_id = :portal_id)
+          and portal_element_parameters.element_id = portal_element_map.element_id
+          and portal_element_parameters.key = :key
+          and portal_element_parameters.value = :value
+        }]
+    }
+
     ad_proc -private evaluate_element {
         {-portal_id:required}
         {-edit_p:required}
@@ -1673,6 +1696,19 @@ namespace eval portal {
                     ad_returnredirect $return_url
                 }
             }
+        }
+    }
+
+    ad_proc -private set_pretty_name { 
+        {-element_id:required}
+        {-pretty_name:required}
+    } {
+        Set the element's pretty name shown in the title bar.
+    } {
+        db_dml update {
+            update portal_element_map
+            set pretty_name = :pretty_name
+            where element_id = :element_id
         }
     }
 
