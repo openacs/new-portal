@@ -13,6 +13,7 @@
     layout_id => :layout_id,
     template_id => :template_id,
     portal_template_p => :portal_template_p,
+    default_page_name => :default_page_name,
     context_id => :context_id
     );
     

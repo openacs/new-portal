@@ -97,6 +97,7 @@ namespace eval portal {
 	{-template_id ""} 
 	{-portal_template_p "f"} 
 	{-layout_name "Simple 2-Column"}
+	{-default_page_name ""}
 	{-context_id ""} 
 	user_id 
     } {

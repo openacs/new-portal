@@ -53,6 +53,7 @@ as
 		v_page_id portal_pages.page_id%TYPE;
 		v_layout_id portal_pages.layout_id%TYPE;
 		v_sort_key portal_pages.sort_key%TYPE;
+                v_current_page_count integer;       
 	begin
 		v_page_id := acs_object.new (
 			object_type	=> object_type,
@@ -83,6 +84,21 @@ as
                        (page_id, pretty_name, portal_id, layout_id, sort_key)
 		values (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key);
 
+                select count(*) into v_current_page_count 
+                from portal_current_page
+                where portal_id = portal_page.new.portal_id;
+                
+                if v_current_page_count = 0 then
+                   insert into portal_current_page
+                   (portal_id, page_id) values (portal_id, v_page_id);
+                else
+                   update portal_current_page 
+                   set page_id = v_page_id
+                   where portal_id = portal_id;
+
+--                   raise_application_error(-20000, 'aks1 just UPDATED portal_current_page with page_id ' || v_page_id || ' portal_id ' || portal_id || ' page count ' || v_current_page_count); 
+                end if;
+
                 return v_page_id;
 	end new;
 
@@ -101,21 +117,22 @@ show errors
 
 create or replace package portal
 as
-	function new (
-		portal_id		in portals.portal_id%TYPE default null,
-		name			in portals.name%TYPE default 'Untitled',
-		theme_id		in portals.theme_id%TYPE default null,
-		layout_id		in portal_layouts.layout_id%TYPE default null,
-		portal_template_p	in portals.portal_template_p%TYPE default 'f',
-		template_id		in portals.template_id%TYPE default null,
-		object_type		in acs_object_types.object_type%TYPE default 'portal',
-		creation_date		in acs_objects.creation_date%TYPE 
-					default sysdate,
-		creation_user		in acs_objects.creation_user%TYPE 
-					default null,
-		creation_ip		in acs_objects.creation_ip%TYPE default null, 
-		context_id		in acs_objects.context_id%TYPE default null 
-	) return portals.portal_id%TYPE;
+    function new (
+        portal_id		in portals.portal_id%TYPE default null,
+        name			in portals.name%TYPE default 'Untitled',
+        theme_id		in portals.theme_id%TYPE default null,
+        layout_id		in portal_layouts.layout_id%TYPE default null,
+        portal_template_p	in portals.portal_template_p%TYPE default 'f',
+        template_id		in portals.template_id%TYPE default null,
+        default_page_name       in portal_pages.pretty_name%TYPE default 'Main Page',
+        object_type		in acs_object_types.object_type%TYPE default 'portal',
+        creation_date		in acs_objects.creation_date%TYPE 
+                                default sysdate,
+        creation_user		in acs_objects.creation_user%TYPE 
+                                default null,
+        creation_ip		in acs_objects.creation_ip%TYPE default null, 
+        context_id		in acs_objects.context_id%TYPE default null 
+    ) return portals.portal_id%TYPE;
 
 	procedure delete (
 		portal_id	in portals.portal_id%TYPE
@@ -133,6 +150,7 @@ as
 		layout_id		in portal_layouts.layout_id%TYPE default null,
 		portal_template_p	in portals.portal_template_p%TYPE default 'f',
 		template_id		in portals.template_id%TYPE default null,
+                default_page_name       in portal_pages.pretty_name%TYPE default 'Main Page',
 		object_type		in acs_object_types.object_type%TYPE default 'portal',
 		creation_date		in acs_objects.creation_date%TYPE 
 					default sysdate,
@@ -146,7 +164,6 @@ as
 		v_theme_id portals.theme_id%TYPE;
 		v_layout_id portal_layouts.layout_id%TYPE;
 		v_page_id portal_pages.page_id%TYPE;
-		v_current_page_id portal_pages.page_id%TYPE;
 	begin
 
                 -- we must create at least one page for this portal
@@ -175,21 +192,16 @@ as
                    -- now insert the default page
 		   v_page_id := portal_page.new (
 			portal_id	=> v_portal_id,
-			pretty_name     => 'Default Page',      
+			pretty_name     => default_page_name,      
                         layout_id       => v_layout_id,
 			creation_date	=> creation_date,
 			creation_user	=> creation_user,
 			creation_ip	=> creation_ip,
 			context_id	=> context_id
 		   );
-
-                   -- set the current page to the page we just made
---                   insert into portal_current_page
---                   (portal_id, page_id) values (v_portal_id, v_page_id);
-
                 else
-                   -- we have to copy things like the template, theme form the template
-                   -- portal_template_p is false. no chained templates yet
+                   -- we have to copy things like the template, theme form the 
+                   --  templateportal_template_p is false. no chained templates 
                    select theme_id into v_theme_id 
                    from portals 
                    where portal_id = portal.new.template_id;
@@ -208,15 +220,6 @@ as
                             sort_key        => page.sort_key
 		       );                                      
                    end loop;
-
-                    -- set the current page to page with sk 0
-                    select page_id into v_current_page_id 
-                    from portal_pages 
-                    where portal_id = v_portal_id
-                    and sort_key = 0; 
-                    
-                    insert into portal_current_page
-                    (portal_id, page_id) values (v_portal_id, v_current_page_id);
                 end if;
 
 
