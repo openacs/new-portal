@@ -25,7 +25,7 @@
 
 select define_function_args('portal_page__new','page_id,pretty_name,portal_id,layout_id,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_page__new (integer,varchar,integer,integer,varchar,timestamp,integer,varchar,integer)
+create function portal_page__new (integer,varchar,integer,integer,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_page_id                       alias for $1;
@@ -128,7 +128,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
-create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamp,integer,varchar,integer)
+create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_portal_id                     alias for $1;
@@ -303,7 +303,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_element_theme__new','theme_id,name,description,filename,resource_dir,object_type;portal_element_theme,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_element_theme__new (integer,varchar,varchar,varchar,varchar,varchar,timestamp,integer,varchar,integer)
+create function portal_element_theme__new (integer,varchar,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_theme_id                      alias for $1;
@@ -378,7 +378,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_layout__new','layout_id,name,description,filename,resource_dir,object_type;portal_layout,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_layout__new (integer,varchar,varchar,varchar,varchar,varchar,timestamp,integer,varchar,integer)
+create function portal_layout__new (integer,varchar,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_layout_id                     alias for $1;
@@ -485,7 +485,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_datasource__new','datasource_id,name,description,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_datasource__new (integer,varchar,varchar,varchar,timestamp,integer,varchar,integer)
+create function portal_datasource__new (integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_datasource_id                 alias for $1; -- default null

@@ -465,7 +465,7 @@ namespace eval portal {
             <input type=submit name=op value=\"[_ new-portal.Rename_Page]\">
             <input type=text name=pretty_name value=\"$page_name\">
             </form> 
-	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/graphics/spacer.gif\" height=1></td></tr>
+	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
 	    </td></tr>"
 
             append template "$page_name_chunk"
@@ -1556,10 +1556,10 @@ namespace eval portal {
             } {
 
         global errorInfo
-        ns_log error "*** portal::render_element show callback Error! ($element(ds_name)) ***\n\n $errmsg\n\n$errorInfo\n\n"
+        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
-        set element(content) " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n"
+        set element(content) "You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
 
     }
 
@@ -1638,9 +1638,10 @@ namespace eval portal {
                 [datasource_call \
                 $element(datasource_id) "Show" [list [array get config] ]] } \
                 errmsg ] } {
-            ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"
+            global errorInfo
+            ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$errorInfo\n\n"
             ad_return -error
-            ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
+            ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <P> $errmsg\n\n"
 
         }
 
@@ -2316,3 +2317,8 @@ namespace eval portal {
     }
 
 }
+ 
+
+
+
+

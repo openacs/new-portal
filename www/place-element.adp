@@ -72,7 +72,7 @@
 
     <!-- hide/remove link and arrows end -->
 </td></tr>
-<tr><td colspan=2 class="bottom-border" height="0"><img src="/graphics/spacer.gif"></td></tr>
+<tr><td colspan=2 class="bottom-border" height="0"><img src="/shared/images/spacer.gif"></td></tr>
 <tr><td></td></tr>
 <tr><td colspan=2 valign=bottom align=center>
 </form>
