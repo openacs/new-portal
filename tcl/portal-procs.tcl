@@ -464,7 +464,7 @@ namespace eval portal {
             <input type=submit name=op value=\"Rename Page\">
             <input type=text name=pretty_name value=\"$page_name\">
             </form> 
-	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/graphics/spacer.gif\" height=1></td></tr>
+	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
 	    </td></tr>"
 
             append template "$page_name_chunk"

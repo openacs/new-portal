@@ -25,9 +25,9 @@
 <bold>      <%= [string toupper @name@] %></bold>
   </td>
 </tr>
-<tr><td colspan=3 class="dark-line" height="0"><img src="/graphics/spacer.gif"></td></tr>
+<tr><td colspan=3 class="dark-line" height="0"><img src="/shared/images/spacer.gif"></td></tr>
 <tr>
-  <td class="light-line" width="1"><img src="/graphics/spacer.gif" width="1"></td>
+  <td class="light-line" width="1"><img src="/shared/images/spacer.gif" width="1"></td>
   <td class="element-text" width="100%">
 	<table cellspacing="0" cellpadding="0" class="element-content" width="100%">
 	<tr><td>
@@ -47,10 +47,10 @@
 	</tr>
 	</table>
   </td>
-	  <td align="right" class="light-line" width="1"><img src="/graphics/spacer.gif" width="1"></td>
+	  <td align="right" class="light-line" width="1"><img src="/shared/images/spacer.gif" width="1"></td>
 
 </tr>
-<tr><td colspan=3 class="light-line" width="1"><img src="/graphics/spacer.gif"></td></tr>
+<tr><td colspan=3 class="light-line" width="1"><img src="/shared/images/spacer.gif"></td></tr>
 </table>
 <!-- Portal Element '@name@' end -->
 
