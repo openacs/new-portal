@@ -76,6 +76,37 @@ begin
 	  );
 
 
+	  -- drop Link
+	  op_id := acs_sc_operation.get_id (
+		  contract_name => 'portal_datasource',
+		  operation_name => 'Link'
+	  );
+	  
+	  acs_sc_operation.delete (
+		  operation_id => op_id,
+		  contract_name => 'portal_datasource',
+		  operation_name => 'Link'
+	  );
+
+	  msg_type_id := acs_sc_msg_type.get_id (
+		  msg_type_name => 'portal_datasource.Link.InputType'
+	  );
+
+	  acs_sc_msg_type.delete (
+		  msg_type_name => 'portal_datasource.Link.InputType',
+		  msg_type_id => msg_type_id
+	  );
+
+	  msg_type_id := acs_sc_msg_type.get_id (
+		  msg_type_name => 'portal_datasource.Link.OutputType'
+	  );
+
+	  acs_sc_msg_type.delete (
+		  msg_type_name => 'portal_datasource.Link.OutputType',
+		  msg_type_id => msg_type_id
+	  );
+
+
 	  -- Drop add_self_to_page
 	  op_id := acs_sc_operation.get_id (
 		  contract_name => 'portal_datasource',
@@ -134,6 +165,37 @@ begin
 
 	  acs_sc_msg_type.delete (
 		  msg_type_name => 'portal_datasource.Show.OutputType',
+		  msg_type_id => msg_type_id
+	  );
+
+
+	  -- Delete Edit
+	  op_id := acs_sc_operation.get_id (
+		  contract_name => 'portal_datasource',
+		  operation_name => 'Edit'
+	  );
+	  
+	  acs_sc_operation.delete (
+		  operation_id => op_id,
+		  contract_name => 'portal_datasource',
+		  operation_name => 'Edit'
+	  );
+
+	  msg_type_id := acs_sc_msg_type.get_id (
+		  msg_type_name => 'portal_datasource.Edit.InputType'
+	  );
+
+	  acs_sc_msg_type.delete (
+		  msg_type_name => 'portal_datasource.Edit.InputType',
+		  msg_type_id => msg_type_id
+	  );
+
+	  msg_type_id := acs_sc_msg_type.get_id (
+		  msg_type_name => 'portal_datasource.Edit.OutputType'
+	  );
+
+	  acs_sc_msg_type.delete (
+		  msg_type_name => 'portal_datasource.Edit.OutputType',
 		  msg_type_id => msg_type_id
 	  );
 
