@@ -60,16 +60,17 @@ begin
 		resource_dir => 'themes/simple-theme');
 
 	theme_id := portal_element_theme.new (
+		name => 'nada',
+		description => 'The un-theme. No graphics.',
+		filename => 'themes/nada-theme',
+		resource_dir => 'themes/nada-theme');
+
+	theme_id := portal_element_theme.new (
 		name => 'deco',
 		description => 'An Art Deco theme',
 		filename => 'themes/deco-theme',
 		resource_dir => 'themes/deco-theme');
 
-	theme_id := portal_element_theme.new (
-		name => 'nada',
-		description => 'The un-theme. No graphics.',
-		filename => 'themes/nada-theme',
-		resource_dir => 'themes/nada-theme');
 
 end;
 /
