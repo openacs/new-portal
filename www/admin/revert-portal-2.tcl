@@ -36,7 +36,7 @@ ad_return_template
 
 
 if {$portal_type == "user"}  {
-    db_exec_plsql revert_user_portals_to_default {
+    db_dml revert_user_portals_to_default {
 	update dotlrn_user_profile_rels set portal_id = :portal_id
     }
     
