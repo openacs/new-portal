@@ -122,7 +122,7 @@ create table portals (
 				constraint p_portal_id_pk
 				primary key,
 	name			varchar(200) default 'Untitled' not null,
-	layout_id		constraint portal_template_id_fk
+	layout_id		constraint portal_layout_id_fk
 				references portal_layouts
 				not null,
 	theme_id		constraint portal_theme_id_fk
