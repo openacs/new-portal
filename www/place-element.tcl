@@ -69,6 +69,11 @@ db_foreach datasource_avail {
     from portal_datasources pd, portal_datasource_avail_map pdam
     where pdam.portal_id = :portal_id
     and pd.datasource_id = pdam.datasource_id
+    and pd.datasource_id not in (
+    select datasource_id 
+    from portal_element_map
+    where portal_id = :portal_id
+    )
     order by name
 } {
     append add_html "<option value=$datasource_id>$name</option>\n"
