@@ -173,18 +173,21 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::configure_dispatch.revert_get_source_elements">
+
+    <fullquery name="portal::configure_dispatch.revert_page_update">
         <querytext>
-            select region,
-                   sort_key,
-                   state,
-                   pd.datasource_id as datasource_id,
-                   pd.name as name,
-                   pem.pretty_name as pretty_name
-            from portal_element_map pem,
-                 portal_datasources pd
-            where pem.page_id = :source_page_id
-            and pem.datasource_id = pd.datasource_id
+            update portal_pages
+            set pretty_name = :pretty_name,
+                layout_id = :layout_id
+            where page_id = :target_page_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.hide_all_element">
+        <querytext>
+		update portal_element_map		
+		set  state = 'hidden'
+		 where page_id = :target_page_id
         </querytext>
     </fullquery>
 
