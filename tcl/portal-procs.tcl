@@ -1550,8 +1550,22 @@ namespace eval portal {
         @param portal_id
         @param ds_id
     } {
-        set new_p_ds_id [db_nextval acs_object_id_seq]
-        db_dml insert {} 
+        if {![datasource_available_p -portal_id $portal_id -datasource_id $ds_id]} {
+            set new_p_ds_id [db_nextval acs_object_id_seq]
+            db_dml insert {} 
+        }
+    }
+
+    ad_proc -private datasource_available_p {
+        {-portal_id:required}
+        {-datasource_id:required}
+    } {
+        Check is the given ds is available to the given portal
+
+        @param portal_id
+        @param ds_id
+    } {
+        return [db_string select {}]
     }
 
     ad_proc -private make_datasource_unavailable {portal_id ds_id} {
