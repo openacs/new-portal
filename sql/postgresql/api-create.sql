@@ -126,7 +126,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
-create function portal__new (integer,varchar,integer,integer,integer,boolean,integer,varchar,varchar,timestamp,integer,varchar,integer)
+create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamp,integer,varchar,integer)
 returns integer as '
 declare
     p_portal_id                     alias for $1;
@@ -224,7 +224,7 @@ begin
                            where page_id = page.page_id
             loop
 
-                select acs_object_id_seq.nextval
+                select nextval(''acs_object_id_seq'')
                 into v_new_element_id
                 from dual;
 
@@ -241,7 +241,7 @@ begin
                              where element_id = element.element_id
                 loop
 
-                    select acs_object_id_seq.nextval
+                    select nextval(''acs_object_id_seq'')
                     into v_new_parameter_id
                     from dual;
 
@@ -547,7 +547,7 @@ begin
     insert into portal_datasource_def_params
     (parameter_id, datasource_id, config_required_p, configured_p, key, value)
     values
-    (acs_object_id_seq.nextval, p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
+    (nextval(''acs_object_id_seq''), p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
 
     return 0;
 
