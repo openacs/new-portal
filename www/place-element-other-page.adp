@@ -18,7 +18,7 @@
 
 %>
 
-<form method=post action=@action_string@>
+<form name="op_move_to_page" method=post action=@action_string@>
 <input type=hidden name=portal_id value=@portal_id@>
 <input type=hidden name=return_url value=@return_url@>
 

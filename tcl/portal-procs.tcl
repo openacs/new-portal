@@ -457,7 +457,7 @@ namespace eval portal {
             set page_name_chunk "<table border=0 width=\"100%\" class=\"portal-page-config\" cellpadding=0 cellspacing=0 border=0>
 	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">[ad_quotehtml $page_name]</h2></a></td>
             <td align=right><name=$page_id></a>
-            <form method=post align=right action=@action_string@>
+            <form name=\"op_rename_page\" method=post align=right action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=page_id value=$page_id>
             <input type=hidden name=return_url value=@return_url@#$page_id>
@@ -595,7 +595,7 @@ namespace eval portal {
             <tr><td><h2 class=\"portal-page-name\">[_ new-portal.Create_a_new_page]</h2></tr></td>
 	<tr><td>
 	<a name=add_a_new_page></a>
-        <form method=post action=@action_string@>
+        <form name=\"op_add_page\" method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@#$page_id>
         <input type=hidden name=anchor value=add_a_new_page>
@@ -614,7 +614,7 @@ namespace eval portal {
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
             append template "<p>
             <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0><tr><td>
-	    <form method=post action=@action_string@>
+	    <form name=\"op_revert\" method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_the_entire_por]</h2>
