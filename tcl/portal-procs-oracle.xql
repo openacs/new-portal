@@ -3,11 +3,10 @@
 <queryset>
 <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
 
-<fullquery name="portal::create.create_new_portal_and_perms">
+<fullquery name="portal::create.create_new_portal">
   <querytext>
 
-    begin
-    
+  begin
     :1 := portal.new ( 
     name => :name,
     layout_id => :layout_id,
@@ -16,26 +15,7 @@
     theme_id => :theme_id,
     context_id => :context_id
     );
-    
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_read_portal' 
-    );
-    
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_edit_portal'
-    );
-
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_admin_portal'
-    );
-
-    end;
+  end;
 
   </querytext>
 </fullquery>

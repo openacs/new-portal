@@ -191,7 +191,11 @@ namespace eval portal {
         db_transaction {
             # create the portal and the first page
 
-            set portal_id [db_exec_plsql create_new_portal_and_perms {}]
+            set portal_id [db_exec_plsql create_new_portal {}]
+
+            permission::grant -party_id $user_id -object_id $portal_id -privilege portal_read_portal
+            permission::grant -party_id $user_id -object_id $portal_id -privilege portal_edit_portal
+            permission::grant -party_id $user_id -object_id $portal_id -privilege portal_admin_portal
 
             # ignore the csv list if we have a template
             if {![empty_string_p $csv_list] && [empty_string_p $template_id]} {

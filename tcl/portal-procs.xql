@@ -327,7 +327,7 @@
   <querytext>
     insert into portal_element_parameters
     (parameter_id, element_id, config_required_p, configured_p, key, value)
-    select acs_object_id_seq.nextval, :new_element_id, config_required_p, configured_p, key, value
+    select nextval('t_acs_object_id_seq'), :new_element_id, config_required_p, configured_p, key, value
     from portal_element_parameters
     where element_id = :template_element_id
 </querytext>
@@ -337,7 +337,7 @@
   <querytext>
     insert into portal_element_parameters
     (parameter_id, element_id, config_required_p, configured_p, key, value)
-    select acs_object_id_seq.nextval, :new_element_id, config_required_p, configured_p, key, value
+    select nextval('t_acs_object_id_seq'), :new_element_id, config_required_p, configured_p, key, value
     from portal_datasource_def_params where datasource_id= :ds_id
   </querytext>
 </fullquery> 
@@ -475,7 +475,7 @@
   <querytext>
     insert into portal_element_parameters
     (parameter_id, element_id, configured_p, key, value) 
-    select acs_object_id_seq.nextval, :element_id, 't', :key, :value
+    select nextval('t_acs_object_id_seq'), :element_id, 't', :key, :value
         from dual
         where not exists (select parameter_id from portal_element_parameters where 
                           element_id= :element_id and key= :key and value= :value)
