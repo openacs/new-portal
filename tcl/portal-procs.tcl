@@ -733,6 +733,10 @@ namespace eval portal {
 	# apply the path hack to the filename and the resourcedir
 	set element(filename) "[www_path]/$element(filename)"
 	set element(resource_dir) "[mount_point]/$element(resource_dir)"
+
+	# set up the title, configuration and other links
+
+
 	
 	# get the element's params
 	db_foreach evaluate_element_params_select "
@@ -751,10 +755,8 @@ namespace eval portal {
 	# get the datasource
 	db_1row evaluate_element_datasource_select "
 	select
-	datasource_id,
 	mime_type,
 	name,
-	description,
 	content
 	from portal_datasources
 	where datasource_id = $element(datasource_id) 
@@ -780,6 +782,48 @@ namespace eval portal {
 
     }
     
+
+    ad_proc -public configure_element { element_id op return_url } {
+	Return a portal configuration page. 
+	All form targets point to file_stub-2.
+    
+	@param portal_id
+	@return_url
+	@return A portal configuration page	
+    } {
+	
+	if { [db_0or1row configure_element_select "select portal_id 
+	from portal_element_map 
+	where element_id = :element_id"] } {
+	    # passed in element_id is good, do they have perms?
+	    ad_require_permission $portal_id portal_read_portal
+	    ad_require_permission $portal_id portal_edit_portal
+	} else {
+	    return
+	}
+	
+	switch $op {
+	    "edit" { 
+		ad_return_complaint 1 "portal::configure_element 
+		edit called with $element_id $return_url
+		Not implimented yet"
+	    }
+	    "shade" {  
+		set shaded_p [get_element_param $element_id "shaded_p"]
+		
+		if { $shaded_p == "f" } {
+		    set_element_param $element_id "shaded_p" "t"
+		} else {
+		    set_element_param $element_id "shaded_p" "f"
+		}
+
+		return "Done. <a href=$return_url>Go back</a>"
+	    }
+	    "hide" {
+		ad_return_complaint 1 "hide called $element_id $return_url"
+	    }
+	}
+    }
     
     #
     # Datasource helper procs
