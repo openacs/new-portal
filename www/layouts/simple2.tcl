@@ -4,6 +4,7 @@ ad_page_contract {
 } -properties {
     element_list:onevalue
     element_src:onevalue
+    action_string:onevalue
 }
 
 portal::layout_elements $element_list
