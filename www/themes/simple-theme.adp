@@ -1,11 +1,11 @@
 <!-- Element: '@name@' begin (application/x-ats) -->
-    <table border=0 bgcolor=#cc0000 cellpadding=1 cellspacing=0 width=100% class="portal_border">
+    <table border=0 bgcolor=black cellpadding=1 cellspacing=0 width=100% class="portal_border">
     <tr>
       <td>
-        <table border=0 cellpadding=3 width=100% cellspacing=0>
+        <table bgcolor=white border=0 cellpadding=2 width=100% cellspacing=0>
 	  <tr>
             <td class="portal_header" bgcolor="#cc0000" align=left>
-              <font size="+1">
+              <font face=arial,helvetica size="-1" color=#ffffcc>
               <if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
                 <b>@name@</b>
               </if><else>
@@ -14,9 +14,8 @@
               </font>
             </td>
          
-
-            <td align=right class="portal_header" bgcolor="#cc0000">
-		<!-- include title buttons here -->
+            <!-- no title buttons -->
+<!--            <td align=right class="portal_header" bgcolor="#cc0000">
 		<if @user_editable_p@ eq "t">	
 		  <a href=configure-element?element_id=@element_id@&op=edit>
 	          <img border=0 src="@dir@/e.gif" alt="edit"></a>
@@ -35,13 +34,16 @@
 		  <img border=0 src="@dir@/x.gif" alt="hide"></a>
 		</if>
             </td>
+-->
 	  </tr>
 
           <tr>
             <td class="portal_body" colspan=2 bgcolor="#ffffff">
+            <font face=arial,helvetica size=-1 color=black>
 <!-- Content: '@name@' begin -->
 	      <slave>
 <!-- Content: '@name@' end -->
+            </font>
             </td>
           </tr>
 	</table>
