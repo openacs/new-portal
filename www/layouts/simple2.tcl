@@ -6,4 +6,4 @@ ad_page_contract {
     element_src:onevalue
 }
 
-portal_layout_elements $element_list
+portal::layout_elements $element_list
