@@ -933,51 +933,102 @@ namespace eval portal {
     } {
 
 	set ds_id [get_datasource_id $ds_name]
-	
-	# XXX - set up a unique prett_name for the PE
-	if { [db_0or1row add_element_to_region_select "select 1  
-	from portal_element_map
-	where portal_id = :portal_id and
-	pretty_name = :ds_name"] } {
-	    set pretty_name [append ds_name "+1"]
-	} else {
-	    set pretty_name $ds_name
-	}
-	
-	# Bind the DS to the PE by inserting into the map
-	# and copying over the default params. 
-	set new_element_id [db_nextval acs_object_id_seq]
 
-	db_dml add_element_to_region_map_insert "
-	insert into portal_element_map
-	(element_id, 
-	name,
-	pretty_name,
-	portal_id,
-	datasource_id,
-	region, 
-	sort_key)
-	values
-	(:new_element_id, 
-	:ds_name,
-	:pretty_name,
-	:portal_id, 
-	:ds_id, 
-	:region,  
-	nvl((select max(sort_key) + 1 
-	     from portal_element_map 
-	     where region = :region), 1))" 
-	
-	db_dml add_element_to_region_param_insert "
-	insert into portal_element_parameters
-	(parameter_id, element_id, config_required_p, configured_p, key, value)
-	select acs_object_id_seq.nextval, 
-	:new_element_id, 
-	config_required_p, 
-	configured_p, 
-	key, 
-	value
-	from portal_datasource_def_params where datasource_id= :ds_id"
+	# First, check if this portal has a portal template, and
+	# that template has an element of this DS in it
+	if { [db_string add_element_to_region_template_check \
+		"select template_id 
+	from portals p , portal_element_map pem
+	where p.portal_id = :portal_id
+	and p.portal_id = pem.portal_id
+	and pem.datasource_id = :ds_id"] != "" } {
+	    # I have a template with the element, copy the element from
+	    # the template to my portal
+
+	    set new_element_id [db_nextval acs_object_id_seq]
+
+	    db_dml add_element_to_region_template_insert "
+	    insert into portal_element_map
+	    (element_id, 
+	    name, 
+	    pretty_name, 
+	    portal_id,
+	    datasource_id, 
+	    region, 
+	    sort_key,
+	    state)
+	    select 
+	    :new_element_id, 
+	    name, 
+	    pretty_name,
+	    :portal_id,
+	    :ds_id,
+	    region, 
+	    sort_key,
+	    state
+	    from portal_element_map 
+	    where portal_id = :template_id
+	    and datasource_id= :ds_id"
+	    
+	    # now copy the params from the template
+	    db_dml add_element_to_region_template_params_copy {
+		insert into portal_element_parameters
+		(parameter_id, 
+		element_id, 
+		config_required_p, 
+		configured_p, 
+		key, 
+		value)
+		select 
+		acs_object_id_seq.nextval, 
+		:new_element_id, 
+		config_required_p, 
+		configured_p, 
+		key, 
+		value
+		from portal_element_parameters
+		where element_id = (select element_id
+		                    from portal_element_map
+		                    where portal_id = :portal_id
+		                    and datasource_id = :ds_id)
+	    }
+
+	} else {
+	    # no template, or the template dosen't have this DS
+	    # or I'm a template!
+	    set new_element_id [db_nextval acs_object_id_seq]
+	    
+	    db_dml add_element_to_region_map_insert "
+	    insert into portal_element_map
+	    (element_id, 
+	    name,
+	    pretty_name,
+	    portal_id,
+	    datasource_id,
+	    region, 
+	    sort_key)
+	    values
+	    (:new_element_id, 
+	    :ds_name,
+	    :ds_name,
+	    :portal_id, 
+	    :ds_id, 
+	    :region,  
+	    nvl((select max(sort_key) + 1 
+	    from portal_element_map 
+	    where region = :region), 1))" 
+	    
+	    db_dml add_element_to_region_param_insert "
+	    insert into portal_element_parameters
+	    (parameter_id, element_id, config_required_p, configured_p, key, value)
+	    select acs_object_id_seq.nextval, 
+	    :new_element_id, 
+	    config_required_p, 
+	    configured_p, 
+	    key, 
+	    value
+	    from portal_datasource_def_params where datasource_id= :ds_id"
+	}
 
 	# The caller must now set the necessary params or else!
 	return $new_element_id
