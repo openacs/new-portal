@@ -2,7 +2,7 @@
     <table border=0 bgcolor=#006600 cellpadding=1 cellspacing=0 width=100% class="portal_border">
     <tr>
       <td>
-        <table border=0 cellpadding=3 cellspacing=0 width=100%>
+        <table border=0 cellpadding=3 width=100% cellspacing=0>
 	  <tr>
             <td class="portal_header" bgcolor="#006600">
               @name@
