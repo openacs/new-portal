@@ -66,6 +66,12 @@ namespace eval portal {
         return "new-portal"
     }
 
+    ad_proc -public get_package_id {} {
+        returns the package ID
+    } {
+        return [apm_package_id_from_key [package_key]]
+    }
+
     # Work around for template::util::url_to_file
     ad_proc -private  www_path {} {
 	Returns the path of the www dir of the portal package. We
@@ -117,7 +123,7 @@ namespace eval portal {
 
         # get the default theme name from param, if no theme given
         if {[empty_string_p $theme_name]} {
-            set theme_name [ad_parameter default_theme_name]
+            set theme_name [ad_parameter -package_id [get_package_id] default_theme_name]
         } 
 
         set theme_id [get_theme_id_from_name -theme_name $theme_name]
