@@ -13,14 +13,17 @@
 <td height="15" background="@dir@/tbl-left.png" rowspan="2"><img src="@dir@/tbl-left.png" alt=" " width="11" height="1"></td>
 <td>
 
-	<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#eeeeee">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
               <tbody>
                 <tr>
                   <td align=left valign=middle width=88%  bgcolor="#eeeee7">
-			<font face="arial,helvetica,lucida" size="+1">
+			<font face="verdana,arial,helvetica" size="+1">
 				<a style="text-decoration: none" href=@link@><b>@name@</b></a></font></td>
+		<if @user_editable_p@ eq "t">	
                   <td align=right width=7%>
+
 			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.png" alt="edit"></a></td>
+		</if>
                   <td align=right width=7%>
 
 			<a href=configure-element?element_id=@element_id@&op=shade>
@@ -48,7 +51,7 @@
 <td align="left" valign="middle" bgcolor="#ffffff">
 <br>
 <div align="justify">
-<font face="arial,helvetica,lucida" color="#333333">
+<font face="verdana,arial,helvetica" color="#333333">
 <!-- Content: '@name@' begin -->
 <slave>
 <!-- Content: '@name@' end @dir@ -->
