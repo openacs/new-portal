@@ -10,7 +10,7 @@ ad_library {
 
 namespace eval portal {
 
-    ad_proc -public create_portal {user_id {layout_name "'Simple 2-Column'"}} {
+    ad_proc -public create {user_id {layout_name "'Simple 2-Column'"}} {
     Create a new portal for the passed in user id. 
 
     @return The newly created portal's id
@@ -54,7 +54,7 @@ namespace eval portal {
     }]
 }
 
-ad_proc -public delete_portal { portal_id } {
+ad_proc -public delete { portal_id } {
     Destroy the portal
 
     @param portal_id
@@ -202,7 +202,7 @@ ad_proc -public get_element_param { element_id key } {
 }
 
 
-ad_proc -public render_portal { portal_id } {
+ad_proc -public render { portal_id } {
     Get a portal by id. If it's not found, say so.
 
     @return Fully rendered portal or error message
@@ -233,18 +233,18 @@ ad_proc -public render_portal { portal_id } {
 	ad_script_abort
     }
 
-    set element_src [portal_path]/www/render-element
- 
+    set element_src "[www_path]/render-element"
+
     set template "<master src=\"@master_template@\">
 <property name=\"title\">@portal.name@</property>
-<include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
+<include src=\"@portal.layout_template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
 
     db_0or1row select_portal_and_layout "
     select
     p.portal_id,
     p.name,
     p.owner_id,
-    t.filename as template,
+    t.filename as layout_template,
     't' as portal_read_p,
     't' as layout_read_p
     from portals p, portal_layouts t
@@ -257,11 +257,10 @@ ad_proc -public render_portal { portal_id } {
     }
 
     # This hack is to work around the acs-templating system
-    set __adp_stub "[full_portal_path]/www/."
+    set __adp_stub "[get_server_root][www_path]/."
     set {master_template} \"master\" 
 
     set code [template::adp_compile -string $template]
-    ns_log notice "AKS22 got here $code"
     set output [template::adp_eval code]
 
 #    if {![empty_string_p $output]} {
@@ -321,7 +320,6 @@ ad_proc -public evaluate_element { element_id } {
  
     # the caching in here needs to be completely redone.  It totally sucks.
     # aks - all catching removed
-
     array set element [eval [list get_element_data $element_id]]
 
     if { ! [info exists element(element_id)] } {
@@ -346,14 +344,14 @@ ad_proc -public evaluate_element { element_id } {
 
 
     # evaulate the datasource.
-    #  it might be good to (optionally) cache this, since it can be an expensive step.
-    ns_log Notice "aks29 got here"
+    # it might be good to (optionally) cache this,
+    # since it can be an expensive step.
     set element(content) [ eval { 
 	portal_render_datasource_$datasource(data_type) [array get datasource] $element(config)
     } ]
-    ns_log Notice "aks30 got here content is $element(content)"	
 	
-	# this is sometimes used when interacting with templates in the filesystem.
+	# this is sometimes used when interacting with templates in the
+	# filesystem.
 	set element(mime_type) $datasource(mime_type)
 	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
 
@@ -669,18 +667,12 @@ ad_proc -public layout_elements {
      }
  }
 
-ad_proc -public  full_portal_path {} {
+# Work around for template::util::url_to_file 
+ad_proc -public  www_path {} {
     Stuff
 } {
-     return "/web/arjun/openacs-4/packages/new-portal" 
+     return "/packages/new-portal/www" 
 }
-
-ad_proc -public  portal_path {} {
-    Other Stuff
-} { 
-     return "/packages/new-portal" 
-}
-
 ad_proc -public  dummy {} {
     There's really something wrong with ad_proc
 } { 
