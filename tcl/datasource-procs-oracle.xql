@@ -23,7 +23,7 @@
                  configured_p => :configured_p, 
                  key => :key, 
                  value => :value
-             ):
+             );
            end;
         </querytext>
     </fullquery>
