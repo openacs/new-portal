@@ -56,66 +56,90 @@ set scan off
 
 -- Insert some default templates.
 
---- XXX todo fix me not done yet
+--- XXX fix directories 
+--- layouts in www/layouts
+--- ?? why /layouts/components? try to get rid of it
+--- elements in www/elements
+--- ds's in www/datasources
+
 
 declare
-	template_id	portal_templates.template_id%TYPE;
+	layout_id	portal_layouts.layout_id%TYPE;
+	theme_id	portal_element_themes.theme_id%TYPE;
 begin
 
--- two-column template, without a header.
-	template_id := portal_template.new (
+-- two-column layout, without a header.
+	layout_id := portal_layout.new (
 		name => 'Simple 2-Column',
 		description => 'A simple 2-column layout',
-		type => 'layout',
-		filename => 'templates/simple2',
-		resource_dir => 'templates/components/simple2');
+		filename => 'layouts/simple2',
+		resource_dir => 'layouts/components/simple2');
 
--- the supported regions for that template.
-	portal_template.add_region (template_id => template_id, region => '1');
-	portal_template.add_region (template_id => template_id, region => '2');
+-- the supported regions for that layout.
+	portal_layout.add_region (layout_id => layout_id, region => '1');
+	portal_layout.add_region (layout_id => layout_id, region => '2');
 
 -- same as above, only, three columns.
-	template_id := portal_template.new (
+	layout_id := portal_layout.new (
 		name => 'Simple 3-Column',
 		description => 'A simple 3-column layout',
-		type => 'layout',
-		filename => 'templates/simple3',
-		resource_dir => 'templates/components/simple3');
+		filename => 'layouts/simple3',
+		resource_dir => 'layouts/components/simple3');
 
-	portal_template.add_region (template_id => template_id, region => '1');
-	portal_template.add_region (template_id => template_id, region => '2');
-	portal_template.add_region (template_id => template_id, region => '3');
+	portal_layout.add_region (layout_id => layout_id, region => '1');
+	portal_layout.add_region (layout_id => layout_id, region => '2');
+	portal_layout.add_region (layout_id => layout_id, region => '3');
 
 -- three columns with a header.
-	template_id := portal_template.new (
+	layout_id := portal_layout.new (
 		name => '3-column w/ Header',
 		description => 'A 3-column layout with a header area.',
-		type => 'layout',
-		filename => 'templates/header3',
-		resource_dir => 'templates/components/header3');
+		filename => 'layouts/header3',
+		resource_dir => 'layouts/components/header3');
 
-	portal_template.add_region (template_id => template_id, region => '1');
-	portal_template.add_region (template_id => template_id, region => '2');
-	portal_template.add_region (template_id => template_id, region => '3');
-	portal_template.add_region (template_id => template_id, region => 'i1', immutable_p => 't');
+	portal_layout.add_region (layout_id => layout_id, region => '1');
+	portal_layout.add_region (layout_id => layout_id, region => '2');
+	portal_layout.add_region (layout_id => layout_id, region => '3');
+	portal_layout.add_region (layout_id => layout_id, region => 'i1', immutable_p => 't');
 
 -- Now, some element themes.
 
-	template_id := portal_template.new (
+	theme_id := portal_element_theme.new (
 		name => 'Simple table-based thing',
-		description => 'A test template.  Pretty crappy overall',
-		type => 'theme',
-		filename => 'templates/simple-element',
-		resource_dir => 'templates/components/simple-element');
+		description => 'A simple test layout.',
+		filename => 'elements/simple-element',
+		resource_dir => 'elements/components/simple-element');
 
-	portal_template.add_type ( template_id => template_id, mime_type => 'text/html' );
-	portal_template.add_type ( template_id => template_id, mime_type => 'text/plain' );
-	portal_template.add_type ( template_id => template_id, mime_type => 'application/x-ats' );
+-- used to just insert into portal_available_mime_type_map
+
+--	portal_theme.add_type ( theme_id => theme_id, mime_type => 'text/html' );
+--	portal_theme.add_type ( theme_id => theme_id, mime_type => 'text/plain' );
+--	portal_theme.add_type ( theme_id => theme_id, mime_type => 'application/x-ats' );
 end;
 /
 
 
--- create a test ds.
+-- create a very simple  ds.
+
+-- XXX path for the content_varchar
+
+declare
+	datasource_id	portal_datasources.datasource_id%TYPE;
+begin
+	datasource_id := portal_datasource.new (
+		data_type => 'raw',
+		mime_type => 'application/x-ats',
+		name => 'NULL datasource',
+		description => 'NULL DS for testing',
+		content_varchar => '/packages/new-portal/www/datasources/null/null'
+	);
+
+end;
+/
+
+commit;
+
+-- test ds
 declare
 	datasource_id	portal_datasources.datasource_id%TYPE;
 begin
@@ -124,7 +148,7 @@ begin
 		mime_type => 'application/x-ats',
 		name => 'Portal Connector',
 		description => 'Connects the current portal with others at the same level on the site-map.',
-		content_varchar => '/packages/portal/www/datasources/connector/connector'
+		content_varchar => '/packages/new-portal/www/datasources/connector/connector'
 	);
 
 end;
