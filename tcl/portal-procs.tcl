@@ -1555,7 +1555,8 @@ namespace eval portal {
              ] \
             } {
 
-        ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"
+        global errorInfo
+        ns_log error "*** portal::render_element show callback Error! ($element(ds_name)) ***\n\n $errmsg\n\n$errorInfo\n\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
         set element(content) " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n"
