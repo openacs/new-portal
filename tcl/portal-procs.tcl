@@ -799,7 +799,7 @@ namespace eval portal {
 	    ad_require_permission $portal_id portal_read_portal
 	    ad_require_permission $portal_id portal_edit_portal
 	} else {
-	    return
+	    ad_returnredirect $return_url
 	}
 	
 	switch $op {
@@ -816,13 +816,15 @@ namespace eval portal {
 		} else {
 		    set_element_param $element_id "shaded_p" "f"
 		}
-
-		return "Done. <a href=$return_url>Go back</a>"
 	    }
 	    "hide" {
-		ad_return_complaint 1 "hide called $element_id $return_url"
+		db_dml configure_element_hide_update \
+			"update portal_element_map 
+		set state =  'hidden' 
+		where element_id = :element_id"
 	    }
 	}
+	ad_returnredirect $return_url
     }
     
     #
