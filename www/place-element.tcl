@@ -55,3 +55,25 @@ and region not like 'i%'"
 
 # Set up the form target
 set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+
+
+# create the fancy drop down for add
+    
+set add_html ""
+set new_package_id [db_nextval acs_object_id_seq]
+
+append add_html "<select name=foobar>"
+	    
+db_foreach datasource_avail {
+    select name, pd.datasource_id
+    from portal_datasources pd, portal_datasource_avail_map pdam
+    where pdam.portal_id = :portal_id
+    and pd.datasource_id = pdam.datasource_id
+    order by name
+} {
+    append add_html "<option value=$datasource_id>$name</option>\n"
+}
+
+append add_html "
+</select><input type=submit name=\"op@region@\" value=\"Add Here\">"
+        

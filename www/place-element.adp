@@ -20,15 +20,15 @@
 <if @immutable_p@ ne 1>
 <br>
 
-<if @region_count@ gt 0>
-  <input type=submit name="remove_@region@" value="Remove All Checked Elements"> <br>
-</if>
+@add_html@
+
 <if @region_count@ ne @all_count@ and @all_count@ gt 0>
-  <input type=submit name="op@region@" value="Move All Checked Elements Here"> <br>
+  <input type=submit name="op@region@" value="Move All Checked Here"> <br>
 </if>
 
-<input type=submit name="add_@region@" value="Add A New Element Here">
 </if>
+
+
 
 <if @would_be_immutable_p@ eq 1>
 <p>
