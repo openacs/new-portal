@@ -25,14 +25,16 @@
 
 
 create table portal_node_mappings (
-       object_id                integer not null
-                                constraint portal_node_map_obj_id_fk
+       object_id                constraint portal_node_map_obj_id_fk
                                 references acs_objects(object_id)
+                                on delete cascade
                                 constraint portal_node_map_obj_id_pk
                                 primary key,
-       node_id                  integer not null
-                                constraint portal_node_map_node_id_fk
+       node_id                  constraint portal_node_map_node_id_fk
                                 references site_nodes(node_id)
+                                on delete cascade
+                                constraint portal_node_map_node_id_nn
+                                not null
 );
 
 
