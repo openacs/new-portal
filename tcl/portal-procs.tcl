@@ -81,7 +81,11 @@ namespace eval portal {
     # Main portal procs
     #
 
-    ad_proc -public create {user_id {layout_name "'Simple 2-Column'"}} {
+    ad_proc -public create {
+	{-portal_template_p "f"} 
+	{-layout_name "'Simple 2-Column'"} 
+	user_id 
+    } {
 	Create a new portal for the passed in user id. 
 	
 	@return The newly created portal's id
@@ -542,6 +546,313 @@ namespace eval portal {
 		ad_return_complaint 1 \
 			"portal::config_dispatch: Not implimented op  = $op"
 	    }
+	    default {
+		ns_log Error \
+			"portal::config_dispatch: Bad op = $op!"
+		ad_return_complaint 1 \
+			"portal::config_dispatch: Bad Op! \n op $op"
+	    }
+	}
+    }
+
+
+    #
+    # portal template procs - util and configuration
+    #
+    ad_proc -private template_p { portal_id } {
+	Check if a portal is a portal template and not a user poral
+    } {
+	if { [db_0or1row template_p_select "select 1 from portals where portal_template_p = 't' and portal_id = :portal_id"] } { 
+	    return 1
+	} else { 
+	    return 0
+	}
+    }
+
+    ad_proc -public template_configure { portal_id } {
+	Return a portal configuration page. 
+	All form targets point to file_stub-2.
+    
+	@param portal_id
+	@return A portal configuration page	
+    } {
+
+	# If this is not a portal_template
+	if { ! [template_p $portal_id] } {
+	    ad_return_complaint 1 "This is not a portal template, sorry!"
+	}
+
+	ad_require_permission $portal_id portal_admin_portal
+	
+	# Set up some template vars, including the form target
+	set master_template [ad_parameter master_template]
+	set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+	set action_string [append target_stub "-2"]
+	set name [get_name $portal_id]
+	
+	# XXX todo layout change
+	# get the layouts
+	#	 set layout_count 0
+	#	 template::multirow create layouts layout_id name \
+		#		 description filename resource_dir checked
+	#    
+	#	 db_foreach configure_layout_select "
+	#	 select 
+	#	 layout_id, 
+	#	 name, 
+	#	 description, 
+	#	 filename, 
+	#	 resource_dir, 
+	#	 ' ' as checked
+	#	 from portal_layouts 
+	#	 order by name "  {
+        #	     set resource_dir "$resource_dir"
+	#	     template::multirow append layouts $layout_id $name \
+	#		     $description $filename $resource_dir $checked
+	#	     incr layout_count
+	#	 }
+	#	     
+	# get the portal.
+	    
+	
+	    # get the themes, template::multirow is not working here
+	    set theme_count 0
+	    set theme_data "<br>"
+
+	    # get the current theme
+	    db_1row configure_portal_curr_theme_select "
+	    select theme_id as cur_theme_id
+	    from portals
+	    where portal_id = :portal_id
+	    " 
+	    db_foreach configure_theme_select "
+	    select 
+	    pet.theme_id, 
+	    pet.name, 
+	    pet.description 
+	    from portal_element_themes pet
+	    order by name "  {
+		if { $cur_theme_id == $theme_id } {
+		    append theme_data "<label><input type=radio name=theme_id 
+		    value=$theme_id checked><b>$name - $description</label></b><br>"
+		} else {
+		    append theme_data "<label><input type=radio name=theme_id 
+		    value=$theme_id>$name - $description</label><br>"
+		}   
+	    }
+
+	    append theme_data "<P><input type=submit name=op value=\"Update Theme\">"
+	    
+	    # get the portal.	    
+	    db_1row configure_portal_select "
+	    select
+	    p.portal_id,
+	    p.name,
+	    t.filename as template,
+	    t.layout_id
+	    from portals p, portal_layouts t
+	    where p.layout_id = t.layout_id and p.portal_id = :portal_id
+	    " -column_array portal
+
+	    # fake some elements so that the <list> in the template has
+	    # something to do.
+	    set layout_id [get_layout_id $portal_id]
+
+	    db_foreach configure_get_regions "
+	    select region
+	    from portal_supported_regions
+	    where layout_id = :layout_id"  {
+		lappend fake_element_ids($region) $portal_id
+	    }
+
+	    set element_list [array get fake_element_ids]
+	    set element_src "[portal::www_path]/template-place-element"
+
+	    # the <include> sources /www/template-place-element.tcl
+	    set template "	
+	    <master src=\"@master_template@\">
+	    <p>
+	    <form action=@action_string@>
+	    <P>
+	    
+	    <form method=post action=@action_string@>
+	    <input type=hidden name=portal_id value=@portal_id@>
+	    <b>Change Theme:</b>
+	    @theme_data@
+	    </form>
+
+	    <P>
+
+	    <b>Configure The Portal's Elements:</b>
+	    <include src=\"@portal.template@\" element_list=\"@element_list@\" 
+	    element_src=\"@element_src@\" action_string=@action_string@
+	    portal_id=@portal_id@>
+	    "
+	
+	#	 <form action=\"update_layout\">
+	#	 <if @layout_count@ gt 1>
+	#	 <p>
+	#	 Change Layout:
+	#	 <br>
+	#	 
+	#	 <table border=0>
+	#	 <tr>
+	#	 
+	#	 <multiple name=\"layouts\">
+	#	 <td>
+	#	 <table border=0>
+	#	 <tr>
+	#	 <td>
+	#	 <input type=radio name=layout_id value=\"@layouts.layout_id@\"
+	#	 <if @layout_id@ eq @layouts.layout_id@>checked</if>>
+	#	 <b>@layouts.name@</b><br>
+	#	 <table border=0 align=center>
+	#	 <tr><td>
+	#	 <include src=\"@layouts.resource_dir@/example\" 
+	#	 resource_dir=\"@layouts.resource_dir@\">
+	#	 </td></tr>
+	#	 </table>
+	#	 <font size=-1>
+	#	 @layouts.description@
+	#	 </font>
+	#	 </td>
+	#	 </tr>
+	#	 </table>
+	#	 </td>
+	#	 </multiple>
+	#	 
+	#	 </tr>
+	#	 </table>
+	#	 </p>
+	#	 </if>
+	#	 
+	#	 <center>
+	#	 <input type=submit value=\"Update Layout\">
+	#	 </center>
+	#	 </form>
+	
+	# This hack is to work around the acs-templating system
+	set __adp_stub "[get_server_root][www_path]/."
+	set {master_template} \"master\" 
+	
+	set code [template::adp_compile -string $template]
+	set output [template::adp_eval code]
+	
+	return $output
+    }
+    
+    ad_proc -public template_configure_dispatch { portal_id form } {
+	Dispatches the configuration operation. 
+	We get the target region number from the op.
+    
+	@param portal_id
+	@param formdata an ns_set with all the formdata
+    } { 
+	
+	ad_require_permission $portal_id portal_read_portal
+	ad_require_permission $portal_id portal_edit_portal
+	
+	set op [ns_set get $form op]
+
+	switch $op {
+	    "Rename" { 
+		portal::update_name $portal_id [ns_set get $form new_name]
+	    }
+	    "swap" {  
+		portal::swap_element $portal_id \
+			[ns_set get $form element_id] \
+			[ns_set get $form sort_key] \
+			[ns_set get $form region] \
+			[ns_set get $form direction]
+	    }
+	    "move" {
+		portal::move_element $portal_id \
+			[ns_set get $form element_id] \
+			[ns_set get $form region] \
+			[ns_set get $form direction]
+	    }
+	    "Show Here" {
+		set region [ns_set get $form region]
+		set element_id [ns_set get $form element_id]
+		
+		db_transaction {
+		    # The new element's sk will be the last in the region
+		    db_dml configure_dispatch_show_update \
+			"update portal_element_map 
+		         set region = :region, 
+		         sort_key = (select nvl((select max(sort_key) + 1
+		                                 from portal_element_map 
+		                                 where portal_id = :portal_id 
+		                                 and region = :region), 
+		                                 1) 
+		                     from dual)
+		                     where element_id = :element_id"
+
+		    db_dml configure_dispatch_unhide_update \
+			    "update portal_element_map 
+		    set state = 'full' 
+		    where element_id = :element_id"
+		}		
+	    }
+	    "hide" {
+		set element_id [ns_set get $form element_id]
+		
+		db_dml template_configure_dispatch_hide_update \
+			    "update portal_element_map 
+		             set state =  'hidden' 
+		             where element_id = :element_id"
+	    }
+	    "Update Theme" {
+		set theme_id [ns_set get $form theme_id] 
+		
+		db_dml template_configure_dispatch_update_theme \
+			"update portals 
+		set theme_id = :theme_id
+		where portal_id = :portal_id"
+	    }
+	    "toggle_lock" {
+		set element_id [ns_set get $form element_id]
+
+		if { [db_string template_configure_dispatch_t_l_s \
+			"select state
+		from portal_element_map 
+		where portal_id = :portal_id 
+		and element_id = :element_id"] == "full"} { 		
+		    
+		    db_dml template_configure_dispatch_toggle_lock_1 \
+			    "update portal_element_map
+		    set state = 'locked'
+		    where portal_id = :portal_id
+		    and element_id = :element_id"
+		} else {
+		    db_dml template_configure_dispatch_toggle_lock_1 \
+			    "update portal_element_map
+		    set state = 'full'
+		    where portal_id = :portal_id
+		    and element_id = :element_id"
+		}
+	    }
+	    "toggle_hideable" {
+
+		set element_id [ns_set get $form element_id]
+
+		if { [get_element_param $element_id "hideable_p"] == "t" } {
+		    set_element_param $element_id "hideable_p" "f"
+		} else {
+		    set_element_param $element_id "hideable_p" "t"
+		}
+	    }
+	    "toggle_shadeable" {
+
+		set element_id [ns_set get $form element_id]
+
+		if { [get_element_param $element_id "shadeable_p"] == "t" } {
+		    set_element_param $element_id "shadeable_p" "f"
+		} else {
+		    set_element_param $element_id "shadeable_p" "t"
+		}
+	    }
+
 	    default {
 		ns_log Error \
 			"portal::config_dispatch: Bad op = $op!"
