@@ -673,8 +673,8 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
 </fullquery> 
 
 <fullquery name="portal::get_layout_region_count_not_cached.select_region_count">      
-  <querytext>df
-    select count(*) as region_count
+  <querytext>
+    select count(*)
     from portal_supported_regions
     where layout_id = :layout_id
   </querytext>
