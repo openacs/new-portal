@@ -13,3 +13,4 @@
 \i api-create.sql
 \i datasource-sc-create.sql
 \i defaults.sql
+\i portal-node-mapping-create.sql

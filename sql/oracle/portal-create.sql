@@ -29,3 +29,4 @@
 @@ api-create.sql
 @@ datasource-sc-create.sql
 @@ defaults.sql
+@@ portal-node-mapping-create.sql
