@@ -3,47 +3,9 @@
 ad_library {
     Portal.
     
-    @author 
-    @creation-date 
-    @cvs-id $Id$
-}
-
-ad_proc -public full_portal_path { } {
-    The path to the portal package. This is a stopgap for development. 
-    Something smarter will be done later.
-
-    @return path to portal package
-
-    @creation-date Spetember 2001
-} {
-    return "/web/arjun/openacs-4/packages/new-portal"
-}
-
-ad_proc -public portal_path { } {
-    The path to the portal package from acs root. This is a stopgap
-    for development.
-    Something smarter will be done later.
-
-    @return path to portal package
-
-    @creation-date Spetember 2001
-} {
-    return "/packages/new-portal"
-}
-
-ad_proc -public portal_exists_p { portal_id } {
-    Check if a portal by that id exists.
-
-    @return 1 on success, 0 on failure
-    @param a portal_id
     @author Arjun Sanyal (arjun@openforce.net)
-    @creation-date September 2001
-} {
-    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} {
-	return 1
-    } else {
-	return 0
-    }
+    @creation-date Sept 2001
+    @cvs-id $Id$
 }
 
 ad_proc -public portal_create_portal { user_id } {
@@ -54,7 +16,6 @@ ad_proc -public portal_create_portal { user_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-
     # XXX hardwire the layout to simple 2 col
     db_1row select_layout \
 	    "select layout_id from
@@ -172,7 +133,6 @@ ad_proc -public portal_render_portal { portal_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-
     set user_id [ad_conn user_id]
     #set admin_p [ad_permission_p $package_id admin]
     #set write_p [ad_permission_p $package_id write]
@@ -192,14 +152,12 @@ ad_proc -public portal_render_portal { portal_id } {
     where p.layout_id = t.layout_id 
   and p.portal_id = :portal_id" -column_array portal
 
+    if { ! [portal_exists_p $portal_id] } {
+	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
+	ad_script_abort
+    }
 
-
-if { ! [portal_exists_p $portal_id] } {
-    ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
-    ad_script_abort
-}
-
-return [array get portal]
+    return [array get portal]   
 
 }
 
@@ -244,8 +202,6 @@ ad_proc -public portal_setup_element_list { portal_id } {
 
     return $element_list
 }
-
-
 
 ad_proc -public portal_render_element { element_id region_id } {
     Wrapper for the below proc
@@ -656,3 +612,32 @@ ad_proc -private portal_region_immutable_p { region } {
     return $portal_region_immutable_p($region)
 }
 
+ad_proc -public full_portal_path { } {
+    The path to the portal package.
+
+    @return path to portal package
+    @creation-date Spetember 2001
+} { return "/web/arjun/openacs-4/packages/new-portal" }
+
+ad_proc -public portal_path { } {
+    The path to the portal package from acs root. 
+    
+    @return path to portal package
+    @creation-date Spetember 2001
+} { return "/packages/new-portal" }
+
+ad_proc -public portal_exists_p { portal_id } {
+    Check if a portal by that id exists.
+
+    @return 1 on success, 0 on failure
+    @param a portal_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date September 2001
+} {
+    if { [db_0or1row select_portal_exists 
+    "select 1 from portals where portal_id = :portal_id"]} { 
+	return 1
+    } else { 
+	return 0 
+    }
+}
