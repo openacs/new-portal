@@ -266,6 +266,7 @@ as
 		secure_p	in portal_datasources.secure_p%TYPE default null,
 		configurable_p	in portal_datasources.configurable_p%TYPE default null,
 		name		in portal_datasources.name%TYPE default null,
+		link		in portal_datasources.link%TYPE default null,
 		description	in portal_datasources.description%TYPE default null,
 		content		in portal_datasources.content%TYPE default null,
 		config_path	in portal_datasources.config_path%TYPE default null,
@@ -304,6 +305,7 @@ as
 		secure_p		in portal_datasources.secure_p%TYPE default null,
 		configurable_p		in portal_datasources.configurable_p%TYPE default null,
 		name			in portal_datasources.name%TYPE default null,
+		link			in portal_datasources.link%TYPE default null,
 		description		in portal_datasources.description%TYPE default null,
 		content			in portal_datasources.content%TYPE default null,
 		config_path		in portal_datasources.config_path%TYPE default null,
@@ -341,11 +343,27 @@ as
 	
 
 		insert into portal_datasources
-			(datasource_id, data_type,
-			mime_type, name, description, secure_p, configurable_p, content, config_path)
+			(datasource_id,
+			data_type,
+			mime_type,
+			name,
+			link,
+			description,
+			secure_p,
+			configurable_p,
+			content,
+			config_path)
 		values
-			(v_datasource_id, data_type,
-			mime_type, name, description, secure_p, configurable_p, content, config_path); 
+			(v_datasource_id,
+			data_type,
+			mime_type,
+			name,
+			link,
+			description,
+			secure_p, 
+			configurable_p, 
+			content,	
+			config_path); 
 
 		return v_datasource_id;
 	end new;

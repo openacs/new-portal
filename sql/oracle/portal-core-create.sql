@@ -65,6 +65,7 @@ create table portal_datasources (
 				constraint p_elements_configurable_p_ck
 				check(configurable_p in ('t', 'f')),
 	name			varchar(200) not null,
+	link			varchar(200),
 	description		varchar(4000),
 	config_path		varchar(200),
 	content			varchar(4000)
