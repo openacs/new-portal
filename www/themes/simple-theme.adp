@@ -4,11 +4,23 @@
       <td>
         <table border=0 cellpadding=3 width=100% cellspacing=0>
 	  <tr>
-            <td class="portal_header" bgcolor="#cc0000">
-              <font face="arial,helvetica"  size="+1" color="#cccccc"><b>@name@</b></font>
+            <td class="portal_header" bgcolor="#cc0000" align=left>
+              <a style="text-decoration: none" href=@link@>
+	      <font face="arial,helvetica" size="+1" color="#cccccc">
+	       <b>@name@</b></font></a>
             </td>
             <td align=right class="portal_header" bgcolor="#cc0000">
 		<!-- include title buttons here -->
+		<a href=configure-element?element_id=@element_id@&op=edit>
+	        <img border=0 src="@dir@/e.gif" alt="edit"></a>
+   		<a href=configure-element?element_id=@element_id@&op=shade>
+		<if @shaded_p@ eq "f">
+	          <img border=0 src="@dir@/shade.gif" alt="shade"></a>
+		</if><else>
+	          <img border=0 src="@dir@/unshade.gif" alt="shade"></a>
+		</else>
+		<a href=configure-element?element_id=@element_id@&op=hide>
+		<img border=0 src="@dir@/x.gif" alt="hide"></a>
             </td>
 	  </tr>
 

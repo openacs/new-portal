@@ -22,7 +22,14 @@
                   <td align=right width=7%>
 			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.png" alt="edit"></a></td>
                   <td align=right width=7%>
-			<a href=configure-element?element_id=@element_id@&op=shade><img border=0 src="@dir@/shade.png" alt="shade"></a></td>
+
+			<a href=configure-element?element_id=@element_id@&op=shade>
+		<if @shaded_p@ eq "f">	
+		<img border=0 src="@dir@/shade.png" alt="shade"></a></td>
+		</if><else>
+		<img border=0 src="@dir@/unshade.png" alt="shade"></a></td>
+		</else>
+
                   <td align=right width=7%>
 			<a href=configure-element?element_id=@element_id@&op=hide><img border=0 src="@dir@/x.png" alt="hide"></a></td>
                 </tr>
