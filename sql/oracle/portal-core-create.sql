@@ -50,7 +50,7 @@ create table portal_datasources (
 				check(configurable_p in ('t', 'f')),
 	name			varchar(200) not null,
 	description		varchar(4000),
-	config_content		clob,
+	config_path		varchar(200),
 	content			clob
 );
 
