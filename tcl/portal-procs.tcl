@@ -1470,9 +1470,10 @@ namespace eval portal {
         db_transaction {
             foreach element_id $element_ids {
 
-                remove_element_param_value -element_id $element_id \
-                        -key $key \
-                        -value $value_id
+                remove_element_param_value \
+                    -element_id $element_id \
+                    -key $key \
+                    -value $value_id
 
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params
