@@ -52,6 +52,33 @@ ad_proc -public portal_create_portal { user_id } {
     }]
 }
 
+ad_proc -public portal_delete_portal { portal_id } {
+    Destroy the portal
+
+    @return 1 on success
+    @param portal_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    # XXX hardwire the layout to simple 2 col
+    db_1row select_layout \
+	    "select layout_id from
+            portal_layouts where
+            name = 'Simple 2-Column'"
+	
+    # insert the portal and grant permission on it.    
+    return [ db_exec_plsql delete_portal {
+	begin
+	    
+	portal.delete ( 
+	portal_id => :portal_id
+	);
+	    
+	end;
+    }]
+}
+
+
 ad_proc -public portal_add_element { portal_id ds_name } {
     Add an element anywhere to a portal given a datasource name
 
