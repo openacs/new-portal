@@ -15,8 +15,8 @@ set user_id [ad_conn user_id]
 set new_portal_id [portal::create_portal $user_id]
 
 # add an bboard PE with a fake instance id
-set instance_id "666"
+set community_id "2763"
 
-set element_id [bboard_portlet::add_self_to_page $new_portal_id $instance_id ]
+set element_id [faq_portlet::add_self_to_page $new_portal_id $community_id  ]
 
 ns_returnredirect "index"

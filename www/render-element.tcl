@@ -30,7 +30,7 @@ if { [catch {set element_data [portal::evaluate_element $element_id] } errmsg ] 
 # consistency is good.
 set element(region) $region
 
-ns_log notice  "AKS5: element array get : [array get element]"
+ns_log notice  "AKS5: [$element(name)::get_pretty_name]"
 
 # return the appropriate template for that element.
 # AKS ???
