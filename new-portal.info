@@ -77,7 +77,6 @@
             <file type="template" path="www/themes/simple-theme.adp"/>
             <file path="www/themes/window-theme.adp"/>
             <file path="www/themes/window-theme/edit.png"/>
-            <file path="www/themes/window-theme/go.png"/>
             <file path="www/themes/window-theme/shade.png"/>
             <file path="www/themes/window-theme/tbl-bleft.png"/>
             <file path="www/themes/window-theme/tbl-bottom.png"/>
