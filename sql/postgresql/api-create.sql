@@ -528,7 +528,7 @@ returns integer as '
 declare
     p_datasource_id                 alias for $1;
 begin
-    perform acs_object__delete(datasource_id);
+    perform acs_object__delete(p_datasource_id);
     return 0;
 end;' language 'plpgsql';
 
