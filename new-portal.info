@@ -8,7 +8,7 @@
     <singleton-p>t</singleton-p>
     <auto-mount>portal</auto-mount>
 
-    <version name="0.1a" url="http://dotlrn.openforce.net/new-portal-0.1a.apm">
+    <version name="0.2d1" url="http://dotlrn.openforce.net/new-portal-0.2d1.apm">
     <database-support>
         <database>oracle</database>
         <database>postgresql</database>
@@ -19,8 +19,8 @@
         <vendor url="http://openforce.net/">OpenForce, Inc.</vendor>
         <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
-        <provides url="new-portal" version="0.1a"/>
-        <requires url="acs-kernel" version="4.0"/>
+        <provides url="new-portal" version="0.2d1"/>
+        <requires url="acs-kernel" version="5.0d13"/>
 
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="full_cache"  default="0" description="The number of seconds to cache a fully rendered portal." section_name="Performance"/>
