@@ -1,10 +1,10 @@
 # www/element-layout.tcl
 
 ad_page_contract {
-    Generate a page with the same layout as the portal, for editing.
+    A page that does everything.
 
-    @author Ian Baker (ibaker@arsdigita.com)
-    @creation-date 12/6/2000
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 10/20/2001
     @cvs-id $Id$
 } {
     portal_id:naturalnum,notnull
@@ -29,25 +29,13 @@ description,
 filename, 
 resource_dir, 
 ' ' as checked
-from portal_layouts
-order by name" {
-
+from portal_layouts 
+order by name "  {
     set resource_dir "$resource_dir"
-
-    # this is evil and broken.  
     # I should be able to pass it a list, straight from db_list.
     template::multirow append layouts $layout_id $name $description $filename $resource_dir $checked
     incr layout_count
 }
-
-set title "Edit Your Portal"
-
-# the portal we're editing exists.  Return it.
-db_1row get_portal "select
-name,
-layout_id
-from portals
-where portal_id = :portal_id"
 
 # get the portal.
 db_1row select_portal {
