@@ -126,7 +126,16 @@ create table portals (
 				not null,
 	theme_id		constraint portal_theme_id_fk
 				references portal_element_themes
-				not null
+				not null,
+	-- is this portal a portal template?
+	portal_template_p	char(1) default 'f'
+				constraint p_portal_template_p_ck
+				check(portal_template_p in ('f', 't')),
+	-- if it's a template, is it active?
+	template_active_p	char(1) default 'f'
+				constraint p_template_active_p_ck
+				check(template_active_p in ('f', 't'))
+
 );
 
 -- **** Portal Elements (PEs) ****
