@@ -198,4 +198,12 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::datasource_delete.delete_datasource">
+        <querytext>
+             select portal_datasource__delete(
+    		:datasource_id
+  	     )
+        </querytext>
+    </fullquery>
+
 </queryset>

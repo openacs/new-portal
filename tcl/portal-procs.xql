@@ -747,4 +747,12 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::datasource_delete.get_datasource_id">
+        <querytext>
+           select datasource_id
+           from portal_datasources
+           where name = :name;
+        </querytext>
+    </fullquery>
+
 </queryset>

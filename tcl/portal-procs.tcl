@@ -2307,7 +2307,6 @@ namespace eval portal {
 
 }
 
-
 ad_proc -private portal::datasource_new {
     {-name:required}
     {-description:required}
@@ -2318,7 +2317,6 @@ ad_proc -private portal::datasource_new {
 } {
     return [db_exec_plsql new_datasource {}]
 }
-
 ad_proc -private portal::datasource_set_def_param {
     {-datasource_id:required}
     {-config_required_p:required}
@@ -2331,6 +2329,22 @@ ad_proc -private portal::datasource_set_def_param {
 
 } {
     db_exec_plsql set_def_param {}
+}
+
+ad_proc -private portal::datasource_delete {
+    {-name:required}
+} {
+
+    @author Don Baccus (dhogaza@pacifier.com)
+
+} {
+
+    if { ![db_0or1row get_datasource_id {}] } {
+        ad_return -code error "Datasource \"$name\" does not exist"
+    }
+
+    return [db_exec_plsql delete_datasource {}]
+
 }
 
 
