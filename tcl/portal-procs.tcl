@@ -226,15 +226,16 @@ namespace eval portal {
         portal_id
     } {
         Get the name of this portal
-
-        @param portal_id
-        @return the name of the portal or null string
     } {
-        ad_require_permission $portal_id portal_read_portal
+        return [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]
+    }
 
-        if {[portal::exists_p $portal_id]} {
-            return [db_string get_name_select {}]
-        }
+    ad_proc -private get_name_not_cached { 
+        {-portal_id:required}
+    } {
+        Memoizing helper
+    } {
+        return [db_string get_name_select {} -default ""]
     }
 
     ad_proc -public render { 
@@ -388,7 +389,7 @@ namespace eval portal {
 
         # get the themes, template::multirow is not working here
         set theme_count 0
-       set theme_data "<br>"
+        set theme_data "<br>"
 
         db_1row current_theme_select {}
 
@@ -444,18 +445,10 @@ namespace eval portal {
 
             # get the portal.            
             db_1row portal_select {} -column_array portal
-
-            # get the numer of elements in this region
-            set element_count [db_string portal_element_count_select "
-            select count(*) 
-            from portal_element_map
-            where page_id = :page_id"]
-
-
+            set layout_id $portal(layout_id)
+            
             # fake some elements for the <list> in the template 
-            set layout_id [get_layout_id -page_id $page_id $portal_id]
-
-            db_foreach get_regions {}  {
+            foreach region [get_layout_region_list -layout_id $portal(layout_id)] {
                 lappend fake_element_ids($region) $portal_id
             }
 
@@ -472,6 +465,14 @@ namespace eval portal {
             <input type=text name=pretty_name value=\"$portal(page_name)\">
             <input type=submit name=op value=\"Rename Page\">
             </form>"            
+
+            set element_count [db_string portal_element_count_select {
+                select 1
+                from dual 
+                where exists (select 1
+                              from portal_element_map 
+                              where page_id = :page_id)
+            } -default 0]
 
             if {$element_count == 0} {
                 append template "
@@ -985,7 +986,7 @@ namespace eval portal {
         set layout_id [get_layout_id -page_id $page_id $portal_id]
 
         # get the regions in this layout
-        db_foreach get_regions {} {
+        foreach region [get_layout_region_list -layout_id $layout_id] {
             lappend region_list $region
         }
 
@@ -1201,6 +1202,38 @@ namespace eval portal {
         db_1row get_my_page_id {}
 
         db_dml update {} 
+    }
+
+    ad_proc -private hideable_p { 
+        {-element_id:required}
+    } {
+        Check if an element is hideable
+    } {        
+        return [util_memoize "portal::hideable_p_not_cached -element_id $element_id"]
+    }
+
+    ad_proc -private hideable_p_not_cached { 
+        {-element_id:required}
+    } {
+        Check if an element is hideable
+    } {
+        return [db_string select_hideable_p {}]
+    }
+
+    ad_proc -private hidden_elements_list { 
+        {-portal_id:required}
+    } {
+        Returns a list of "hidden" element avaliable to a portal
+    } {        
+        return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id"]
+    }
+
+    ad_proc -private hidden_elements_list_not_cached { 
+        {-portal_id:required}
+    } {
+        Memoizing helper
+    } {
+        return [db_list_of_lists select_hidden_elements {}]
     }
 
     ad_proc -private set_element_param { 
@@ -1659,7 +1692,29 @@ namespace eval portal {
     ad_proc -private get_layout_region_count { 
         {-layout_id:required}
     } {
+        return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
+    }
+
+    ad_proc -private get_layout_region_count_not_cached { 
+        {-layout_id:required}
+    } {
         return [db_string select_region_count {}]
+    }
+
+    ad_proc -private get_layout_region_list {
+        {-layout_id:required}
+    } {
+        Get a list of the regions that a layout supports
+    } {
+        return [util_memoize "portal::get_layout_region_list_not_cached -layout_id $layout_id"]
+    }
+
+    ad_proc -private get_layout_region_list_not_cached {
+        {-layout_id:required}
+    } {
+        Memoizing helper
+    } {
+        return [db_list select_region_list {}]
     }
 
     ad_proc -private get_layout_id { 

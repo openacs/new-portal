@@ -47,7 +47,7 @@ db_foreach select_elements_by_region {} {
             $name \
             $sort_key \
             $state \
-            [portal::get_element_param $element_id "hideable_p"] \
+            [portal::hideable_p -element_id $element_id] \
             $page_id
 
     incr region_count
@@ -60,9 +60,9 @@ set show_html ""
 
 append show_html "<select name=element_id>"
 
-db_foreach hidden_elements {} {
+foreach element [portal::hidden_elements_list -portal_id $portal_id] {
     set show_avail_p 1
-    append show_html "<option value=$element_id>$pretty_name</option>\n"
+    append show_html "<option value=[lindex $element 0]>[lindex $element 1]</option>\n"
 }
 
 set imgdir "[portal::mount_point]/place-element-components"        

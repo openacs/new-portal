@@ -25,7 +25,7 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_name.get_name_select">      
+<fullquery name="portal::get_name_not_cached.get_name_select">      
   <querytext>
     select name from portals where portal_id = :portal_id
   </querytext>
@@ -82,20 +82,15 @@
 
 <fullquery name="portal::configure.portal_select">      
   <querytext>
-    select  p.name, p.portal_id,  pl.filename as template, pp.pretty_name as page_name
+    select  p.name, p.portal_id, 
+    pl.filename as template, 
+    pp.pretty_name as page_name, 
+    pp.layout_id as layout_id
     from portals p, portal_layouts pl, portal_pages pp
     where  pp.portal_id = :portal_id
     and pp.page_id = :page_id
     and pp.portal_id = p.portal_id
     and pl.layout_id = pp.layout_id
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::configure.get_regions">      
-  <querytext>
-    select region
-    from portal_supported_regions
-    where layout_id = :layout_id
   </querytext>
 </fullquery> 
 
@@ -323,20 +318,12 @@
 </fullquery> 
 
 <fullquery name="portal::navbar.list_page_nums_select">
-<querytext>
-select pretty_name, sort_key as page_num from portal_pages where
-portal_id = :portal_id
-order by sort_key
-</querytext>
-</fullquery>
-
-<fullquery name="portal::add_element.get_regions">      
   <querytext>
-    select region
-    from portal_supported_regions
-    where layout_id = :layout_id
+    select pretty_name, sort_key as page_num from portal_pages where
+    portal_id = :portal_id
+    order by sort_key
   </querytext>
-</fullquery> 
+</fullquery>
 
 <fullquery name="portal::add_element.region_count">      
   <querytext>
@@ -466,6 +453,23 @@ order by sort_key
   <querytext>
     update portal_element_map set sort_key = :other_sort_key
     where element_id = :element_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::hideable_p_not_cached.select_hideable_p">      
+  <querytext>
+    select value from portal_element_parameters where element_id = :element_id and key = 'hideable_p'
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::hidden_elements_list_not_cached.select_hidden_elements">      
+  <querytext>
+    select element_id, pem.pretty_name
+    from portal_element_map pem, portal_pages pp
+    where pp.portal_id = :portal_id
+    and pp.page_id = pem.page_id
+    and pem.state = 'hidden'
+    order by name
   </querytext>
 </fullquery> 
 
@@ -668,9 +672,17 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_layout_region_count.select_region_count">      
-  <querytext>
+<fullquery name="portal::get_layout_region_count_not_cachedregion.select_region_count">      
+  <querytext>df
     select count(*) as region_count
+    from portal_supported_regions
+    where layout_id = :layout_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_layout_region_list_not_cached.select_region_list">      
+  <querytext>
+    select region
     from portal_supported_regions
     where layout_id = :layout_id
   </querytext>
