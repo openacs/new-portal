@@ -1047,19 +1047,19 @@ namespace eval portal {
         if {![empty_string_p $element_id]} {
             db_dml delete {}
         } else {
-            if {[empty_string_p $portal_id] && [empty_string_p $datasource_name]} {
+            if {[empty_string_p $portal_id] && [empty_string_p $portlet_name]} {
                 ad_return_complaint 1 "portal::remove_element error bad params! \n
                 Please notify the system administrator of this error. Thank You"
             }
-                       
+
             set element_ids [portal::get_element_ids_by_ds \
                     $portal_id \
-                    $datasource_name
+                    $portlet_name
             ]
 
             db_transaction {
                 foreach element_id $element_ids {
-                    portal::remove_element $element_id
+                    portal::remove_element -element_id $element_id
                 }
             }
         }
