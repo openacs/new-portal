@@ -1042,7 +1042,7 @@ namespace eval portal {
         that datasource on the portal. An element_id overrides all other params
     } {
         if {![empty_string_p $element_id]} {
-            db_dml delete {}
+           db_dml delete {}
         } else {
             if {[empty_string_p $portal_id] && [empty_string_p $portlet_name]} {
                 ad_return_complaint 1 "portal::remove_element error bad params! \n
@@ -1810,7 +1810,7 @@ namespace eval portal {
                 if {[llength [get_element_param_list \
                         -element_id $element_id \
                         -key $key]] == 0} {
-                    remove_element $element_id
+                    remove_element -element_id $element_id
                 }
             }
         }
