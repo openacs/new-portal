@@ -194,6 +194,10 @@ create table portal_element_map (
 				not null,
 	region			varchar(20) not null,
 	sort_key		integer	not null,
+	state			varchar(6) not null default 'full',
+				constraint p_element_map_state
+				check(state in ('full', 'shaded', 'hidden', 
+					        'locked')),
  	-- Two elements may not exist in the same place on a portal.
 	constraint p_element_map_pid_rgn_srt_un 
 	unique(portal_id,region,sort_key),
