@@ -46,6 +46,53 @@ ad_proc -public portal_exists_p { portal_id } {
     }
 }
 
+ad_proc -public portal_create_portal { user_id } {
+    Create a new portal for the passed in user id. 
+
+    @return The newly created portal's id
+    @param user_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    # XXX hardwire the layout to simple 2 col
+    db_1row select_layout \
+	    "select layout_id from
+            portal_layouts where
+            name = 'Simple 2-Column'"
+	
+    # insert the portal and grant permission on it.    
+    return [ db_exec_plsql insert_portal {
+	begin
+	    
+	:1 := portal.new ( 
+	layout_id => :layout_id,
+	owner_id => :user_id
+	);
+	    
+	acs_permission.grant_permission ( 
+	object_id => :1,
+	grantee_id => :user_id,
+	privilege => 'read' 
+	);
+	
+	acs_permission.grant_permission ( 
+	object_id => :1,
+	grantee_id => :user_id,
+	privilege => 'write'
+	);
+	    
+	acs_permission.grant_permission ( 
+	object_id => :1,
+	grantee_id => :user_id,
+	privilege => 'admin'
+	);
+	end;
+    }]
+}
+
+
+
 
 ad_proc -public portal_render_portal { portal_id } {
     Get a portal by id. If it's not found, say so.
@@ -83,6 +130,7 @@ if { ! [portal_exists_p $portal_id] } {
 }
 
 return [array get portal]
+
 }
 
 ad_proc -public portal_setup_element_src { portal_id } {
@@ -211,8 +259,6 @@ ad_proc -public portal_evaluate_element { element_id } {
 	# this is sometimes used when interacting with templates in the filesystem.
 	set element(mime_type) $datasource(mime_type)
 	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
-
-	# aks: good here
 
 	return [array get element]
 
@@ -539,3 +585,4 @@ ad_proc -private portal_region_immutable_p { region } {
 
     return $portal_region_immutable_p($region)
 }
+
