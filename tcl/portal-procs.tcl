@@ -1072,6 +1072,16 @@ namespace eval portal {
             set config(link_hideable_p) "f"
         }
 
+        # If user has no permissions to edit this portal, cancel out
+        # some of the config parameters
+        set portal_id [db_string select_portal_id "select portal_id from portal_pages where page_id = (select page_id from portal_element_map where element_id= :element_id)"]
+
+        if {![ad_permission_p $portal_id portal_edit_portal]} {
+            set config(shadeable_p) "f"
+            set config(hideable_p) "f"
+            set config(user_editable_p) "f"
+        }
+
         # do the callback for the ::show proc
         # evaulate the datasource.
         if { [catch {        set element(content) \

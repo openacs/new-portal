@@ -86,7 +86,7 @@
     insert into portal_element_map
     (element_id, name, pretty_name, page_id, datasource_id, region, sort_key)
     values
-    (:new_element_id, :ds_name, :ds_name, :page_id, :ds_id, :region,  
+    (:new_element_id, :ds_name, :pretty_name, :page_id, :ds_id, :region,  
     nvl((select max(sort_key) + 1 
          from portal_element_map
          where region = :region
