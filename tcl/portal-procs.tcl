@@ -852,6 +852,11 @@ namespace eval portal {
 		    set state = 'locked'
 		    where portal_id = :portal_id
 		    and element_id = :element_id"
+
+                    # "locked" implies not user hideable, shadable
+		    set_element_param $element_id "hideable_p" "f"
+		    set_element_param $element_id "shadeable_p" "f"
+                    
 		} else {
 		    db_dml template_configure_dispatch_toggle_lock_1 \
 			    "update portal_element_map
@@ -1077,20 +1082,23 @@ namespace eval portal {
 	
 	if { $dir == "up" } {
 	    # get the sort_key and id of the element above
-	    db_1row swap_element_get_prev_sort_key {
+	    if {[db_0or1row swap_element_get_prev_sort_key {
 		select sort_key as other_sort_key, 
 	               element_id as other_element_id
 	        from (select sort_key, element_id 
 		      from portal_element_map
 	              where portal_id = :portal_id 
 	              and region = :region 
-	              and sort_key < :sort_key 
+	              and sort_key < :sort_key
+                      and state != 'locked'
 	               order by sort_key desc
-		) where rownum = 1
-	    }
+		) where rownum = 1 }] == 0} {
+                    return
+                }
+
 	} elseif { $dir == "down"} {
 	    # get the sort_key and id of the element below
-	    db_1row swap_element_get_next_sort_key {
+	    if {[db_0or1row swap_element_get_next_sort_key {
 		select sort_key as other_sort_key,
 		       element_id as other_element_id
 		from (select sort_key, element_id
@@ -1098,9 +1106,11 @@ namespace eval portal {
 		      where portal_id = :portal_id 
 	              and region = :region 
 	              and sort_key > :sort_key 
+                      and state != 'locked'
 	              order by sort_key
-	  	) where rownum = 1
-	    }
+	  	) where rownum = 1}] == 0} {
+                    return
+                }
 	} else {
 	    ad_return_complaint 1 \ 
 	    "portal::swap_element: Bad direction: $dir"
