@@ -143,10 +143,8 @@
 <fullquery name="portal::configure_dispatch.toggle_pinned_select">
   <querytext>
     select state
-    from portal_element_map pem, portal_currentXXXX_page pcp 
-    where pcp.portal_id = :portal_id 
-    and pem.page_id = pcp.page_id
-    and element_id = :element_id
+    from portal_element_map pem
+    where element_id = :element_id
   </querytext>
 </fullquery> 
 
