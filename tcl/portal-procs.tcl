@@ -1,4 +1,3 @@
-
 #  Copyright (C) 2001, 2002 OpenForce, Inc.
 #
 #  This file is part of dotLRN.
@@ -355,65 +354,41 @@ namespace eval portal {
 
 
     ad_proc -public configure { 
-        {-page_id ""}
-        {-template_p "f"}
         {-referer ""}
+        {-template_p f}
         portal_id
         return_url
     } {
         Return a portal or portal template configuration page. 
         All form targets point to file_stub-2.
 
-        XXX REFACTOR ME
+        FIXME REFACTOR ME
 
-        @param page_num the page of the portal to config, def 0
-        @param template_p is this portal a template?
         @param portal_id
         @return_url
-        @return A portal configuration page        
     } {
-        set edit_p \
-                [permission::permission_p \
-                -object_id $portal_id \
-                -privilege portal_edit_portal
-        ]
+        #
+        # check perms
+        #
+        set edit_p [permission::permission_p \
+            -object_id $portal_id \
+            -privilege portal_edit_portal]
 
         if {!$edit_p} {
             ad_require_permission $portal_id portal_admin_portal
             set edit_p 1
         }
 
-        # Set up some template vars, including the form target
+        #
+        # Set up some whole page stuff 
+        #
         set master_template [ad_parameter master_template]
         set action_string [generate_action_string]
-
-        # get the themes, template::multirow is not working here
-        set theme_count 0
-        set theme_data "<br>"
-
-        db_1row current_theme_select {}
-
-        db_foreach all_theme_select {} {
-            if { $cur_theme_id == $theme_id } {
-                append theme_data "<label><input type=radio name=theme_id 
-                value=$theme_id checked><b>$name - $description</label></b>
-                <br>"
-            } else {
-                append theme_data "<label><input type=radio name=theme_id 
-                value=$theme_id>$name - $description</label><br>"
-            }   
-        }
-
-        append theme_data "<input type=submit name=op value=\"Change Theme\">"
-
-        # page support 
         if { $template_p == "f" } {
             set element_src "[portal::www_path]/place-element"
         }  else {
             set element_src "[portal::www_path]/template-place-element"
         }
-
-        set portal_name [get_name $portal_id]
 
         if {[empty_string_p $referer]} {
             set return_text "<a href=@return_url@>Go back</a>"
@@ -422,38 +397,61 @@ namespace eval portal {
             set return_url $referer
         }
 
+        #
+        # Begin creating the template
+        # 
         set template "        
         <master src=\"@master_template@\">
         <p>
         $return_text
-        <P>
-        <form method=post action=@action_string@>
-        <input type=hidden name=portal_id value=@portal_id@>
-        <input type=hidden name=return_url value=@return_url@>
-        <strong>Change Theme:</strong> 
-        @theme_data@
-        </form>
-        <P>"
+        <p>"
 
-        set list_of_page_ids [list $page_id]
+        #
+        # Theme selection chunk
+        # 
+        set theme_chunk "
+            <form method=post action=@action_string@>
+            <input type=hidden name=portal_id value=@portal_id@>
+            <input type=hidden name=return_url value=@return_url@>
+            <strong>Change Theme:</strong> 
+            <br>"
+        set current_theme_id [portal::get_theme_id -portal_id $portal_id]
 
-        if {[empty_string_p $page_id]} {
-            set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
+        foreach theme [get_theme_info_not_cached] {
+            set theme_id [ns_set get $theme theme_id]
+            set name [ns_set get $theme name]
+            set description [ns_set get $theme description]
+
+            append theme_chunk "<label><input type=radio name=theme_id value=$theme_id"
+            set one_theme_chunk "&nbsp;$name - $description"
+
+            if {$current_theme_id == $theme_id } {
+                append theme_chunk "checked><b>$one_theme_chunk</b>"
+            } else {
+                append theme_chunk ">$one_theme_chunk"
+            }
+            append theme_chunk "</label><br>\n"
         }
+        
+        append theme_chunk "<input type=submit name=op value=\"Change Theme\"></form>"
+        append template "$theme_chunk"
+
+        #
+        # Per-page template chunks
+        # 
+        set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
         foreach page_id $list_of_page_ids {
 
-            # get the portal.            
-            db_1row portal_select {} -column_array portal
-            set layout_id $portal(layout_id)
-            
-            # fake some elements for the <list> in the template 
-            foreach region [get_layout_region_list -layout_id $portal(layout_id)] {
-                lappend fake_element_ids($region) $portal_id
-            }
+            set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
+            set page_name [portal::get_page_pretty_name -page_id $page_id]
+            set page_layout_id [portal::get_layout_id -page_id $page_id]
 
-            set element_list [array get fake_element_ids]
+            append template "<table bgcolor=#eeeeee border=0 width=\"100%\">"
 
+            #
+            # Page rename chunk
+            # 
             set page_name_chunk "
             <a name=$page_id></a>
             <form method=post action=@action_string@>
@@ -462,38 +460,28 @@ namespace eval portal {
             <input type=hidden name=return_url value=@return_url@>
             <input type=hidden name=anchor value=$page_id>
             <br><strong>Page:</strong>
-            <input type=text name=pretty_name value=\"$portal(page_name)\">
+            <input type=text name=pretty_name value=\"$page_name\">
             <input type=submit name=op value=\"Rename Page\">
             </form>"            
+            append template "$page_name_chunk"
 
-            set element_count [db_string portal_element_count_select {
-                select 1
-                from dual 
-                where exists (select 1
-                              from portal_element_map 
-                              where page_id = :page_id)
-            } -default 0]
+            if {[portal::non_hidden_elements_p -page_id $page_id] || $first_page_p} {
 
-            if {$element_count == 0} {
+                #
+                # Page with non-hidden elements OR the first page of the portal
+                #
+                
+                db_1row portal_and_page_info_select {} -column_array portal
+            
+                # fake some elements for the <list> in the template 
+                foreach region [get_layout_region_list -layout_id $portal(layout_id)] {
+                    lappend fake_element_ids($region) $portal_id
+                }
+                
+                set element_list [array get fake_element_ids]
+
                 append template "
-                $page_name_chunk
-                <table bgcolor=#eeeeee border=0 width=100%>
-                <tr valign=middle><td valign=middle>
-                <center>
-                No Elements
-                <form method=post action=@action_string@>
-                <input type=hidden name=portal_id value=$portal_id>
-                <input type=hidden name=page_id value=$page_id>
-                <input type=hidden name=return_url value=@return_url@>
-                <input type=submit name=op value=\"Remove Empty Page\">
-                </form>
-                </center>
-                </td></tr>
-                </table>"
-            } else {
-                append template "
-                $page_name_chunk
-                <table bgcolor=#eeeeee border=0 width=100%>
+                <table bgcolor=#eeeeee border=0 width=\"100%\">
                 <tr valign=middle><td valign=middle>
                 <include src=\"$portal(template)\" 
                 element_list=\"$element_list\" 
@@ -501,17 +489,91 @@ namespace eval portal {
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
                 hide_links_p=f 
                 page_id=$page_id 
-                layout_id=$layout_id 
+                layout_id=$portal(layout_id)
                 edit_p=@edit_p@>
-                </td></tr>
-                </table>"
+                </td></tr>"
+
+                # clear out the region array
+                array unset fake_element_ids
             }
 
-            # clear out the region array
-            array unset fake_element_ids
-        }
+            if {![portal::non_hidden_elements_p -page_id $page_id]} {
+                
+                # 
+                # Non first page with all hidden elements
+                # 
 
-        # set up the page creation stuff
+                #
+                # Remove page chunk - don't allow removal of the first page
+                # 
+
+                if {!$first_page_p} {
+                    append template "
+                    <tr valign=middle><td valign=middle>
+                    <center>
+                    No Elements on this page
+                    <form method=post action=@action_string@>
+                    <input type=hidden name=portal_id value=$portal_id>
+                    <input type=hidden name=page_id value=$page_id>
+                    <input type=hidden name=return_url value=@return_url@>
+                    <input type=submit name=op value=\"Remove Empty Page\">
+                    </form>
+                    </center>
+                    </td>
+                    </tr>"
+                }
+
+                # 
+                # Layout change chunk - only shown when there are no visible elements on the page
+                # 
+                set layout_chunk ""
+
+                foreach layout [get_layout_info] {
+                    set layout_id [ns_set get $layout layout_id]
+                    set layout_name [ns_set get $layout layout_name]
+                    set layout_description [ns_set get $layout layout_description]
+                    set one_layout_chunk "<small>&nbsp;$layout_name - $layout_description</small>"
+                    append layout_chunk "<label><input type=radio name=layout_id value=$layout_id"
+
+                    if {$page_layout_id == $layout_id} {
+                        append layout_chunk " checked><b>$one_layout_chunk</b>"
+                    } else {
+                        append layout_chunk ">$one_layout_chunk"
+                    }
+                    
+                    append layout_chunk "</label><br>\n"
+                }
+                
+
+                append template "
+                <tr>
+                <td>
+                <br>
+                <form method=post action=@action_string@>
+                <small>
+                <b>Change page layout:</b>
+                <br>
+                <input type=hidden name=portal_id value=$portal_id>
+                <input type=hidden name=page_id value=$page_id>
+                <input type=hidden name=return_url value=@return_url@>
+                $layout_chunk
+                <input type=submit name=op value=\"Change Page Layout\">
+                </small>
+                </form>
+                </td></tr>"
+
+            } 
+
+            
+            # close the page's table
+            append template "</table>"
+
+        }
+        
+        #
+        # New page chunk
+        #
+
         set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
         append template "
@@ -525,10 +587,10 @@ namespace eval portal {
         <input type=submit name=op value=\"Add Page\">
         </form>
         "
-
-
-        # reverting to template support 
-        # this is new code (4/15/02)
+        
+        #
+        # Revert page chunk 
+        #
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
             append template "
             <br>
@@ -540,7 +602,9 @@ namespace eval portal {
             </form>"
         }
 
-        # This hack is to work around the acs-templating system
+        #
+        # Templating system hacks
+        #
         set __adp_stub "[get_server_root][www_path]/."
         set {master_template} \"master\" 
 
@@ -664,35 +728,10 @@ namespace eval portal {
                     db_dml show_here_update_state {}
                 }                
             }
-            "move_to_page" {
-                set page_id [ns_set get $form page_id]
-                set element_id [ns_set get $form element_id]
-                set curr_reg [db_string move_to_page_curr_select {}] 
-                set target_reg_num [db_string move_to_page_target_select {}] 
-
-                if {$curr_reg > $target_reg_num} {
-                    # the new page dosent have this region, set to max region
-                    set region $target_reg_num
-                } else {
-                    set region $curr_reg
-                }
-
-                db_dml move_to_page_update {} 
-            }
             "Move to page" {
-                set page_id [ns_set get $form page_id]
-                set element_id [ns_set get $form element_id]
-                set curr_reg [db_string move_to_page_curr_select {}] 
-                set target_reg_num [db_string move_to_page_target_select {}] 
-
-                if {$curr_reg > $target_reg_num} {
-                    # the new page dosent have this region, set to max region
-                    set region $target_reg_num
-                } else {
-                    set region $curr_reg
-                }
-
-                db_dml move_to_page_update {} 
+                portal::move_element_to_page \
+                    -page_id [ns_set get $form page_id] \
+                    -element_id [ns_set get $form element_id]
             }
             "hide" {
                 set element_id_list [list]
@@ -704,8 +743,17 @@ namespace eval portal {
                 }
 
                 if {! [empty_string_p $element_id_list] } {
-                    foreach element_id $element_id_list {
-                        db_dml hide_update {}
+                    db_transaction {
+                        foreach element_id $element_id_list {
+                            db_dml hide_update {}
+                            
+                            # after hiding an element, add
+                            # it to the _first_ page
+                            # of the portal.
+                            portal::move_element_to_page \
+                                -page_id [portal::get_page_id -portal_id $portal_id] \
+                                -element_id $element_id
+                        }
                     }
                 } 
             }
@@ -725,6 +773,11 @@ namespace eval portal {
                 set page_id [ns_set get $form page_id]
                 page_delete -page_id $page_id
             }
+            "Change Page Layout" {
+                set_layout_id \
+                    -page_id [ns_set get $form page_id] \
+                    -layout_id [ns_set get $form layout_id] 
+            }
             "Rename Page" {
                 set pretty_name [ns_set get $form pretty_name]
                 set page_id [ns_set get $form page_id]
@@ -732,8 +785,7 @@ namespace eval portal {
                 if {[empty_string_p $pretty_name]} {
                     ad_return_complaint 1 "You must enter new name for the page."
                 }
-                set_page_pretty_name \
-                        -pretty_name $pretty_name -page_id $page_id
+                set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
             }
             "toggle_pinned" {
                 set element_id [ns_set get $form element_id]
@@ -757,12 +809,6 @@ namespace eval portal {
             "toggle_shadeable" {
                 set element_id [ns_set get $form element_id]
                 toggle_element_param -element_id $element_id -key "shadeable_p"
-            }
-            "update_layout" {
-                ns_log Error \
-                        "portal::config_dispatch: Bad op = $op!"
-                ad_return_complaint 1 \
-                        "portal::config_dispatch: Not implimented op  = $op"
             }
             default {
                 ns_log Error \
@@ -842,6 +888,19 @@ namespace eval portal {
             }                
         } else {
             return [db_string get_page_id_select {}]
+        }
+    }
+
+    ad_proc -public first_page_p {
+        {-portal_id:required}
+        {-page_id:required}
+    } {
+        Returns 1 if the given page_id is the first page in the given portal. Otherwise 0.
+    } {
+        if {$page_id == [portal::get_page_id -portal_id $portal_id -sort_key 0]} {
+            return 1
+        } else {
+            return 0
         }
     }
 
@@ -1204,6 +1263,35 @@ namespace eval portal {
         db_dml update {} 
     }
 
+    ad_proc -private get_element_region {
+        {-element_id:required}
+    } {
+        Gets the region an element is in
+    } {
+        return [db_string get_element_region_select {}]
+    }
+
+    ad_proc -private move_element_to_page {
+        {-page_id:required}
+        {-element_id:required}
+    } {
+        Moves a PE to the given page
+    } {
+        set curr_reg [get_element_region -element_id $element_id]
+        set target_reg_num [get_layout_region_count_not_cached \
+            -layout_id [get_layout_id -page_id $page_id]
+        ]
+
+        if {$curr_reg > $target_reg_num} {
+            # the new page dosent have this region, set to max region
+            set region $target_reg_num
+        } else {
+            set region $curr_reg
+        }
+
+        db_dml update {} 
+    }
+
     ad_proc -private hideable_p { 
         {-element_id:required}
     } {
@@ -1235,6 +1323,15 @@ namespace eval portal {
         Memoizing helper
     } {
         return [db_list_of_lists select_hidden_elements {}]
+    }
+
+    ad_proc -private non_hidden_elements_p { 
+        {-page_id:required}
+    } {
+        Returns 1 when this page has at least 1 non-hidden element on it.
+    } {        
+        return [db_string non_hidden_elements_p_select {} -default 0]
+
     }
 
     ad_proc -private set_element_param { 
@@ -1693,13 +1790,15 @@ namespace eval portal {
     ad_proc -private get_layout_region_count { 
         {-layout_id:required}
     } {
+        Get the number of regions (aka columns) this layout supports
+    } { 
         return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
     }
 
     ad_proc -private get_layout_region_count_not_cached { 
         {-layout_id:required}
     } {
-        return [db_string select_region_count {}]
+        return [db_string select {}]
     }
 
     ad_proc -private get_layout_region_list {
@@ -1716,6 +1815,23 @@ namespace eval portal {
         Memoizing helper
     } {
         return [db_list select_region_list {}]
+    }
+
+    ad_proc -private get_layout_info {
+    } {
+        Returns a list of all the layouts in the system asns_sets with 
+        keys being: name, description, and number of regions.
+    } {
+        return [db_list_of_ns_sets select_layout_info {}]
+    }
+
+    ad_proc -private set_layout_id {
+        {-page_id:required}
+        {-layout_id:required}
+    } {
+        Updates a page's layout.
+    } {
+        db_dml update_layout_id {}
     }
 
     ad_proc -private get_layout_id { 
@@ -1970,6 +2086,21 @@ namespace eval portal {
             ad_return_complaint 1 "portal::get_theme_id_from_name_select bad theme_id!"
         }
 
+    }
+
+    ad_proc -private get_theme_info {
+    } {
+        Returns a list of all the themes in the system as ns_sets with 
+        keys being: theme_id, name, description
+    } {
+        return [util_memoize "portal::get_theme_info_not_cached"]
+    }
+
+    ad_proc -private get_theme_info_not_cached {
+    } {
+        Memoizing helper
+    } {
+        return [db_list_of_ns_sets get_theme_info_select {}]
     }
 
     ad_proc dimensional {

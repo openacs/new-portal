@@ -64,23 +64,7 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure.current_theme_select">      
-  <querytext>
-    select theme_id as cur_theme_id
-    from portals
-    where portal_id = :portal_id
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::configure.all_theme_select">      
-  <querytext>
-    select theme_id, name, description
-    from portal_element_themes
-    order by name 
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::configure.portal_select">      
+<fullquery name="portal::configure.portal_and_page_info_select">      
   <querytext>
     select  p.name, p.portal_id, 
     pl.filename as template, 
@@ -99,23 +83,6 @@
     update portal_element_map
     set state = 'full' 
     where element_id = :element_id
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::configure_dispatch.move_to_page_curr_select">      
-  <querytext>
-    select region
-    from portal_element_map
-    where element_id = :element_id
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::configure_dispatch.move_to_page_target_select">      
-  <querytext>
-    select count(*) 
-    from portal_pages pp, portal_supported_regions psr 
-    where pp.layout_id = psr.layout_id 
-    and pp.page_id = :page_id
   </querytext>
 </fullquery> 
 
@@ -458,6 +425,12 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::get_element_region.get_element_region_select">      
+  <querytext>
+    select region from portal_element_map where element_id = :element_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::hideable_p_not_cached.select_hideable_p">      
   <querytext>
     select value from portal_element_parameters where element_id = :element_id and key = 'hideable_p'
@@ -472,6 +445,17 @@
     and pp.page_id = pem.page_id
     and pem.state = 'hidden'
     order by name
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::non_hidden_elements_p.non_hidden_elements_p_select">      
+  <querytext>
+    select 1
+    from dual 
+    where exists (select 1
+                  from portal_element_map pem
+                  where pem.page_id = :page_id
+                  and pem.state != 'hidden')
   </querytext>
 </fullquery> 
 
@@ -674,7 +658,7 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_layout_region_count_not_cached.select_region_count">      
+<fullquery name="portal::get_layout_region_count_not_cached.select">      
   <querytext>
     select count(*)
     from portal_supported_regions
@@ -687,6 +671,19 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
     select region
     from portal_supported_regions
     where layout_id = :layout_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_layout_info.select_layout_info">      
+  <querytext>
+    select layout_id, name as layout_name, description as layout_description
+    from portal_layouts
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::set_layout_id.update_layout_id">      
+  <querytext>
+    update portal_pages set layout_id = :layout_id where page_id = :page_id
   </querytext>
 </fullquery> 
 
@@ -723,6 +720,14 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
 <fullquery name="portal::get_theme_id.get_theme_id_select">
   <querytext>
     select theme_id from portals where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_theme_info_not_cached.get_theme_info_select">      
+  <querytext>
+    select theme_id, name, description
+    from portal_element_themes
+    order by name 
   </querytext>
 </fullquery> 
 
