@@ -635,8 +635,10 @@ namespace eval portal {
                         insert into portal_current_page 
                         (portal_id, page_id) values (:portal_id, :page_id)
                     }
-                    return $page_id
+                    
                 }
+                
+                return $page_id
             }
         }
     }
