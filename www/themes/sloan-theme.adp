@@ -18,41 +18,34 @@
 
 %>
 
-<!-- Portal Element '@name@' begin -->
 <table class="element" border=0 cellpadding="0" cellspacing="0" width="100%">
-<tr> 
-  <td colspan=3 class="element-header-text">
-<bold>      <%= [string toupper @name@] %></bold>
-  </td>
-</tr>
-<tr><td colspan=3 class="dark-line" height="0"><img src="/shared/images/spacer.gif"></td></tr>
-<tr>
-  <td class="light-line" width="1"><img src="/shared/images/spacer.gif" width="1"></td>
-  <td class="element-text" width="100%">
-	<table cellspacing="0" cellpadding="0" class="element-content" width="100%">
-	<tr><td>
-
-		<table border="0" bgcolor="white" cellpadding="0" cellspacing="0" width="100%">
-		<tr>
-		<td class=element-text>
-
-		  <!-- Portal Element '@name@' Content begin -->
-		    <slave>
-		  <!-- Portal Element '@name@' Content end -->
-		</td>
-		</tr>
-		</table>
-
-	</td>
-	</tr>
-	</table>
-  </td>
-	  <td align="right" class="light-line" width="1"><img src="/shared/images/spacer.gif" width="1"></td>
-
-</tr>
-<tr><td colspan=3 class="light-line" width="1"><img src="/shared/images/spacer.gif"></td></tr>
+  <tr> 
+    <td colspan=3 class="element-header-text">
+      <bold><%= [string toupper @name@] %></bold>
+    </td>
+  </tr>
+  <tr><td colspan=3 class="dark-line" height="0"><img src="/resources/acs-subsite/spacer.gif"></td></tr>
+  <tr>
+    <td class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif" width="1"></td>
+    <td class="element-text" width="100%">
+      <table cellspacing="0" cellpadding="0" class="element-content" width="100%">
+        <tr>
+          <td>
+            <table border="0" bgcolor="white" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td class=element-text>
+                  <slave>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align="right" class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif" width="1"></td>
+  </tr>
+  <tr><td colspan=3 class="light-line" width="1"><img src="/resources/acs-subsite/spacer.gif"></td></tr>
 </table>
-<!-- Portal Element '@name@' end -->
 
 
 

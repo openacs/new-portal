@@ -18,7 +18,6 @@
 
 %>
 
-<!-- Portal Element '@name@' begin -->
 <table class="element" border="0" cellpadding="1" cellspacing="0" width="100%">
 <tr> 
   <td class="element-header-text">
@@ -66,9 +65,7 @@
 <tr>
 <td>
 
-  <!-- Portal Element '@name@' Content begin -->
     <slave>
-  <!-- Portal Element '@name@' Content end -->
 </td>
 </tr>
 </table>
@@ -80,4 +77,3 @@
   </td>
 </tr>
 </table>
-<!-- Portal Element '@name@' end -->
