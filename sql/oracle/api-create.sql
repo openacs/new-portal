@@ -290,7 +290,7 @@ as
 		config_required_p	in portal_datasource_def_params.config_required_p%TYPE default null,
 		configured_p		in portal_datasource_def_params.configured_p%TYPE default null,
 		key			in portal_datasource_def_params.key%TYPE,
-		value			in portal_datasource_def_params.value%TYPE default null,
+		value			in portal_datasource_def_params.value%TYPE default null
 	);
 
 
@@ -364,23 +364,21 @@ as
 		config_required_p	in portal_datasource_def_params.config_required_p%TYPE default null,
 		configured_p		in portal_datasource_def_params.configured_p%TYPE default null,
 		key			in portal_datasource_def_params.key%TYPE,
-		value			in portal_datasource_def_params.value%TYPE default null,
+		value			in portal_datasource_def_params.value%TYPE default null
 	)
 	is
 		v_parameter_id  portal_datasource_def_params.parameter_id%TYPE;
 	begin
-		v_parameter_id := select acs_object_id_seq.nextval from dual;
+
+		select acs_object_id_seq.nextval into v_parameter_id from dual;
 		    
 		insert into portal_datasource_def_params
 			(parameter_id, datasource_id, config_required_p, configured_p, key, value)
 		values
-			(v_parameter_id, datasource_id, config_required_p, configured_p, key, value)
-		return v_datasource_id;		    
+			(v_parameter_id, datasource_id, config_required_p, configured_p, key, value);
 
-
+	end set_def_param;
 
 end portal_datasource;
 /
 show errors
-
--- AKS XXX Do we need an API for datasource def params?
