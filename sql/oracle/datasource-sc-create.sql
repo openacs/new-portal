@@ -39,6 +39,16 @@ begin
 		    'portal_datasource.MyName.OutputType'
 	  );
 
+
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
+
 	-- Get a pretty name
 	  foo := acs_sc_msg_type.new (
 		    msg_type_name => 'portal_datasource.GetPrettyName.InputType',
@@ -61,7 +71,47 @@ begin
 	  );
 
 
-	-- Tell the portal element  to add itself to a portal page
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
+
+	-- Link: Where is the href target for this PE?
+	  foo := acs_sc_msg_type.new (
+		    msg_type_name => 'portal_datasource.Link.InputType',
+		    msg_type_spec => ''
+	  );
+
+	  foo := acs_sc_msg_type.new (
+		    msg_type_name => 'portal_datasource.Link.OutputType',
+		    msg_type_spec => 'pretty_name:string'
+	  );
+
+	  foo := acs_sc_operation.new (
+		    'portal_datasource',
+		    'Link',
+		    'Get the link ie the href target for this datasource',
+		    't', -- not cacheable
+		    0,   -- n_args
+		    'portal_datasource.Link.InputType',
+		    'portal_datasource.Link.OutputType'
+	  );
+
+
+end;
+/
+show errors
+
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
+	-- Tell the datasource  to add itself to a portal page
 	-- add_self_to_page
 	-- The "args" string is an ns_set of extra arguments 
 	  foo := acs_sc_msg_type.new(
@@ -77,12 +127,52 @@ begin
 	  foo := acs_sc_operation.new (
 		    'portal_datasource',
 		    'AddSelfToPage',
-		    'Tells the given portal element to add itself to the given page',
+		    'Adds itself to the given page returns an element_id',
 		    'f', -- not cacheable
 		    3,   -- n_args
 		    'portal_datasource.AddSelfToPage.InputType',
 		    'portal_datasource.AddSelfToPage.OutputType'
 	  );
+
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
+
+	-- Edit: the datasources' edit html
+	  foo := acs_sc_msg_type.new(
+		    msg_type_name => 'portal_datasource.Edit.InputType',
+		    msg_type_spec => 'element_id:integer'
+	  );
+
+	  foo := acs_sc_msg_type.new(
+		    msg_type_name => 'portal_datasource.Edit.OutputType',
+		    msg_type_spec => 'output:string'
+	  );
+	  
+	  foo := acs_sc_operation.new (
+		    'portal_datasource',
+		    'Edit',
+		    'Returns the edit html',
+		    'f', -- not cacheable
+		    1,   -- n_args
+		    'portal_datasource.Edit.InputType',
+		    'portal_datasource.Edit.OutputType'
+	  );
+
+
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
 
 	-- Show: the portal element's display proc
 	  foo := acs_sc_msg_type.new(
@@ -105,6 +195,15 @@ begin
 		    'portal_datasource.Show.OutputType'
 	  );
 
+
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
 	-- Tell the PE to remove itself from a page
 	-- remove_self_from_page
 	  foo := acs_sc_msg_type.new(
@@ -120,7 +219,7 @@ begin
 	  foo := acs_sc_operation.new (
 		    'portal_datasource',
 		    'RemoveSelfFromPage',
-		    'Tells the given portal element to remove itself from the given page',
+		    ' remove itself from the given page',
 		    'f', -- not cacheable
 		    2,   -- n_args
 		    'portal_datasource.RemoveSelfFromPage.InputType',
@@ -128,6 +227,14 @@ begin
 	  );
 
 
+end;
+/
+show errors
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
 
 	  -- Make self available
 	  foo := acs_sc_msg_type.new(
@@ -149,6 +256,16 @@ begin
 		    'portal_datasource.MakeSelfAvailable.InputType',
 		    'portal_datasource.MakeSelfAvailable.OutputType'
 	  );
+
+end;
+/
+show errors
+
+
+declare
+	sc_dotlrn_contract integer;
+	foo integer;
+begin
 
 	  -- Make self unavailable
 	  foo := acs_sc_msg_type.new(
