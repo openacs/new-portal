@@ -13,14 +13,20 @@ begin
 
     -- privs on a single portal
     acs_privilege.create_privilege('portal_read_portal');
+    acs_privilege.add_child('portal_edit_portal','portal_read_portal');
+
     acs_privilege.create_privilege('portal_edit_portal');
+    acs_privilege.add_child('portal_admin_portal','portal_edit_portal');
+
     acs_privilege.create_privilege('portal_admin_portal');
 
     -- set up the portal perms hierarchy
     -- and root privs to global priv names
-    acs_privilege.add_child('admin','portal_create_portal');
-    acs_privilege.add_child('admin','portal_delete_portal');
+    acs_privilege.add_child('create','portal_create_portal');
+    acs_privilege.add_child('delete','portal_delete_portal');
     acs_privilege.add_child('admin','portal_admin_portal');
+
+
 
 end;
 /
