@@ -1,5 +1,4 @@
 # tcl/portal-procs.tcl
-
 ad_library {
     Portal.
     
@@ -8,7 +7,9 @@ ad_library {
     @cvs-id $Id$
 }
 
-ad_proc -public portal_create_portal { user_id } {
+namespace eval portal {
+
+    ad_proc -public create_portal {user_id {layout_name "Simple 2-Column"}} {
     Create a new portal for the passed in user id. 
 
     @return The newly created portal's id
@@ -16,11 +17,11 @@ ad_proc -public portal_create_portal { user_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-    # XXX hardwire the layout to simple 2 col
+    # The defualt layout is simple 2 column
     db_1row select_layout \
 	    "select layout_id from
             portal_layouts where
-            name = 'Simple 2-Column'"
+            name = $layout_name "
 	
     # insert the portal and grant permission on it.    
     return [ db_exec_plsql insert_portal {
@@ -52,38 +53,43 @@ ad_proc -public portal_create_portal { user_id } {
     }]
 }
 
-ad_proc -public portal_delete_portal { portal_id } {
+ad_proc -public delete_portal { portal_id } {
     Destroy the portal
 
-    @return 1 on success
     @param portal_id
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-    # XXX hardwire the layout to simple 2 col
-    db_1row select_layout \
-	    "select layout_id from
-            portal_layouts where
-            name = 'Simple 2-Column'"
-	
-    # insert the portal and grant permission on it.    
+    # XXX - This dosen't work yet
     return [ db_exec_plsql delete_portal {
 	begin
-	    
-	portal.delete ( 
-	portal_id => :portal_id
-	);
-	    
+	portal.delete (portal_id => :portal_id);
 	end;
     }]
 }
 
-
-ad_proc -public portal_add_element { portal_id ds_name } {
-    Add an element anywhere to a portal given a datasource name
+ad_proc -public add_element { portal_id ds_name } {
+    Add an element to a portal given a datasource name. Used for procs
+    that have no knowledge of regions
 
     @return the id of the new element
-    @param portal_id ds_name
+    @param portal_id 
+    @param ds_name
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    # get the regions that the layout supports
+    # portal_get_regions [portal_get_layout_id $portal_id]
+    # AKS: for now _always_ insert the new PE into region 1
+    return [add_element_to_region $portal_id $ds_name 1]
+}
+
+ad_proc -public add_element_to_region { portal_id ds_name region } {
+    Add an element to a portal in a region, given a datasource name
+
+    @return the id of the new element
+    @param portal_id 
+    @param ds_name
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
@@ -94,17 +100,13 @@ ad_proc -public portal_add_element { portal_id ds_name } {
     where name = :ds_name"
 
     # set up a unique name for the PE
-    if { [db_0or1row pe_name_unique_check "select 1 
+    if { [db_0or1row pe_name_unique_check "select  
     from portal_element_map
     where portal_id = :portal_id and
     name = :ds_name"] } {
+	# XXX sophisticated regsub here
 	append ds_name "+1"
     } 
-
-    # get the regions that the layout supports
-    # portal_get_regions [portal_get_layout_id $portal_id]
-    # AKS: for now _always_ insert the new PE into region 1
-    set region 1
 
     # Bind the DS to the PE by inserting into the map and
     # copying the default params. 
@@ -144,8 +146,7 @@ ad_proc -public portal_add_element { portal_id ds_name } {
     return $new_element_id
 }
 
-
-ad_proc -public portal_set_element_param { element_id key value } {
+ad_proc -public set_element_param { element_id key value } {
     Set an element param
 
     @return 1 on success
@@ -165,8 +166,7 @@ ad_proc -public portal_set_element_param { element_id key value } {
 
 }
 
-
-ad_proc -public portal_get_element_param { element_id key } {
+ad_proc -public get_element_param { element_id key } {
     Get an element param. Returns the value of the param.
 
     @return the value of the param
@@ -189,7 +189,7 @@ ad_proc -public portal_get_element_param { element_id key } {
 }
 
 
-ad_proc -public portal_render_portal { portal_id } {
+ad_proc -public render_portal { portal_id } {
     Get a portal by id. If it's not found, say so.
 
     @return Fully rendered portal or error message
@@ -205,13 +205,26 @@ ad_proc -public portal_render_portal { portal_id } {
     set css_path [ad_parameter css_path]
    
 
-    set element_list [portal_setup_element_list $portal_id]
-    set element_src [portal_setup_element_src $portal_id]
+   # put the element IDs into buckets by region...
+    foreach entry_list [get_elements $portal_id] {
+	array set entry $entry_list
+	lappend element_ids($entry(region)) $entry(element_id)
+    }    
+        
+    set element_list [array get element_ids]
+
+    if { [empty_string_p $element_list] } {
+	ad_return_complaint 1 \
+		"This portal has no elements.
+	You might want to <a href=\"element-layout?[export_url_vars portal_id]\">edit</a> it."
+	ad_script_abort
+    }
+
+    set element_src [portal_path]/www/render-element
  
     set template "<master src=\"@master_template@\">
 <property name=\"title\">@portal.name@</property>
 <include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
-
 
     db_0or1row select_portal_and_layout "
     select
@@ -243,48 +256,7 @@ ad_proc -public portal_render_portal { portal_id } {
     return 
 }
 
-ad_proc -public portal_setup_element_src { portal_id } {
-    Setup the element src
-
-    @return 
-    @param element_id 
-    @param region_id 
-    @author Arjun Sanyal
-    @creation-date Sept 2001
-} {
-    return "[portal_path]/www/render-element"
-}
-
-
-ad_proc -public portal_setup_element_list { portal_id } {
-    Setup the element list
-
-    @return 
-    @param element_id 
-    @param region_id 
-    @author Arjun Sanyal
-    @creation-date Sept 2001
-} {
-
-    # put the element IDs into buckets by region...
-    foreach entry_list [portal_get_elements $portal_id] {
-	array set entry $entry_list
-	lappend element_ids($entry(region)) $entry(element_id)
-    }    
-        
-    set element_list [array get element_ids]
-
-    if { [empty_string_p $element_list] } {
-	ad_return_complaint 1 \
-		"This portal has no elements.
-	You might want to <a href=\"element-layout?[export_url_vars portal_id]\">edit</a> it."
-	ad_script_abort
-    }
-
-    return $element_list
-}
-
-ad_proc -public portal_render_element { element_id region_id } {
+ad_proc -public render_element { element_id region_id } {
     Wrapper for the below proc
 
     @return 
@@ -294,33 +266,31 @@ ad_proc -public portal_render_element { element_id region_id } {
     @creation-date Sept 2001
 } {
 
-# get the complete, evaluated element.
-# if there's an error, report it.
-if { [catch {set element_data [portal_evaluate_element $element_id] } errmsg ] } {
-    if { [ad_parameter log_datasource_errors_p] } {
-	ns_log Error "portal: $errmsg"
+    # get the complete, evaluated element.
+    # if there's an error, report it.
+    if { [catch {set element_data [evaluate_element $element_id] } errmsg ] } {
+	if { [ad_parameter log_datasource_errors_p] } {
+	    ns_log Error "portal: $errmsg"
+	}
+    
+	if { [ad_parameter show_datasource_errors_p] } {
+	    set element(content) "<div class=portal_alert>$errmsg</div>"
+	    set element(mime_type) "text/html"
+	} else {
+	    return
+	}
+    } else {
+	array set element $element_data
     }
     
-    if { [ad_parameter show_datasource_errors_p] } {
-	set element(content) "<div class=portal_alert>$errmsg</div>"
-	set element(mime_type) "text/html"
-    } else {
-	return
-    }
-} else {
-    array set element $element_data
+    # consistency is good.
+    set element(region) $region
+    
+    # return the appropriate template for that element.
+    ad_return_template "layouts/mime-types/$element(mime_type_noslash)"
 }
 
-# consistency is good.
-set element(region) $region
-
-# return the appropriate template for that element.
-ad_return_template "layouts/mime-types/$element(mime_type_noslash)"
-
-}
-
-
-ad_proc -public portal_evaluate_element { element_id } {
+ad_proc -public evaluate_element { element_id } {
     Get an element.  Combine the datasource, template, etc.  Return a suitable
     chunk of HTML.
 
@@ -333,7 +303,7 @@ ad_proc -public portal_evaluate_element { element_id } {
     # the caching in here needs to be completely redone.  It totally sucks.
     # aks - all catching removed
 
-    array set element [eval [list portal_get_element_data $element_id]]
+    array set element [eval [list get_element_data $element_id]]
 
     if { ! [info exists element(element_id)] } {
 	# no permission, probably.  Debug?
@@ -341,8 +311,8 @@ ad_proc -public portal_evaluate_element { element_id } {
     }
 
     # get the datasource and configuration.
-    array set datasource [eval [list portal_get_datasource $element(datasource_id)] ]
-    set element(config) [eval [list portal_get_element_parameters $element(element_id) ]]
+    array set datasource [eval [list get_datasource $element(datasource_id)] ]
+    set element(config) [eval [list get_element_parameters $element(element_id) ]]
 
     if { ! [info exists datasource(datasource_id)] } {
 	# permissions likely didn't match.  Debug?
@@ -359,7 +329,7 @@ ad_proc -public portal_evaluate_element { element_id } {
     # evaulate the datasource.
     #  it might be good to (optionally) cache this, since it can be an expensive step.
     set element(content) [ eval { 
-	portal_render_datasource_$datasource(data_type) [array get datasource] $element(config)
+	render_datasource_$datasource(data_type) [array get datasource] $element(config)
     } ]
 	
 	
@@ -371,21 +341,19 @@ ad_proc -public portal_evaluate_element { element_id } {
 
 }
 
-ad_proc -private portal_get_element_data { element_id } {
+ad_proc -private get_element_data { element_id } {
     Fetch element data.
 
     @param element_id The element's ID.
     @return a list-ified array containing the information from portal_elements and portal_templates for $element_id.
     @author Arjun Sanyal (arjun@openforce.net)
-    @creation-date Sept 2001
-} {
+    @creation-date Sept 2001 } {
+
     set user_id [ad_conn user_id]
 
-# XXX issue here with element config params
+    # XXX issue here with element config params
 
     if { ! [db_0or1row select_element_data {
-
-
 	select
 	pem.element_id,
 	pem.name,
@@ -404,7 +372,7 @@ ad_proc -private portal_get_element_data { element_id } {
     }
     
     if { ! [ regexp {^/} $element_data(filename)] } {
-# AKS - hack
+	# AKS - hack
 	set element_data(filename) "/packages/new-portal/www/$element_data(filename)"
     }
 
@@ -417,11 +385,9 @@ ad_proc -private portal_get_element_data { element_id } {
     } else {
 	return -code error "Read permission on element $element_id required."
     }
-
 }
 
-
-ad_proc -private portal_get_element_parameters { element_id } {
+ad_proc -private get_element_parameters { element_id } {
     Fetch element parameters.
 
     @param element_id
@@ -448,7 +414,7 @@ ad_proc -private portal_get_element_parameters { element_id } {
     return [array get config]
 }
 
-ad_proc -private portal_get_datasource { datasource_id } {
+ad_proc -private get_datasource { datasource_id } {
     Fetch datasource data.
 
     @param datasource_id The element's ID.
@@ -484,7 +450,7 @@ ad_proc -private portal_get_datasource { datasource_id } {
     return [array get datasource]
 }
 
-ad_proc -private portal_data_type { type name } {
+ad_proc -private data_type { type name } {
     Get the details about a data or mime type.  The idea here is that
     the caller will cache the call to this proc with util_memoize.
 
@@ -508,7 +474,7 @@ ad_proc -private portal_data_type { type name } {
     return [ array get type_details ]
 }
 
-ad_proc -private portal_data_types { type } {
+ad_proc -private data_types { type } {
     Get all the entries in a data_type table, sorted by sort_key.
 
     @param type Which type to fetch (mime_type or data_type)
@@ -531,7 +497,7 @@ ad_proc -private portal_data_types { type } {
 
 # put a proc here for retrieving stuff from the portal/element map (so
 # it can me memoized by index.tcl)
-ad_proc -private portal_get_elements { portal_id } {
+ad_proc -private get_elements { portal_id } {
     Get the portal_element_map entries for a portal.
 
     @param portal_id The portal in question's ID.
@@ -552,86 +518,7 @@ ad_proc -private portal_get_elements { portal_id } {
     return $entries
 }
 
-ad_proc -private portal_default_p { portal_id } {
-    @return 1 if portal_id is a default portal (NULL owner_id), 0 otherwise.  Please make sure that the portal exists.
-} {
-    db_1row check_default "select decode(owner_id, null, 1, 0) as default_portal_p from portals where portal_id = :portal_id"
-    return $default_portal_p
-}
-
-ad_proc -public portal_arg { config key } {
-    Used in building Tcl datasources.  This is the method by which the value
-    (or values) of an argument may be fetched by the datasource to which
-    it applies.
-
-    @param config The configuration variable passed to the datasource.
-    @param key The name of the argument for which you'd like the values.
-    @return a list containing all the values for $key for the current datasource.  If there are no values, returns the empty string.
-} {
-    array set cf $config
-    if { [info exists cf($key)] } {
-	return $cf($key)
-    } else {
-	return {}
-    }
-}
-
-ad_proc -public portal_info { flag } {
-    Return information about the current connection that's relevant to the current connection.<p>
-    Currently, the following keys are available:<br>
-
-    <ul>
-    <li>
-      <b>default_portal_id</b>: The default portal (if any) for the current connection.
-                                If none is available, returns the empty string.
-    </li>
-    <li>
-      <b>parent_portal_id</b>: The ultimate parent portal for the current connection.  In some cases, the default will
-                               still be a child of some other portal.  This returns the absolute parent, whatever its package_id.
-    </li>
-    </ul>
-
-    A value is retrieved only once per session.
-
-    @param flag The name of the parameter you'd like.
-} {
-    global portal_info
-
-    set package_id [ad_conn package_id]
-
-    if { ! [info exists portal_info($flag)] } {
-	if { $flag == "default_portal_id" } {
-
-	    db_0or1row get_default \
-		"select portal_id as info_value
-                 from portals
-                 where package_id = :package_id and owner_id is null"
-
-	} elseif { $flag == "parent_portal_id" } {
-
-	    db_0or1row get_parent \
-		"select portal.parent(default_portal_id) as info_value
-                 from (
-                   select portal_id as default_portal_id
-                   from portals
-                   where package_id = :package_id and owner_id is null
-                 )"
-
-	} else {
-	    reutrn -code error "Don't know what to do with $flag.  Expecting one of: default_portal_id, parent_portal_id"
-	}
-
-	if { ! [info exists info_value] } {
-	    set info_value {}
-	}
-
-	set portal_info($flag) $info_value
-    }
-
-    return $portal_info($flag)
-}
-
-ad_proc -private portal_get_layout_id { portal_id } {
+ad_proc -private get_layout_id { portal_id } {
     Get the layout_id of a layout template for a portal.
 
     @param portal_id The portal_id.
@@ -646,7 +533,7 @@ ad_proc -private portal_get_layout_id { portal_id } {
     return $layout_id
 }
 
-ad_proc -private portal_get_regions { layout_id } {
+ad_proc -private get_regions { layout_id } {
     Set the current layout, returning the regions that it supports.
 
     @param layout_id
@@ -673,7 +560,7 @@ ad_proc -private portal_get_regions { layout_id } {
     return $portal_region_list
 }
 
-ad_proc -private portal_region_immutable_p { region } {
+ad_proc -private region_immutable_p { region } {
     Check to see if a region in the current layout template is immutable.
 
     @param region The region
@@ -706,7 +593,7 @@ ad_proc -public portal_path { } {
     @creation-date Spetember 2001
 } { return "/packages/new-portal" }
 
-ad_proc -public portal_exists_p { portal_id } {
+ad_proc -public exists_p { portal_id } {
     Check if a portal by that id exists.
 
     @return 1 on success, 0 on failure
@@ -720,3 +607,65 @@ ad_proc -public portal_exists_p { portal_id } {
 	return 0 
     }
 }
+
+ad_proc -public get_datasource_name { ds_id } {
+    Get the ds name from the id or the null string if not found.
+
+    @return ds_name
+    @creation-date Spetember 2001
+} { 
+    if {[db_0or1row get_ds_name_from_id "select name from portal_datasources where datasource_id = :ds_id"]} {
+	return $name
+    } else {
+	return ""
+    }
+}
+
+ad_proc -public portal_path { } {
+    The path to the portal package from acs root. 
+    
+    @return path to portal package
+    @creation-date Spetember 2001
+} { return "/packages/new-portal" }
+
+ad_proc -public exists_p { portal_id } {
+    Check if a portal by that id exists.
+
+    @return 1 on success, 0 on failure
+    @param a portal_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date September 2001
+} {
+    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} { 
+	return 1
+    } else { 
+	return 0 
+    }
+}
+
+
+
+ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
+    Split a list up into a bunch of variables for inserting into a layout
+    template.  This seems pretty kludgy (probably because it is), but a
+    template::multirow isn't really well suited to data of this shape.  
+    It'll setup a set of variables, $var_stub_1 - $var_stub_8 and $var_stub_i1
+    - $var_stub_i8, each contining the portal_ids that belong in that region.
+
+    @creation-date 12/11/2000
+    @param element_id_list An [array get]'d array, keys are regions, values are lists of element_ids.
+    @param var_stub A name upon which to graft the bits that will be passed to the template.
+} {
+    array set elements $element_list
+    
+    foreach idx [list 1 2 3 4 5 6 7 8 9 i1 i2 i3 i4 i5 i6 i7 i8 i9 ] {
+	upvar [join [list $var_stub "_" $idx] ""] group
+	if { [info exists elements($idx) ] } {
+	    set group $elements($idx)
+	} else {
+	    set group {}
+	}
+    }
+}
+
+} # namespace
