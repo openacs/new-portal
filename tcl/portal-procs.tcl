@@ -18,6 +18,11 @@ namespace eval portal {
     ad_proc -private  www_path {} {
 	Returns the path of the www dir of the portal package
     } { return "/packages/new-portal/www"  }
+
+    # Work around for template::util::url_to_file 
+    ad_proc -private  mount_point {} {
+	Returns the mount point - XXX fixme
+    } { return "/portal"  }
     
     #
     # Main portal procs
@@ -714,13 +719,15 @@ namespace eval portal {
 	pem.datasource_id,
 	pem.theme_id,
 	pet.description,
-	pet.filename
+	pet.filename, 
+	pet.resource_dir
 	from portal_element_map pem, portal_element_themes pet
 	where pem.theme_id = pet.theme_id
 	and pem.element_id = :element_id " -column_array element 
 	
-	# apply the path hack
+	# apply the path hack to the filename and the resourcedir
 	set element(filename) "[www_path]/$element(filename)"
+	set element(resource_dir) "[mount_point]/$element(resource_dir)"
 	
 	# get the element's params
 	db_foreach evaluate_element_params_select "
