@@ -1617,7 +1617,7 @@ namespace eval portal {
     ad_proc -private get_layout_region_count { 
         {-layout_id:required}
     } {
-        return [db_1row select_region_count {}]
+        return [db_string select_region_count {}]
     }
 
     ad_proc -private get_layout_id { 
