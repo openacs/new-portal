@@ -271,7 +271,7 @@ ad_proc -public move_elements {portal_id element_id_list target_region} {
 		"update portal_element_map 
 	set region = :target_region, 
 	    sort_key = (select nvl(
-	                          (select max(sort_key) 
+	                          (select max(sort_key) + 1
 	                           from portal_element_map 
 	                           where portal_id = :portal_id 
 	                           and region = :target_region), 
