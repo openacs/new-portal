@@ -389,7 +389,7 @@ namespace eval portal {
 
         # get the themes, template::multirow is not working here
         set theme_count 0
-        set theme_data "<br>"
+       set theme_data "<br>"
 
         db_1row current_theme_select {}
 
@@ -468,6 +468,7 @@ namespace eval portal {
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=page_id value=$page_id>
             <input type=hidden name=return_url value=@return_url@>
+            <input type=hidden name=anchor value=$page_id>
             <br><strong>Page:</strong>
             <input type=text name=pretty_name value=\"$portal(page_name)\">
             <input type=submit name=op value=\"Rename Page\">
@@ -476,16 +477,24 @@ namespace eval portal {
             if {$element_count == 0} {
                 append template "
                 $page_name_chunk
+                <table bgcolor=#eeeeee border=0 width=100%>
+                <tr valign=middle><td valign=middle>
+                <center>
                 No Elements
                 <form method=post action=@action_string@>
                 <input type=hidden name=portal_id value=$portal_id>
                 <input type=hidden name=page_id value=$page_id>
                 <input type=hidden name=return_url value=@return_url@>
                 <input type=submit name=op value=\"Remove Empty Page\">
-                </form>"
+                </form>
+                </center>
+                </td></tr>
+                </table>"
             } else {
                 append template "
                 $page_name_chunk
+                <table bgcolor=#eeeeee border=0 width=100%>
+                <tr valign=middle><td valign=middle>
                 <include src=\"$portal(template)\" 
                 element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
@@ -493,7 +502,9 @@ namespace eval portal {
                 hide_links_p=f 
                 page_id=$page_id 
                 layout_id=$layout_id 
-                edit_p=@edit_p@>"
+                edit_p=@edit_p@>
+                </td></tr>
+                </table>"
             }
 
             # clear out the region array
@@ -504,9 +515,11 @@ namespace eval portal {
         set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
         append template "
+        <a name=add_a_new_page></a>
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
+        <input type=hidden name=anchor value=add_a_new_page>
         <b>Add a new page:</b> 
          <input type=text name=pretty_name value=\"Page $new_page_num\">
         <input type=submit name=op value=\"Add Page\">

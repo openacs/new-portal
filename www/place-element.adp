@@ -37,9 +37,9 @@
 
     <if @element_multi.state@ ne "pinned">
 
-    <!-- hide link and arrows begin - refactor with tempate? -->
+    <!-- hide/remove link and arrows begin - refactor with tempate? -->
 
-      <small>[<a href="@action_string@?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@&return_url=@return_url@&anchor=@page_id@">hide</a>]</small>
+      <small>[<a href="@action_string@?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@&return_url=@return_url@&anchor=@page_id@">remove</a>]</small>
 
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
@@ -66,7 +66,7 @@
 
     </if>
 
-    <!-- hide link and arrows end -->
+    <!-- hide/remove link and arrows end -->
 
 </form>
 
