@@ -17,7 +17,7 @@ set layout_id [portal_get_layout_id $portal_id]
 
 # this is required to execute the query that initializes the
 # datastructures used by portal_region_immutable_p
-portal_get_regions $template_id
+portal_get_regions $layout_id
 
 if { [portal_region_immutable_p $region] && ! [portal_default_p $portal_id] } {
     ad_return_complaint 1 "You don't have permission to edit this region."
