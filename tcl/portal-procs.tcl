@@ -254,14 +254,18 @@ namespace eval portal {
 	    from portals p, portal_layouts t
 	    where p.layout_id = t.layout_id and p.portal_id = :portal_id
 	    " -column_array portal
-	    
+
 	    # fake some elements so that the <list> in the template has
 	    # something to do.
-#	    foreach region [ portal::get_regions $portal(layout_id) ] {
-	#	# pass the portal_id along here instead of the element_id.
-		#lappend fake_element_ids($region) $portal_id
-	    #}
-	
+	    set layout_id [get_layout_id $portal_id]
+
+	    db_foreach configure_get_regions "
+	    select region
+	    from portal_supported_regions
+	    where layout_id = :layout_id"  {
+		lappend fake_element_ids($region) $portal_id
+	    }
+
 	    set element_list [array get fake_element_ids]
 	    set element_src "[portal::www_path]/place-element"
 	
