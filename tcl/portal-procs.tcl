@@ -123,7 +123,7 @@ namespace eval portal {
         set layout_name_list [list "Simple 2-Column"]
 
         if {![empty_string_p $csv_list]} {
-            set page_name_and_layout_list [split $csv_list ";"]
+            set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
             set page_name_list [list]
             set layout_name_list [list]
 
@@ -702,6 +702,8 @@ namespace eval portal {
         @return the id of the page
         @param portal_id 
     } {
+        ns_log notice "aks91 $pretty_name, $layout_name"
+
         # get the layout_id
         if {![empty_string_p $layout_name]} {
             set layout_id [get_layout_id -layout_name $layout_name]
@@ -1135,9 +1137,16 @@ namespace eval portal {
                 errmsg \
              ] \
             } {
-                ns_log error "aks86 *** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
-                ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
-        }
+        
+        ns_log error "aks86 *** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+        # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
+        
+        set element(content)  " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n" 
+        
+    }
+    
+    # trim the element's content
+    set element(content) [string trim $element(content)]
 
         # We use the actual pretty name from the DB (ben)
         # FIXME: this is not as good as it should be
