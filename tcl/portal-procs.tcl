@@ -815,7 +815,8 @@ namespace eval portal {
 
 	# apply the path hack to the filename and the resourcedir
 	set element(filename) "[www_path]/$element(filename)"
-	set element(resource_dir) "[mount_point]/$element(resource_dir)"
+        # notice no "/" after mount point
+	set element(resource_dir) "[mount_point]$element(resource_dir)"
 
 	return [array get element]
     }
