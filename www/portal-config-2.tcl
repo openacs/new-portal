@@ -14,6 +14,8 @@ ad_page_contract {
 # string directly here, because we don't know for sure what the
 # parameter is called, and you need to know that sort of thing for
 # ad_page_contract to work.
+
+# aks: region here is the "target" region
 if { ! [regexp {[\?&](add|move|remove)_(i?\d+)} [ad_conn query] match mode region ]} {
     ad_return_complaint 1 "No mode.  (region $region, mode $mode, match $match, query [ad_conn query])"
 } else { ns_log Notice "AKS: mode is $mode" }
@@ -43,7 +45,8 @@ if { $mode == "add" } {
 # checked every time they're loaded anyway.
 #
 # - AKS: we are not going the route above.
-set element_id_list [join $element_ids ","]
+
+set element_id_list $element_ids
 
 if { $mode == "remove" && ! [empty_string_p $element_id_list] } {
     if { [ad_parameter local_remove_p] } {
@@ -61,39 +64,12 @@ if { $mode == "remove" && ! [empty_string_p $element_id_list] } {
 }
 
 if { $mode == "move" && ! [empty_string_p $element_id_list] } {
-    set where "m.portal_id = :portal_id and
-      m.region != :region and
-      $skip_region_sql
-      m.element_id in ($element_id_list)"
 
-    db_transaction {
-	# this could be done with a much simpler query (an update, even), but that
-	# wouldn't preserve the ordering.  This is slightly slower, but keeps
-	# the sort-keys in order.
-	#
-	# in case you're wondering, the second subselect causes rownums to
-	# be assigned _after_ the order by is applied.
+    portal::move_elements $portal_id $element_id_list $region 
 
-	# XXX - AKS - I'm baffled here
-	db_exec_plsql move_elements_insert "
-	begin
-	insert into portal_element_map (sort_key, region, portal_id, element_id)
-	    select
-	        nvl((select max(sort_key) 
-	             from portal_element_map 
-	             where region = :region)
-	        , 1) + rownum, 
-	        :region, 
-	        :portal_id, 
-	        element_id
-	     from (select element_id 
-	           from portal_element_map m 
-	           where $where 
-	           order by region,sort_key)
-	end;"	
-	db_dml move_elements_delete "delete from portal_element_map m where $where"
-    }
+} elseif { $mode == "move" && [empty_string_p $element_id_list] } {
+
+    ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
 }
 
-ns_returnredirect "element-layout.tcl?[export_url_vars portal_id template_id name]"
-return
+ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
