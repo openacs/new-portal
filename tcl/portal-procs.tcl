@@ -409,7 +409,7 @@ namespace eval portal {
             <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
-            <strong>Change Theme:</strong>
+            <strong>[_ new-portal.Change_Theme]</strong>
             <br>"
         set current_theme_id [portal::get_theme_id -portal_id $portal_id]
 
@@ -429,7 +429,7 @@ namespace eval portal {
             append theme_chunk "</label><br>\n"
         }
 
-        append theme_chunk "<input type=submit name=op value=\"Change Theme\"></form>"
+        append theme_chunk "<input type=submit name=op value=\"[_ new-portal.Change_Theme_1]\"></form>"
 	if {$allow_theme_change_p} {
         append template "$theme_chunk"
 	}
@@ -445,7 +445,8 @@ namespace eval portal {
         foreach page_id $list_of_page_ids {
 
             set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
-            set page_name [portal::get_page_pretty_name -page_id $page_id]
+            # We allow portal page names to have embedded message keys that we localize on the fly
+            set page_name [lang::util::localize [portal::get_page_pretty_name -page_id $page_id]]
             set page_layout_id [portal::get_layout_id -page_id $page_id]
 
             append template "<table bgcolor=#eeeeee border=0 width=\"100%\">"
@@ -524,12 +525,12 @@ namespace eval portal {
                     append template "
                     <tr valign=middle><td valign=middle>
                     <center>
-                    No Elements on this page
+                    [_ new-portal.lt_No_Elements_on_this_p]
                     <form method=post action=@action_string@>
                     <input type=hidden name=portal_id value=$portal_id>
                     <input type=hidden name=page_id value=$page_id>
                     <input type=hidden name=return_url value=@return_url@>
-                    <input type=submit name=op value=\"Remove Empty Page\">
+                    <input type=submit name=op value=\"[_ new-portal.Remove_Empty_Page]\">
                     </form>
                     </center>
                     </td>
@@ -565,13 +566,13 @@ namespace eval portal {
                 <br>
                 <form method=post action=@action_string@>
                 <small>
-                <b>Change page layout:</b>
+                <b>[_ new-portal.Change_page_layout]</b>
                 <br>
                 <input type=hidden name=portal_id value=$portal_id>
                 <input type=hidden name=page_id value=$page_id>
                 <input type=hidden name=return_url value=@return_url@>
                 $layout_chunk
-                <input type=submit name=op value=\"Change Page Layout\">
+                <input type=submit name=op value=\"[_ new-portal.Change_Page_Layout]\">
                 </small>
                 </form>
                 </td></tr>"
@@ -593,7 +594,7 @@ namespace eval portal {
         append template "
 	<p>
         <table class=\"portal-page-config\" border=0 cellspacing=0 cellpadding=0>
-            <tr><td><h2 class=\"portal-page-name\">Create a new page</h2></tr></td>
+            <tr><td><h2 class=\"portal-page-name\">[_ new-portal.Create_a_new_page]</h2></tr></td>
 	<tr><td>
 	<a name=add_a_new_page></a>
         <form method=post action=@action_string@>
@@ -601,8 +602,8 @@ namespace eval portal {
         <input type=hidden name=return_url value=@return_url@#$page_id>
         <input type=hidden name=anchor value=add_a_new_page>
         <center>
-         <input type=text name=pretty_name value=\"Page $new_page_num\">
-        <input type=submit name=op value=\"Add Page\">
+         <input type=text name=pretty_name value=\"[_ new-portal.Page] $new_page_num\">
+        <input type=submit name=op value=\"[_ new-portal.Add_Page]\">
 	<center>
         </form>
 	</td></tr></table>
@@ -618,9 +619,9 @@ namespace eval portal {
 	    <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
-            <h2 class=\"portal-page-name\">Revert the entire portal to the default arrangement</h2>
+            <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_the_entire_por]</h2>
 	    <center>
-            <input type=submit name=op value=\"Revert\">
+            <input type=submit name=op value=\"[_ new-portal.Revert]\">
             </form></center>
 	    </td></tr></table>"
         }
@@ -811,7 +812,7 @@ namespace eval portal {
                 set page_id [ns_set get $form page_id]
 
                 if {[empty_string_p $pretty_name]} {
-                    ad_return_complaint 1 "You must enter new name for the page."
+                    ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
                 }
                 set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
             }
@@ -1027,7 +1028,7 @@ namespace eval portal {
             lappend ad_dim_struct [list $page_num $pretty_name [list]]
         }
 
-        set ad_dim_struct "{ page_num \"Page:\" 0 [list $ad_dim_struct] }"
+        set ad_dim_struct "{ page_num \"[_ new-portal.Page_1]\" 0 [list $ad_dim_struct] }"
 
         return [dimensional -no_header \
                 -no_bars \
@@ -1138,8 +1139,7 @@ namespace eval portal {
            db_dml delete {}
         } else {
             if {[empty_string_p $portal_id] && [empty_string_p $portlet_name]} {
-                ad_return_complaint 1 "portal::remove_element error bad params! \n
-                Please notify the system administrator of this error. Thank You"
+                ad_return_complaint 1 "portal::remove_element [_ new-portal.lt_Error_bad_params_n___]"
             }
 
             set element_ids [portal::get_element_ids_by_ds \
@@ -1240,7 +1240,7 @@ namespace eval portal {
             }
         } else {
             ad_return_complaint 1 \
-            "portal::swap_element: Bad direction: $dir"
+            "portal::swap_element: [_ new-portal.Bad_direction] $dir"
         }
 
         db_transaction {
@@ -1257,7 +1257,7 @@ namespace eval portal {
             # Set the element to be moved's sort_key to the right value
             db_dml swap_sort_keys_3 {}
         } on_error {
-            ad_return_complaint 1 "portal::swap_element: transaction failed"
+            ad_return_complaint 1 "portal::swap_element: [_ new-portal.transaction_failed]"
         }
     }
 
@@ -1283,7 +1283,7 @@ namespace eval portal {
         } elseif { $direction == "left" } {
             set target_region [expr $region - 1]
         } else {
-            ad_return_complaint 1 "portal::move_element Bad direction!"
+            ad_return_complaint 1 "portal::move_element [_ new-portal.Bad_direction_1]"
         }
 
         # get this element's page_id
@@ -1579,6 +1579,10 @@ namespace eval portal {
             set element(name) $element(pretty_name)
         }
 
+        # Peter: we allow the element name to contain embedded message catalog keys
+        # that we localize on the fly
+        set element(name) [lang::util::localize $element(name)]
+
         # The idea for the link proc in the datasource API is that
         # it is the target for the href for the title of the portlet,
         # but since we are using "hide_links_p" all the time, the
@@ -1642,6 +1646,10 @@ namespace eval portal {
         set element(name) \
                 [datasource_call \
                 $element(datasource_id) "GetPrettyName" [list]]
+
+        # Peter: we allow the element name to contain embedded message catalog keys
+        # that we localize on the fly
+        set element(name) [lang::util::localize $element(name)]
 
         # no "Link" for raw elements
         set element(link) {}
@@ -2272,7 +2280,9 @@ namespace eval portal {
             set first_p 1
             foreach option_value [lindex $option 3] {
                 set thisoption_name [lindex $option_value 0]
-                set thisoption_value [lindex $option_value 1]
+                # We allow portal page names to have embedded message catalog keys
+                # that we localize on the fly
+                set thisoption_value [lang::util::localize [lindex $option_value 1]]
                 set thisoption_link_p 1
                 if {[llength $option_value] > 3} {
                     set thisoption_link_p [lindex $option_value 3]
@@ -2305,8 +2315,4 @@ namespace eval portal {
     }
 
 }
- 
-
-
-
 
