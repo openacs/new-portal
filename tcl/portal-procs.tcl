@@ -2307,8 +2307,31 @@ namespace eval portal {
     }
 
 }
- 
 
 
+ad_proc -private portal::datasource_new {
+    {-name:required}
+    {-description:required}
+} {
+
+    @author Simon Carstensen (simon@bcuni.net)
+
+} {
+    return [db_exec_plsql new_datasource {}]
+}
+
+ad_proc -private portal::datasource_set_def_param {
+    {-datasource_id:required}
+    {-config_required_p:required}
+    {-configured_p:required}
+    {-key:required}
+    {-value:required}
+} {
+
+    @author Simon Carstensen (simon@bcuni.net)
+
+} {
+    db_exec_plsql set_def_param {}
+}
 
 

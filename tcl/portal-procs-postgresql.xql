@@ -177,4 +177,25 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::datasource_new.new_datasource">
+        <querytext>
+             select portal_datasource__new(
+    		:name,
+    		:description     
+  	     )
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::datasource_set_def_param.set_def_param">
+        <querytext>
+            select portal_datasource__set_def_param(
+		:datasource_id,
+		:config_required_p,
+		:configured_p, 
+		:key, 
+		:value
+	    )
+        </querytext>
+    </fullquery>
+
 </queryset>
