@@ -43,6 +43,7 @@
              target_stub=@target_stub@
              portal_id=@portal_id@
              page_id=@element_multi.page_id@>
+    <br>
 
 </multiple>
 
