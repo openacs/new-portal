@@ -105,10 +105,10 @@ begin
 -- Now, some element themes.
 
 	theme_id := portal_element_theme.new (
-		name => 'Simple table-based thing',
-		description => 'A simple test layout.',
-		filename => 'elements/simple-element',
-		resource_dir => 'elements/components/simple-element');
+		name => 'Simple table-based element theme',
+		description => 'A simple element theme.',
+		filename => 'themes/simple-theme',
+		resource_dir => 'themes/simple-theme/simple-theme');
 
 -- used to just insert into portal_available_mime_type_map
 
