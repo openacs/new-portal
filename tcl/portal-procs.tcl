@@ -714,7 +714,7 @@ namespace eval portal {
 	pem.datasource_id,
 	pem.theme_id,
 	pet.description,
-	pet.filename,
+	pet.filename
 	from portal_element_map pem, portal_element_themes pet
 	where pem.theme_id = pet.theme_id
 	and pem.element_id = :element_id " -column_array element 
@@ -735,7 +735,7 @@ namespace eval portal {
 	
 	# shove the listified config into the element array
 	set element(config) [array get config]
-	
+
 	# get the datasource
 	db_1row evaluate_element_datasource_select "
 	select
@@ -745,7 +745,7 @@ namespace eval portal {
 	description,
 	content
 	from portal_datasources
-	where datasource_id = :element(datasource_id) 
+	where datasource_id = $element(datasource_id) 
 	" -column_array datasource 
 	
 	# evaulate the datasource.
