@@ -163,7 +163,8 @@ create table portals (
 
 -- this sequence is only used for swapping sort keys so that we
 -- don't abuse the acs_object_id_seq
-create sequence portal_element_map_sk_seq start with 1;
+
+create sequence portal_element_map_sk_seq start with 1000;
 
 
 create table portal_element_map (
