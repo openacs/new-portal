@@ -56,14 +56,14 @@ db_transaction {
     where datasource_id = :ds_id" {
 	set new_param_id [db_nextval acs_object_id_seq]
 	db_dml insert_into_params "
-	insert into partal_element_parameters
+	insert into portal_element_parameters
 	(parameter_id, element_id, config_required_p, configured_p)
 	values
 	(:new_param_id, :new_element_id, :config_required_p, :configured_p)"
     }
     
 }   on_error {
-    ad_return_complaint "The DML failed."
+    ad_return_complaint  1 "The DML failed."
 }
 
 
