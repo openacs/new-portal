@@ -643,14 +643,16 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_element_ids_by_ds.select">      
-  <querytext>
-    select element_id from portal_element_map pem, portal_pages pp
-    where pp.portal_id= :portal_id 
-    and datasource_id= :ds_id
-    and pem.page_id = pp.page_id
-  </querytext>
-</fullquery> 
+    <fullquery name="portal::get_element_ids_by_ds.select">      
+        <querytext>
+            select portal_element_map.element_id
+            from portal_element_map,
+                 portal_pages
+            where portal_pages.portal_id = :portal_id 
+            and portal_element_map.datasource_id = :ds_id
+            and portal_element_map.page_id = portal_pages.page_id
+        </querytext>
+    </fullquery> 
 
 <fullquery name="portal::get_element_id_by_pretty_name.select">      
   <querytext>
