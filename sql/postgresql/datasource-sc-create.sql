@@ -16,12 +16,12 @@
 
 	  -- Get my name - not to be confused with the pretty_name
 	  select acs_sc_msg_type__new (
-		    /* msg_type_name */ 'portal_datasource.MyName.InputType',
+		    /* msg_type_name */ 'portal_datasource.GetMyName.InputType',
 		    /* msg_type_spec */ ''
 	  );
 
 	  select acs_sc_msg_type__new (
-		    /* msg_type_name */ 'portal_datasource.MyName.OutputType',
+		    /* msg_type_name */ 'portal_datasource.GetMyName.OutputType',
 		    /* msg_type_spec */ 'my_name:string'
 	  );
 

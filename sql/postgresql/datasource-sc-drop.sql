@@ -9,18 +9,18 @@
 --
 -- $Id$
 
-	-- drop MyName	  
+	-- drop GetMyName	  
 	  select acs_sc_operation__delete (
 		  /* contract_name */ 'portal_datasource',
-		  /* operation_name */ 'MyName'
+		  /* operation_name */ 'GetMyName'
 	  );
 
 	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.MyName.InputType'
+		  /* msg_type_name */ 'portal_datasource.GetMyName.InputType'
 	  );
 
 	  select acs_sc_msg_type__delete (
-		  /* msg_type_name */ 'portal_datasource.MyName.OutputType'
+		  /* msg_type_name */ 'portal_datasource.GetMyName.OutputType'
 	  );
 
 	  -- drop GetPrettyName		  
