@@ -14,12 +14,35 @@
 #  details.
 #
 
-# www/templates/simple3.tcl
 ad_page_contract {
-    @cvs_id $Id$
+    This is a simple 3 column layout called from portal::render and the like. 
+    It lays out the elements with portal::layout_elements and hands off
+    rendering of the individual portlets to the template in the
+    "element_src" var
+
+    @author arjun@openforce.net
+    @author yon@openforce.net
+    @version $Id$
 } -properties {
     element_list:onevalue
     element_src:onevalue
+    action_string:onevalue
+    theme_id:onevalue
+    return_url:onevalue
 }
 
-portal_layout_elements $element_list
+if {![exists_and_not_null action_string]} {
+    set action_string ""
+}
+
+if {![exists_and_not_null theme_id]} {
+    set theme_id ""
+}
+
+if {![exists_and_not_null return_url]} {
+    set return_url ""
+}
+
+portal::layout_elements $element_list
+
+ad_return_template
