@@ -44,7 +44,6 @@ if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -e
 
 # Added by Ben to bypass rendering if there's nada"
 if {[empty_string_p $element(content)]} {
-    ns_log Notice "BMA-debug: empty!"
     set empty_p 1
 } else {
     set empty_p 0
