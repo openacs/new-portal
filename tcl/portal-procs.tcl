@@ -11,6 +11,59 @@ ad_library {
 namespace eval portal {
 
     #
+    # acs-service-contract procs
+    #
+
+    ad_proc -public datasource_call {
+	ds_id
+	op
+	list_args
+    } {
+	Call a particular ds op
+    } {
+	ns_log warning "datasource_call: op= $op ds_id = $ds_id list args = [llength list_args]"
+	return [acs_sc_call portal_datasource $op $list_args [get_datasource_name $ds_id]]
+    }
+
+    ad_proc -public list_datasources {
+	{portal_id ""}
+    } {
+	Lists the datasources available to a portal or in general
+    } {
+	if {[empty_string_p $portal_id]} {
+	    # List all applets
+	    return [db_list select_all_datasources \
+		    "select impl_name from acs_sc_impls, 
+	    acs_sc_bindings, 
+	    acs_sc_contracts
+	    where
+	    acs_sc_impls.impl_id = acs_sc_bindings.impl_id and
+	    acs_sc_contracts.contract_id= acs_sc_bindings.contract_id and 
+	    acs_sc_contracts.contract_name='portal_datasource'"]
+	} else {
+	    # List from the DB
+	    return [db_list select_datasources \
+		    "select datasource_id 
+	    from portal_datasource_avail_map
+	    where portal_id = :portal_id"]
+	}
+    }
+
+    ad_proc -public datasource_dispatch {
+	portal_id
+	op
+	list_args
+    } {
+	Dispatch an operation to every datasource
+    } {
+	foreach datasource [list_datasources $portal_id] {
+	    # Callback on datasource
+	    datasource_call $datasource $op $list_args
+	}
+    }
+
+
+    #
     # Special Hacks
     #
 
@@ -106,7 +159,7 @@ namespace eval portal {
 	@return Fully rendered portal as an html string
 	@param portal_id
     } {
-	
+
 	ad_require_permission $portal_id portal_read_portal
 
 	set edit_p [ad_permission_p $portal_id portal_edit_portal]
@@ -114,11 +167,16 @@ namespace eval portal {
 	set css_path [ad_parameter css_path]
 	
 	# get the portal and layout
-	db_0or1row render_portal_and_layout_select "
-	select p.portal_id, p.name, t.filename as layout_template
-	from portals p, portal_layouts t
-	where p.layout_id = t.layout_id 
-	and p.portal_id = :portal_id" -column_array portal
+	db_0or1row render_portal_select "
+	select portal_id, portals.name, theme_id, filename as layout_template
+	from portals, portal_layouts
+	where portals.layout_id = portal_layouts.layout_id 
+	and portal_id = :portal_id" -column_array portal
+
+	# theme_id override
+	if { $theme_id != "" } {
+	    set portal(theme_id) $theme_id
+	}
 
 	# get the elements of the portal and put them in a list
 	db_foreach render_element_select "
@@ -148,7 +206,7 @@ namespace eval portal {
 	    <include src=\"@portal.layout_template@\" 
 	    element_list=\"@element_list@\"
 	    element_src=\"@element_src@\"
-	    theme_id=@theme_id@>"
+	    theme_id=@portal.theme_id@>"
 	}
 	
 	# Necessary hack to work around the acs-templating system
@@ -180,6 +238,7 @@ namespace eval portal {
 	@param var_stub A name upon which to graft the bits that will be \
 		passed to the template. 
     } {
+
 	array set elements $element_list
 	
 	foreach idx [list 1 2 3 4 5 6 7 8 9 i1 i2 i3 i4 i5 i6 i7 i8 i9 ] {
@@ -763,26 +822,19 @@ namespace eval portal {
 	@return A string containing the fully-rendered content for $element_id.
 	@param element_id 
     } {
-	
+
 	set query "
-	select pem.element_id, 
-	pem.name, 
+	select pem.element_id,
 	pem.datasource_id,
-	pem.theme_id,
 	pem.state,
-	pet.description,
-	pet.filename, 
-	pet.resource_dir
+	pet.filename as filename, 
+	pet.resource_dir as resource_dir
 	from portal_element_map pem, portal_element_themes pet
 	where pet.theme_id = :theme_id
 	and pem.element_id = :element_id "
-	
+
 	# get the element data and theme
 	db_1row evaluate_element_element_select $query -column_array element 
-	
-	# apply the path hack to the filename and the resourcedir
-	set element(filename) "[www_path]/$element(filename)"
-	set element(resource_dir) "[mount_point]/$element(resource_dir)"
 
 	# get the element's params
 	db_foreach evaluate_element_params_select "
@@ -794,38 +846,28 @@ namespace eval portal {
 	} if_no_rows {
 	    # this element has no config, set up some defaults
 	    set config(shaded_p) "f"
+	    set config(user_editable_p) "f"
 	}
 	
-	# shove the listified config into the element array
-	set element(config) [array get config]
-
-	# get the datasource
-	db_1row evaluate_element_datasource_select "
-	select
-	name,
-	link,
-	content
-	from portal_datasources
-	where datasource_id = $element(datasource_id) 
-	" -column_array datasource 
-	
+	# do the callback for the ::show proc
 	# evaulate the datasource.
-	if { [catch { 
-	    set element(content) \
-		    [ eval "$datasource(content) { $element(config) }" ] \
-		} errmsg ] 
-	} {
-	    ad_return_complaint 1 \
-		    "portal::evaluate_element error $datasource(name): 
-	    $errmsg"
-	}
-	
-	# pass the ds link, and the shaded_p param to the element
-	set element(link) $datasource(link)
-	set element(shaded_p) $config(shaded_p)
+	set element(content) \
+		[datasource_call \
+		$element(datasource_id) "Show" [list [array get config] ]] 
+
+	# pass some ds info, and the shaded_p param to the element
+	set element(name) \
+		[datasource_call \
+		$element(datasource_id) "GetPrettyName" [list]] 
+	set element(link) [datasource_call $element(datasource_id) "Link" [list]]
+	set element(shaded_p) $config(shaded_p) 
+	set element(user_editable_p) $config(user_editable_p)
+
+	# apply the path hack to the filename and the resourcedir
+	set element(filename) "[www_path]/$element(filename)"
+	set element(resource_dir) "[mount_point]/$element(resource_dir)"
 
 	return [array get element]
-
     }
     
 
