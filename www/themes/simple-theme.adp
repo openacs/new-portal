@@ -11,16 +11,23 @@
             </td>
             <td align=right class="portal_header" bgcolor="#cc0000">
 		<!-- include title buttons here -->
-		<a href=configure-element?element_id=@element_id@&op=edit>
-	        <img border=0 src="@dir@/e.gif" alt="edit"></a>
-   		<a href=configure-element?element_id=@element_id@&op=shade>
-		<if @shaded_p@ eq "f">
-	          <img border=0 src="@dir@/shade.gif" alt="shade"></a>
-		</if><else>
-	          <img border=0 src="@dir@/unshade.gif" alt="shade"></a>
-		</else>
-		<a href=configure-element?element_id=@element_id@&op=hide>
-		<img border=0 src="@dir@/x.gif" alt="hide"></a>
+		<if @user_editable_p@ eq "t">	
+		  <a href=configure-element?element_id=@element_id@&op=edit>
+	          <img border=0 src="@dir@/e.gif" alt="edit"></a>
+		</if>
+		<if @shadeable_p@ eq "t">		
+   		  <a href=configure-element?element_id=@element_id@&op=shade>
+		  <if @shaded_p@ eq "f">
+	            <img border=0 src="@dir@/shade.gif" alt="shade"></a>
+		  </if>
+		  <else>
+	              <img border=0 src="@dir@/unshade.gif" alt="shade"></a>
+		  </else>
+		</if>
+		<if @hideable_p@ eq "t">		
+		  <a href=configure-element?element_id=@element_id@&op=hide>
+		  <img border=0 src="@dir@/x.gif" alt="hide"></a>
+		</if>
             </td>
 	  </tr>
 
