@@ -42,7 +42,7 @@ create table portal_datasources (
 				primary key,
 	description		varchar(200),
 	name			varchar(200) not null,
-	pretty_name		varchar(200) not null
+	pretty_name		varchar(200)
 );
 
 
