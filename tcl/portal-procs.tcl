@@ -217,7 +217,7 @@ namespace eval portal {
     } {
         Get the name of this portal
     } {
-        return [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]
+	return [lang::util::localize [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]]
     }
 
     ad_proc -private get_name_not_cached {
