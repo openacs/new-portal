@@ -8,6 +8,97 @@
 --
 --
 
+
+create or replace package portal_page
+as
+	function new (
+		page_id                 in portal_pages.page_id%TYPE default null,
+		pretty_name		in portal_pages.pretty_name%TYPE default 'Untitled Page',
+		portal_id		in portal_pages.portal_id%TYPE default null,
+		layout_id		in portal_pages.layout_id%TYPE default null,
+		sort_key		in portal_pages.sort_key%TYPE default 0,
+		object_type		in acs_object_types.object_type%TYPE default 'portal_page',
+		creation_date		in acs_objects.creation_date%TYPE 
+					default sysdate,
+		creation_user		in acs_objects.creation_user%TYPE 
+					default null,
+		creation_ip		in acs_objects.creation_ip%TYPE default null, 
+		context_id		in acs_objects.context_id%TYPE default null 
+	) return portal_pages.page_id%TYPE;
+
+	procedure delete (
+		page_id                 in portal_pages.page_id%TYPE
+	);
+end portal_page;
+/
+show errors
+
+create or replace package body portal_page
+as
+	function new (
+		page_id                 in portal_pages.page_id%TYPE default null,
+		pretty_name		in portal_pages.pretty_name%TYPE default 'Untitled Page',
+		portal_id		in portal_pages.portal_id%TYPE default null,
+		layout_id		in portal_pages.layout_id%TYPE default null,
+		sort_key		in portal_pages.sort_key%TYPE default 0,
+		object_type		in acs_object_types.object_type%TYPE default 'portal_page',
+		creation_date		in acs_objects.creation_date%TYPE 
+					default sysdate,
+		creation_user		in acs_objects.creation_user%TYPE 
+					default null,
+		creation_ip		in acs_objects.creation_ip%TYPE default null, 
+		context_id		in acs_objects.context_id%TYPE default null 
+	) return portal_pages.page_id%TYPE
+	is
+		v_page_id portal_pages.page_id%TYPE;
+		v_layout_id portal_pages.layout_id%TYPE;
+		v_sort_key portal_pages.sort_key%TYPE;
+	begin
+		v_page_id := acs_object.new (
+			object_type	=> object_type,
+			creation_date	=> creation_date,
+			creation_user	=> creation_user,
+			creation_ip	=> creation_ip,
+			context_id	=> context_id
+		);
+
+                if layout_id is null then             
+                   select min(layout_id) into v_layout_id from portal_layouts;
+                else 
+                   v_layout_id := layout_id;
+                end if;
+
+                if portal_id is not null then             
+                   select max(sort_key) + 1  into v_sort_key 
+                   from portal_pages 
+                   where portal_id = portal_page.new.portal_id;                   
+                   if v_sort_key is null then
+                      v_sort_key := 0;
+                   end if;
+                else 
+                    raise_application_error(-20000, 'NULL portal_id sent to portal_page.new!');
+                end if;
+
+		insert into portal_pages 
+                       (page_id, pretty_name, portal_id, layout_id, sort_key)
+		values (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key);
+
+                return v_page_id;
+	end new;
+
+	procedure delete (
+		page_id         in portal_pages.page_id%TYPE
+	)
+	is
+	begin
+                delete from portal_current_page where page_id = page_id;
+                acs_object.delete(page_id);
+	end delete;
+
+end portal_page;
+/
+show errors
+
 create or replace package portal
 as
 	function new (
@@ -152,96 +243,6 @@ as
 	end delete;
 
 end portal;
-/
-show errors
-
-create or replace package portal_page
-as
-	function new (
-		page_id                 in portal_pages.page_id%TYPE default null,
-		pretty_name		in portal_pages.pretty_name%TYPE default 'Untitled Page',
-		portal_id		in portal_pages.portal_id%TYPE default null,
-		layout_id		in portal_pages.layout_id%TYPE default null,
-		sort_key		in portal_pages.sort_key%TYPE default 0,
-		object_type		in acs_object_types.object_type%TYPE default 'portal_page',
-		creation_date		in acs_objects.creation_date%TYPE 
-					default sysdate,
-		creation_user		in acs_objects.creation_user%TYPE 
-					default null,
-		creation_ip		in acs_objects.creation_ip%TYPE default null, 
-		context_id		in acs_objects.context_id%TYPE default null 
-	) return portal_pages.page_id%TYPE;
-
-	procedure delete (
-		page_id                 in portal_pages.page_id%TYPE
-	);
-end portal_page;
-/
-show errors
-
-create or replace package body portal_page
-as
-	function new (
-		page_id                 in portal_pages.page_id%TYPE default null,
-		pretty_name		in portal_pages.pretty_name%TYPE default 'Untitled Page',
-		portal_id		in portal_pages.portal_id%TYPE default null,
-		layout_id		in portal_pages.layout_id%TYPE default null,
-		sort_key		in portal_pages.sort_key%TYPE default 0,
-		object_type		in acs_object_types.object_type%TYPE default 'portal_page',
-		creation_date		in acs_objects.creation_date%TYPE 
-					default sysdate,
-		creation_user		in acs_objects.creation_user%TYPE 
-					default null,
-		creation_ip		in acs_objects.creation_ip%TYPE default null, 
-		context_id		in acs_objects.context_id%TYPE default null 
-	) return portal_pages.page_id%TYPE
-	is
-		v_page_id portal_pages.page_id%TYPE;
-		v_layout_id portal_pages.layout_id%TYPE;
-		v_sort_key portal_pages.sort_key%TYPE;
-	begin
-		v_page_id := acs_object.new (
-			object_type	=> object_type,
-			creation_date	=> creation_date,
-			creation_user	=> creation_user,
-			creation_ip	=> creation_ip,
-			context_id	=> context_id
-		);
-
-                if layout_id is null then             
-                   select min(layout_id) into v_layout_id from portal_layouts;
-                else 
-                   v_layout_id := layout_id;
-                end if;
-
-                if portal_id is not null then             
-                   select max(sort_key) + 1  into v_sort_key 
-                   from portal_pages 
-                   where portal_id = portal_page.new.portal_id;                   
-                   if v_sort_key is null then
-                      v_sort_key := 0;
-                   end if;
-                else 
-                    raise_application_error(-20000, 'NULL portal_id sent to portal_page.new!');
-                end if;
-
-		insert into portal_pages 
-                       (page_id, pretty_name, portal_id, layout_id, sort_key)
-		values (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key);
-
-                return v_page_id;
-	end new;
-
-	procedure delete (
-		page_id         in portal_pages.page_id%TYPE
-	)
-	is
-	begin
-                delete from portal_current_page where page_id = page_id;
-                acs_object.delete(page_id);
-	end delete;
-
-end portal_page;
 /
 show errors
 
