@@ -30,7 +30,6 @@ namespace eval portal {
     # acs-service-contract procs
     #
 
-
     ad_proc -private log_time {str} {
         global old_time
         set time "[expr [expr [clock clicks] + 1000000000] / 1000]"
@@ -58,12 +57,7 @@ namespace eval portal {
             set datasource_name [get_datasource_name $ds_id]
         }
         
-        ns_log notice "portal::datasource_call op=$op ds_id=$ds_id ds_name=$datasource_name"
-
-        log_time "aks2A before ds call"        
-        set result [acs_sc_call portal_datasource $op $list_args $datasource_name]
-        log_time "aks2A after ds call"        
-        return $result
+        return [acs_sc_call portal_datasource $op $list_args $datasource_name]
     }
 
     ad_proc -public list_datasources {
@@ -266,18 +260,18 @@ namespace eval portal {
 
         # if no page_num set, render page 0
         if {[empty_string_p $page_id] && [empty_string_p $page_num]} {
-            set page_id [get_page_id -portal_id $portal_id -sort_key 0]
+            set sort_key 0
         } elseif {![empty_string_p $page_num]} {
-            set page_id [get_page_id -portal_id $portal_id -sort_key $page_num]
+            set sort_key $page_num
         } 
 
         # get the portal and layout
         db_1row portal_select {} -column_array portal
+        set page_id $portal(page_id)
 
         # theme_id override  
         if { $theme_id != "" } { set portal(theme_id) $theme_id }
 
-        log_time "entering element_select"
         db_foreach element_select {} -column_array entry {
             # put the element IDs into buckets by region...
             lappend element_ids($entry(region)) $entry(element_id)
@@ -314,9 +308,7 @@ namespace eval portal {
 
         # Compile and evaluate the template
         set code [template::adp_compile -string $template]
-        set output [template::adp_eval code]
-
-        return $output
+        return [template::adp_eval code]
     }
 
     ad_proc -private layout_elements { 
@@ -335,11 +327,10 @@ namespace eval portal {
         @param var_stub A name upon which to graft the bits that will be \
                 passed to the template. 
     } {
+       array set elements $element_list
 
-        array set elements $element_list
-
-        foreach idx [list 1 2 3 4 5 6 7 8 9 i1 i2 i3 i4 i5 i6 i7 i8 i9 ] {
-            upvar [join [list $var_stub "_" $idx] ""] group
+        foreach idx [list 1 2 3 4 5 6] {
+            upvar "${var_stub}_$idx" group
             if { [info exists elements($idx) ] } {
                 set group $elements($idx)
             } else {
@@ -933,6 +924,10 @@ namespace eval portal {
         @param portal_id 
         @param ds_name
     } {
+
+        # XXX AKS: The whole issue of datasource/portlet naming must 
+        # be cleaned up! FIXME
+
         if {[empty_string_p $pretty_name]} {
             set pretty_name $ds_name
         }
@@ -1150,13 +1145,8 @@ namespace eval portal {
 
         @return A string containing the fully-rendered content for $element_id.
     } {
-
-        log_time "aks1 portal::evaluate_element START"
-
         # get the element data and theme
         db_1row element_select {} -column_array element 
-
-        log_time "ben1 portal::evaluate_element after element_select"
 
         # get the element's params
         db_foreach params_select {} {
@@ -1180,8 +1170,6 @@ namespace eval portal {
         # setting editable to false
         set config(user_editable_p) "f"
 
-        log_time "aks2 portal::evaluate_element about to call Show"
-
         # do the callback for the ::show proc
         # evaulate the datasource.
         if { [catch { set element(content) \
@@ -1203,26 +1191,36 @@ namespace eval portal {
         
     }
     
-    log_time "aks3 portal::evaluate_element done with call to Show"
-
     # trim the element's content
     set element(content) [string trim $element(content)]
 
         # We use the actual pretty name from the DB (ben)
         # FIXME: this is not as good as it should be
         if {$element(ds_name) == $element(pretty_name)} {
+            
+            ns_log notice "aks4 about to call get p name"
+
             set element(name) \
                     [datasource_call \
-                    $element(datasource_id) "GetPrettyName" [list]]
+                        -datasource_name $element(ds_name) \
+                        $element(datasource_id) \
+                        "GetPrettyName" \
+                        [list]]
         } else {
             set element(name) $element(pretty_name) 
         }
 
+        # The idea for the link proc in the datasource API is that
+        # it is the target for the href for the title of the portlet,
+        # but since we are using "hide_links_p" all the time, the
+        # value this returns is ignored
         set element(link) \
-                [datasource_call $element(datasource_id) "Link" [list]]
+                [datasource_call  \
+                    -datasource_name $element(ds_name) \
+                    $element(datasource_id) \
+                    "Link" \
+                    [list]]
         
-        log_time "ben3 portal::evalute_element not quite END"
-
         # done with callbacks, now set config params
         set element(shadeable_p) $config(shadeable_p) 
         set element(shaded_p) $config(shaded_p) 
@@ -1233,11 +1231,7 @@ namespace eval portal {
         # apply the path hack to the filename and the resourcedir
         set element(filename) "[www_path]/$element(filename)"
         # notice no "/" after mount point
-        log_time "ben3 portal::evalute_element not quite END v2"
         set element(resource_dir) "[mount_point]$element(resource_dir)"
-
-
-        log_time "aks3 portal::evaluate_element END"
 
         return [array get element]
     }
