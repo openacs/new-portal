@@ -1,6 +1,4 @@
 
-
-
 <!-- Element: '@name@' begin (text+html) -->
 <table border="0" width="100%" cellpadding="0" cellspacing="0" >
 <tr> <td width="11" height="11" background="@dir@/tbl-tleft.png"><img src="@dir@/tbl-tleft.png" alt=" " width="11" height="11"></td>
