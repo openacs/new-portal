@@ -76,19 +76,20 @@ db_foreach hidden_elements {
 
 
 # moving to other pages
-set other_page_avail_p 0
-set other_page_html "<select name=page_id>"
+template::multirow create pages page_id pretty_name
 
 db_foreach other_pages_select {
     select page_id, pretty_name
-     from portal_pages pem
+     from portal_pages pp
      where
        pp.portal_id = :portal_id 
        and pp.page_id != :page_id
     order by sort_key
 } {
     set other_page_avail_p 1
-    append other_page_html "<option value=$element_id>$name</option>\n"
+
+    template::multirow append pages \
+            $page_id $pretty_name
 }
 
 set dir "[portal::mount_point]/place-element-components"        

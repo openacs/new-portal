@@ -399,7 +399,7 @@ namespace eval portal {
                 <P>
                 Debug: element_list $element_list, layout_id $layout_id
                 <P>
-                :</b>
+                </b>
                 <include src=\"$portal(template)\" element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
@@ -462,6 +462,14 @@ namespace eval portal {
 		    db_dml show_here_update_sk {} 
 		    db_dml show_here_update_state {}
 		}		
+	    }
+            "move_to_page" {
+		set page_id [ns_set get $form page_id]
+		set element_id [ns_set get $form element_id]
+                
+                #ad_return_complaint 1 "$page_id/$element_id"
+
+                db_dml move_to_page {} 
 	    }
 	    "hide" {
 		set element_id_list [list]
