@@ -57,12 +57,12 @@ show errors;
 begin  
   acs_object_type.create_type (
     supertype     => 'acs_object',
-    object_type   => 'portal_layouts',
-    pretty_name   => 'Portal Layouts',
+    object_type   => 'portal_layout',
+    pretty_name   => 'Portal Layout',
     pretty_plural => 'Portal Layouts',
     table_name    => 'PORTAL_LAYOUTS',
     id_column     => 'LAYOUT_ID',
-    package_name  => 'portal_layouts'
+    package_name  => 'portal_layout'
   );
 end;
 /
@@ -73,7 +73,7 @@ declare
  attr_id acs_attributes.attribute_id%TYPE; 
 begin
   attr_id := acs_attribute.create_attribute ( 
-    object_type    => 'portal_layouts', 
+    object_type    => 'portal_layout', 
     attribute_name => 'NAME', 
     pretty_name    => 'Name', 
     pretty_plural  => 'Names', 
@@ -81,7 +81,7 @@ begin
   ); 
 
   attr_id := acs_attribute.create_attribute ( 
-    object_type    => 'portal_layouts', 
+    object_type    => 'portal_layout', 
     attribute_name => 'DESCRIPTION', 
     pretty_name    => 'Description', 
     pretty_plural  => 'Descriptions', 
@@ -135,7 +135,7 @@ declare
  attr_id acs_attributes.attribute_id%TYPE; 
 begin
   attr_id := acs_attribute.create_attribute ( 
-    object_type    => 'portal_element_themes', 
+    object_type    => 'portal_element_theme', 
     attribute_name => 'NAME', 
     pretty_name    => 'Name', 
     pretty_plural  => 'Names', 
@@ -143,7 +143,7 @@ begin
   ); 
 
   attr_id := acs_attribute.create_attribute ( 
-    object_type    => 'portal_element_themes', 
+    object_type    => 'portal_element_theme', 
     attribute_name => 'DESCRIPTION', 
     pretty_name    => 'Description', 
     pretty_plural  => 'Descriptions', 
@@ -151,7 +151,7 @@ begin
   ); 
 
   attr_id := acs_attribute.create_attribute ( 
-    object_type    => 'portal_element_themes', 
+    object_type    => 'portal_element_theme', 
     attribute_name => 'TYPE', 
     pretty_name    => 'Type', 
     pretty_plural  => 'Types', 
@@ -159,7 +159,7 @@ begin
   ); 
 
   attr_id := acs_attribute.create_attribute (
-    object_type    => 'portal_element_themes',
+    object_type    => 'portal_element_theme',
     attribute_name => 'FILENAME',
     pretty_name    => 'Filename',
     pretty_plural  => 'Filenames',
@@ -167,7 +167,7 @@ begin
   ); 
 
   attr_id := acs_attribute.create_attribute (
-    object_type    => 'portal_element_themes',
+    object_type    => 'portal_element_theme',
     attribute_name => 'resource_dir',
     pretty_name    => 'Resource Directory',
     pretty_plural  => 'Resource Directory',
