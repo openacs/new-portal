@@ -13,20 +13,15 @@ ad_page_contract {
 set user_id [ad_conn user_id]
 set my_url [ad_conn url]
 
-# this is actually the portal_id.  It's passed as element_id to make the template
-# designer's job a little easier (one less thing to pass, since it's seldom used anyway)
-#  perhaps it should be named something that can represent both values...?
-set portal_id $element_id
+# this is actually the portal_id.  It's passed as element_id to make
+# the template designer's job a little easier (one less thing to pass,
+# since it's seldom used anyway) perhaps it should be named something
+# that can represent both values...?  set portal_id $element_id
 
 # can this region be edited?
 if { [portal_region_immutable_p $region] } {
-    if { $default_portal_p } {
-	set immutable_p 0
-	set would_be_immutable_p 1
-    } else {
-	set immutable_p 1
-	set would_be_immutable_p 0
-    }
+    set immutable_p 1
+    set would_be_immutable_p 0
 } else {
     set immutable_p 0
     set would_be_immutable_p 0
