@@ -10,6 +10,8 @@ ad_page_contract {
 
 
 # XXX fix me themes
+# XXX check for name constraint violations
+
 # AKS: most of the references to "element" here are really
 # to DS
 
@@ -45,11 +47,11 @@ foreach element_id $element_ids {
     region,
     sort_key)
     values
-    ($new_element_id,
-    :name
+    (:new_element_id,
+    :name,
     :portal_id,
     :element_id,
-    nvl((select max(theme_id) from portal_element_themes), 1))
+    nvl((select max(theme_id) from portal_element_themes), 1),
     :region,
     nvl((select max(sort_key) + 1 from portal_element_map where region = :region), 1))"
 }
