@@ -20,7 +20,11 @@
 <if @immutable_p@ ne 1>
 <br>
 
+<if @add_avail_p@ ne 0>
 @add_html@
+</select><input type=submit name="op@region@" value="Add Here">
+</if>
+
 
 <if @region_count@ ne @all_count@ and @all_count@ gt 0>
   <input type=submit name="op@region@" value="Move All Checked Here"> <br>
