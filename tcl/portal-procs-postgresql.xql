@@ -65,7 +65,7 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::configure_dispatch.move_to_page_update">      
+<fullquery name="portal::move_to_page.update">      
   <querytext>
     update portal_element_map
     set page_id = :page_id, 
