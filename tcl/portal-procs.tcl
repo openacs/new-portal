@@ -217,7 +217,7 @@ namespace eval portal {
     } {
         Get the name of this portal
     } {
-        return [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]
+	return [lang::util::localize [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]]
     }
 
     ad_proc -private get_name_not_cached {
@@ -569,6 +569,7 @@ namespace eval portal {
                 <input type=hidden name=portal_id value=$portal_id>
                 <input type=hidden name=page_id value=$page_id>
                 <input type=hidden name=return_url value=@return_url@>
+                <input type=hidden name=anchor value=$page_id>
                 $layout_chunk
                 <input type=submit name=\"op_change_page_layout\" value=\"[_ new-portal.Change_Page_Layout]\">
                 </small>

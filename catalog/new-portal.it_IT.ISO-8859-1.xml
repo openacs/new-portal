@@ -34,6 +34,8 @@
   <msg key="simple_3column_layout_name">Semplice a 3 colonne</msg>
   <msg key="simple_red_theme_description">Un tema semplice basato su tabella rossa</msg>
   <msg key="simple_red_theme_name">semplice</msg>
+  <msg key="sloan_theme_description">Tema MIT Sloan</msg>
+  <msg key="sloan_theme_name">Sloan</msg>
   <msg key="transaction_failed">transazione fallita</msg>
   <msg key="Unused_Portlets">Portlet Inutilizzate</msg>
 </message_catalog>
