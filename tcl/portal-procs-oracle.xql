@@ -21,7 +21,7 @@
     <fullquery name="portal::delete.delete_portal">
         <querytext>
             begin
-                portal.delete(portal_id => :portal_id);
+                portal.del(portal_id => :portal_id);
             end;
         </querytext>
     </fullquery>
@@ -132,7 +132,7 @@
     <fullquery name="portal::page_delete.page_delete">
         <querytext>
             begin
-                portal_page.delete(page_id => :page_id);
+                portal_page.del(page_id => :page_id);
             end;
         </querytext>
     </fullquery>

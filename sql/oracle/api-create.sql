@@ -38,7 +38,7 @@ as
         context_id                  in acs_objects.context_id%TYPE default null
     ) return portal_pages.page_id%TYPE;
 
-    procedure delete (
+    procedure del (
         page_id                     in portal_pages.page_id%TYPE
     );
 
@@ -96,7 +96,7 @@ as
 
     end new;
 
-    procedure delete (
+    procedure del (
         page_id                     in portal_pages.page_id%TYPE
     )
     is
@@ -111,7 +111,7 @@ as
         select portal_id, sort_key
         into v_portal_id, v_sort_key
         from portal_pages
-        where page_id = portal_page.delete.page_id;
+        where page_id = portal_page.del.page_id;
 
         select (count(*) - 1)
         into v_page_count_from_0
@@ -124,7 +124,7 @@ as
 
                 delete
                 from portal_pages
-                where page_id = portal_page.delete.page_id;
+                where page_id = portal_page.del.page_id;
 
             elsif i > v_sort_key then
 
@@ -140,9 +140,9 @@ as
 
         end loop;
 
-        acs_object.delete(page_id);
+        acs_object.del(page_id);
 
-    end delete;
+    end del;
 
 end portal_page;
 /
@@ -165,7 +165,7 @@ as
         context_id                  in acs_objects.context_id%TYPE default null
     ) return portals.portal_id%TYPE;
 
-    procedure delete (
+    procedure del (
         portal_id                   in portals.portal_id%TYPE
     );
 end portal;
@@ -313,7 +313,7 @@ as
 
     end new;
 
-    procedure delete (
+    procedure del (
         portal_id                   in portals.portal_id%TYPE
     )
     is
@@ -321,15 +321,15 @@ as
 
         for page in (select page_id
                      from portal_pages
-                     where portal_id = portal.delete.portal_id
+                     where portal_id = portal.del.portal_id
                      order by sort_key desc)
         loop
-            portal_page.delete(page_id => page.page_id);
+            portal_page.del(page_id => page.page_id);
         end loop;
 
-        acs_object.delete(portal_id);
+        acs_object.del(portal_id);
 
-    end delete;
+    end del;
 
 end portal;
 /
@@ -350,7 +350,7 @@ as
         context_id                  in acs_objects.context_id%TYPE default null
     ) return portal_element_themes.theme_id%TYPE;
 
-    procedure delete (
+    procedure del (
         theme_id                    in portal_element_themes.theme_id%TYPE
     );
 
@@ -395,13 +395,13 @@ as
 
     end new;
 
-    procedure delete (
+    procedure del (
         theme_id                    in portal_element_themes.theme_id%TYPE
     )
     is
     begin
-        acs_object.delete(theme_id);
-    end delete;
+        acs_object.del(theme_id);
+    end del;
 
 end portal_element_theme;
 /
@@ -423,7 +423,7 @@ as
         context_id                  in acs_objects.context_id%TYPE default null
     ) return portal_layouts.layout_id%TYPE;
 
-    procedure delete (
+    procedure del (
         layout_id                   in portal_layouts.layout_id%TYPE
     );
 
@@ -473,13 +473,13 @@ as
 
     end new;
 
-    procedure delete (
+    procedure del (
         layout_id                   in portal_layouts.layout_id%TYPE
     )
     is
     begin
-        acs_object.delete(layout_id);
-    end delete;
+        acs_object.del(layout_id);
+    end del;
 
     procedure add_region (
         layout_id                   in portal_supported_regions.layout_id%TYPE,
@@ -512,7 +512,7 @@ as
         context_id                  in acs_objects.context_id%TYPE default null
     ) return portal_datasources.datasource_id%TYPE;
 
-    procedure delete (
+    procedure del (
         datasource_id               in portal_datasources.datasource_id%TYPE
     );
 
@@ -563,13 +563,13 @@ as
 
     end new;
 
-    procedure delete (
+    procedure del (
         datasource_id               in portal_datasources.datasource_id%TYPE
     )
     is
     begin
-        acs_object.delete(datasource_id);
-    end delete;
+        acs_object.del(datasource_id);
+    end del;
 
     procedure set_def_param (
         datasource_id               in portal_datasource_def_params.datasource_id%TYPE,

@@ -33,7 +33,7 @@ begin
         operation_name => 'GetMyName'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'GetMyName'
@@ -43,7 +43,7 @@ begin
         msg_type_name => 'portal_datasource.GetMyName.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.GetMyName.InputType',
         msg_type_id => msg_type_id
     );
@@ -52,7 +52,7 @@ begin
         msg_type_name => 'portal_datasource.GetMyName.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.GetMyName.OutputType',
         msg_type_id => msg_type_id
     );
@@ -63,7 +63,7 @@ begin
         operation_name => 'GetPrettyName'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'GetPrettyName'
@@ -73,7 +73,7 @@ begin
         msg_type_name => 'portal_datasource.GetPrettyName.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.GetPrettyName.InputType',
         msg_type_id => msg_type_id
     );
@@ -82,7 +82,7 @@ begin
         msg_type_name => 'portal_datasource.GetPrettyName.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.GetPrettyName.OutputType',
         msg_type_id => msg_type_id
     );
@@ -94,7 +94,7 @@ begin
         operation_name => 'Link'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'Link'
@@ -104,7 +104,7 @@ begin
         msg_type_name => 'portal_datasource.Link.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Link.InputType',
         msg_type_id => msg_type_id
     );
@@ -113,7 +113,7 @@ begin
         msg_type_name => 'portal_datasource.Link.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Link.OutputType',
         msg_type_id => msg_type_id
     );
@@ -124,7 +124,7 @@ begin
         operation_name => 'AddSelfToPage'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'AddSelfToPage'
@@ -134,7 +134,7 @@ begin
         msg_type_name => 'portal_datasource.AddSelfToPage.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.AddSelfToPage.InputType',
         msg_type_id => msg_type_id
     );
@@ -143,7 +143,7 @@ begin
         msg_type_name => 'portal_datasource.AddSelfToPage.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.AddSelfToPage.OutputType',
         msg_type_id => msg_type_id
     );
@@ -154,7 +154,7 @@ begin
         operation_name => 'Show'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'Show'
@@ -164,7 +164,7 @@ begin
         msg_type_name => 'portal_datasource.Show.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Show.InputType',
         msg_type_id => msg_type_id
     );
@@ -173,7 +173,7 @@ begin
         msg_type_name => 'portal_datasource.Show.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Show.OutputType',
         msg_type_id => msg_type_id
     );
@@ -184,7 +184,7 @@ begin
         operation_name => 'Edit'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'Edit'
@@ -194,7 +194,7 @@ begin
         msg_type_name => 'portal_datasource.Edit.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Edit.InputType',
         msg_type_id => msg_type_id
     );
@@ -203,7 +203,7 @@ begin
         msg_type_name => 'portal_datasource.Edit.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.Edit.OutputType',
         msg_type_id => msg_type_id
     );
@@ -214,7 +214,7 @@ begin
         operation_name => 'RemoveSelfFromPage'
     );
 
-    acs_sc_operation.delete (
+    acs_sc_operation.del (
         operation_id => op_id,
         contract_name => 'portal_datasource',
         operation_name => 'RemoveSelfFromPage'
@@ -224,17 +224,17 @@ begin
         msg_type_name => 'portal_datasource.RemoveSelfFromPage.InputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.RemoveSelfFromPage.InputType',
         msg_type_id => msg_type_id
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_id := acs_sc_msg_type.get_id (
         msg_type_name => 'portal_datasource.RemoveSelfFromPage.OutputType'
     );
 
-    acs_sc_msg_type.delete (
+    acs_sc_msg_type.del (
         msg_type_name => 'portal_datasource.RemoveSelfFromPage.OutputType',
         msg_type_id => msg_type_id
     );
@@ -242,7 +242,7 @@ begin
     -- drop the contract
     contract_id := acs_sc_contract.get_id ('portal_datasource');
 
-    acs_sc_contract.delete (
+    acs_sc_contract.del (
         contract_id => contract_id,
         contract_name => 'portal_datasource'
     );

@@ -31,7 +31,7 @@
     <fullquery name="portal::datasource::delete.delete_datasource">
         <querytext>
            begin
-             portal_datasource.delete(
+             portal_datasource.del(
                datasource_id => :datasource_id
              );
            end;
