@@ -100,7 +100,7 @@ namespace eval portal {
     }
     
 
-    ad_proc -public render { portal_id } {
+    ad_proc -public render { portal_id {theme_id ""} } {
 	Get a portal by id. If it's not found, say so.
 	
 	@return Fully rendered portal as an html string
@@ -146,8 +146,9 @@ namespace eval portal {
 	    set template "<master src=\"@master_template@\">
 	    <property name=\"title\">@portal.name@</property>
 	    <include src=\"@portal.layout_template@\" 
-	    element_list=\"@element_list@\" 
-	    element_src=\"@element_src@\">"
+	    element_list=\"@element_list@\"
+	    element_src=\"@element_src@\"
+	    theme_id=@theme_id@>"
 	}
 	
 	# Necessary hack to work around the acs-templating system
@@ -779,26 +780,43 @@ namespace eval portal {
 	}
     }
 
-    ad_proc -private evaluate_element { element_id } {
+    ad_proc -private evaluate_element { element_id {theme_id ""} } {
 	Combine the datasource, template, etc.  Return a chunk of HTML.
 	
 	@return A string containing the fully-rendered content for $element_id.
 	@param element_id 
     } {
 	
+	if { $theme_id != "" } {
+	    set query "
+	    select pem.element_id, 
+	    pem.name, 
+	    pem.datasource_id,
+	    pem.theme_id,
+	    pem.state,
+	    pet.description,
+	    pet.filename, 
+	    pet.resource_dir
+	    from portal_element_map pem, portal_element_themes pet
+	    where pet.theme_id = :theme_id
+	    and pem.element_id = :element_id "
+	} else {
+	    set query "
+	    select pem.element_id, 
+	    pem.name, 
+	    pem.datasource_id,
+	    pem.theme_id,
+	    pem.state,
+	    pet.description,
+	    pet.filename, 
+	    pet.resource_dir
+	    from portal_element_map pem, portal_element_themes pet
+	    where pem.theme_id = pet.theme_id
+	    and pem.element_id = :element_id "	    
+	}
+	
 	# get the element data and theme
-	db_1row evaluate_element_element_select "
-	select pem.element_id, 
-	pem.name, 
-	pem.datasource_id,
-	pem.theme_id,
-	pem.state,
-	pet.description,
-	pet.filename, 
-	pet.resource_dir
-	from portal_element_map pem, portal_element_themes pet
-	where pem.theme_id = pet.theme_id
-	and pem.element_id = :element_id " -column_array element 
+	db_1row evaluate_element_element_select $query -column_array element 
 	
 	# apply the path hack to the filename and the resourcedir
 	set element(filename) "[www_path]/$element(filename)"
