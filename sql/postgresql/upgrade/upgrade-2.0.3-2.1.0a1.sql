@@ -1,6 +1,6 @@
 -- fixes bug where you couldn't delete and emply page - 476
 
-create function portal_page__delete(integer)
+create or replace function portal_page__delete(integer)
 returns integer as '
 declare
     p_page_id                       alias for $1;
