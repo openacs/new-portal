@@ -64,16 +64,13 @@ as
 			context_id	=> context_id
 		);
 
-
-
-		-- if we don't have a template_id this is a stand-alone portal
 		if template_id is null then	       
 		   select max(theme_id) into v_theme_id from portal_element_themes;
 		   select min(layout_id) into v_layout_id from portal_layouts;
 
 		   insert into portals 
-			  (portal_id, name, layout_id, theme_id)
-		   values (v_portal_id, name, v_layout_id, v_theme_id);
+			  (portal_id, name, layout_id, theme_id, portal_template_p)
+		   values (v_portal_id, name, v_layout_id, v_theme_id, portal_template_p);
 
 		else
 		-- we have to copy things like the template, theme form the template
@@ -84,9 +81,6 @@ as
 		   insert into portals 
 			  (portal_id, name, layout_id, theme_id, portal_template_p, template_id)
 		   values (v_portal_id, name, v_layout_id, v_theme_id, 'f', portal.new.template_id);
-
-
-
 		end if;
 
 		return v_portal_id;
