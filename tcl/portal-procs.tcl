@@ -1,12 +1,10 @@
 # tcl/portal-procs.tcl
-#
-# "The Mystic Portal! Oooo!"  --Toy Story 2
 
 ad_library {
     Portal.
     
-    @author Ian Baker (ibaker@arsdigita.com)
-    @creation-date 12/1/2000
+    @author 
+    @creation-date 
     @cvs-id $Id$
 }
 
@@ -58,48 +56,77 @@ ad_proc -public portal_render_portal { portal_id } {
     @creation-date 9/28/2001
 } {
 
-set portal_id 2317
-
-set user_id [ad_conn user_id]
-
-db_0or1row select_portal_and_layout "
-  select
+    set user_id [ad_conn user_id]
+    #set admin_p [ad_permission_p $package_id admin]
+    #set write_p [ad_permission_p $package_id write]
+    #set read_p [ad_permission_p $package_id read]
+    set master_template [ad_parameter master_template]
+    set css_path [ad_parameter css_path]
+    
+    db_0or1row select_portal_and_layout "
+    select
     p.portal_id,
     p.name,
     p.owner_id,
-    l.filename as layout
-  from portals p, portal_layouts l
-  where  p.portal_id = :portal_id
-  and l.layout_id = p.layout_id
-  and p.owner_id = :user_id" -column_array portal
+    t.filename as template,
+    't' as portal_read_p,
+    't' as layout_read_p
+    from portals p, portal_layouts t
+    where p.layout_id = t.layout_id 
+  and p.portal_id = :portal_id" -column_array portal
 
-# XXX some security needed here
 
 
-# put the element IDs into buckets by region...
-foreach entry_list [portal_get_elements $portal(portal_id)] {
-    array set entry $entry_list
-    lappend element_ids($entry(region)) $entry(element_id)
-}    
-
-# is there an automatic way to determine this path?
-set element_src "[portal_path]/www/render_element"
-
-set element_list [array get element_ids]
-
-if { [empty_string_p $element_list] } {
-    set portal_id $portal(portal_id)
-    ad_return_complaint 1 \
-	"This portal has no elements.
-         You might want to <a href=\"element-layout?[export_url_vars portal_id]\">edit</a> it."
+if { ! [portal_exists_p $portal_id] } {
+    ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
     ad_script_abort
 }
 
-ad_return_template [portal_path]/www/index
+return [array get portal]
+}
 
+ad_proc -public portal_setup_element_src { portal_id } {
+    Setup the element src - hack
 
+    @return 
+    @param element_id 
+    @param region_id 
+    @author Arjun Sanyal
+    @creation-date Sept 2001
+} {
+    return "[portal_path]/www/render-element"
 
 }
+
+
+ad_proc -public portal_setup_element_list { portal_id } {
+    Setup the element list - hack
+
+    @return 
+    @param element_id 
+    @param region_id 
+    @author Arjun Sanyal
+    @creation-date Sept 2001
+} {
+
+    # put the element IDs into buckets by region...
+    foreach entry_list [portal_get_elements $portal_id] {
+	array set entry $entry_list
+	lappend element_ids($entry(region)) $entry(element_id)
+    }    
+        
+    set element_list [array get element_ids]
+
+    if { [empty_string_p $element_list] } {
+	ad_return_complaint 1 \
+		"This portal has no elements.
+	You might want to <a href=\"element-layout?[export_url_vars portal_id]\">edit</a> it."
+	ad_script_abort
+    }
+
+    return $element_list
+}
+
 
 
 ad_proc -public portal_render_element { element_id region_id } {
@@ -147,17 +174,11 @@ ad_proc -public portal_evaluate_element { element_id } {
     @author Ian Baker (ibaker@arsdigita.com)
     @creation-date December 2000
 } {
+ 
     # the caching in here needs to be completely redone.  It totally sucks.
+    # aks - all catching removed
 
-    # get the element.
-    if { [info exists flush] } {
-	set flush_p 1
-	util_memoize_flush [ list portal_fetch_element_data $element_id ]
-    } else {
-	set flush_p ""
-    }
-
-    array set element [util_memoize [list portal_get_element_data $element_id] ]
+    array set element [eval [list portal_get_element_data $element_id]]
 
     if { ! [info exists element(element_id)] } {
 	# no permission, probably.  Debug?
@@ -165,12 +186,8 @@ ad_proc -public portal_evaluate_element { element_id } {
     }
 
     # get the datasource and configuration.
-    if { [info exists flush] } {
-	util_memoize_flush [list portal_get_datasource $element(datasource_id)]
-	util_memoize_flush [list portal_get_element_parameters $element(config_id)]
-    }
-    array set datasource [ util_memoize [list portal_get_datasource $element(datasource_id)] ]
-    set element(config) [ util_memoize [list portal_get_element_parameters $element(config_id) ] ]
+    array set datasource [eval [list portal_get_datasource $element(datasource_id)] ]
+    set element(config) [eval [list portal_get_element_parameters $element(element_id) ]]
 
     if { ! [info exists datasource(datasource_id)] } {
 	# permissions likely didn't match.  Debug?
@@ -183,17 +200,22 @@ ad_proc -public portal_evaluate_element { element_id } {
 	return
     }
 
+
     # evaulate the datasource.
     #  it might be good to (optionally) cache this, since it can be an expensive step.
     set element(content) [ eval { 
 	portal_render_datasource_$datasource(data_type) [array get datasource] $element(config)
     } ]
+	
+	
+	# this is sometimes used when interacting with templates in the filesystem.
+	set element(mime_type) $datasource(mime_type)
+	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
 
-    # this is sometimes used when interacting with templates in the filesystem.
-    set element(mime_type) $datasource(mime_type)
-    regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
-    
-    return [array get element]
+	# aks: good here
+
+	return [array get element]
+
 }
 
 ad_proc -private portal_get_element_data { element_id } {
@@ -201,26 +223,29 @@ ad_proc -private portal_get_element_data { element_id } {
 
     @param element_id The element's ID.
     @return a list-ified array containing the information from portal_elements and portal_templates for $element_id.
-    @author Ian Baker (ibaker@arsdigita.com)
-    @creation-date December 2000
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date Sept 2001
 } {
     set user_id [ad_conn user_id]
 
+# XXX issue here with element config params
+
     if { ! [db_0or1row select_element_data {
+
+
 	select
-	element_id,
-	name,
-	datasource_id,
-	template_id,
-	description,
-	config_id,
-	exportable_p,
-	filename,
-	decode(acs_permission.permission_p(element_id, :user_id, 'read'), 't', 1, 'f', 0) as element_read_p,
-	decode(acs_permission.permission_p(template_id, :user_id, 'read'), 't', 1, 'f', 0) as template_read_p
-	from portal_elem_tmpl
-	where
-	element_id = :element_id } -column_array element_data ]
+	pem.element_id,
+	pem.name,
+	pem.datasource_id,
+	pem.theme_id,
+	pet.description,
+	pet.filename,
+	't' as element_read_p,
+	't' as template_read_p
+	from portal_element_map pem, portal_element_themes pet
+	where pem.theme_id = pet.theme_id
+	and pem.element_id = :element_id
+    } -column_array element_data ]
      } {
 	return -code error "That element doesn't exist."
     }
@@ -243,12 +268,12 @@ ad_proc -private portal_get_element_data { element_id } {
 }
 
 
-ad_proc -private portal_get_element_parameters { config_id } {
+ad_proc -private portal_get_element_parameters { element_id } {
     Fetch element parameters.
 
-    @param config_id The configuration's ID.
-    @author Ian Baker (ibaker@arsdigita.com)
-    @creaton-date December 2000
+    @param element_id
+    @author 
+    @creaton-date 
 } {
     set user_id [ad_conn user_id]
 
@@ -256,16 +281,18 @@ ad_proc -private portal_get_element_parameters { config_id } {
     select key, value
     from portal_element_parameters
     where
-      config_id = :config_id and
-      acs_permission.permission_p(config_id, :user_id, 'read') = 't'
+      element_id = :element_id 
     order by key" {
 	lappend config($key) $value
     } if_no_rows {
-	# this might happen if the passed config_id was null, which will happen occasionally.
-	# (though not too often, since this empty return value will be cached...)
+	
+	# this might happen if the passed config_id was null, 
+	# which will happen occasionally. (though not too often, 
+	#since this empty return value will be cached...)
 	array set config {}
     }
     
+    ns_log notice "aks got here"
     return [array get config]
 }
 
@@ -281,27 +308,26 @@ ad_proc -private portal_get_datasource { datasource_id } {
     if { ! [db_0or1row select_datasource_data {
 	select
         datasource_id,
+        data_type,
+        mime_type,
         name,
         description,
-        content,
-        mime_type,
-        data_type,
-        default_config_id,
-	decode(acs_permission.permission_p(datasource_id, :user_id, 'read'), 't', 1, 'f', 0) as datasource_read_p
+        content
 	from portal_datasources
 	where datasource_id = :datasource_id } -column_array datasource ]
      } {
 	return -code error "That datasource doesn't exist."
     }
 
-    if { ! $datasource(datasource_read_p) } {
-	return -code error "Inadequate permissions on datasource $datasource_id"
-    }
+#    if { ! $datasource(datasource_read_p) } {
+#	return -code error "Inadequate permissions on datasource $datasource_id"
+#    }
     
     # There's no provision to flush these, but they should update so
     # infrequently as to never need flushing (essentially, only when
     # the package is upgraded).
-    array set datasource [ util_memoize [ list portal_data_type data_type $datasource(data_type) ] ]
+
+#    array set datasource  [ list portal_data_type data_type $datasource(data_type) ]
     
     return [array get datasource]
 }
