@@ -29,9 +29,14 @@ if { [catch {set element_data [portal::evaluate_element $element_id] } errmsg ] 
 
 # consistency is good.
 set element(region) $region
+set new_name ""
+regsub -all -- {-} $element(name) "_" new_name
+append new_name "::get_pretty_name"
 
-ns_log notice  "AKS5: [$element(name)::get_pretty_name]"
 
+ns_log notice  "AKS67: [$new_name]"
+
+set element(name) [$new_name]
 # return the appropriate template for that element.
 # AKS ???
 ad_return_template "layouts/mime-types/$element(mime_type_noslash)"
