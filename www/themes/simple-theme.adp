@@ -5,10 +5,16 @@
         <table border=0 cellpadding=3 width=100% cellspacing=0>
 	  <tr>
             <td class="portal_header" bgcolor="#cc0000" align=left>
-              <a style="text-decoration: none" href=@link@>
-	      <font face="arial,helvetica" size="+1" color="#cccccc">
-	       <b>@name@</b></font></a>
+              <font size="+1">
+              <if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
+                <b>@name@</b>
+              </if><else>
+                <a style="text-decoration: none" href=@link@><b>@name@</b></a>
+              </else>
+              </font>
             </td>
+         
+
             <td align=right class="portal_header" bgcolor="#cc0000">
 		<!-- include title buttons here -->
 		<if @user_editable_p@ eq "t">	

@@ -1,5 +1,5 @@
 
-<!-- The nada theme, I'm a code hero  -->
+<!-- The ''nada'' theme, I'm a ''code'' hero!  -->
 
 <!-- Element: '@name@' begin (text+html) -->
 <table border="0" width="100%" cellpadding="0" cellspacing="0" >
@@ -7,12 +7,21 @@
 <!-- Title/button bar begin -->
 <tr>
 <td>
-	<table cellpadding="0" cellspacing="0" border="0" width="100%">
-              <tbody>
-                <tr>
-                  <td align=left valign=middle width=88%  bgcolor="#eeeee7">
-			<font face="verdana,arial,helvetica" size="+1">
-				<a style="text-decoration: none" href=@link@><b>@name@</b></a></font></td>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+    <tr>
+    <td align=left valign=middle width=88%  bgcolor="#eeeee7">
+      <font face="verdana,arial,helvetica" size="+1">
+	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
+          <b>@name@</b>
+        </if><else>
+          <a style="text-decoration: none" href=@link@><b>@name@</b></a>
+        </else>
+      </font>
+    </td>
+
+
+
 		<if @user_editable_p@ eq "t">	
                   <td align=right width=7%>
 			<a href=configure-element?element_id=@element_id@&op=edit>[edit]</a></td>
