@@ -492,6 +492,7 @@ ad_proc -public configure { portal_id } {
     set element_src "[portal::www_path]/place-element"
     
     
+    # the <include> sources /www/place-element.tcl
     set template "	
     <master src=\"@master_template@\">
     <form action=\"@target_stub@-2\">
@@ -513,9 +514,10 @@ ad_proc -public configure { portal_id } {
     </form>
     
     <center>
-    <form method=get action=\"revert\">
+    <form method=get action=\"@target_stub@-2\">
+    <input type=hidden name=portal_id value=@portal_id@>
     <%= [export_form_vars portal_id ] %>
-    <input type=submit value=\"Revert To The Default\">
+    <input type=submit name=op value=\"Revert To Default\">
     </form>
     </center>
 "
@@ -583,11 +585,11 @@ ad_proc -public configure_dispatch { portal_id query } {
 nope} {
     ad_require_permission $portal_id portal_read_portal
     ad_require_permission $portal_id portal_edit_portal
-   
+
     # remove the portal_id from the query
     set query [string tolower $query]
     regsub {[&]*portal_id=\d+} $query "" query
-
+    
     # get then remove the op including an optional target_region
     regexp {[&]*op([\d])?=([\w\+]+)} $query whole_op target_region op
     regsub {[&]*op[\d]?=[\w\+]+} $query "" query
@@ -625,13 +627,17 @@ nope} {
 		ns_returnredirect "portal-config.tcl?[export_url_vars portal_id]"
 	    }
 	} 
-	"add" {
+	"add a new element here" {
+	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
 	}
-	"remove" {
+	"remove all checked elements" {
+	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
 	}
-	"revert" {
+	"revert to default" {
+	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
 	}
 	"update_layout" {
+	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
 	}
 	default {
 	    ns_log Warning \
