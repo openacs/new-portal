@@ -174,7 +174,7 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     return $new_element_id
 }
 
-ad_proc -public move_element {portal_id element_id sort_key region direction} {
+ad_proc -public swap_element {portal_id element_id sort_key region direction} {
     Moves a PE in the direction indicated by swapping it with its neighbor
 
     @param portal_id 
@@ -247,6 +247,40 @@ ad_proc -public move_element {portal_id element_id sort_key region direction} {
 	ad_return_complaint 1 "portal::move_element: transaction failed"
     }
 }    
+
+
+ad_proc -public move_elements {portal_id element_id_list target_region} {
+    Moves a PE in the direction indicated by swapping it with its neighbor
+
+    @param portal_id 
+    @param element_id_list
+    @param target_region
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+    
+    ad_require_permission $portal_id portal_read_portal
+    ad_require_permission $portal_id portal_edit_portal
+    
+    # AKS: XXX locked areas
+    foreach element_id $element_id_list {
+
+	# just move each element to the bottom of the region, don't 
+	# fuss with keeping sort_keys in order at this point
+	db_dml move_elements \
+		"update portal_element_map 
+	set region = :target_region, 
+	    sort_key = (select nvl(
+	                          (select max(sort_key) 
+	                           from portal_element_map 
+	                           where portal_id = :portal_id 
+	                           and region = :target_region), 
+                                 1) 
+	               from dual)
+	where element_id = :element_id"
+
+    }    
+}
 
 ad_proc -public set_element_param { element_id key value } {
     Set an element param
