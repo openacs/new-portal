@@ -299,16 +299,140 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::add_element_param_value.insert">      
+  <querytext>
+    insert into portal_element_parameters
+    (parameter_id, element_id, configured_p, key, value) values
+    (acs_object_id_seq.nextval, :element_id, 't', :key, :value)
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::.">      
+  <querytext>
+    
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::remove_element_param_value.delete">      
+  <querytext>
+     delete from portal_element_parameters where
+     element_id= :element_id and
+     key= :key and
+     value= :value
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::remove_all_element_param_values.delete">      
+  <querytext>
+	delete from portal_element_parameters where
+	element_id= :element_id and
+	key= :key
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::get_element_param.select">      
+  <querytext>
+    select value
+    from portal_element_parameters 
+    where element_id = :element_id and 
+    key = :key
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::evaluate_element.element_select">      
+  <querytext>
+    select pem.element_id,
+    pem.datasource_id,
+    pem.state,
+    pet.filename as filename, 
+    pet.resource_dir as resource_dir
+    from portal_element_map pem, portal_element_themes pet
+    where pet.theme_id = :theme_id
+    and pem.element_id = :element_id
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::evaluate_element.params_select">      
+  <querytext>
+    select key, value
+    from portal_element_parameters
+    where element_id = :element_id
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::configure_element.select">      
+  <querytext>
+    select portal_id, datasource_id
+    from portal_element_map 
+    where element_id = :element_id
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::configure_element.hide_update">      
+  <querytext>
+    update portal_element_map 
+    set state =  'hidden' 
+    where element_id = :element_id
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::get_datasource_name.select">      
+  <querytext>
+    select name from portal_datasources where datasource_id = :ds_id
+  </querytext>
+</fullquery> 
 
+<fullquery name="portal::get_datasource_id.select">      
+  <querytext>
+    select datasource_id from portal_datasources where name = :ds_name
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::make_datasource_available.insert">      
+  <querytext>
+    insert into portal_datasource_avail_map
+    (portal_datasource_id, portal_id, datasource_id)
+    values
+    (:new_p_ds_id, :portal_id, :ds_id)
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::make_datasource_unavailable.delete">      
+  <querytext>
+    delete from portal_datasource_avail_map
+    where portal_id =  :portal_id
+    and datasource_id = :ds_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::toggle_datasource_availability.select">      
+  <querytext>
+    select 1  
+    from portal_datasource_avail_map
+    where portal_id = :portal_id and
+    datasource_id = :ds_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_element_ids_by_ds.select">      
+  <querytext>
+    select element_id from portal_element_map
+    where portal_id= :portal_id 
+    and datasource_id= :ds_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_layout_id.select">      
+  <querytext>
+    select layout_id from portals where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::exists_p.select">      
+  <querytext>
+    select 1 from portals where portal_id = :portal_id
+  </querytext>
+</fullquery> 
 
 
 </queryset>
