@@ -634,11 +634,18 @@ nope} {
 	    regexp {[&]*element_id=(\d+)} $query "" element_id
 
 	    db_transaction {
-		db_dml set_region_element \
+		# The new element's sk will be the last in the region
+		db_dml set_element_region_and_sk \
 			"update portal_element_map 
-		set region = :target_region
-		where element_id = :element_id"
-		
+		         set region = :target_region, 
+		         sort_key = (select nvl((select max(sort_key) + 1
+		                                 from portal_element_map 
+		                                 where portal_id = :portal_id 
+		                                 and region = :target_region), 
+		                                 1) 
+		                     from dual)
+		                     where element_id = :element_id"
+
 		db_dml unhide_element \
 			"update portal_element_map 
 		set state = 'full' 
@@ -960,6 +967,7 @@ ad_proc -private get_elements { portal_id } {
     select m.element_id, m.region, m.sort_key
     from portal_element_map m
     where m.portal_id = :portal_id
+    and m.state != 'hidden'
     order by region, sort_key, element_id" -column_array entry {
 	lappend entries [array get entry]
     } if_no_rows {
