@@ -252,7 +252,38 @@ namespace eval portal {
 	    #	 }
 	    #	     
 	    # get the portal.
+
 	    
+	    # get the themes, template::multirow is not working here
+	    set theme_count 0
+	    set theme_data "<br>"
+
+	    # get the current theme
+	    db_1row configure_portal_curr_theme_select "
+	    select distinct
+	    theme_id as cur_theme_id
+	    from portal_element_map
+	    where portal_id = :portal_id
+	    " 
+	    db_foreach configure_theme_select "
+	    select 
+	    pet.theme_id, 
+	    pet.name, 
+	    pet.description 
+	    from portal_element_themes pet
+	    order by name "  {
+		if { $cur_theme_id == $theme_id } {
+		    append theme_data "<label><input type=radio name=theme_id 
+		    value=$theme_id checked><b>$name - $description</label></b><br>"
+		} else {
+		    append theme_data "<label><input type=radio name=theme_id 
+		    value=$theme_id>$name - $description</label><br>"
+		}   
+}
+
+	    append theme_data "<input type=submit name=op value=\"Update Theme\">"
+	    
+	    # get the portal.	    
 	    db_1row configure_portal_select "
 	    select
 	    p.portal_id,
@@ -276,7 +307,29 @@ namespace eval portal {
 
 	    set element_list [array get fake_element_ids]
 	    set element_src "[portal::www_path]/place-element"
-	
+
+#	       <multiple name=themes>
+#	       <td>
+#		 <table border=0>
+#		 <tr>
+#		 <td>
+#		   <input type=radio name=theme_id value=@themes.theme_id@
+#		   <if @theme_id@ eq @themes.theme_id@>checked</if>>
+#		   <b>@themes.name@</b><br>
+#		     <table border=0 align=center>
+#		      <tr><td>
+#		      <include src=\"@themes.resource_dir@/example\" 
+#		       resource_dir=\"@themes.resource_dir@\"> 
+#		       </td></tr>
+#		       </table>
+#
+#		 <font size=-1>@themes.description@</font>
+#		 </td>
+#		 </tr>
+#		 </table>
+#	       </td>
+#	       </multiple>
+#	 
 	    # the <include> sources /www/place-element.tcl
 	    set template "	
 	    <master src=\"@master_template@\">
@@ -296,6 +349,14 @@ namespace eval portal {
 	    <include src=\"@portal.template@\" element_list=\"@element_list@\" 
 	    element_src=\"@element_src@\" action_string=@action_string@>
 	    
+	    
+	    <form method=post action=@action_string@>
+	    <input type=hidden name=portal_id value=@portal_id@>
+	    <b>Change Theme:</b>
+	    @theme_data@
+	    </form>
+
+
 	    <b>Undo Your Changes:</b>
 	    <form method=get action=\"@target_stub@-2\">
 	    <input type=hidden name=portal_id value=@portal_id@>
@@ -367,7 +428,7 @@ namespace eval portal {
 	ad_require_permission $portal_id portal_edit_portal
 	
 	set op [ns_set get $form op]
-	
+
 	switch $op {
 	    "Rename" { 
 		portal::update_name $portal_id [ns_set get $form new_name]
@@ -425,6 +486,14 @@ namespace eval portal {
 		             where element_id = :element_id"
 		    }
 		} 
+	    }
+	    "Update Theme" {
+		set theme_id [ns_set get $form theme_id] 
+		
+		db_dml configure_dispatch_update_theme \
+			"update portal_element_map 
+		set theme_id = :theme_id
+		where portal_id = :portal_id"
 	    }
 	    "revert to default" {
 		ad_return_complaint 1 \
@@ -723,6 +792,7 @@ namespace eval portal {
 	pem.name, 
 	pem.datasource_id,
 	pem.theme_id,
+	pem.state,
 	pet.description,
 	pet.filename, 
 	pet.resource_dir
@@ -775,9 +845,10 @@ namespace eval portal {
 	set element(mime_type) $datasource(mime_type)
 	regsub -all {/} $element(mime_type) {+} element(mime_type_noslash)
 
-	# pass the ds link to the element
+	# pass the ds link, and the shaded_p param to the element
 	set element(link) $datasource(link)
-
+	set element(shaded_p) $config(shaded_p)
+	
 	return [array get element]
 
     }
