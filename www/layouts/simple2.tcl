@@ -2,10 +2,10 @@
 ad_page_contract {
     @cvs_id $Id$
 } {
-    element_list:onevalue
-    element_src:onevalue
-    {theme_id:onevalue,optional ""}
-    {action_string:onevaue,optional ""}
+    {element_list:trim,optional ""}
+    {element_src:trim,optional ""}
+    {theme_id:integer,optional ""}
+    {action_string:trim,optional ""}
 
 } -properties {
     element_list:onevalue
