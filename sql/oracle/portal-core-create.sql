@@ -30,20 +30,11 @@ create table portal_datasources (
 				references acs_objects(object_id)
 				constraint p_datasources_datasource_id_pk
 				primary key,
-	-- lame flag until real metadata arrives
-	secure_p		char(1) default 'f'
-				constraint p_datasources_secure_p_ck
-				check(secure_p in ('t', 'f')),
+	description		varchar(4000),
 	configurable_p		char(1) default 'f'
 				constraint p_elements_configurable_p_ck
 				check(configurable_p in ('t', 'f')),
-	name			varchar(200) not null,
-	link			varchar(200),
-	description		varchar(4000),
-	config_path		varchar(200),
-	-- the name of a tcl proc, like content, that returns the edit html
-	edit_content		varchar(200) default NULL,	
-	content			varchar(4000)
+	name			varchar(200) not null
 );
 
 
