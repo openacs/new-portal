@@ -20,6 +20,7 @@ begin
 
     -- set up the portal perms hierarchy
     -- and root privs to global priv names
+    acs_privilege.add_child('read','portal_read_portal');
     acs_privilege.add_child('portal_edit_portal','portal_read_portal');
     acs_privilege.add_child('portal_admin_portal','portal_edit_portal');
     acs_privilege.add_child('create','portal_create_portal');
