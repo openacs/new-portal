@@ -1223,9 +1223,10 @@ namespace eval portal {
     ad_proc -private hidden_elements_list { 
         {-portal_id:required}
     } {
-        Returns a list of "hidden" element avaliable to a portal
+        Returns a list of "hidden" element avaliable to a portal. Use a 1 second cache here
+        to fake a per-connection cache.
     } {        
-        return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id"]
+        return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id" 1]
     }
 
     ad_proc -private hidden_elements_list_not_cached { 
