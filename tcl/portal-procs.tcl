@@ -82,6 +82,7 @@ namespace eval portal {
     #
 
     ad_proc -public create {
+	{-template_id ""} 
 	{-portal_template_p "f"} 
 	{-layout_name "'Simple 2-Column'"} 
 	user_id 
@@ -99,13 +100,14 @@ namespace eval portal {
 	"select layout_id from
 	portal_layouts where
 	name = $layout_name "
-	
+
 	# insert the portal and grant user-level permission on it.    
 	return [ db_exec_plsql insert_portal {
 	    begin
 	    
 	    :1 := portal.new ( 
-	    layout_id => :layout_id
+	    layout_id => :layout_id,
+	    template_id => :template_id
 	    );
 	    
 	    acs_permission.grant_permission ( 
@@ -569,6 +571,18 @@ namespace eval portal {
 	}
     }
 
+    ad_proc -private get_portal_template_id { portal_id } {
+	Returns this portal's template_id or the null string if it dosent have a portal template
+    } {
+	if { [db_0or1row get_portal_template_id_select \
+		"select template_id from portals where portal_id = :portal_id and template_id is not null"] } { 
+	    return $template_id
+	} else { 
+	    return ""
+	}
+    }
+
+
     ad_proc -public template_configure { portal_id return_url } {
 	Return a portal configuration page. 
 	All form targets point to file_stub-2.
@@ -934,14 +948,19 @@ namespace eval portal {
 
 	set ds_id [get_datasource_id $ds_name]
 
-	# First, check if this portal has a portal template, and
-	# that template has an element of this DS in it
-	if { [db_string add_element_to_region_template_check \
+	# First, check if this portal has a portal template and
+	# that that template has an element of this DS in it. If 
+	# so, copy stuff. If not, just insert normally. 
+	if { [db_0or1row add_element_to_region_template_check_new \
 		"select template_id 
-	from portals p , portal_element_map pem
+	from portals p, portal_element_map pem
 	where p.portal_id = :portal_id
-	and p.portal_id = pem.portal_id
-	and pem.datasource_id = :ds_id" -default ""] != "" } {
+	and p.template_id = pem.portal_id
+	and pem.datasource_id = :ds_id" ] == 1 } {
+
+	    ns_log notice "aks2"
+	    
+
 	    # I have a template with the element, copy the element from
 	    # the template to my portal
 
@@ -989,11 +1008,14 @@ namespace eval portal {
 		from portal_element_parameters
 		where element_id = (select element_id
 		                    from portal_element_map
-		                    where portal_id = :portal_id
+		                    where portal_id = :template_id
 		                    and datasource_id = :ds_id)
 	    }
 
 	} else {
+
+	    ns_log notice "aks3"
+
 	    # no template, or the template dosen't have this DS
 	    # or I'm a template!
 	    set new_element_id [db_nextval acs_object_id_seq]
