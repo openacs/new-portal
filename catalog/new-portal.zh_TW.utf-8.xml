@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.0.3" locale="zh_TW" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="zh_TW" charset="utf-8">
 
+  <msg key="Add_Page">新增</msg>
+  <msg key="Change_Theme">更改佈景主題:</msg>
+  <msg key="Change_Theme_1">更改佈景主題</msg>
+  <msg key="Create_a_new_page">新增頁</msg>
+  <msg key="Go_back">回上頁</msg>
+  <msg key="lt_Revert_the_entire_por">回復為預設配置</msg>
+  <msg key="Move_to_page">移至</msg>
+  <msg key="Page">頁</msg>
   <msg key="Page_1">頁
 </msg>
+  <msg key="Rename_Page">變更名稱</msg>
+  <msg key="Revert">回復</msg>
+  <msg key="Unused_Portlets">未使用的Portlets</msg>
 </message_catalog>
