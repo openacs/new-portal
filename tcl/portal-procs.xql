@@ -34,9 +34,11 @@
 <fullquery name="portal::render.portal_select">      
   <querytext>
     select p.name, p.portal_id, p.theme_id as theme_id, 
-    pl.layout_id as layout_id, pl.filename as layout_filename
+    pl.layout_id as layout_id, pl.filename as layout_filename, 
+    pp.page_id as page_id
     from portals p, portal_pages pp, portal_layouts pl
-    where :page_id = pp.page_id 
+    where pp.sort_key = :sort_key
+    and pp.portal_id = :portal_id
     and pp.portal_id = p.portal_id
     and pp.layout_id = pl.layout_id
   </querytext>
