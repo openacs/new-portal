@@ -18,15 +18,22 @@
 
 %>
 
-<form method=post action=@action_string@>
-<input type=hidden name=portal_id value=@portal_id@>
-<input type=hidden name=region value=@region@>
-<input type=hidden name=page_id value=@page_id@>
 
 <table border=0 width="100%">
 <tr><td>
 
 <multiple name=element_multi>
+
+<if @element_multi.rownum@ eq 1>
+
+<form method=post action=@action_string@>
+<input type=hidden name=portal_id value=@portal_id@>
+<input type=hidden name=region value=@region@>
+<input type=hidden name=page_id value=@page_id@>
+
+</if>
+
+
 <center>  
 <table class="portlet-config" cellpadding=0 cellspacing=0 border="0" bground="white" width="95%">
     <tr><td class="element-header-text"><%= [lang::util::localize "@element_multi.name@"] %></td>
