@@ -10,7 +10,6 @@ ad_page_contract {
     region:onevalue
 }
 
-set user_id [ad_conn user_id]
 set my_url [ad_conn url]
 
 # this is actually the portal_id.  It's passed as element_id to make
