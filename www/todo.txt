@@ -1,16 +1,14 @@
 
 
-1. create new index page that gives the user a choice of 
-portals that they own to show
-
+1. bboard ds
 2. layout-element page broken for non root users?
 
+- clean up portal-procs.tcl
+- start on admin dir
+- deletion of portals
 
 notes:
 
 - both simple layouts working for root user
 
 
-- clean up portal-procs.tcl
-- create bboard ds
-- start on admin dir
