@@ -1,4 +1,5 @@
 # tcl/portal-procs.tcl
+
 ad_library {
     Portal.
     
@@ -9,7 +10,7 @@ ad_library {
 
 namespace eval portal {
 
-    ad_proc -public create_portal {user_id {layout_name "Simple 2-Column"}} {
+    ad_proc -public create_portal {user_id {layout_name "'Simple 2-Column'"}} {
     Create a new portal for the passed in user id. 
 
     @return The newly created portal's id
@@ -100,7 +101,7 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     where name = :ds_name"
 
     # set up a unique name for the PE
-    if { [db_0or1row pe_name_unique_check "select  
+    if { [db_0or1row pe_name_unique_check "select 1  
     from portal_element_map
     where portal_id = :portal_id and
     name = :ds_name"] } {
@@ -238,22 +239,32 @@ ad_proc -public render_portal { portal_id } {
     where p.layout_id = t.layout_id 
   and p.portal_id = :portal_id" -column_array portal
 
-    if { ! [portal_exists_p $portal_id] } {
+    if { ! [exists_p $portal_id] } {
 	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
 	ad_script_abort
     }
 
-    set __adp_stub "[full_portal_path]/www/"
+    # This hack is to work around the acs-templating system
+    set __adp_stub "[full_portal_path]/www/."
+    set {master_template} \"master\" 
+
     set code [template::adp_compile -string $template]
+    ns_log notice "AKS22 got here $code"
     set output [template::adp_eval code]
+
+
+
 
     if {![empty_string_p $output]} {
         set mime_type [template::get_mime_type]
         set header_preamble [template::get_mime_header_preamble $mime_type]
 
+
 	ns_return 200 $mime_type "$header_preamble $output"
     }
-    return 
+    
+    return
+
 }
 
 ad_proc -public render_element { element_id region_id } {
@@ -329,7 +340,7 @@ ad_proc -public evaluate_element { element_id } {
     # evaulate the datasource.
     #  it might be good to (optionally) cache this, since it can be an expensive step.
     set element(content) [ eval { 
-	render_datasource_$datasource(data_type) [array get datasource] $element(config)
+	portal_render_datasource_$datasource(data_type) [array get datasource] $element(config)
     } ]
 	
 	
@@ -626,24 +637,9 @@ ad_proc -public portal_path { } {
     
     @return path to portal package
     @creation-date Spetember 2001
-} { return "/packages/new-portal" }
-
-ad_proc -public exists_p { portal_id } {
-    Check if a portal by that id exists.
-
-    @return 1 on success, 0 on failure
-    @param a portal_id
-    @author Arjun Sanyal (arjun@openforce.net)
-    @creation-date September 2001
-} {
-    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} { 
-	return 1
-    } else { 
-	return 0 
-    }
+} { 
+    return "/packages/new-portal" 
 }
-
-
 
 ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
     Split a list up into a bunch of variables for inserting into a layout
@@ -653,19 +649,38 @@ ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
     - $var_stub_i8, each contining the portal_ids that belong in that region.
 
     @creation-date 12/11/2000
-    @param element_id_list An [array get]'d array, keys are regions, values are lists of element_ids.
-    @param var_stub A name upon which to graft the bits that will be passed to the template.
+    @param element_id_list An [array get]'d array, keys are regions, \
+	     values are lists of element_ids.
+    @param var_stub A name upon which to graft the bits that will be \
+	     passed to the template. 
 } {
     array set elements $element_list
-    
+	 
     foreach idx [list 1 2 3 4 5 6 7 8 9 i1 i2 i3 i4 i5 i6 i7 i8 i9 ] {
-	upvar [join [list $var_stub "_" $idx] ""] group
-	if { [info exists elements($idx) ] } {
-	    set group $elements($idx)
-	} else {
-	    set group {}
-	}
+	 upvar [join [list $var_stub "_" $idx] ""] group
+	 if { [info exists elements($idx) ] } {
+	     set group $elements($idx)
+	 } else {
+	     set group {}
+	 }
     }
 }
 
+#
+#ad_proc -public exists_p { portal_id } {
+#    Check if a portal by that id exists.
+#
+#    @return 1 on success, 0 on failure
+#    @param a portal_id
+#    @author Arjun Sanyal (arjun@openforce.net)
+#    @creation-date September 2001
+#} {
+#    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} { 
+#	 return 1
+#    } else { 
+#	 return 0 
+#    }
+#}
+#
+    
 } # namespace
