@@ -5,7 +5,7 @@
 <querytext>
 select count(*) as num_regions
 from portal_supported_regions
-where layout_id = :layout_id"
+where layout_id = :layout_id
 </querytext>
 </fullquery>
 
@@ -45,7 +45,7 @@ where
 
 <fullquery name="hidden_elements">
 <querytext>
-select element_id, name
+select element_id, pem.pretty_name
 from portal_element_map pem, portal_pages pp
 where
 pp.portal_id = :portal_id 
