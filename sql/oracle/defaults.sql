@@ -86,6 +86,12 @@ begin
         resource_dir => 'themes/deco-theme'
     );
 
+    theme_id := portal_element_theme.new (
+        name => 'Sloan',
+        description => 'MIT Sloan theme',
+        filename => 'themes/sloan-theme',
+        resource_dir => 'themes/sloan-theme');
+
 end;
 /
 show errors

@@ -25,7 +25,6 @@ create function inline_0 ()
 returns integer as '
 declare
     layout_id                       portal_layouts.layout_id%TYPE;
-    theme_id                        portal_element_themes.theme_id%TYPE;
 begin
 
     -- two-column layout, without a header.
@@ -64,26 +63,33 @@ begin
     perform portal_layout__add_region(layout_id, ''3'');
 
     -- Now, some element themes.
-    theme_id := portal_element_theme__new(
+    perform portal_element_theme__new(
         ''simple'',
         ''A simple red table-based theme'',
         ''themes/simple-theme'',
         ''themes/simple-theme''
     );
 
-    theme_id := portal_element_theme__new(
+    perform portal_element_theme__new(
         ''nada'',
         ''The un-theme. No graphics.'',
         ''themes/nada-theme'',
         ''themes/nada-theme''
     );
 
-    theme_id := portal_element_theme__new(
+    perform portal_element_theme__new(
         ''deco'',
         ''An Art Deco theme'',
         ''themes/deco-theme'',
         ''themes/deco-theme''
     );
+
+    perform portal_element_theme__new (
+              ''Sloan'',    -- name
+              ''MIT Sloan theme'', -- description
+              ''themes/sloan-theme'', -- filename
+              ''themes/sloan-theme'' -- directory
+            );
 
     return 0;
 
