@@ -87,8 +87,8 @@ begin
     );
 
     theme_id := portal_element_theme.new (
-        name => 'Sloan',
-        description => 'MIT Sloan theme',
+        name => '#new-portal.sloan_theme_name#',
+        description => '#new-portal.sloan_theme_description#',
         filename => 'themes/sloan-theme',
         resource_dir => 'themes/sloan-theme');
 
