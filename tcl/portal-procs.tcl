@@ -23,7 +23,7 @@ namespace eval portal {
     # Main portal procs
     #
 
-    ad_proc -private create {user_id {layout_name "'Simple 2-Column'"}} {
+    ad_proc -public create {user_id {layout_name "'Simple 2-Column'"}} {
 	Create a new portal for the passed in user id. 
 	
 	@return The newly created portal's id
@@ -61,7 +61,7 @@ namespace eval portal {
 	}]
     }
     
-    ad_proc -private delete { portal_id } {
+    ad_proc -public delete { portal_id } {
 	Destroy the portal
 	@param portal_id
     } {
@@ -77,7 +77,7 @@ namespace eval portal {
 	}]
     }
 	
-    ad_proc -private get_name { portal_id } {
+    ad_proc -public get_name { portal_id } {
 	Get the name of this portal
 	
 	@param portal_id
@@ -255,7 +255,6 @@ namespace eval portal {
 	    where p.layout_id = t.layout_id and p.portal_id = :portal_id
 	    " -column_array portal
 	    
-	    # XXX fixme
 	    # fake some elements so that the <list> in the template has
 	    # something to do.
 #	    foreach region [ portal::get_regions $portal(layout_id) ] {
@@ -436,7 +435,7 @@ namespace eval portal {
     # Element Procs
     #
 
-    ad_proc -private add_element { portal_id ds_name } {
+    ad_proc -public add_element { portal_id ds_name } {
 	Add an element to a portal given a datasource name. Used for procs
 	that have no knowledge of regions
 	
@@ -481,7 +480,7 @@ namespace eval portal {
     }
 
 
-    ad_proc -private remove_element {element_id} {
+    ad_proc -public remove_element {element_id} {
 	Remove an element from a portal
     } {
 	db_transaction {
@@ -744,33 +743,18 @@ namespace eval portal {
 	from portal_datasources
 	where datasource_id = :element(datasource_id) 
 	" -column_array datasource 
-
+	
 	# evaulate the datasource.
-	set element(content) [ eval { 
-	    render_datasource_$datasource(data_type) \
-		    [array get datasource] $element(config)
-	} ]
-	    
-	    
-	    
-	    if [catch {set output [ eval "$src(content) { $cf }" ] } errmsg ] {
-		ad_return_complaint 1 "portal::evaluate_element 
-		Error processing datasource '$src(name)': $errmsg"
-    }
-    
-
-ad_proc -private render_datasource_tcl_proc { ds cf } {
-    Accepts params.
-} {
-    array set src $ds
-
-    if [catch {set output [ eval "$src(content) { $cf }" ] } errmsg ] }
-
-    # in case the data feed code didn't explicitly return.
-    return $output
-}
-
-
+	if { [catch { 
+	    set element(content) \
+		    [ eval "$datasource(content) { $element(config) }" ] \
+		} errmsg ] 
+	} {
+	    ad_return_complaint 1 \
+		    "portal::evaluate_element error $datasource(name): 
+	    $errmsg"
+	}
+	
 	# this is sometimes used when interacting with templates in the
 	# filesystem.
 	set element(mime_type) $datasource(mime_type)
@@ -778,42 +762,9 @@ ad_proc -private render_datasource_tcl_proc { ds cf } {
 
 	return [array get element]
 
-}
-
-ad_proc -private get_layout_id { portal_id } {
-    Get the layout_id of a layout template for a portal.
-
-    @param portal_id The portal_id.
-    @return A layout_id.
-} {
-    db_1row get_layout_id_select {
-	select layout_id from portals where portal_id = :portal_id
     }
-
-    return $layout_id
-}
-
-
-
-ad_proc -private exists_p { portal_id } {
-    Check if a portal by that id exists.
-
-    @return 1 on success, 0 on failure
-    @param a portal_id
-} {
-    if { [db_0or1row exists_p_select "select 1 from portals where portal_id = :portal_id"]} { 
-	return 1
-    } else { 
-	return 0 
-    }
-}
-
-
-
-
-
-
-
+    
+    
     #
     # Datasource helper procs
     #
@@ -896,5 +847,46 @@ ad_proc -private exists_p { portal_id } {
 	}
     }
 
+    #
+    # Misc procs
+    #
 
+    ad_proc -private get_element_ids_by_ds {portal_id ds_name} {
+	Get element IDs for a particular portal and a datasource name
+    } {
+	set ds_id [get_datasource_id $ds_name]
+	
+	return [db_list select_element_ids \
+		"select element_id from portal_element_map
+	where portal_id= :portal_id 
+	and datasource_id= :ds_id"]
+    }
+    
+    ad_proc -private get_layout_id { portal_id } {
+	Get the layout_id of a layout template for a portal.
+	
+	@param portal_id The portal_id.
+	@return A layout_id.
+    } {
+	db_1row get_layout_id_select {
+	    select layout_id from portals where portal_id = :portal_id
+	}
+	
+	return $layout_id
+    }    
+    
+    ad_proc -private exists_p { portal_id } {
+	Check if a portal by that id exists.
+	
+	@return 1 on success, 0 on failure
+	@param a portal_id
+    } {
+	if { [db_0or1row exists_p_select "select 1 from portals where portal_id = :portal_id"]} { 
+	    return 1
+	} else { 
+	    return 0 
+	}
+    }
+    
+        
 }
