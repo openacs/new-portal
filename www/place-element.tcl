@@ -9,6 +9,7 @@ ad_page_contract {
     region:onevalue
     action_string:onevalue
     portal_id:onevalue
+    element_multi:multirow
 }
 
 set layout_id [portal::get_layout_id $portal_id]
@@ -22,8 +23,8 @@ where layout_id = :layout_id"
 set region_count 0
 template::multirow create element_multi element_id name sort_key state
 db_foreach select_elements_by_region {
-    select element_id, name, sort_key, state
-     from portal_element_map
+    select element_id, pretty_name as name,  sort_key, state
+     from portal_element_map pem
      where
        portal_id = :portal_id 
        and region = :region 

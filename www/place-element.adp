@@ -10,7 +10,7 @@
 
 <multiple name=element_multi>
     @element_multi.name@
-    <if @state@ ne "locked">
+    <if @element_multi.state@ ne "locked">
 
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
