@@ -1,17 +1,19 @@
 <master src="@master_template@">
 <property name="title">Edit Portal: @portal.name@</property>
 
+
+
+<form action="portal-update-name">
 Change Name:
 <P>
-<input type="text" name="name" value="@portal.name@">
-
-<center>
-<form action="update_name">
+<input type="text" name="new_name" value="@portal.name@">
 <%= [export_form_vars portal_id ] %>
+<center>
 <input type=submit value="Update Name">
 </form>
 </center>
 
+<P>
 
 <form method=get action="element-layout-2">
 <%= [export_form_vars portal_id ] %>
