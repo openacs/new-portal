@@ -626,8 +626,7 @@ ad_proc -public portal_exists_p { portal_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date September 2001
 } {
-    if { [db_0or1row select_portal_exists 
-    "select 1 from portals where portal_id = :portal_id"]} { 
+    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} { 
 	return 1
     } else { 
 	return 0 
