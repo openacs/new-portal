@@ -252,13 +252,9 @@ ad_proc -public render_portal { portal_id } {
     ns_log notice "AKS22 got here $code"
     set output [template::adp_eval code]
 
-
-
-
     if {![empty_string_p $output]} {
         set mime_type [template::get_mime_type]
         set header_preamble [template::get_mime_header_preamble $mime_type]
-
 
 	ns_return 200 $mime_type "$header_preamble $output"
     }
@@ -339,10 +335,11 @@ ad_proc -public evaluate_element { element_id } {
 
     # evaulate the datasource.
     #  it might be good to (optionally) cache this, since it can be an expensive step.
+    ns_log Notice "aks29 got here"
     set element(content) [ eval { 
 	portal_render_datasource_$datasource(data_type) [array get datasource] $element(config)
     } ]
-	
+    ns_log Notice "aks30 got here content is $element(content)"	
 	
 	# this is sometimes used when interacting with templates in the filesystem.
 	set element(mime_type) $datasource(mime_type)
@@ -666,21 +663,6 @@ ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
     }
 }
 
-#
-#ad_proc -public exists_p { portal_id } {
-#    Check if a portal by that id exists.
-#
-#    @return 1 on success, 0 on failure
-#    @param a portal_id
-#    @author Arjun Sanyal (arjun@openforce.net)
-#    @creation-date September 2001
-#} {
-#    if { [db_0or1row select_portal_exists "select 1 from portals where portal_id = :portal_id"]} { 
-#	 return 1
-#    } else { 
-#	 return 0 
-#    }
-#}
-#
-    
+
+
 } # namespace
