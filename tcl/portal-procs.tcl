@@ -702,7 +702,7 @@ namespace eval portal {
         {-extra_td_html ""}
         {-table_html_args ""}
     } {
-        Wraps ad_dimensional to create a dotlrn navbar
+        Wraps portal::dimensional to create a dotlrn navbar
 
 	@return the id of the page
 	@param portal_id 
@@ -721,7 +721,7 @@ namespace eval portal {
 
         set ad_dim_struct "{ page_num \"Page:\" 0  [list $ad_dim_struct] }"
 
-        return [ad_dimensional -no_header \
+        return [dimensional -no_header \
                 -no_bars \
                 -link_all $link_all \
                 -td_align $td_align \
@@ -1523,5 +1523,96 @@ namespace eval portal {
         
     }
 
+    ad_proc dimensional {
+        {-no_header:boolean}
+        {-no_bars:boolean}
+        {-link_all 0}
+        {-th_bgcolor "#ECECEC"}
+        {-td_align "center"}
+        {-extra_td_html ""}
+        {-table_html_args "border=0 cellspacing=0 cellpadding=3 width=100%"}
+        {-pre_html ""}
+        {-post_html ""}
+        option_list 
+        {url {}} 
+        {options_set ""} 
+        {optionstype url}
+    } {
+        An enhanced ad_dimensional. see that proc for usage details
+    } {
+
+        set html {}
+
+        if {[empty_string_p $option_list]} {
+            return
+        }
+        
+        if {[empty_string_p $options_set]} {
+            set options_set [ns_getform]
+        }
+        
+        if {[empty_string_p $url]} {
+            set url [ad_conn url]
+        }
+        
+        append html "<table $table_html_args>\n<tr>\n"
+        
+        if {!$no_header_p} {
+            foreach option $option_list { 
+                append html " <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
+            }
+        }
+        
+        append html "</tr>\n"
+        
+        append html "<tr>\n"
+        
+        foreach option $option_list { 
+            append html " <td align=$td_align>"
+            
+            if {!$no_bars_p} {
+                append html "\["
+            }
+            
+            # find out what the current option value is.
+            # check if a default is set otherwise the first value is used
+            set option_key [lindex $option 0]
+            set option_val {}
+            if { ! [empty_string_p $options_set]} {
+                set option_val [ns_set get $options_set $option_key]
+            }
+
+            if { [empty_string_p $option_val] } {
+                set option_val [lindex $option 2]
+            }
+            
+            set first_p 1
+            foreach option_value [lindex $option 3] { 
+                set thisoption [lindex $option_value 0]
+                if { $first_p } {
+                    set first_p 0
+                } else {
+                    if {!$no_bars_p} {
+                        append html " | "
+                    } else {
+                        append html "   "                    
+                    }
+                } 
+                
+                if {[string compare $option_val $thisoption] == 0 && !$link_all} {
+                    append html "$pre_html<strong>[lindex $option_value 1]</strong>$post_html"
+                } else {
+                    append html "<a href=\"$url?[export_ns_set_vars "url" $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption]\">$pre_html[lindex $option_value 1]$post_html</a>"
+                }
+            }
+            
+            if {!$no_bars_p} {
+                append html "\]"
+            } 
+            
+            append html "$extra_td_html</td>\n "
+        }
+        append html "</tr>\n</table>\n"
+    }
 
 }
