@@ -13,6 +13,13 @@ ad_page_contract {
 set user_id [ad_conn user_id]
 
 # XXX security!
-portal_delete_portal $portal_id
+
+db_dml delete_portal_perms "
+delete from acs_permissions where object_id = $portal_id"
+
+db_dml delete_portal "
+delete from portals where portal_id = $portal_id"
+
+portal::delete_portal $portal_id
 
 ns_returnredirect "index"
