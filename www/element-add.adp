@@ -13,7 +13,7 @@ Elements that you aren't currently using:<br>
 </select>
 
 <p>
-What should this element be named:<br>
+What should this element be named (XXX - fixme unique names):<br>
 <b>Name:</b> <input type="text" name="name" value="Untitled-1">
 </p>
 
