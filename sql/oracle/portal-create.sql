@@ -5,7 +5,8 @@
 --
 --
 -- arjun@openforce.net
--- started Sept. 26, 2001
+-- $Id$
 --
 
 @portal-core-create.sql
+@objects-create.sql
