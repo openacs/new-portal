@@ -1470,8 +1470,8 @@ namespace eval portal {
                 [datasource_call \
                 $element(datasource_id) "GetPrettyName" [list]] 
 
-        set element(link) \
-                [datasource_call $element(datasource_id) "Link" [list]]
+        # no "Link" for raw elements
+        set element(link) {}
 
         # done with callbacks, now set config params
         set element(shadeable_p) $config(shadeable_p) 
