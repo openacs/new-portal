@@ -16,6 +16,12 @@ begin
     acs_privilege.create_privilege('portal_edit_portal');
     acs_privilege.create_privilege('portal_admin_portal');
 
+    -- set up the portal perms hierarchy
+    -- and root privs to global priv names
+    acs_privilege.add_child('admin','portal_create_portal');
+    acs_privilege.add_child('admin','portal_delete_portal');
+    acs_privilege.add_child('admin','portal_admin_portal');
+
 end;
 /
 show errors
