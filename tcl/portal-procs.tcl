@@ -146,7 +146,7 @@ namespace eval portal {
 
         set page_name_list [list "Page 1"]
         set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
-	ns_log Warning "CREATING A NEW PORTAL"
+	
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
             set page_name_list [list]
