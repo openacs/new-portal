@@ -21,7 +21,7 @@ namespace eval portal {
     } {
 	Call a particular ds op
     } {
-	ns_log warning "datasource_call: op= $op ds_id = $ds_id list args = [llength list_args]"
+	ns_log notice "portal::datasource_call op= $op ds_id = $ds_id list args = [llength list_args]"
 	return [acs_sc_call portal_datasource $op $list_args [get_datasource_name $ds_id]]
     }
 
@@ -972,9 +972,6 @@ namespace eval portal {
 	and p.template_id = pem.portal_id
 	and pem.datasource_id = :ds_id" ] == 1 } {
 
-	    ns_log notice "aks2"
-	    
-
 	    # I have a template with the element, copy the element from
 	    # the template to my portal
 
@@ -1027,8 +1024,6 @@ namespace eval portal {
 	    }
 
 	} else {
-
-	    ns_log notice "aks3"
 
 	    # no template, or the template dosen't have this DS
 	    # or I'm a template!
@@ -1315,31 +1310,20 @@ namespace eval portal {
 		[datasource_call \
 		$element(datasource_id) "Show" [list [array get config] ]] } \
 		errmsg ] } {
-	    ns_log notice "portal::render_element show callback Error! $errmsg"	
+	    ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"	
+            ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 	}
-
-	ns_log notice "aks18 [array get config]"
 
 	set element(name) \
 		[datasource_call \
 		$element(datasource_id) "GetPrettyName" [list]] 
 
-	ns_log notice "aks17 [array get config]"
-
-	set element(link) [datasource_call $element(datasource_id) "Link" [list]]
+	set element(link) \
+                [datasource_call $element(datasource_id) "Link" [list]]
 
 	# done with callbacks, now set config params
-
-	ns_log notice "aks15 [array get config]"
-
 	set element(shadeable_p) $config(shadeable_p) 
-
-	ns_log notice "aks16"
-
 	set element(shaded_p) $config(shaded_p) 
-
-	ns_log notice "aks14"
-
 	set element(hideable_p) $config(hideable_p) 
 	set element(user_editable_p) $config(user_editable_p)
 
