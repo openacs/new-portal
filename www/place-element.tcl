@@ -16,7 +16,9 @@ set my_url [ad_conn url]
 # this is actually the portal_id.  It's passed as element_id to make
 # the template designer's job a little easier (one less thing to pass,
 # since it's seldom used anyway) perhaps it should be named something
-# that can represent both values...?  set portal_id $element_id
+# that can represent both values...?  
+
+set portal_id $element_id
 
 # can this region be edited?
 if { [portal_region_immutable_p $region] } {
