@@ -527,9 +527,7 @@ namespace eval portal {
                     <center>
                     [_ new-portal.lt_No_Elements_on_this_p]
                     <form method=post action=@action_string@>
-                    <input type=hidden name=portal_id value=$portal_id>
-                    <input type=hidden name=page_id value=$page_id>
-                    <input type=hidden name=return_url value=@return_url@>
+                    [export_vars -form { portal_id page_id return_url { anchor $page_id } }]
                     <input type=submit name=\"op_remove_empty_page\" value=\"[_ new-portal.Remove_Empty_Page]\">
                     </form>
                     </center>
