@@ -10,5 +10,6 @@
 
 @@ portal-core-create.sql
 @@ objects-create.sql
-@@ api-create
-@@ defaults
+@@ api-create.sql
+@@ portal-element-sc-create.sql
+@@ defaults.sql
