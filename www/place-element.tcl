@@ -66,3 +66,4 @@ db_foreach hidden_elements {} {
 }
 
 set imgdir "[portal::mount_point]/place-element-components"        
+set location [ad_conn location]

@@ -469,6 +469,7 @@ namespace eval portal {
             set element_list [array get fake_element_ids]
 
             set page_name_chunk "
+            <a name=$page_id></a>
             <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=page_id value=$page_id>
@@ -544,13 +545,13 @@ namespace eval portal {
 
     ad_proc -public configure_dispatch { 
         {-template_p "f"}
-        portal_id
-        form
+        {-portal_id:required}
+        {-form:required}
     } {
         Dispatches the configuration operation. 
         We get the target region number from the op.
 
-        @param portal_id
+        @param portal_id the portal to edit
         @param formdata an ns_set with all the formdata
     } { 
 

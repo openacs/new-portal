@@ -24,6 +24,7 @@
 
 <if @other_page_avail_p@ ne 0>
   <input type=hidden name=element_id value=@element_id@>
+  <input type=hidden name=anchor value=@page_id@>
   <input type=submit name="op" value="Move to page">
   <select name=page_id>
   <multiple name=pages>

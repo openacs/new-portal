@@ -35,5 +35,9 @@ if {[portal::template_p $portal_id]} {
     set template_p "f"
 }
 
-set rendered_page [portal::configure -referer $referer -template_p $template_p $portal_id ""]
+set rendered_page [portal::configure \
+        -referer $referer \
+        -template_p $template_p \
+        $portal_id ""
+]
 set name [portal::get_name $portal_id]
