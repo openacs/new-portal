@@ -27,7 +27,7 @@ create table portal_datasources (
 				references acs_objects(object_id)
 				constraint p_datasources_datasource_id_pk
 				primary key,
-	description		varchar(4000),
+	description		varchar(200),
 	name			varchar(200) not null
 );
 
@@ -54,8 +54,8 @@ create table portal_datasource_def_params (
 	configured_p		char(1) default 'f'
 				constraint p_ds_def_prms_configured_p_ck
 				check(configured_p in ('t', 'f')),
-	key		varchar(50) not null,
-	value		varchar(4000)
+	key			varchar(200) not null,
+	value			varchar(200)
 );
 
 
@@ -72,9 +72,9 @@ create table portal_layouts (
 				constraint p_layouts_name_un
 				unique
 				not null,
-	description		varchar(4000),
-	filename		varchar(4000),
-	resource_dir		varchar(4000)
+	description		varchar(200),
+	filename		varchar(200),
+	resource_dir		varchar(200)
 );
 
 create table portal_supported_regions (
@@ -86,7 +86,8 @@ create table portal_supported_regions (
 	  immutable_p		char(1) not null
 				constraint p_spprtd_rgns_immtble_p_ck
 				check(immutable_p in ('t', 'f')),
-	  constraint p_spprtd_rgns_tmpl_id_rgn_pk primary key (layout_id,region)
+	  constraint		p_spprtd_rgns_tmpl_id_rgn_pk 
+				primary key (layout_id,region)
 );
 
 
@@ -103,9 +104,9 @@ create table portal_element_themes (
 				constraint p_e_themes_name_un
 				unique
 				not null,
-	description		varchar(4000),
-	filename		varchar(4000),
-	resource_dir		varchar(4000)
+	description		varchar(200),
+	filename		varchar(200),
+	resource_dir		varchar(200)
 );
 
 
@@ -188,7 +189,7 @@ create table portal_element_parameters (
 				constraint p_element_prms_configured_p_ck
 				check(configured_p in ('t', 'f')),
 	key			varchar(50) not null,
-	value			varchar(4000) 
+	value			varchar(200) 
 );
 
 
