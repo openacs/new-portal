@@ -32,8 +32,7 @@
             <file type="data_model" db_type="oracle" path="sql/oracle/portal-core-drop.sql"/>
             <file type="data_model_create" db_type="oracle" path="sql/oracle/portal-create.sql"/>
             <file type="data_model_drop" db_type="oracle" path="sql/oracle/portal-drop.sql"/>
-            <file type="tcl_procs" path="tcl/datasource-procs.tcl"/>
-            <file type="tcl_procs" path="tcl/filter-procs.tcl"/>
+            <file type="data_model" db_type="oracle" path="sql/oracle/portal-element-sc-create.sql"/>
             <file type="tcl_procs" path="tcl/portal-procs.tcl"/>
             <file type="content_page" path="www/element-add-2.tcl"/>
             <file type="content_page" path="www/element-add.adp"/>
