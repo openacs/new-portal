@@ -50,7 +50,7 @@ create table portal_datasources (
 				check(configurable_p in ('t', 'f')),
 	name			varchar(200) not null,
 	description		varchar(4000),
-	-- these may go when acs-service-contract arrives
+	config_content		clob,
 	content			clob
 );
 
