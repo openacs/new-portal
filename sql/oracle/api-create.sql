@@ -284,6 +284,16 @@ as
 	procedure delete (
 		datasource_id	in portal_datasources.datasource_id%TYPE
 	);
+
+	procedure set_def_param (
+		datasource_id		in portal_datasource_def_params.datasource_id%TYPE,
+		config_required_p	in portal_datasource_def_params.config_required_p%TYPE default null,
+		configured_p		in portal_datasource_def_params.configured_p%TYPE default null,
+		key			in portal_datasource_def_params.key%TYPE,
+		value			in portal_datasource_def_params.value%TYPE default null,
+	);
+
+
 end portal_datasource;
 /
 show errors
@@ -348,6 +358,26 @@ as
 	begin
 		acs_object.delete(datasource_id);
 	end delete;
+
+	procedure set_def_param (
+		datasource_id		in portal_datasource_def_params.datasource_id%TYPE,
+		config_required_p	in portal_datasource_def_params.config_required_p%TYPE default null,
+		configured_p		in portal_datasource_def_params.configured_p%TYPE default null,
+		key			in portal_datasource_def_params.key%TYPE,
+		value			in portal_datasource_def_params.value%TYPE default null,
+	)
+	is
+		v_parameter_id  portal_datasource_def_params.parameter_id%TYPE;
+	begin
+		v_parameter_id := select acs_object_id_seq.nextval from dual;
+		    
+		insert into portal_datasource_def_params
+			(parameter_id, datasource_id, config_required_p, configured_p, key, value)
+		values
+			(v_parameter_id, datasource_id, config_required_p, configured_p, key, value)
+		return v_datasource_id;		    
+
+
 
 end portal_datasource;
 /
