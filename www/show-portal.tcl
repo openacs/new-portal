@@ -12,6 +12,6 @@ ad_page_contract {
 
 
 
-portal::render_portal $portal_id
+ns_return 200 text/html [portal::render_portal $portal_id]
 
 
