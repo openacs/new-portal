@@ -1,4 +1,0 @@
-1. fill out bboard ds
-2. clean up portal-procs.tcl
-3. admin dir
-4. deletion of portals

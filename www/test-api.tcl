@@ -12,7 +12,7 @@ ad_page_contract {
 set user_id [ad_conn user_id]
 
 # make a new portal
-set new_portal_id [portal::create_portal $user_id]
+set new_portal_id [portal::create $user_id]
 
 # add an bboard PE with a fake instance id
 set community_id "2763"
