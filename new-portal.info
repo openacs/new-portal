@@ -65,10 +65,10 @@
             <file type="template" path="www/layouts/title-buttons.tcl"/>
             <file type="content_page" path="www/master.adp"/>
             <file type="content_page" path="www/master.tcl"/>
-            <file type="content_page" path="www/place-element-components/finger-down.gif"/>
-            <file type="content_page" path="www/place-element-components/finger-left.gif"/>
-            <file type="content_page" path="www/place-element-components/finger-right.gif"/>
-            <file type="content_page" path="www/place-element-components/finger-up.gif"/>
+            <file type="content_page" path="www/place-element-components/arrow-down.gif"/>
+            <file type="content_page" path="www/place-element-components/arrow-left.gif"/>
+            <file type="content_page" path="www/place-element-components/arrow-right.gif"/>
+            <file type="content_page" path="www/place-element-components/arrow-up.gif"/>
             <file type="content_page" path="www/place-element.adp"/>
             <file type="content_page" path="www/place-element.tcl"/>
             <file path="www/render-element.adp"/>
@@ -76,25 +76,26 @@
             <file path="www/spacer.gif"/>
             <file type="content_page" path="www/template-place-element.adp"/>
             <file type="content_page" path="www/template-place-element.tcl"/>
+            <file type="content_page" path="www/themes/deco-theme.adp"/>
+            <file type="content_page" path="www/themes/deco-theme/edit.png"/>
+            <file type="content_page" path="www/themes/deco-theme/shade.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bleft.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bottom.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bright.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-left.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-right.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-tleft.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-top.png"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-tright.png"/>
+            <file type="content_page" path="www/themes/deco-theme/unshade.png"/>
+            <file type="content_page" path="www/themes/deco-theme/x.png"/>
+            <file type="content_page" path="www/themes/nada-theme.adp"/>
             <file type="template" path="www/themes/simple-theme.adp"/>
             <file path="www/themes/simple-theme/e.gif"/>
             <file path="www/themes/simple-theme/edit.gif"/>
             <file path="www/themes/simple-theme/shade.gif"/>
             <file path="www/themes/simple-theme/unshade.gif"/>
             <file path="www/themes/simple-theme/x.gif"/>
-            <file path="www/themes/window-theme.adp"/>
-            <file path="www/themes/window-theme/edit.png"/>
-            <file path="www/themes/window-theme/shade.png"/>
-            <file path="www/themes/window-theme/tbl-bleft.png"/>
-            <file path="www/themes/window-theme/tbl-bottom.png"/>
-            <file path="www/themes/window-theme/tbl-bright.png"/>
-            <file path="www/themes/window-theme/tbl-left.png"/>
-            <file path="www/themes/window-theme/tbl-right.png"/>
-            <file path="www/themes/window-theme/tbl-tleft.png"/>
-            <file path="www/themes/window-theme/tbl-top.png"/>
-            <file path="www/themes/window-theme/tbl-tright.png"/>
-            <file path="www/themes/window-theme/unshade.png"/>
-            <file path="www/themes/window-theme/x.png"/>
         </files>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="full_cache"  default="0" description="The number of seconds to cache a fully rendered portal." section_name="Performance"/>
