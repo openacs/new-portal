@@ -16,7 +16,7 @@
         <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
         <provides url="new-portal" version="0.2d1"/>
-        <requires url="acs-kernel" version="5.0.0a5"/>
+        <requires url="acs-kernel" version="5.0.0b4"/>
 
         <callbacks>
         </callbacks>
