@@ -16,7 +16,7 @@
             </td>
          
             <!-- no title buttons -->
-<!--            <td align=right class="portal_header" bgcolor="#cc0000">
+            <td align=right class="portal_header" bgcolor="#cc0000">
 		<if @user_editable_p@ eq "t">	
 		  <a href=configure-element?element_id=@element_id@&op=edit>
 	          <img border=0 src="@dir@/e.gif" alt="edit"></a>
@@ -35,7 +35,6 @@
 		  <img border=0 src="@dir@/x.gif" alt="hide"></a>
 		</if>
             </td>
--->
 	  </tr>
 
           <tr>
