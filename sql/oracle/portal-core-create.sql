@@ -131,11 +131,9 @@ create table portals (
 	portal_template_p	char(1) default 'f'
 				constraint p_portal_template_p_ck
 				check(portal_template_p in ('f', 't')),
-	-- if it's a template, is it active?
-	template_active_p	char(1) default 'f'
-				constraint p_template_active_p_ck
-				check(template_active_p in ('f', 't'))
-
+	-- Not null, if I have a template
+	template_id		constraint portal_template_id_fk
+				references portals
 );
 
 -- **** Portal Elements (PEs) ****
