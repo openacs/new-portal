@@ -159,7 +159,16 @@ ad_proc -public portal_render_portal { portal_id } {
     #set read_p [ad_permission_p $package_id read]
     set master_template [ad_parameter master_template]
     set css_path [ad_parameter css_path]
-    
+   
+
+    set element_list [portal_setup_element_list $portal_id]
+    set element_src [portal_setup_element_src $portal_id]
+ 
+    set template "<master src=\"@master_template@\">
+<property name=\"title\">@portal.name@</property>
+<include src=\"@portal.template@\" element_list=\"@element_list@\" element_src=\"@element_src@\">"
+
+
     db_0or1row select_portal_and_layout "
     select
     p.portal_id,
@@ -177,7 +186,22 @@ ad_proc -public portal_render_portal { portal_id } {
 	ad_script_abort
     }
 
-    return [array get portal]   
+    set __adp_stub "/web/arjun/openacs-4/packages/new-portal/www/"
+    set code [template::adp_compile -string $template]
+    ns_log Notice "AKS19 code: $code"
+    set output [template::adp_eval code]
+    ns_log Notice "AKS19 out: $output"
+
+
+    if {![empty_string_p $output]} {
+        set mime_type [template::get_mime_type]
+        set header_preamble [template::get_mime_header_preamble $mime_type]
+
+	ns_return 200 $mime_type "$header_preamble $output"
+    }
+
+    
+    return 
 
 }
 
