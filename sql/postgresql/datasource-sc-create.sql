@@ -22,17 +22,17 @@
 
 	  select acs_sc_msg_type__new (
 		    /* msg_type_name */ 'portal_datasource.GetMyName.OutputType',
-		    /* msg_type_spec */ 'my_name:string'
+		    /* msg_type_spec */ 'get_my_name:string'
 	  );
 
 	  select acs_sc_operation__new (
 		    'portal_datasource',
-		    'MyName',
+		    'GetMyName',
 		    'Get the name',
 		    't', -- not cacheable
 		    0,   -- n_args
-		    'portal_datasource.MyName.InputType',
-		    'portal_datasource.MyName.OutputType'
+		    'portal_datasource.GetMyName.InputType',
+		    'portal_datasource.GetMyName.OutputType'
 	  );
 
 
@@ -179,55 +179,4 @@
 		    2,   -- n_args
 		    'portal_datasource.RemoveSelfFromPage.InputType',
 		    'portal_datasource.RemoveSelfFromPage.OutputType'
-	  );
-
-
-
-
-
-	  -- Make self available
-	  select acs_sc_msg_type__new(
-	    /* msg_type_name */ 'portal_datasource.MakeSelfAvailable.InputType',
-	    /* msg_type_spec */ 'portal_id:integer'
-	  );
-
-	  select acs_sc_msg_type__new(
-	    /* msg_type_name */ 'portal_datasource.MakeSelfAvailable.OutputType',
-	    /* msg_type_spec */ ''
-	  );
-	  
-	  select acs_sc_operation__new (
-		    'portal_datasource',
-		    'MakeSelfAvailable',
-		    'Makes this PE available to this portal page',
-		    'f', -- not cacheable
-		    1,   -- n_args
-		    'portal_datasource.MakeSelfAvailable.InputType',
-		    'portal_datasource.MakeSelfAvailable.OutputType'
-	  );
-
-
-
-
-
-
-	  -- Make self unavailable
-	  select acs_sc_msg_type__new(
-	    /* msg_type_name */ 'portal_datasource.MakeSelfUnavailable.InputType',
-	    /* msg_type_spec */ 'portal_id:integer'
-	  );
-
-	  select acs_sc_msg_type__new(
-	    /* msg_type_name */ 'portal_datasource.MakeSelfUnavailable.OutputType',
-	    /* msg_type_spec */ ''
-	  );
-	  
-	  select acs_sc_operation__new (
-		    'portal_datasource',
-		    'MakeSelfUnavailable',
-		    'Makes this PE UNavailable to this portal page',
-		    'f', -- not cacheable
-		    1,   -- n_args
-		    'portal_datasource.MakeSelfUnavailable.InputType',
-		    'portal_datasource.MakeSelfUnavailable.OutputType'
 	  );

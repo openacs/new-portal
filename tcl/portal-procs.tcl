@@ -155,10 +155,6 @@ namespace eval portal {
         @param user_id
         @param layout_name optional
     } {
-        # aks debug
-        ns_log notice "aks1: portal::create name is $name / template_id is $template_id / csv $csv_list"
-
-
         # if we have a cvs list in the form "page_name1, layout1;
         # page_name2, layout2...", we get the required first page_name
         # and first page layout from it, overriding any other params
@@ -210,8 +206,6 @@ namespace eval portal {
             }
 
         }
-
-        ns_log notice "aks1: portal::create leaving  $name / $portal_id / $template_id"
 
         return $portal_id
     }
@@ -835,7 +829,13 @@ namespace eval portal {
         @param sort_key - optional, defaults to page 0
     } {
         if {![empty_string_p $page_name]} {
-            return [db_string get_page_id_from_name {} -default ""]
+            set page_id [db_string get_page_id_from_name {} -default ""] 
+            if {[empty_string_p $page_id]} {
+                # there is no page by that name in the portal, return page 0
+                return  [get_page_id -portal_id $portal_id]
+            } else {
+                return $page_id
+            }                
         } else {
             return [db_string get_page_id_select {}]
         }
@@ -955,30 +955,24 @@ namespace eval portal {
     #
 
     ad_proc -public add_element { 
+        {-portal_id:required}
+        {-portlet_name:required}
         {-force_region ""}
         {-page_id ""}
-        {-page_num ""}
         {-pretty_name ""}
-        portal_id
-        ds_name
     } {
         Add an element to a portal given a datasource name. Used for procs
         that have no knowledge of regions
 
         @return the id of the new element
-        @param portal_id 
-        @param page_num the number of the portal page to add to, def 0 
-        @param ds_name
     } {
-        ns_log notice "aks6: portal_id $portal_id"
-
         if {[empty_string_p $pretty_name]} {
-            set pretty_name $ds_name
+            set pretty_name $portlet_name
         }
 
-        if { [empty_string_p $page_num] && [empty_string_p $page_id] } {
+        if {[empty_string_p $page_id]} {
             # neither page_num or page_id given, default to 0
-            set page_id [portal::get_page_id -portal_id $portal_id -sort_key 0]
+            set page_id [portal::get_page_id -portal_id $portal_id]
         } 
 
         # Balance the portal by adding the new element to the region
@@ -1035,16 +1029,40 @@ namespace eval portal {
                     -page_id $page_id \
                     -layout_id $layout_id \
                     -pretty_name $pretty_name \
-                    $portal_id $ds_name $min_region]
+                    $portal_id \
+                    $portlet_name \
+                    $min_region]
     }
 
 
     ad_proc -public remove_element {
-        element_id
+        {-element_id ""}
+        {-portlet_name ""}
+        {-portal_id ""}
     } {
-        Remove an element from a portal
+        Remove an element from a portal. Can either specify 1. the element_id to remove
+        or 2. the portal_id and the datasource_name which will remove all elements of
+        that datasource on the portal. An element_id overrides all other params
     } {
-        db_dml delete {}
+        if {![empty_string_p $element_id]} {
+            db_dml delete {}
+        } else {
+            if {[empty_string_p $portal_id] && [empty_string_p $datasource_name]} {
+                ad_return_complaint 1 "portal::remove_element error bad params! \n
+                Please notify the system administrator of this error. Thank You"
+            }
+                       
+            set element_ids [portal::get_element_ids_by_ds \
+                    $portal_id \
+                    $datasource_name
+            ]
+
+            db_transaction {
+                foreach element_id $element_ids {
+                    portal::remove_element $element_id
+                }
+            }
+        }
     }
 
     ad_proc -private add_element_to_region { 
@@ -1081,7 +1099,7 @@ namespace eval portal {
 
                 set bar [db_string foobar { select name from portal_element_map pem where pem.page_id = :target_page_id and pem.sort_key = :template_element_sk and pem.region = 1} -default NONE ] 
                 
-                ns_log notice "aks5 $template_page_sort_key / $template_element_region  / $template_element_name / $template_element_sk / $bar" 
+                # ns_log notice "aks5 $template_page_sort_key / $template_element_region  / $template_element_name / $template_element_sk / $bar" 
                 
                 db_dml template_insert {}
                 db_dml template_params_insert {}
@@ -1338,8 +1356,6 @@ namespace eval portal {
         # FIXME: this is not as good as it should be
         if {$element(ds_name) == $element(pretty_name)} {
             
-            ns_log notice "aks4 about to call get p name"
-
             set element(name) \
                     [datasource_call \
                         -datasource_name $element(ds_name) \
@@ -1662,11 +1678,11 @@ namespace eval portal {
 
     ad_proc -public add_element_or_append_id { 
         {-portal_id:required}
-        {-page_id ""}
-        {-pretty_name ""}
         {-portlet_name:required}
         {-value_id:required}
         {-key "instance_id"}
+        {-page_id ""}
+        {-pretty_name ""}
         {-extra_params ""}
         {-force_region ""}
     } {
@@ -1692,11 +1708,12 @@ namespace eval portal {
 
                 # Tell portal to add this element to the page
                 set element_id [add_element \
+                        -portal_id $portal_id \
+                        -portlet_name $portlet_name \
                         -pretty_name $pretty_name \
                         -page_id $page_id \
-                        -force_region $force_region \
-                        $portal_id \
-                        $portlet_name ]
+                        -force_region $force_region
+                ]
 
                 # There is already a value for the param which is overwritten
                 set_element_param $element_id $key $value_id

@@ -114,37 +114,6 @@
 	  /* msg_type_name */ 'portal_datasource.RemoveSelfFromPage.OutputType'
 	  );
 
-	    
-	    select acs_sc_operation__delete (
-		    /* contract_name */ 'portal_datasource',
-		    /* operation_name */ 'MakeSelfAvailable'
-	    );
-
-
-	    select acs_sc_msg_type__delete (
-	    /* msg_type_name */ 'portal_datasource.MakeSelfAvailable.InputType'
-	    );
-
-	    select acs_sc_msg_type__delete (
-	    /* msg_type_name */ 'portal_datasource.MakeSelfAvailable.OutputType'
-	    );
-
-
-	  -- rem MakeSelfUnavailable
-	    
-	    select acs_sc_operation__delete (
-		    /* contract_name */ 'portal_datasource',
-		    /* operation_name */ 'MakeSelfUnavailable'
-	    );
-
-	    select acs_sc_msg_type__delete (
-	    /* msg_type_name */ 'portal_datasource.MakeSelfUnavailable.InputType'
-	    );
-
-	    select acs_sc_msg_type__delete (
-	    /* msg_type_name */ 'portal_datasource.MakeSelfUnavailable.OutputType'
-	    );
-
 
 	    -- drop the contract 
 	    select acs_sc_contract__delete (
