@@ -1354,6 +1354,9 @@ namespace eval portal {
 
         # We use the actual pretty name from the DB (ben)
         # FIXME: this is not as good as it should be
+    
+    ns_log notice "aks1 $element(ds_name) / $element(pretty_name)"
+    
         if {$element(ds_name) == $element(pretty_name)} {
             
             set element(name) \
