@@ -91,7 +91,77 @@ ad_proc -public portal_create_portal { user_id } {
     }]
 }
 
+ad_proc -public portal_add_element { portal_id ds_name } {
+    Add an element anywhere to a portal given a datasource name
 
+    @return None
+    @param user_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    # get the ds_id from the ds_name
+    db_1row ds_name_select \ 
+    "select datasource_name as ds_id
+    from portal_datasources 
+    where name = :ds_name"
+
+    # set up a unique name for the PE
+    if { [db1row pe_name_unique_check \
+	    "select 1 
+    from portal_element_map
+    where portal_id = :portal_id and
+    name = :ds_name"] } {
+	append ds_name "+1"
+    } 
+
+    # get the regions that the layout supports
+    # portal_get_regions [portal_get_layout_id $portal_id]
+    # AKS: for now _always_ insert the new PE into region 1
+    set region 1
+
+    # Bind the DS to the PE by inserting into the map and
+    # copying the default params. 
+    set new_element_id [db_nextval acs_object_id_seq]
+
+    db_transaction {
+	db_dml insert_into_map "
+	insert into portal_element_map
+	(element_id, 
+	name, 
+	portal_id, 
+	datasource_id, 
+	theme_id, 
+	region, 
+	sort_key)
+	values
+	(:new_element_id, 
+	:name, 
+	:portal_id, 
+	:ds_id, 
+	nvl((select max(theme_id) from portal_element_themes), 1), 
+	:region,  
+	nvl((select max(sort_key) + 1 from portal_element_map where region = :region), 1))" 
+	
+	db_foreach get_def_params "
+	select config_required_p, configured_p, key, value
+	from portal_datasource_def_params
+	where datasource_id = :ds_id" {
+	    set new_param_id [db_nextval acs_object_id_seq]
+	    db_dml insert_into_params "
+	    insert into partal_element_parameters
+	    (parameter_id, element_id, config_required_p, configured_p)
+	    values
+	    (:new_param_id, :new_element_id, :config_required_p, :configured_p)"
+	}
+	
+    } on_error {
+	ad_return_complaint "The DML failed."
+    }
+
+    # The caller must now set the necessary params or else!
+    return
+}
 
 
 ad_proc -public portal_render_portal { portal_id } {
