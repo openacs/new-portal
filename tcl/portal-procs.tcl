@@ -512,11 +512,12 @@ namespace eval portal {
                 # Remove page chunk - don't allow removal of the first page
                 #
 
+		
 		if {! $first_page_p } {
 		    
-		    append template "<tr><td><include src=\"show-here\" portal_id=$portal_id
+		    append template "<tr><td> <include src=\"show-here\" portal_id=$portal_id
 		    action_string=@action_string@
-		    region=@region@
+		    region=1
 		    page_id=$page_id
 		    anchor=$page_id
 		    return_url=@return_url@></tr></td>"
