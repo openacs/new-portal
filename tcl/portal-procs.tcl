@@ -65,6 +65,25 @@ ad_proc -public delete { portal_id } {
     }]
 }
 
+ad_proc -public update_name { portal_id new_name } {
+    Update the name of this portal
+
+    @param portal_id
+    @param new_name
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 9/28/2001
+} {
+
+    # check permissions
+    ad_require_permission $portal_id portal_read_portal
+    ad_require_permission $portal_id portal_edit_portal
+
+    # remove permissions (this sucks - ben)
+    db_dml remove_permissions "update portals set name = :new_name where portal_id = :portal_id"
+
+}
+
+
 ad_proc -public add_element { portal_id ds_name } {
     Add an element to a portal given a datasource name. Used for procs
     that have no knowledge of regions
@@ -551,6 +570,31 @@ ad_proc -private get_regions { layout_id } {
 
     return $portal_region_list
 }
+
+ad_proc -private fake_regions { layout_id } {
+    Fake a display of regions using simple html tables.
+
+    @param layout_id
+    @return a list containing the name of each region, in no particular order.
+    @creation-date 9/28/2001
+    @author Arjun Sanyal (arjun@openforce.net)
+} {
+    if { ! [info exists portal_region_list($layout_id) ] } {
+	db_foreach get_regions {
+	    select
+	    region,
+	    decode(immutable_p, 't', 1, 'f', 0) as immutable_p
+	    from portal_supported_regions
+	    where layout_id = :layout_id
+	} {
+	    set portal_region_immutable_p($region) $immutable_p
+	    lappend portal_region_list $region
+	}
+    }
+
+    return $portal_region_list
+}
+
 
 ad_proc -private region_immutable_p { region } {
     Check to see if a region in the current layout template is immutable.
