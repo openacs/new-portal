@@ -141,7 +141,6 @@ namespace eval portal {
     ad_proc -public create {
         {-name "Untitled"} 
         {-template_id ""} 
-        {-portal_template_p "f"} 
         {-layout_name ""}
         {-theme_name ""}
         {-default_page_name ""}
@@ -777,14 +776,6 @@ namespace eval portal {
     #
     # portal template procs - util and configuration
     #
-    ad_proc -private template_p { 
-        portal_id
-    } {
-        Check if a portal is a portal template and not a user poral
-    } {
-        return [db_0or1row select {}]
-    }
-
     ad_proc -private get_portal_template_id { 
         portal_id
     } {
@@ -1106,18 +1097,12 @@ namespace eval portal {
         if {[db_0or1row get_template_info_select {}] == 1} {
 
                 set new_element_id [db_nextval acs_object_id_seq]
-                set target_page_id [get_page_id -portal_id $portal_id -page_name $page_name -sort_key $template_page_sort_key]
+                set target_page_id [get_page_id \
+                                        -portal_id $portal_id \
+                                        -page_name $page_name \
+                                        -sort_key $template_page_sort_key
+                ]
 
-                # set bar [db_string foobar {
-                #     select name
-                #     from portal_element_map pem
-                #     where pem.page_id = :target_page_id
-                #     and pem.sort_key = :template_element_sk
-                #     and pem.region = 1
-                # } -default NONE] 
-                # 
-                # ns_log notice "aks5 $template_page_sort_key / $template_element_region / $template_element_name / $template_element_sk / $bar" 
-                
                 db_dml template_insert {}
                 db_dml template_params_insert {}
 
@@ -1371,9 +1356,6 @@ namespace eval portal {
 
         # We use the actual pretty name from the DB (ben)
         # FIXME: this is not as good as it should be
-    
-    ns_log notice "aks1 $element(ds_name) / $element(pretty_name)"
-    
         if {$element(ds_name) == $element(pretty_name)} {
             
             set element(name) \
@@ -1696,29 +1678,37 @@ namespace eval portal {
         }
     }
 
-    ad_proc -public add_element_or_append_id { 
+
+    ad_proc -public add_element_parameters { 
         {-portal_id:required}
         {-portlet_name:required}
-        {-value_id:required}
+        {-value:required}
         {-key "package_id"}
         {-page_name ""}
         {-pretty_name ""}
         {-extra_params ""}
         {-force_region ""}
+        {-param_action "overwrite"}
     } {
         A helper proc for portlet "add_self_to_page" procs.
         Adds the given portlet as an portal element to the given
         page. If the portlet is already in the given portal page,
-        it appends the value_id to the element's parameters with the 
+        it appends the value to the element's parameters with the 
         given key. Returns the element_id used.
+
+        IMPROVE ME: refactor 
 
         @return element_id The new element's id
         @param portal_id The page to add the portlet to
         @param portlet_name The name of the portlet to add
-        @param key the key for the value_id (defaults to package_id)
-        @param value_id the value of the key
+        @param key the key for the value (defaults to package_id)
+        @param value the value of the key
         @param extra_params a list of extra key/value pairs to insert or append
     } {
+
+        if {[empty_string_p $param_action]} {
+            set param_action "overwrite"
+        }
 
         # Find out if this portlet already exists in this page
         set element_id_list [get_element_ids_by_ds $portal_id $portlet_name]
@@ -1736,7 +1726,7 @@ namespace eval portal {
                 ]
 
                 # There is already a value for the param which is overwritten
-                set_element_param $element_id $key $value_id
+                set_element_param $element_id $key $value
 
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params
@@ -1752,29 +1742,39 @@ namespace eval portal {
             db_transaction {
                 set element_id [lindex $element_id_list 0]
 
-                # There are existing values which should NOT be overwritten
-                add_element_param_value -element_id $element_id -key $key -value $value_id
-
+                if {[string equal $param_action "append"]} {
+                    add_element_param_value -element_id $element_id -key $key -value $value
+                } elseif {[string equal $param_action "overwrite"]} {
+                    set_element_param $element_id $key $value
+                } else {
+                    error "portal::add_element_parameters error: bad param action! $param_action 1"
+                } 
+            
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params
 
                     for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
-                        add_element_param_value \
-                            -element_id $element_id \
-                            -key [lindex $extra_params $x] \
-                            -value [lindex $extra_params [expr $x + 1]]
-                    }        
+                        if {[string equal $param_action "append"]} {
+                            add_element_param_value \
+                                -element_id $element_id \
+                                -key [lindex $extra_params $x] \
+                                -value [lindex $extra_params [expr $x + 1]]
+                        } elseif {[string equal $param_action "overwrite"]} {
+                            set_element_param $element_id [lindex $extra_params $x]  [lindex $extra_params [expr $x + 1]]
+                        } else {
+                            error "portal::add_element_parameters error: bad param action! $param_action 2"
+                        } 
+                    }
                 }
             }
         }
-
         return $element_id
     }
 
-    ad_proc -public remove_element_or_remove_id { 
+    ad_proc -public remove_element_parameters { 
         {-portal_id:required} 
         {-portlet_name:required}
-        {-value_id:required}
+        {-value:required}
         {-key "package_id"}
         {-extra_params ""}
     } {
@@ -1788,8 +1788,8 @@ namespace eval portal {
 
         @param portal_id The portal page to act on
         @param portlet_name The name of the portlet to (maybe) remove 
-        @param key the key for the value_id (defaults to package_id)
-        @param value_id the value of the key
+        @param key the key for the value (defaults to package_id)
+        @param value the value of the key
         @param extra_params a list of extra key/value pairs to remove
     } {
         # get the element IDs (could be more than one!)
@@ -1802,7 +1802,7 @@ namespace eval portal {
                 remove_element_param_value \
                     -element_id $element_id \
                     -key $key \
-                    -value $value_id
+                    -value $value
 
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params

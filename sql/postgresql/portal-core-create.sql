@@ -142,7 +142,7 @@ create table portals (
 				constraint portal_theme_id_fk
 				references portal_element_themes
 				not null,
-	-- is this portal a portal template?
+	-- AKS this is out of date!! is this portal a portal template?
 	portal_template_p	char(1) default 'f'
 				constraint p_portal_template_p_ck
 				check(portal_template_p in ('f', 't')),

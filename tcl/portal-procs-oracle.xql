@@ -12,7 +12,6 @@
     name => :name,
     layout_id => :layout_id,
     template_id => :template_id,
-    portal_template_p => :portal_template_p,
     default_page_name => :default_page_name,
     theme_id => :theme_id,
     context_id => :context_id
@@ -30,13 +29,11 @@
     privilege => 'portal_edit_portal'
     );
 
-    if :portal_template_p = 't' then
     acs_permission.grant_permission ( 
     object_id => :1,
     grantee_id => :user_id,
     privilege => 'portal_admin_portal'
     );
-    end if;
 
     end;
 
@@ -91,17 +88,6 @@
          from portal_element_map
          where region = :region
          and page_id = :page_id), 1))
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::add_element_to_region.template_insert">      
-  <querytext>
-    insert into portal_element_map
-    (element_id, name, pretty_name, page_id, datasource_id, region, state, sort_key)
-    select 
-    :new_element_id, name, pretty_name, :target_page_id, :ds_id, region, state, sort_key
-    from portal_element_map pem
-    where pem.element_id = :template_element_id
   </querytext>
 </fullquery> 
 

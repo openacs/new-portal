@@ -91,7 +91,7 @@ create table portal_datasource_def_params (
 
 -- **** Portal Layouts ****
 
--- Layouts are the template for the portal page. i.e. 2 cols, 3 cols,
+-- Layouts are ADP templates for the portal page. i.e. 2 cols, 3 cols,
 -- etc. They are globally available. No secret layouts!
 create table portal_layouts (
 	layout_id		constraint p_layouts_layout_id_fk
@@ -123,7 +123,7 @@ create table portal_supported_regions (
 
 -- **** Portal Element Themes ****
 
--- Themes are templates with decoration for PEs, nothing more.
+-- Themes are ADP templates with decoration for PEs, nothing more.
 -- At this point they will just be bits of ADPs  in the filesystem
 create table portal_element_themes (
 	theme_id		constraint p_e_themes_theme_id_fk
@@ -155,12 +155,8 @@ create table portals (
 	theme_id		constraint portal_theme_id_fk
 				references portal_element_themes
 				not null,
-	-- is this portal a portal template?
-	portal_template_p	char(1) default 'f'
-				constraint p_portal_template_p_ck
-				check(portal_template_p in ('f', 't')),
-	-- Not null, if I have a template
-	template_id		constraint portal_template_id_fk
+	-- Not null, if I have a portal I'm using as a template
+	template_id		constraint template_id_fk
 				references portals
 );
 

@@ -272,15 +272,6 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::template_p.select">      
-  <querytext>
-    select 1
-    from portals 
-    where portal_template_p = 't'
-    and portal_id = :portal_id
-  </querytext>
-</fullquery> 
-
 <fullquery name="portal::get_portal_template_id.select">      
   <querytext>
    select template_id
@@ -405,6 +396,17 @@ order by sort_key
     (parameter_id, element_id, config_required_p, configured_p, key, value)
     select acs_object_id_seq.nextval, :new_element_id, config_required_p, configured_p, key, value
     from portal_datasource_def_params where datasource_id= :ds_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::add_element_to_region.template_insert">      
+  <querytext>
+    insert into portal_element_map
+    (element_id, name, pretty_name, page_id, datasource_id, region, state, sort_key)
+    select 
+    :new_element_id, :ds_name, :pretty_name, :target_page_id, :ds_id, region, state, sort_key
+    from portal_element_map pem
+    where pem.element_id = :template_element_id
   </querytext>
 </fullquery> 
 

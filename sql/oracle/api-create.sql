@@ -146,7 +146,6 @@ as
         name			in portals.name%TYPE default 'Untitled',
         theme_id		in portals.theme_id%TYPE default null,
         layout_id		in portal_layouts.layout_id%TYPE default null,
-        portal_template_p	in portals.portal_template_p%TYPE default 'f',
         template_id		in portals.template_id%TYPE default null,
         default_page_name       in portal_pages.pretty_name%TYPE default 'Main Page',
         object_type		in acs_object_types.object_type%TYPE default 'portal',
@@ -172,7 +171,6 @@ as
 		name			in portals.name%TYPE default 'Untitled',
 		theme_id		in portals.theme_id%TYPE default null,
 		layout_id		in portal_layouts.layout_id%TYPE default null,
-		portal_template_p	in portals.portal_template_p%TYPE default 'f',
 		template_id		in portals.template_id%TYPE default null,
                 default_page_name       in portal_pages.pretty_name%TYPE default 'Main Page',
 		object_type		in acs_object_types.object_type%TYPE default 'portal',
@@ -188,6 +186,8 @@ as
 		v_theme_id portals.theme_id%TYPE;
 		v_layout_id portal_layouts.layout_id%TYPE;
 		v_page_id portal_pages.page_id%TYPE;
+		v_new_element_id portal_element_map.element_id%TYPE;
+		v_new_parameter_id portal_element_parameters.parameter_id%TYPE;
 	begin
 
                 -- we must create at least one page for this portal
@@ -215,8 +215,8 @@ as
                    end if;
 
                    insert into portals 
-                          (portal_id, name, theme_id, portal_template_p)
-                   values (v_portal_id, name, v_theme_id, portal_template_p);
+                          (portal_id, name, theme_id)
+                   values (v_portal_id, name, v_theme_id);
 
                    -- now insert the default page
 		   v_page_id := portal_page.new (
@@ -229,16 +229,16 @@ as
 			context_id	=> context_id
 		   );
                 else
-                   -- we have to copy things like the template, theme form the 
-                   --  templateportal_template_p is false. no chained templates 
+                   -- we have a portal as our template. Copy it's theme, pages, layouts,
+                   -- elements, and element params.
                    select theme_id into v_theme_id 
                    from portals 
                    where portal_id = portal.new.template_id;
 
                    insert into portals 
-                   (portal_id, name, theme_id, portal_template_p, template_id)
+                   (portal_id, name, theme_id, template_id)
                    values 
-                   (v_portal_id, name,  v_theme_id, 'f', portal.new.template_id);
+                   (v_portal_id, name, v_theme_id, portal.new.template_id);
 
                    for page in (select * from portal_pages where portal_id = portal.new.template_id) loop
                        -- now insert the pages from the portal template
@@ -248,6 +248,30 @@ as
                             layout_id       => page.layout_id,
                             sort_key        => page.sort_key
 		       );                                      
+                       
+                       for element in (select * from portal_element_map where page_id = page.page_id) loop
+                           -- now get the elements on the template's page and put them on the new page
+                           select acs_object_id_seq.nextval into v_new_element_id from dual;                        
+                
+                           insert into portal_element_map               
+                           (element_id, name, pretty_name, page_id, datasource_id, region, state, sort_key)
+                           select                 
+                           v_new_element_id, name, pretty_name, v_page_id, datasource_id, region, state, sort_key
+                           from portal_element_map pem
+                           where pem.element_id = element.element_id;
+                           
+                           for param in (select * from portal_element_parameters where element_id = element.element_id) loop 
+                               -- now for the element's params
+                               select acs_object_id_seq.nextval into v_new_parameter_id from dual;
+                                                          
+                               insert into portal_element_parameters
+                               (parameter_id, element_id, config_required_p, configured_p, key, value)
+                               select v_new_parameter_id, v_new_element_id, config_required_p, configured_p, key, value
+                               from portal_element_parameters
+                               where parameter_id = param.parameter_id;
+
+                           end loop;
+                       end loop;
                    end loop;
                 end if;
 

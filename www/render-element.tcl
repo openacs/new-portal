@@ -29,9 +29,6 @@ ad_page_contract {
 # get the complete, evaluated element.
 # if there's an error, report it.
 if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] } errmsg ] } {
-    
-    ns_log Error "aks18 render-element.tcl (after eval): $errmsg"
-    
     if { [ad_parameter show_datasource_errors_p] == 1} {
 	set element(content) "<div class=portal_alert>$errmsg</div>"
     } else {

@@ -74,7 +74,7 @@ begin
 end;' language 'plpgsql';
 
 
-select define_function_args('portal__new','portal_id,name,theme_id,layout_id,portal_template_p,template_id,default_page_name,object_type;portal,creation_date,creation_user,creation_ip,context_id');
+select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
 create function portal__new (integer,varchar,integer,integer,integer,boolean,integer,varchar,varchar,timestamp,integer,varchar,integer)
 returns integer as '
@@ -83,14 +83,13 @@ declare
     p_name		alias for $2;
     p_theme_id		alias for $3;
     p_layout_id		alias for $4;
-    p_portal_template_p	alias for $5;
-    p_template_id	alias for $6;
-    p_default_page_name	alias for $7;
-    p_object_type	alias for $8;
-    p_creation_date	alias for $9;
-    p_creation_user	alias for $10;
-    p_creation_ip	alias for $11;
-    p_context_id	alias for $12;
+    p_template_id	alias for $5;
+    p_default_page_name	alias for $6;
+    p_object_type	alias for $7;
+    p_creation_date	alias for $8;
+    p_creation_user	alias for $9;
+    p_creation_ip	alias for $10;
+    p_context_id	alias for $11;
     v_portal_id		portals.portal_id%TYPE;
     v_theme_id		portals.theme_id%TYPE;
     v_layout_id		portal_layouts.layout_id%TYPE;
@@ -123,8 +122,8 @@ begin
                    end if;
 
                    insert into portals 
-                          (portal_id, name, theme_id, portal_template_p)
-                   values (v_portal_id, p_name, v_theme_id, p_portal_template_p);
+                          (portal_id, name, theme_id)
+                   values (v_portal_id, p_name, v_theme_id);
 
                    -- now insert the default page
 		   v_page_id := portal_page__new (
@@ -137,8 +136,7 @@ begin
 			/* context_id	 */ p_context_id
 		   );
                 else
-                   -- we have to copy things like the template, theme form the 
-                   --  templateportal_template_p is false. no chained templates 
+                   -- AKS this is out of date!!!
                    select theme_id into v_theme_id 
                    from portals 
                    where portal_id = p_template_id;

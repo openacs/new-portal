@@ -28,16 +28,9 @@ ad_page_contract {
 }
 
 set name ""
-
-if {[portal::template_p $portal_id]} {
-    set template_p "t"
-} else {
-    set template_p "f"
-}
-
 set rendered_page [portal::configure \
         -referer $referer \
-        -template_p $template_p \
+        -template_p f \
         $portal_id ""
 ]
 set name [portal::get_name $portal_id]
