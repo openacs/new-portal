@@ -21,6 +21,14 @@ ad_page_contract {
 # AKS: XXX fixme 
 set portal_id $element_id
 
+set layout_id [portal::get_layout_id $portal_id]
+
+db_1row select_num_regions "
+select count(*) as num_regions
+from portal_supported_regions
+where layout_id = :layout_id"
+
+
 # get the elements for this region.
 set region_count 0
 template::multirow create element_multi element_id name sort_key state
