@@ -18,6 +18,20 @@ set my_url [ad_conn url]
 #  perhaps it should be named something that can represent both values...?
 set portal_id $element_id
 
+# can this region be edited?
+if { [portal_region_immutable_p $region] } {
+    if { $default_portal_p } {
+	set immutable_p 0
+	set would_be_immutable_p 1
+    } else {
+	set immutable_p 1
+	set would_be_immutable_p 0
+    }
+} else {
+    set immutable_p 0
+    set would_be_immutable_p 0
+}
+
 # get the elements for this region.
 set region_count 0
 template::multirow create element_multi element_id name sort_key
@@ -26,7 +40,7 @@ db_foreach select_elements_by_region \
      from portal_element_map pe
      where
        pe.portal_id = :portal_id and
-       pe.region = :region and
+       pe.region = :region 
      order by pe.sort_key" \
 {
     template::multirow append element_multi $element_id $name $sort_key
@@ -40,5 +54,5 @@ db_1row select_all_noimm_count \
 "select count(*) as all_count
 from portal_element_map
 where
-portal_id = :portal_id and acs_permission.permission_p(element_id, :user_id, 'read') = 't'
+portal_id = :portal_id
 and region not like 'i%'"
