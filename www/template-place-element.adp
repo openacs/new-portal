@@ -7,7 +7,10 @@
 <td align=left>
 
 <multiple name=element_multi>
-    @element_multi.name@ - @element_multi.description@
+@element_multi.name@ - @element_multi.description@
+
+<br>
+
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
         <a href="@target_stub@-2?portal_id=@portal_id@&region=@region@&op=swap&element_id=@element_multi.element_id@&sort_key=@element_multi.sort_key@&direction=up&return_url=@return_url@"><img border=0 src="@dir@/finger-up.gif" alt="move up"></a>
@@ -23,9 +26,10 @@
 
     <if @region@ gt 1 and @region@ lt @num_regions@>
     <a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/finger-left.gif" alt="move left"></a>
-    <a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/finger-right.gif" alt="move right"></a></if>
-    <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/finger-left.gif" alt="move left"></a></if>
-</if>
+    <a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=right&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/finger-right.gif" alt="move right"></a>
+    </if>
+    <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&op=move&element_id=@element_multi.element_id@&direction=left&region=@region@&return_url=@return_url@"><img border=0 src="@dir@/finger-left.gif" alt="move left"></a>     </if>
+
 
 <p align=left>
 
@@ -33,15 +37,15 @@ Action: (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@elem
 
 <BR>
 
-<if @state@ ne "locked">
-Locked? unlocked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">set lock</a>)
+<if @element_multi.state@ ne "locked">
+@state@ Locked? unlocked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">set lock</a>)
 </if>
 <else>Locked? locked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">unlock</a>)
 </else>
 
 <BR>
 
-<if @hideable_p@ eq "t">
+<if @element_multi.hideable_p@ eq "t">
 Hideable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow hiding</a>)
 </if>
 <else>Hideable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">allow hiding</a>)
@@ -49,13 +53,13 @@ Hideable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideabl
 
 <BR>
 
-<if @shadeable_p@ eq "t">
+<if @element_multi.shadeable_p@ eq "t">
 Shadeable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow shading</a>)
 </if>
 <else>Shadeable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">allow shading</a>)
 </else>
 
-<br>
+<p>
 </multiple>
 
 
