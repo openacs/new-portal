@@ -1,5 +1,5 @@
 #
-#  Copyright (C) 2001, 2002 MIT
+#  Copyright (C) 2004 MIT
 #
 #  This file is part of dotLRN.
 #
@@ -14,28 +14,13 @@
 #  details.
 #
 
-# www/portal-config.tcl
-
 ad_page_contract {
-    Main configuration page for a portal
-
-    @author Arjun Sanyal (arjun@openforce.net)
-    @creation-date 10/20/2001
-    @cvs-id $Id$
-} {
+    Reverts to the default template. Very perfomance intensive. Use
+    only in extreme occasions.
+}  {
     {referer:optional ""}
     portal_id:naturalnum,notnull
 }
 
-set page_url [ad_conn url]
-set name ""
-set rendered_page [portal::configure \
-        -referer $referer \
-        -template_p f \
-        $portal_id ""
-]
-
-
 set name [portal::get_name $portal_id]
-set return_url "$page_url?portal_id=$portal_id"
 

@@ -31,15 +31,14 @@
 <a name="custom"><h2></a>Custom Portlets</h2> - Note custom portlets for portal templates are very fragile right now. Only use this during system set up before any portlets have been created with this template.  Better solution coming soon.
 <include src="/packages/static-portlet/www/static-admin-portlet" package_id="@portal_id@" template_portal_id="@portal_id@" return_url="@return_url@">
 
-<if @name@ eq "User Portal">
 
-<a name="revert"> </a><h2>Revert Users</h2>
+<a name="revert"> </a><h2>Revert</h2>
 
-<form name="op_revert" method=post action=revert-users>
+<form name="op_revert" method=post action=revert-portal>
 	<input type=hidden name=referer value=@return_url@>
 	<input type=hidden name=portal_id value=@portal_id@>
 
-        Revert all users to the default portal arrangement.
+	Revert to the default portal arrangement.
 
 <center>
 <input type=submit name="op_revert" value="Revert">
