@@ -32,12 +32,8 @@ set element(region) $region
 set new_name ""
 regsub -all -- {-} $element(name) "_" new_name
 append new_name "::get_pretty_name"
-
-
-ns_log notice  "AKS67: [$new_name]"
-
 set element(name) [$new_name]
+
 # return the appropriate template for that element.
-# AKS ???
 ad_return_template "[portal::www_path]/layouts/mime-types/$element(mime_type_noslash)"
 
