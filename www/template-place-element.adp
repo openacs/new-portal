@@ -33,12 +33,12 @@
 
 <p align=left>
 
-Action: (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@&return_url=@return_url@">hide this element</a>)
+Shown? (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@element_multi.element_id@&return_url=@return_url@">hide this element</a>)
 
 <BR>
 
 <if @element_multi.state@ ne "locked">
-@state@ Locked? unlocked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">set lock</a>)
+Locked? unlocked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">set lock</a>)
 </if>
 <else>Locked? locked (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_lock&element_id=@element_multi.element_id@&return_url=@return_url@">unlock</a>)
 </else>
@@ -46,17 +46,17 @@ Action: (<a href="@target_stub@-2?portal_id=@portal_id@&op=hide&element_id=@elem
 <BR>
 
 <if @element_multi.hideable_p@ eq "t">
-Hideable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow hiding</a>)
+User hideable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow hiding</a>)
 </if>
-<else>Hideable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">allow hiding</a>)
+<else>User Hideable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_hideable&element_id=@element_multi.element_id@&return_url=@return_url@">allow hiding</a>)
 </else>
 
 <BR>
 
 <if @element_multi.shadeable_p@ eq "t">
-Shadeable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow shading</a>)
+User shadeable? true (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">don't allow shading</a>)
 </if>
-<else>Shadeable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">allow shading</a>)
+<else>User shadeable? false (<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">allow shading</a>)
 </else>
 
 <p>
