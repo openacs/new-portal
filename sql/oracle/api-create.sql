@@ -270,7 +270,6 @@ as
 		name		in portal_datasources.name%TYPE default null,
 		description	in portal_datasources.description%TYPE default null,
 		content		in portal_datasources.content%TYPE default null,
-		content_varchar	varchar default null,
 		config_path	in portal_datasources.config_path%TYPE default null,
 		object_type	in acs_object_types.object_type%TYPE default 'portal_datasource',
 		creation_date	in acs_objects.creation_date%TYPE 
