@@ -57,6 +57,8 @@
             <file type="template" path="www/layouts/header3.adp"/>
             <file type="template" path="www/layouts/header3.tcl"/>
             <file path="www/layouts/simple-element.adp"/>
+            <file type="content_page" path="www/layouts/simple1.adp"/>
+            <file type="content_page" path="www/layouts/simple1.tcl"/>
             <file type="template" path="www/layouts/simple2.adp"/>
             <file type="template" path="www/layouts/simple2.tcl"/>
             <file type="template" path="www/layouts/simple3.adp"/>
@@ -77,18 +79,18 @@
             <file type="content_page" path="www/template-place-element.adp"/>
             <file type="content_page" path="www/template-place-element.tcl"/>
             <file type="content_page" path="www/themes/deco-theme.adp"/>
-            <file type="content_page" path="www/themes/deco-theme/edit.png"/>
-            <file type="content_page" path="www/themes/deco-theme/shade.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-bleft.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-bottom.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-bright.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-left.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-right.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-tleft.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-top.png"/>
-            <file type="content_page" path="www/themes/deco-theme/tbl-tright.png"/>
-            <file type="content_page" path="www/themes/deco-theme/unshade.png"/>
-            <file type="content_page" path="www/themes/deco-theme/x.png"/>
+            <file type="content_page" path="www/themes/deco-theme/edit.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/shade.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bleft.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bottom.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-bright.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-left.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-right.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-tleft.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-top.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/tbl-tright.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/unshade.gif"/>
+            <file type="content_page" path="www/themes/deco-theme/x.gif"/>
             <file type="content_page" path="www/themes/nada-theme.adp"/>
             <file type="template" path="www/themes/simple-theme.adp"/>
             <file path="www/themes/simple-theme/e.gif"/>
