@@ -91,10 +91,8 @@ ad_proc -public remove_element {element_id} {
     Remove an element from a portal
 } {
     db_transaction {
-	# Remove parameters
-	db_dml remove_params "delete from portal_element_parameters where element_id= :element_id"
 
-	# Remove map
+	# Remove map, this PE's parameters will cascade
 	db_dml remove_map "delete from portal_element_map where element_id= :element_id"
     }
 }
@@ -114,14 +112,16 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     from portal_datasources 
     where name = :ds_name"
 
-    # set up a unique name for the PE
-    if { [db_0or1row pe_name_unique_check "select 1  
+    # set up a unique prett_name for the PE
+    if { [db_0or1row pe_prety_name_unique_check "select 1  
     from portal_element_map
     where portal_id = :portal_id and
-    name = :ds_name"] } {
+    pretty_name = :ds_name"] } {
 	# XXX sophisticated regsub here
-	append ds_name "+1"
-    } 
+	set pretty_name [append ds_name "+1"]
+    } else {
+	set pretty_name $ds_name
+    }
 
     # Bind the DS to the PE by inserting into the map and
     # copying the default params. 
@@ -131,6 +131,7 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     insert into portal_element_map
     (element_id, 
     name, 
+    pretty_name,
     portal_id, 
     datasource_id, 
     theme_id, 
@@ -138,7 +139,8 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     sort_key)
     values
     (:new_element_id, 
-    :ds_name, 
+    :ds_name,
+    :pretty_name,
     :portal_id, 
     :ds_id, 
     nvl((select max(theme_id) from portal_element_themes), 1), 
