@@ -8,10 +8,10 @@
     @element_multi.name@
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
-        (<a href="element-move?portal_id=@portal_id@&element_id=@element_id@&region=@region@&sort_key=@element_multi.sort_key@&direction=up">up</a>)
+        (<a href="element-move?portal_id=@portal_id@&element_id=@element_multi.element_id@&region=@region@&sort_key=@element_multi.sort_key@&direction=up">up</a>)
       </if>
       <if @element_multi:rowcount@ gt @element_multi.rownum@>
-        (<a href="element-move?portal_id=@portal_id@&element_id=@element_id@&region=@region@&sort_key=@element_multi.sort_key@&direction=down">down</a>)
+        (<a href="element-move?portal_id=@portal_id@&element_id=@element_multi.element_id@&region=@region@&sort_key=@element_multi.sort_key@&direction=down">down</a>)
       </if>
     </if>
     <br>
