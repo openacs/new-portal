@@ -2267,7 +2267,10 @@ namespace eval portal {
             set option_key [lindex $option 0]
             set option_val [lindex $option 2]
             if {![empty_string_p $options_set]} {
-                set option_val [ns_set get $options_set $option_key]
+                set options_set_val [ns_set get $options_set $option_key]
+                if { ![empty_string_p $options_set_val] } {
+                    set option_val $options_set_val
+                }
             }
 	    
             set first_p 1
