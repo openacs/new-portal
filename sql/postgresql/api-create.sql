@@ -468,17 +468,17 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_datasource__new','datasource_id,name,description,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_datasource__new (integer,varchar,varchar,varchar,timestamp,integer,integer,integer)
+create function portal_datasource__new (integer,varchar,varchar,varchar,timestamp,integer,varchar,integer)
 returns integer as '
 declare
-    p_datasource_id                 alias for $1;
-    p_name                          alias for $2;
-    p_description                   alias for $3;
-    p_object_type                   alias for $4;
-    p_creation_date                 alias for $5;
-    p_creation_user                 alias for $6;
-    p_creation_ip                   alias for $7;
-    p_context_id                    alias for $8;
+    p_datasource_id                 alias for $1; -- default null
+    p_name                          alias for $2; -- default null
+    p_description                   alias for $3; -- default null
+    p_object_type                   alias for $4; -- default ''portal_datasource''
+    p_creation_date                 alias for $5; -- default now()
+    p_creation_user                 alias for $6; -- default null
+    p_creation_ip                   alias for $7; -- default null
+    p_context_id                    alias for $8; -- default null
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
 begin
 
@@ -513,7 +513,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_datasource__set_def_param','datasource_id,config_required_p,configured_p,key,value');
 
-create function portal_datasource__set_def_param (integer,boolean,boolean,varchar)
+create function portal_datasource__set_def_param (integer,varchar,varchar,varchar,varchar)
 returns integer as '
 declare
     p_datasource_id                 alias for $1;
