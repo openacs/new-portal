@@ -9,12 +9,15 @@
   <msg key="Change_Theme">Change Theme:</msg>
   <msg key="Change_Theme_1">Change Theme</msg>
   <msg key="Create_a_new_page">Create a new page</msg>
+  <msg key="Custom_Portlets">Custom Portlets</msg>
   <msg key="deco_theme_description">An Art Deco theme</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Go back</msg>
+  <msg key="lt_-_Note_custom_portlet">- Note custom portlets for portal templates are somewhat fragile and not fully flexible, anyway you can add custom portlets at any time to the template, and will be added to all the portals related (users, classes, etc.), you can edit them and the change will be reflected in all the portals as well, also in the class &amp; community the custom portlets added through the template can be changed manually by the class admin, but you can always override when editing the custom portlet through the main templates (here).</msg>
   <msg key="lt_Add_This_Portlet_Here">Add This Portlet Here</msg>
   <msg key="lt_Error_bad_params_n___">Error, bad params! \n
                 Please notify the system administrator of this error. Thank You</msg>
+  <msg key="lt_Manage_Custom_Portlet">Manage Custom Portlets</msg>
   <msg key="lt_No_Elements_on_this_p">No Elements on this page</msg>
   <msg key="lt_None_You_can_not_add_">None. You can not add any portlets to this page because they are all in use.</msg>
   <msg key="lt_Revert_the_entire_por">Revert the entire portal to the default arrangement</msg>
