@@ -682,8 +682,6 @@ ad_proc -private get_element_data { element_id } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date Sept 2001 } {
 
-    set user_id [ad_conn user_id]
-
     # XXX issue here with element config params
 
     if { ! [db_0or1row select_element_data {
@@ -727,7 +725,6 @@ ad_proc -private get_element_parameters { element_id } {
     @author 
     @creaton-date 
 } {
-    set user_id [ad_conn user_id]
 
     db_foreach select_element_params "
     select key, value
@@ -754,7 +751,6 @@ ad_proc -private get_datasource { datasource_id } {
     @author Ian Baker (ibaker@arsdigita.com)
     @creaton-date December 2000
 } {
-    set user_id [ad_conn user_id]
 
     if { ! [db_0or1row select_datasource_data {
 	select
@@ -836,7 +832,6 @@ ad_proc -private get_elements { portal_id } {
     @param portal_id The portal in question's ID.
     @return A list of lists.  Each sublist is suitable for passing through 'array set', yielding an array with the keys 'element_id', 'region', 'sort_key'.
 } {
-    set user_id [ad_conn user_id]
 
     db_foreach select_p_e_map "
     select m.element_id, m.region, m.sort_key
