@@ -8,7 +8,7 @@ ad_page_contract {
     @cvs-id $Id$
 } {
     name:nohtml,notnull
-    layout_id:naturalnum,notnull,permission(read),optional
+    layout_id:naturalnum,notnull,optional
     portal_id:naturalnum,notnull
 }
 
