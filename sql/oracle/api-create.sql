@@ -46,6 +46,7 @@ as
 	) return portals.portal_id%TYPE
 	is
 		v_portal_id portals.portal_id%TYPE;
+		v_theme_id portals.theme_id%TYPE;
 	begin
 		v_portal_id := acs_object.new (
 			object_id	=> portal_id,
@@ -56,13 +57,16 @@ as
 			context_id	=> context_id
 		);
 
+
+		select max(theme_id) into v_theme_id from portal_element_themes;
+
 		insert into portals (portal_id, layout_id, name, theme_id) 
 		       values (v_portal_id, 
 			       layout_id, 
 			       'Untitled', 
-			       nvl((select max(theme_id) from portal_element_themes), 1) 
+			       v_theme_id
 			       );
-`
+
 		return v_portal_id;
 	end new;
 
