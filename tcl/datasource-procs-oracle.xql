@@ -7,9 +7,9 @@
         <querytext>
            begin
              :1 := portal_datasource.new(
-    		     name => :name,
-    		     description => :description     
-  	     );
+                     name => :name,
+                     description => :description     
+             );
            end;
         </querytext>
     </fullquery>
@@ -17,13 +17,13 @@
     <fullquery name="portal::datasource::set_def_param.set_def_param">
         <querytext>
            begin
-             :1 := portal_datasource.set_def_param(
-		     datasource_id => :datasource_id,
-		     config_required_p => :config_required_p,
-		     configured_p => :configured_p, 
-		     key => :key, 
-		     value => :value
-	     ):
+             portal_datasource.set_def_param(
+                 datasource_id => :datasource_id,
+                 config_required_p => :config_required_p,
+                 configured_p => :configured_p, 
+                 key => :key, 
+                 value => :value
+             ):
            end;
         </querytext>
     </fullquery>
@@ -33,7 +33,7 @@
            begin
              portal_datasource.delete(
                datasource_id => :datasource_id
-  	     );
+             );
            end;
         </querytext>
     </fullquery>
