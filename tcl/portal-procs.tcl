@@ -380,12 +380,13 @@ ad_proc -public swap_element {portal_id element_id sort_key region direction} {
 }    
 
 
-ad_proc -public move_elements {portal_id element_id_list target_region} {
+ad_proc -public move_element {portal_id element_id region direction} {
     Moves a PE in the direction indicated by swapping it with its neighbor
 
     @param portal_id 
-    @param element_id_list
-    @param target_region
+    @param element_id
+    @param region the PEs current region
+    @param direction up or down
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
@@ -393,24 +394,25 @@ ad_proc -public move_elements {portal_id element_id_list target_region} {
     ad_require_permission $portal_id portal_read_portal
     ad_require_permission $portal_id portal_edit_portal
     
-    # AKS: XXX locked areas
-    foreach element_id $element_id_list {
+    if { $direction == "right" } {
+	set target_region [expr $region + 1]
+    } elseif { $direction == "left" } {
+	set target_region [expr $region - 1]
+    } else {
+	ad_return_complaint 1 "portal::move_element Bad direction!"
+    }
 
-	# just move each element to the bottom of the region, don't 
-	# fuss with keeping sort_keys in order at this point
-	db_dml move_elements \
-		"update portal_element_map 
-	set region = :target_region, 
-	    sort_key = (select nvl(
-	                          (select max(sort_key) + 1
-	                           from portal_element_map 
-	                           where portal_id = :portal_id 
-	                           and region = :target_region), 
-                                 1) 
-	               from dual)
-	where element_id = :element_id"
-
-    }    
+    # just move the element to the bottom of the region
+    db_dml move_element \
+	    "update portal_element_map 
+                 set region = :target_region, 
+                 sort_key = (select nvl((select max(sort_key) + 1
+                                         from portal_element_map 
+                                         where portal_id = :portal_id 
+                                         and region = :target_region), 
+                                         1) 
+                             from dual)
+             where element_id = :element_id"
 }
 
 ad_proc -public set_element_param { element_id key value } {
@@ -597,9 +599,9 @@ ad_proc -public configure { portal_id } {
 	set output [template::adp_eval code]
 	
 	return $output
-    }
+}
 
-ad_proc -public configure_dispatch_ns_set { portal_id form } {
+ad_proc -public configure_dispatch { portal_id form } {
     Dispatches the configuration operation. 
     We get the target region number from the op.
     
@@ -607,7 +609,7 @@ ad_proc -public configure_dispatch_ns_set { portal_id form } {
     @param formdata an ns_set with all the formdata
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
-nope} {
+} { 
 
     ad_require_permission $portal_id portal_read_portal
     ad_require_permission $portal_id portal_edit_portal
@@ -625,7 +627,37 @@ nope} {
 		    [ns_set get $form region] \
 		    [ns_set get $form direction]
 	}
-	"Move All Checked Here" {
+	"move" {
+	    portal::move_element $portal_id \
+		    [ns_set get $form element_id] \
+		    [ns_set get $form region] \
+		    [ns_set get $form direction]
+	}
+	"Show Here" {
+
+	    set region [ns_set get $form region]
+	    set element_id [ns_set get $form element_id]
+
+	    db_transaction {
+		# The new element's sk will be the last in the region
+		db_dml set_element_region_and_sk \
+			"update portal_element_map 
+		         set region = :region, 
+		         sort_key = (select nvl((select max(sort_key) + 1
+		                                 from portal_element_map 
+		                                 where portal_id = :portal_id 
+		                                 and region = :region), 
+		                                 1) 
+		                     from dual)
+		                     where element_id = :element_id"
+
+		db_dml unhide_element \
+			"update portal_element_map 
+		set state = 'full' 
+		where element_id = :element_id"
+	    }		
+	}
+	"hide" {
 
 	    set element_id_list [list]
 
@@ -636,183 +668,24 @@ nope} {
 	    }
 
 	    if {! [empty_string_p $element_id_list] } {
-		portal::move_elements \
-			$portal_id $element_id_list $target_region 
-	    } else {
-		ns_returnredirect \
-			"portal-config.tcl?[export_url_vars portal_id]"
-	    }
-	} 
-	"add here" {
-
-	    ad_return_complaint 1 "$op, [ns_set get $form element_id] [ns_set get $form sort_key] [ns_set get $form region] [ns_set get $form direction]"
-
-
-	    regexp {[&]*element_id=(\d+)} $query "" element_id
-
-	    db_transaction {
-		# The new element's sk will be the last in the region
-		db_dml set_element_region_and_sk \
-			"update portal_element_map 
-		         set region = :target_region, 
-		         sort_key = (select nvl((select max(sort_key) + 1
-		                                 from portal_element_map 
-		                                 where portal_id = :portal_id 
-		                                 and region = :target_region), 
-		                                 1) 
-		                     from dual)
-		                     where element_id = :element_id"
-
-		db_dml unhide_element \
-			"update portal_element_map 
-		set state = 'full' 
-		where element_id = :element_id"
-	    }
-		
-	}
-	"remove all checked" {
-
-	    set element_id_list [list]
-
-	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
-		lappend element_id_list $element_id
-		regsub {[&]*element_ids=\d+} $query ""  query
-	    }
-
-	    if {! [empty_string_p $element_id_list] } {
 		foreach element_id $element_id_list {
 		    db_dml hide_element \
 			    "update portal_element_map 
 		             set state =  'hidden' 
 		             where element_id = :element_id"
 		}
-	    } else {
-		ns_returnredirect \
-			"portal-config.tcl?[export_url_vars portal_id]"
-	    }
+	    } 
 	}
 	"revert to default" {
-	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
+	    ad_return_complaint 1 "portal::config_dispatch: Not implimented yet:  op  = $op"
 	}
 	"update_layout" {
-	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
+	    ad_return_complaint 1 "portal::config_dispatch: Not implimented yet:  op  = $op"
 	}
 	default {
 	    ns_log Warning \
 		    "portal::config_dispatch: op = $op, and that's not right!"
-	    ad_return_complaint 1  "portal::config_dispatch: Bad Op! \n whole_op = $whole_op, tr = $target_region, op $op"
-	}
-    }
-}
-
-
-ad_proc -public configure_dispatch { portal_id query } {
-    Dispatches the configuration operation. 
-    We get the target region number from the op.
-    
-    @author Arjun Sanyal (arjun@openforce.net)
-    @creation-date 9/28/2001
-nope} {
-    ad_require_permission $portal_id portal_read_portal
-    ad_require_permission $portal_id portal_edit_portal
-
-    # remove the portal_id from the query
-    set query [string tolower $query]
-    regsub {[&]*portal_id=\d+} $query "" query
-    
-    # get then remove the op including an optional target_region
-    regexp {[&]*op([\d])?=([\w\+]+)} $query whole_op target_region op
-    regsub {[&]*op[\d]?=[\w\+]+} $query "" query
-
-    # replace the "+"'s with spaces
-    regsub -all {\+} $op " " op
-    set op [string tolower $op]
-
-    switch $op {
-	"rename" { 
-	    regsub {[&]*new_name=} $query "" new_name
-	    portal::update_name $portal_id $new_name
-	}
-	"swap" {  
-	    regexp {[&]*element_id=(\d+)} $query "" element_id
-	    regexp {[&]*sort_key=(\d+)} $query "" sort_key
-	    regexp {[&]*region=(\d+)} $query "" region
-	    regexp {[&]*direction=(\w+)} $query "" direction
-	    portal::swap_element \
-		    $portal_id $element_id $sort_key $region $direction
-	}
-	"move all checked here" {
-
-	    set element_id_list [list]
-
-	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
-		lappend element_id_list $element_id
-		regsub {[&]*element_ids=\d+} $query ""  query
-	    }
-
-	    if {! [empty_string_p $element_id_list] } {
-		portal::move_elements \
-			$portal_id $element_id_list $target_region 
-	    } else {
-		ns_returnredirect \
-			"portal-config.tcl?[export_url_vars portal_id]"
-	    }
-	} 
-	"add here" {
-
-	    regexp {[&]*element_id=(\d+)} $query "" element_id
-
-	    db_transaction {
-		# The new element's sk will be the last in the region
-		db_dml set_element_region_and_sk \
-			"update portal_element_map 
-		         set region = :target_region, 
-		         sort_key = (select nvl((select max(sort_key) + 1
-		                                 from portal_element_map 
-		                                 where portal_id = :portal_id 
-		                                 and region = :target_region), 
-		                                 1) 
-		                     from dual)
-		                     where element_id = :element_id"
-
-		db_dml unhide_element \
-			"update portal_element_map 
-		set state = 'full' 
-		where element_id = :element_id"
-	    }
-		
-	}
-	"remove all checked" {
-
-	    set element_id_list [list]
-
-	    while {[regexp {[&]*element_ids=(\d+)} $query "" element_id]} {
-		lappend element_id_list $element_id
-		regsub {[&]*element_ids=\d+} $query ""  query
-	    }
-
-	    if {! [empty_string_p $element_id_list] } {
-		foreach element_id $element_id_list {
-		    db_dml hide_element \
-			    "update portal_element_map 
-		             set state =  'hidden' 
-		             where element_id = :element_id"
-		}
-	    } else {
-		ns_returnredirect \
-			"portal-config.tcl?[export_url_vars portal_id]"
-	    }
-	}
-	"revert to default" {
-	    ad_return_complaint 1 "Not implimented yet:  op  = $op, target_region = $target_region"
-	}
-	"update_layout" {
-	    ad_return_complaint 1 "Not implimented yet: op  = $op, target_region = $target_region"
-	}
-	default {
-	    ns_log Warning \
-		    "portal::config_dispatch: op = $op, and that's not right!"
-	    ad_return_complaint 1  "portal::config_dispatch: Bad Op! \n whole_op = $whole_op, tr = $target_region, op $op"
+	    ad_return_complaint 1  "portal::config_dispatch: Bad Op! \n op $op"
 	}
     }
 }
