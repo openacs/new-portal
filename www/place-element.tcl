@@ -48,11 +48,11 @@ and region not like 'i%'"
 
 # Set up the form target
 set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-set add_avail_p 0
-set add_html ""
+set show_avail_p 0
+set show_html ""
 set new_package_id [db_nextval acs_object_id_seq]
 
-append add_html "<select name=element_id>"
+append show_html "<select name=element_id>"
 
 db_foreach hidden_elements {
     select element_id, name
@@ -62,9 +62,9 @@ db_foreach hidden_elements {
        and pem.state = 'hidden'
     order by name
 } {
-    set add_avail_p 1
-    append add_html "<option value=$element_id>$name</option>\n"
+    set show_avail_p 1
+    append show_html "<option value=$element_id>$name</option>\n"
 }
 
-append add_html ""
+append show_html ""
         
