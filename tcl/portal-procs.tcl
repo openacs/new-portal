@@ -941,7 +941,7 @@ namespace eval portal {
 	from portals p , portal_element_map pem
 	where p.portal_id = :portal_id
 	and p.portal_id = pem.portal_id
-	and pem.datasource_id = :ds_id"] != "" } {
+	and pem.datasource_id = :ds_id" -default ""] != "" } {
 	    # I have a template with the element, copy the element from
 	    # the template to my portal
 
