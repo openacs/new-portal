@@ -515,7 +515,7 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::element_params_not_cached.params_select">
+    <fullquery name="portal::evaluate_element.params_select">
         <querytext>
             select key,
                    value
