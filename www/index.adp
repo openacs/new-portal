@@ -11,8 +11,8 @@
     Goto portal <a href="show-portal.tcl?portal_id=@users_portals.portal_id@">@users_portals.name@</a>
     </if>
     <br>
+</multiple>
 
 <if @users_portals:rowcount@ gt 0>
     <a href="portal-ae">Create another portal</a>
 </if>
-</multiple>
