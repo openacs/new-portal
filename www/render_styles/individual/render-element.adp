@@ -1,3 +1,4 @@
+<if @empty_p@ eq 0>
 <master src="@element.filename@">
 <property name="name">@element.name@</property>
 <property name="dir">@element.resource_dir@</property>
@@ -11,3 +12,4 @@
 <property name="hide_links_p">@hide_links_p@</property>
 
 @element.content@
+</if>

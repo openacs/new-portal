@@ -25,5 +25,13 @@ if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] }
     array set element $element_data
 }
 
+# Added by Ben to bypass rendering if there's nada"
+if {[empty_string_p [string trim $element(content)]]} {
+    set empty_p 1
+} else {
+    set empty_p 0
+} 
+
 ad_return_template
+
 
