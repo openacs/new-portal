@@ -8,33 +8,33 @@
 
     begin
     
-    :1 := portal.new ( 
-    name => :name,
-    layout_id => :layout_id,
-    template_id => :template_id,
-    portal_template_p => :portal_template_p,
-    default_page_name => :default_page_name,
-    theme_id => :theme_id,
-    context_id => :context_id
+    :1 := portal__new ( 
+    /* name */ :name,
+    /* layout_id */ :layout_id,
+    /* template_id */ :template_id,
+    /* portal_template_p */ :portal_template_p,
+    /* default_page_name */ :default_page_name,
+    /* theme_id */ :theme_id,
+    /* context_id */ :context_id
     );
     
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_read_portal' 
+    perform acs_permission__grant_permission ( 
+    /* object_id */ :1,
+    /* grantee_id */ :user_id,
+    /* privilege */ 'portal_read_portal' 
     );
     
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_edit_portal'
+    perform acs_permission__grant_permission ( 
+    /* object_id */ :1,
+    /* grantee_id */ :user_id,
+    /* privilege */ 'portal_edit_portal'
     );
 
     if :portal_template_p = 't' then
-    acs_permission.grant_permission ( 
-    object_id => :1,
-    grantee_id => :user_id,
-    privilege => 'portal_admin_portal'
+    acs_permission__grant_permission ( 
+    /* object_id */ :1,
+    /* grantee_id */ :user_id,
+    /* privilege */ 'portal_admin_portal'
     );
     end if;
 
@@ -45,9 +45,7 @@
 
 <fullquery name="portal::delete.delete_portal">
   <querytext>
-    begin
-      portal.delete (portal_id => :portal_id);
-    end;
+      select portal__delete (/* portal_id */ :portal_id);
   </querytext>
 </fullquery>
 
@@ -56,9 +54,10 @@
     update portal_element_map
     set region = :region,
     page_id = :page_id,
-    sort_key = (select nvl((select max(pem.sort_key) + 1
-	                    from portal_element_map pem
-                            where pem.page_id = :page_id
+    sort_key = (select coalesce((select max(pem.sort_key) + 1
+	                    from portal_element_map pem, portal_pages pp
+	                    where pp.portal_id = :portal_id 
+                            and pp.page_id = pem.page_id
 		            and region = :region), 
                             1) 
 		 from dual)
@@ -71,7 +70,7 @@
     update portal_element_map
     set page_id = :page_id, 
     region = :region,
-    sort_key = (select nvl((select max(sort_key) + 1
+    sort_key = (select coalesce((select max(sort_key) + 1
 	                    from portal_element_map 
                             where page_id = :page_id
 		            and region = :region), 
@@ -86,11 +85,10 @@
     insert into portal_element_map
     (element_id, name, pretty_name, page_id, datasource_id, region, sort_key)
     values
-    (:new_element_id, :ds_name, :pretty_name, :page_id, :ds_id, :region,  
-    nvl((select max(sort_key) + 1 
+    (:new_element_id, :ds_name, :ds_name, :page_id, :ds_id, :region,  
+    coalesce((select max(sort_key) + 1 
          from portal_element_map
-         where region = :region
-         and page_id = :page_id), 1))
+         where region = :region), 1))
   </querytext>
 </fullquery> 
 
@@ -98,9 +96,10 @@
   <querytext>
     update portal_element_map 
     set region = :target_region, 
-    sort_key = (select nvl((select max(pem.sort_key) + 1
-	                    from portal_element_map pem
-	                    where page_id = :my_page_id         
+    sort_key = (select coalesce((select max(pem.sort_key) + 1
+	                    from portal_element_map pem, portal_pages pp
+	                    where pp.portal_id = :portal_id
+                            and pp.page_id = pem.page_id
                             and region = :target_region), 
                            1) 
                 from dual)
@@ -111,15 +110,11 @@
 <fullquery name="portal::page_create.page_create_insert">
 <querytext>
 
-    begin
-    
-    :1 := portal_page.new ( 
-    pretty_name => :pretty_name,
-    portal_id => :portal_id,
-    layout_id => :layout_id
+    select portal_page__new ( 
+    /* pretty_name */ :pretty_name,
+    /* portal_id */ :portal_id,
+    /* layout_id */ :layout_id
     );
-
-    end;
 
 </querytext>
 </fullquery>

@@ -216,6 +216,14 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::navbar.list_page_nums_select">
+<querytext>
+select pretty_name, sort_key as page_num from portal_pages where
+portal_id = :portal_id
+order by sort_key
+</querytext>
+</fullquery>
+
 <fullquery name="portal::add_element.get_regions">      
   <querytext>
     select region
@@ -367,6 +375,14 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::move_element.get_my_page_id">      
+  <querytext>
+  select page_id as my_page_id
+  from portal_element_map 
+  where element_id = :element_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::get_element_param_list.select">      
   <querytext>
     select value
@@ -442,6 +458,12 @@
     where element_id = :element_id
   </querytext>
 </fullquery> 
+
+<fullquery name="portal::evaluate_element.select_portal_id">
+<querytext>
+select portal_id from portal_pages where page_id = (select page_id from portal_element_map where element_id= :element_id)
+</querytext>
+</fullquery>
 
 <fullquery name="portal::evaluate_element_raw.element_select">      
   <querytext>

@@ -764,11 +764,7 @@ namespace eval portal {
     } {
         set ad_dim_struct [list]
 
-        db_foreach list_page_nums_select {
-            select pretty_name, sort_key as page_num from portal_pages where
-            portal_id = :portal_id
-            order by sort_key
-        } {
+        db_foreach list_page_nums_select {} {
             lappend ad_dim_struct [list $page_num $pretty_name [list]]
         } 
 
@@ -1128,7 +1124,7 @@ namespace eval portal {
 
         # If user has no permissions to edit this portal, cancel out
         # some of the config parameters
-        set portal_id [db_string select_portal_id "select portal_id from portal_pages where page_id = (select page_id from portal_element_map where element_id= :element_id)"]
+        set portal_id [db_string select_portal_id {}]
 
         if {![ad_permission_p $portal_id portal_edit_portal]} {
             set config(shadeable_p) "f"
