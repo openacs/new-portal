@@ -693,6 +693,7 @@ namespace eval portal {
     #
 
     ad_proc -public add_element { 
+        {-force_region ""}
         {-page_id ""}
         {-page_num ""}
         portal_id
@@ -717,34 +718,53 @@ namespace eval portal {
 	set min_num 99999
 	set min_region 0
 
-        # get the layout for some page?
-        ns_log notice "aks36  add_element args  $page_num/$page_id"
+        # get the layout for some page
         set layout_id [get_layout_id -page_id $page_id $portal_id]
 	
-	db_foreach get_regions {} {
-	    lappend region_list $region
-	}
-
-	foreach region $region_list {
-	    db_1row region_count {}
-	    
-	    if { $count == 0 } {
-		set min_region $region
-		break
-	    }
-	    
-	    if { $min_num > $count } {
-		set min_num $count
-		set min_region $region
-	    } 
-	}
-	
-	if { $min_region == 0 } { 
-            set min_region 1
+        # get the regions in this layout
+        db_foreach get_regions {} {
+            lappend region_list $region
         }
+        
+	if {[empty_string_p $force_region]} {
+            # find the "best" region to put it in
+            foreach region $region_list {
+                db_1row region_count {}
+                
+                if { $count == 0 } {
+                    set min_region $region
+                    break
+                }
+                
+                if { $min_num > $count } {
+                    set min_num $count
+                    set min_region $region
+                } 
+            }
+            
+            if { $min_region == 0 } { 
+                set min_region 1
+            }
+        } else {
+            # verify that the region given is in this layout
+            set min_region 0
 
+            foreach region $region_list {
+            ns_log notice "aks40 $region / $force_region"
+                if {$force_region == $region} {
+                    set min_region $region
+                    break
+                }
+            }
+            
+            ns_log notice "aks40 min region $min_region"
 
-
+            if {$min_region == 0} {
+                # the region asked for was not in the list
+                ns_log error "portal::add_element region $force_region not in layout $layout_id"
+                ad_return_complaint 1  "portal::add_element region $force_region not in layout $layout_id"
+            }
+        }
         return [add_element_to_region \
                     -page_id $page_id \
                     -layout_id $layout_id \
