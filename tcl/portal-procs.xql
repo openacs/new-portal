@@ -672,7 +672,7 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_layout_region_count_not_cachedregion.select_region_count">      
+<fullquery name="portal::get_layout_region_count_not_cached.select_region_count">      
   <querytext>df
     select count(*) as region_count
     from portal_supported_regions
