@@ -1556,7 +1556,7 @@ namespace eval portal {
             } {
 
         global errorInfo
-        ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n"
+        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
         set element(content) " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n"
@@ -1634,7 +1634,8 @@ namespace eval portal {
                 [datasource_call \
                 $element(datasource_id) "Show" [list [array get config] ]] } \
                 errmsg ] } {
-            ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"
+            global errorInfo
+            ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$errorInfo\n\n"
             ad_return -error
             ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
