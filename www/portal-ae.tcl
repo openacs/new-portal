@@ -7,7 +7,7 @@ ad_page_contract {
     @creation-date 9/28/2001
     @cvs-id $Id$
 } {
-    portal_id:naturalnum,notnull,optional,object_write
+    portal_id:naturalnum,notnull,optional
 }
 
 set user_id [ad_conn user_id]
