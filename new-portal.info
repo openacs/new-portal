@@ -75,6 +75,19 @@
             <file path="www/spacer.gif"/>
             <file type="tcl_util" path="www/test-api.tcl"/>
             <file type="template" path="www/themes/simple-theme.adp"/>
+            <file path="www/themes/window-theme.adp"/>
+            <file path="www/themes/window-theme/edit.png"/>
+            <file path="www/themes/window-theme/go.png"/>
+            <file path="www/themes/window-theme/shade.png"/>
+            <file path="www/themes/window-theme/tbl-bleft.png"/>
+            <file path="www/themes/window-theme/tbl-bottom.png"/>
+            <file path="www/themes/window-theme/tbl-bright.png"/>
+            <file path="www/themes/window-theme/tbl-left.png"/>
+            <file path="www/themes/window-theme/tbl-right.png"/>
+            <file path="www/themes/window-theme/tbl-tleft.png"/>
+            <file path="www/themes/window-theme/tbl-top.png"/>
+            <file path="www/themes/window-theme/tbl-tright.png"/>
+            <file path="www/themes/window-theme/x.png"/>
         </files>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="full_cache"  default="0" description="The number of seconds to cache a fully rendered portal." section_name="Performance"/>
