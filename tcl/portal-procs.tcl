@@ -85,7 +85,8 @@ namespace eval portal {
 	{-name "Untitled"} 
 	{-template_id ""} 
 	{-portal_template_p "f"} 
-	{-layout_name "'Simple 2-Column'"} 
+	{-layout_name "'Simple 2-Column'"}
+	{-context_id ""} 
 	user_id 
     } {
 	Create a new portal for the passed in user id. 
@@ -111,7 +112,7 @@ namespace eval portal {
 	    layout_id => :layout_id,
 	    template_id => :template_id,
 	    portal_template_p => :portal_template_p
-
+	    context_id => :context_id
 	    );
 	    
 	    acs_permission.grant_permission ( 
