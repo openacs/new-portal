@@ -426,7 +426,7 @@ namespace eval portal {
             set one_theme_chunk "&nbsp;$name - $description"
 
             if {$current_theme_id == $theme_id } {
-                append theme_chunk "checked><b>$one_theme_chunk</b>"
+                append theme_chunk " checked><b>$one_theme_chunk</b>"
             } else {
                 append theme_chunk ">$one_theme_chunk"
             }
