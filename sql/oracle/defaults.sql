@@ -26,30 +26,11 @@ insert
 -- it's possible to pass parameters to a procedure, so
 -- element attributes can be sent to it.
 
+
+-- the only datasource is the tcl proc, this is deprecated
 insert
     into portal_data_types (name, pretty_name)
     values ('tcl_proc', 'Tcl Procedure');
-
-insert
-    into portal_data_types (name, pretty_name)
-    values ('tcl_raw', 'Raw Tcl');
-
-insert
-    into portal_data_types (name, pretty_name)
-    values ('plsql', 'Oracle PL/SQL Procedure');
-
-insert
-    into portal_data_types (name, pretty_name)
-    values ('adp', 'AOLserver ADP');
-
-insert
-    into portal_data_types (name, pretty_name, secure_p)
-    values ('raw', 'Raw Data', 't');
-
-insert
-    into portal_data_types (name, pretty_name)
-    values ('url', 'URL');
-
 
 -- ampersands break if I don't do this.
 set scan off
@@ -110,6 +91,12 @@ begin
 		filename => 'themes/simple-theme',
 		resource_dir => 'themes/simple-theme/simple-theme');
 
+	theme_id := portal_element_theme.new (
+		name => 'Funky theme with icons',
+		description => 'Funky theme with icons',
+		filename => 'themes/window-theme',
+		resource_dir => 'themes/window-theme');
+
 -- used to just insert into portal_available_mime_type_map
 
 --	portal_theme.add_type ( theme_id => theme_id, mime_type => 'text/html' );
@@ -118,50 +105,3 @@ begin
 end;
 /
 
-
--- create a very simple  ds.
-
--- XXX path for the content_varchar
----
----declare
----	   v_datasource_id	portal_datasources.datasource_id%TYPE;
----begin
----	   v_datasource_id := portal_datasource.new (
----		   data_type => 'raw',
----		   mime_type => 'application/x-ats',
----		   name => 'null-datasource',
----		   description => 'NULL DS for testing',
----		   content_varchar => '/packages/new-portal/www/datasources/null/null',
----		   configurable_p => 't'
----	   );
----	   
----	   -- some test default params
----	   portal_datasource.set_def_param (
----		   datasource_id => v_datasource_id,
----		   config_required_p => 'f',
----		   configured_p => 'f',
----		   key => 'foo',
----		   value => 'bar'
----	   );
----end;
----/
----
----commit;
----
----
------ test ds
----declare
----	   datasource_id	portal_datasources.datasource_id%TYPE;
----begin
----	   datasource_id := portal_datasource.new (
----		   data_type => 'raw',
----		   mime_type => 'application/x-ats',
----		   name => 'Portal Connector',
----		   description => 'Connects the current portal with others at the same level on the site-map.',
----		   content_varchar => '/packages/new-portal/www/datasources/connector/connector'
----	   );
----
----end;
----/
----
----commit;
