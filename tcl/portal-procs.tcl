@@ -249,14 +249,14 @@ ad_proc -public render_portal { portal_id } {
     ns_log notice "AKS22 got here $code"
     set output [template::adp_eval code]
 
-    if {![empty_string_p $output]} {
-        set mime_type [template::get_mime_type]
-        set header_preamble [template::get_mime_header_preamble $mime_type]
-
-	ns_return 200 $mime_type "$header_preamble $output"
-    }
-    
-#    return $output
+#    if {![empty_string_p $output]} {
+#	 set mime_type [template::get_mime_type]
+#	 set header_preamble [template::get_mime_header_preamble $mime_type]
+#
+#	 ns_return 200 $mime_type "$header_preamble $output"
+#    }
+#    
+    return $output
 
 }
 
