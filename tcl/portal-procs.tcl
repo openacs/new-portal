@@ -142,8 +142,10 @@ namespace eval portal {
     }
     
     ad_proc -public render { 
+        {-hide_links_p "f"} 
         portal_id
         {theme_id ""} 
+
     } {
 	Get a portal by id. If it's not found, say so.
 	
@@ -186,7 +188,8 @@ namespace eval portal {
 	    element_list=\"@element_list@\"
 	    element_src=\"@element_src@\"
 	    theme_id=@portal.theme_id@
-	    portal_id=@portal.portal_id@>"
+	    portal_id=@portal.portal_id@
+            hide_links_p=@hide_links_p@>"
 	}
 	
 	# Necessary hack to work around the acs-templating system
@@ -331,7 +334,8 @@ namespace eval portal {
         <b>Configure The Portal's Elements:</b>
         <include src=\"@portal.template@\" element_list=\"@element_list@\" 
         action_string=@action_string@ portal_id=@portal_id@ 
-        return_url=\"@return_url@\" element_src=\"@element_src@\">
+        return_url=\"@return_url@\" element_src=\"@element_src@\"
+        hide_links_p=f>
         "
 	# This hack is to work around the acs-templating system
 	set __adp_stub "[get_server_root][www_path]/."
@@ -788,6 +792,7 @@ namespace eval portal {
 	    set config(shadeable_p) "f"
 	    set config(hideable_p) "f"
 	    set config(user_editable_p) "f"
+	    set config(link_hideable_p) "f"
 	}
 	
 	# do the callback for the ::show proc
@@ -812,6 +817,7 @@ namespace eval portal {
 	set element(shaded_p) $config(shaded_p) 
 	set element(hideable_p) $config(hideable_p) 
 	set element(user_editable_p) $config(user_editable_p)
+	set element(link_hideable_p) $config(link_hideable_p)
 
 	# apply the path hack to the filename and the resourcedir
 	set element(filename) "[www_path]/$element(filename)"
@@ -996,6 +1002,168 @@ namespace eval portal {
 	    return 0 
 	}
     }
-    
+
+    ad_proc -public add_element_or_append_id { 
+        {-portal_id:required} 
+        {-portlet_name:required}
+        {-value_id:required}
+        {-key "instance_id"}
+        {-extra_params ""}
+    } {
+        A helper proc for portlet "add_self_to_page" procs.
+        Adds the given portlet as an portal element to the given
+        page. If the portlet is already in the given portal page,
+        it appends the value_id to the element's parameters with the 
+        given key. Returns the element_id used.
         
+ 	@return element_id The new element's id
+	@param portal_id The page to add the portlet to
+	@param portlet_name The name of the portlet to add
+        @param key the key for the value_id (defaults to instance_id)
+	@param value_id the value of the key
+        @param extra_params a list of extra key/value pairs to insert or append
+    } {
+
+	# Find out if this portlet already exists in this page
+	set element_id_list [get_element_ids_by_ds $portal_id $portlet_name]
+
+	if {[llength $element_id_list] == 0} {
+	    db_transaction {
+
+                # Tell portal to add this element to the page
+                set element_id [add_element $portal_id $portlet_name]
+
+                # There is already a value for the param which is overwritten
+                set_element_param $element_id $key $value_id
+                
+                if {![empty_string_p $extra_params]} {
+                    check_key_value_list $extra_params
+
+                    for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
+                        set_element_param $element_id \
+                                [lindex $extra_params $x] \
+                                [lindex $extra_params [expr $x + 1]]
+                    }        
+                }
+            }
+	} else {
+            db_transaction {
+                set element_id [lindex $element_id_list 0]
+
+                # There are existing values which should NOT be overwritten
+                add_element_param_value -element_id $element_id \
+                        -key $key \
+                        -value $value_id
+                
+                if {![empty_string_p $extra_params]} {
+                    check_key_value_list $extra_params
+
+                    for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
+                        add_element_param_value -element_id $element_id \
+                                -key [lindex $extra_params $x] \
+                                -value [lindex $extra_params [expr $x + 1]]
+                    }        
+                }
+            }
+        }
+
+        return $element_id
+    }
+
+    ad_proc -public remove_element_or_remove_id { 
+        {-portal_id:required} 
+        {-portlet_name:required}
+        {-value_id:required}
+        {-key "instance_id"}
+        {-extra_params ""}
+    } {
+        A helper proc for portlet "remove_self_from_page" procs.
+        The inverse of the above proc.
+
+        Removes the given parameters from all the the portlets 
+        of this type on the given page. If by removing this param, 
+        there are no more params (say instace_id's) of this type,
+        that means that the portlet has become empty and can be
+
+	@param portal_id The portal page to act on
+	@param portlet_name The name of the portlet to (maybe) remove 
+        @param key the key for the value_id (defaults to instance_id)
+	@param value_id the value of the key
+        @param extra_params a list of extra key/value pairs to remove
+    } {
+	# get the element IDs (could be more than one!)
+	set element_ids [get_element_ids_by_ds $portal_id $portlet_name]
+
+	# step 1: remove all the given param(s) from all of the pe's
+	db_transaction {
+	    foreach element_id $element_ids {
+
+                ns_log notice "aks30 $element_id, $key, $value_id"
+
+		remove_element_param_value -element_id $element_id \
+                        -key $key \
+                        -value $value_id
+
+                if {![empty_string_p $extra_params]} {
+                    check_key_value_list $extra_params
+
+                    for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
+
+                        ns_log notice "aks31 $element_id, [lindex $extra_params $x] 
+                                 [lindex $extra_params [expr $x + 1]]"
+
+                        remove_element_param_value -element_id $element_id \
+                                -key [lindex $extra_params $x] \
+                                -value [lindex $extra_params [expr $x + 1]]
+                    }
+                }                
+            }
+        }
+
+        # step 2:  Check if we should really remove the element
+        db_transaction {
+            foreach element_id $element_ids {
+                if {[llength [get_element_param_list \
+                        -element_id $element_id \
+                        -key $key]] == 0} {
+                    remove_element $element_id
+                }
+            }
+        }
+    }
+
+    ad_proc -private check_key_value_list { 
+        list_to_check
+    } {
+        rat-simple consistency check for the above 2 procs
+    } {              
+        if {[expr [llength $list_to_check] % 2] != 0} {
+            ns_log error "portal::check_key_value_list bad var list_to_check!"
+            ad_return_complaint 1  "portal::check_key_value_list bad var list_to_check!"
+        }    
+    }
+
+    ad_proc -public show_proc_helper { 
+        {-package_key:required}
+        {-config_list:required}
+    } {
+        hides ugly templating calls for portlet "show" procs
+    } {
+        
+        # some stupid upvar tricks to get them set right
+        upvar __pk foo
+        set foo $package_key
+
+        upvar __cflist bar
+        set bar $config_list
+
+        uplevel 1 {
+            set template "<include src=\"$__pk\" cf=\"$__cflist\">"
+            set __adp_stub "[get_server_root]/packages/$__pk/www/."
+            set code [template::adp_compile -string $template]	
+            set output [template::adp_eval code]
+            return $output
+        }
+    }
+
 }
