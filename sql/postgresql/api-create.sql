@@ -370,11 +370,13 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_element_theme__delete','theme_id');
 
-create function portal_element_theme__delete (integer)
+create or replace function portal_element_theme__delete (integer)
 returns integer as '
+declare
     p_theme_id                      alias for $1;
 begin
-    perform acs_object__delete(p_theme_id);
+    PERFORM acs_object__delete(p_theme_id);
+
     return (0);
 end;' language 'plpgsql';
 
@@ -444,8 +446,9 @@ end;' language 'plpgsql';
 
 select define_function_args('portal_layout__delete','layout_id');
 
-create function portal_layout__delete(integer)
+create or replace function portal_layout__delete(integer)
 returns integer as '
+declare
     p_layout_id                     alias for $1;
 begin
     perform acs_object__delete(layout_id);
