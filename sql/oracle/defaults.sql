@@ -72,8 +72,8 @@ begin
 	layout_id := portal_layout.new (
 		name => 'Simple 2-Column',
 		description => 'A simple 2-column layout',
-		filename => 'layouts/simple2',
-		resource_dir => 'layouts/components/simple2');
+		filename => 'www/layouts/simple2',
+		resource_dir => 'www/layouts/components/simple2');
 
 -- the supported regions for that layout.
 	portal_layout.add_region (layout_id => layout_id, region => '1');
@@ -126,18 +126,28 @@ end;
 declare
 	datasource_id	portal_datasources.datasource_id%TYPE;
 begin
-	datasource_id := portal_datasource.new (
+	v_datasource_id := portal_datasource.new (
 		data_type => 'raw',
 		mime_type => 'application/x-ats',
-		name => 'NULL datasource',
+		name => 'null-datasource',
 		description => 'NULL DS for testing',
-		content_varchar => '/packages/new-portal/www/datasources/null/null'
+		content_varchar => '/packages/new-portal/www/datasources/null/null',
+		configurable_p => 't'
 	);
-
+	
+	-- some test default params
+	portal_datasource.set_def_param (
+		datasource_id => v_datasource_id,
+		config_required_p => 'f',
+		configured_p => 'f'
+		key => 'foo',
+		value => 'bar'
+	);
 end;
 /
 
 commit;
+
 
 -- test ds
 declare
