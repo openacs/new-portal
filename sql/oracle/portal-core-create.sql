@@ -51,7 +51,7 @@ create table portal_datasources (
 	name			varchar(200) not null,
 	description		varchar(4000),
 	config_path		varchar(200),
-	content			clob
+	content			varchar(4000)
 );
 
 
