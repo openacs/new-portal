@@ -58,7 +58,6 @@
 <tr>
 <td align="left" valign="middle" bgcolor="#ffffff">
 <br>
-<div align="justify">
 <font face="verdana,arial,helvetica" color="#333333">
 <!-- Content: '@name@' begin -->
 <slave>
