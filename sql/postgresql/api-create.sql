@@ -500,6 +500,27 @@ begin
 
 end;' language 'plpgsql';
 
+create function portal_datasource__new (varchar,varchar)
+returns integer as '
+declare
+    p_name                          alias for $1; -- default null
+    p_description                   alias for $2; -- default null
+    v_datasource_id                 portal_datasources.datasource_id%TYPE;
+begin
+
+    v_datasource_id := portal_datasource__new(null,
+				  p_name,
+				  p_description,
+				  ''portal_datasource'',
+				  now(),
+				  null,
+				  null,
+				  null);
+
+    return v_datasource_id;
+
+end;' language 'plpgsql';
+
 select define_function_args('portal_datasource__delete','datasource_id');
 
 create function portal_datasource__delete (integer)
