@@ -244,6 +244,8 @@ create table portal_element_parameters (
 	value			varchar(200) 
 );
 
+create index p_element__prms_elem_id_idx on portal_element_parameters (element_id);
+create index p_element_prms_elem_key_idx on portal_element_parameters (element_id, key);
 
 -- This table maps the datasources that are available for portals to
 -- bind to (i.e. creating a PE). This table is required since some DSs
