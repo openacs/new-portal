@@ -274,40 +274,6 @@ ad_proc -public render { portal_id } {
 
 }
 
-ad_proc -public render_element { element_id region_id } {
-    Wrapper for the below proc
-
-    @return 
-    @param element_id 
-    @param region_id 
-    @author Arjun Sanyal
-    @creation-date Sept 2001
-} {
-
-    # get the complete, evaluated element.
-    # if there's an error, report it.
-    if { [catch {set element_data [evaluate_element $element_id] } errmsg ] } {
-	if { [ad_parameter log_datasource_errors_p] == 1} {
-	    ns_log Error "portal: $errmsg"
-	}
-    
-	if { [ad_parameter show_datasource_errors_p] == 1} {
-	    set element(content) "<div class=portal_alert>$errmsg</div>"
-	    set element(mime_type) "text/html"
-	} else {
-	    return
-	}
-    } else {
-	array set element $element_data
-    }
-    
-    # consistency is good.
-    set element(region) $region
-    
-    # return the appropriate template for that element.
-    ad_return_template "layouts/mime-types/$element(mime_type_noslash)"
-}
-
 ad_proc -public evaluate_element { element_id } {
     Get an element.  Combine the datasource, template, etc.  Return a suitable
     chunk of HTML.
@@ -680,4 +646,4 @@ ad_proc -public  dummy {} {
 }
 
 
-} # namespace
+}
