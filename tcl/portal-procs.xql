@@ -425,10 +425,13 @@
     pem.datasource_id,
     pem.state,
     pet.filename as filename, 
-    pet.resource_dir as resource_dir
-    from portal_element_map pem, portal_element_themes pet
+    pet.resource_dir as resource_dir,
+    pem.pretty_name as pretty_name,
+    pd.name as ds_name
+    from portal_element_map pem, portal_element_themes pet, portal_datasources pd
     where pet.theme_id = :theme_id
     and pem.element_id = :element_id
+    and pem.datasource_id = pd.datasource_id
   </querytext>
 </fullquery> 
 

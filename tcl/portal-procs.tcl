@@ -1082,6 +1082,10 @@ namespace eval portal {
             set config(user_editable_p) "f"
         }
 
+        # HACK FIXME (ben)
+        # setting editable to false
+        set config(user_editable_p) "f"
+
         # do the callback for the ::show proc
         # evaulate the datasource.
         if { [catch {        set element(content) \
@@ -1092,9 +1096,15 @@ namespace eval portal {
             ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
         }
 
-        set element(name) \
-                [datasource_call \
-                $element(datasource_id) "GetPrettyName" [list]] 
+        # We use the actual pretty name from the DB (ben)
+        # FIXME: this is not as good as it should be
+        if {$element(ds_name) == $element(pretty_name)} {
+            set element(name) \
+                    [datasource_call \
+                    $element(datasource_id) "GetPrettyName" [list]]
+        } else {
+            set element(name) $element(pretty_name) 
+        }
 
         set element(link) \
                 [datasource_call $element(datasource_id) "Link" [list]]
