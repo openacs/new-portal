@@ -18,8 +18,9 @@
 
 %>
 
-<master src="master">
-<property name="title">Configure page: @name@</property>
-<p>
+<master>
+<property name="title">Configure portal: @name@</property>
+
+Configure portal: @name@
 
 @rendered_page@

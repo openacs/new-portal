@@ -29,6 +29,10 @@ ad_page_contract {
 # Get the portal's name for the title
 set name [portal::get_name $portal_id]
 
+ad_return_complaint 1 "foo [portal::get_name $portal_id]/$name/$portal_id"
+
+ad_script_abort
+
 set rendered_page [portal::configure $portal_id "index.tcl"]
 
 ad_return_template
