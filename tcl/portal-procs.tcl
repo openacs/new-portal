@@ -119,6 +119,9 @@ namespace eval portal {
         # page_name2, layout2...", we get the required first page_name
         # and first page layout from it, overriding any other params
 
+        set page_name_list [list "Page 1"]
+        set layout_name_list [list "Simple 2-Column"]
+
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split $csv_list ";"]
             set page_name_list [list]
@@ -129,17 +132,15 @@ namespace eval portal {
                 lappend page_name_list [lindex [split $item ","] 0]
                 lappend layout_name_list [lindex [split $item ","] 1]
             }
-
-            set default_page_name [lindex $page_name_list 0]
-            set layout_name [lindex $layout_name_list 0]
         }
 
+        set default_page_name [lindex $page_name_list 0]
+        set layout_name [lindex $layout_name_list 0]
 
         # get the default layout_id - simple2
+        set layout_id [get_layout_id]
         if {![empty_string_p $layout_name]} {
             set layout_id [get_layout_id -layout_name $layout_name]
-        } else {
-            set layout_id [get_layout_id]
         }
 
         # get the default theme name from param, if no theme given
@@ -151,19 +152,19 @@ namespace eval portal {
 
         db_transaction {
             # create the portal and the first page
+
             set portal_id [db_exec_plsql create_new_portal_and_perms {}]
 
             if {![empty_string_p $csv_list]} {
                 # if there are more pages in the csv_list, create them
                 for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
                     portal::page_create -portal_id $portal_id \
-                            -pretty_name [lindex $page_name_list $i] \
-                            -layout_name [lindex $layout_name_list $i]
+                        -pretty_name [lindex $page_name_list $i] \
+                        -layout_name [lindex $layout_name_list $i]
                 }
             }
 
         }
-
 
         return $portal_id
     }
