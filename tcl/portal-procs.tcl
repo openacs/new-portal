@@ -609,6 +609,7 @@ namespace eval portal {
 
     ad_proc -public get_page_id {
         {-portal_id:required}
+        {-page_name ""}
         {-sort_key "0"}
         {-current "f"}
     } {
@@ -624,7 +625,11 @@ namespace eval portal {
         if {$current == "f"} {
             return [db_string get_page_id_select {}]
         } else {
-            return [db_string get_current_page_id_select {}]
+            if {![empty_string_p $page_name]} {
+                return [db_string get_page_id_from_name {} -default ""]
+            } else {
+                return [db_string get_current_page_id_select {}]
+            }
         }
     }
 
@@ -1359,7 +1364,8 @@ namespace eval portal {
     }
 
     ad_proc -public add_element_or_append_id { 
-        {-portal_id:required} 
+        {-portal_id:required}
+        {-page_id ""}
         {-portlet_name:required}
         {-value_id:required}
         {-key "instance_id"}
@@ -1386,7 +1392,7 @@ namespace eval portal {
 	    db_transaction {
 
                 # Tell portal to add this element to the page
-                set element_id [add_element $portal_id $portlet_name]
+                set element_id [add_element -page_id $page_id $portal_id $portlet_name]
 
                 # There is already a value for the param which is overwritten
                 set_element_param $element_id $key $value_id

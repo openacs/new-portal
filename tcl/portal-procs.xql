@@ -201,6 +201,15 @@
 <fullquery name="portal::get_page_id.get_current_page_id_select">      
   <querytext>
    select page_id
+   from portal_pages
+   where portal_id = :portal_id 
+   and pretty_name= :page_name
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::get_page_id.get_current_page_id_select">      
+  <querytext>
+   select page_id
    from portal_current_page
    where portal_id = :portal_id 
   </querytext>

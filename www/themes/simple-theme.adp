@@ -5,11 +5,12 @@
         <table bgcolor=white border=0 cellpadding=2 width=100% cellspacing=0>
 	  <tr>
             <td class="portal_header" bgcolor="#cc0000" align=left>
-              <font face=arial,helvetica size="-1" color=#ffffcc>
+              <font face=arial,helvetica size="-1" color=#ffffcc link=#ffffcc vlink=#ffffcc>
               <if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
                 <b>@name@</b>
               </if><else>
-                <a style="text-decoration: none" href=@link@><b>@name@</b></a>
+                 <!--<a style="text-decoration: none" href=@link@><b>@name@</b></a>-->
+                 <b>@name@</b>
               </else>
               </font>
             </td>
