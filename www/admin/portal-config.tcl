@@ -23,10 +23,11 @@ ad_page_contract {
     @creation-date 10/20/2001
     @cvs-id $Id$
 } {
-    {referer:notnull}
+    {referer:optional ""}
     portal_id:naturalnum,notnull
 }
 
+set page_url [ad_conn url]
 set name ""
 set rendered_page [portal::configure \
         -referer $referer \
@@ -34,3 +35,12 @@ set rendered_page [portal::configure \
         $portal_id ""
 ]
 set name [portal::get_name $portal_id]
+set return_url "$page_url?portal_id=$portal_id"
+
+
+
+
+
+
+
+

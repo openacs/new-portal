@@ -346,6 +346,7 @@ namespace eval portal {
     ad_proc -public configure {
         {-referer ""}
         {-template_p f}
+	{-allow_theme_change_p 1}
         portal_id
         return_url
     } {
@@ -429,7 +430,9 @@ namespace eval portal {
         }
 
         append theme_chunk "<input type=submit name=op value=\"Change Theme\"></form>"
+	if {$allow_theme_change_p} {
         append template "$theme_chunk"
+	}
 
         #
         # Per-page template chunks
@@ -437,6 +440,8 @@ namespace eval portal {
 
         set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
+	set last_page [lindex $list_of_page_ids [expr [llength $list_of_page_ids] - 1]]
+	ns_log warning "last_page is $last_page"
         foreach page_id $list_of_page_ids {
 
             set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
@@ -448,18 +453,20 @@ namespace eval portal {
             #
             # Page rename chunk
             #
-
-            set page_name_chunk "
-            <a name=$page_id></a>
-            <form method=post action=@action_string@>
+            set page_name_chunk "<table border=0 width=\"100%\" class=\"portal-page-config\" cellpadding=0 cellspacing=0 border=0>
+	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">$page_name</h2></a></td>
+            <td align=right><name=$page_id></a>
+            <form method=post align=right action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=page_id value=$page_id>
-            <input type=hidden name=return_url value=@return_url@>
+            <input type=hidden name=return_url value=@return_url@#$page_id>
             <input type=hidden name=anchor value=$page_id>
-            <br><strong>Page:</strong>
-            <input type=text name=pretty_name value=\"$page_name\">
             <input type=submit name=op value=\"Rename Page\">
-            </form>"
+            <input type=text name=pretty_name value=\"$page_name\">
+            </form> 
+	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/graphics/spacer.gif\" height=1></td></tr>
+	    </td></tr>"
+
             append template "$page_name_chunk"
 
             if {[portal::non_hidden_elements_p -page_id $page_id] || $first_page_p} {
@@ -478,7 +485,7 @@ namespace eval portal {
                 set element_list [array get fake_element_ids]
 
                 append template "
-                <table bgcolor=#eeeeee border=0 width=\"100%\">
+                <table class=\"portal-page-config\" bgcolor=#eeeeee border=0 width=\"100%\">
                 <tr valign=middle><td valign=middle>
                 <include src=\"$portal(template)\"
                 element_list=\"$element_list\"
@@ -504,7 +511,16 @@ namespace eval portal {
                 # Remove page chunk - don't allow removal of the first page
                 #
 
-                if {!$first_page_p} {
+		append template "<tr><td><include src=\"show-here\" portal_id=$portal_id
+		    action_string=@action_string@
+		    region=@region@
+		    page_id=$page_id
+		    anchor=$page_id
+		    return_url=@return_url@></tr></td>"
+
+
+
+                if { $page_id == $last_page } {
                     append template "
                     <tr valign=middle><td valign=middle>
                     <center>
@@ -564,7 +580,7 @@ namespace eval portal {
 
 
             # close the page's table
-            append template "</table>"
+            append template "</table><p>"
 
         }
 
@@ -575,15 +591,21 @@ namespace eval portal {
         set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
         append template "
-        <a name=add_a_new_page></a>
+	<p>
+        <table class=\"portal-page-config\" border=0 cellspacing=0 cellpadding=0>
+            <tr><td><h2 class=\"portal-page-name\">Create a new page</h2></tr></td>
+	<tr><td>
+	<a name=add_a_new_page></a>
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
-        <input type=hidden name=return_url value=@return_url@>
+        <input type=hidden name=return_url value=@return_url@#$page_id>
         <input type=hidden name=anchor value=add_a_new_page>
-        <b>Add a new page:</b>
+        <center>
          <input type=text name=pretty_name value=\"Page $new_page_num\">
         <input type=submit name=op value=\"Add Page\">
+	<center>
         </form>
+	</td></tr></table>
         "
 
         #
@@ -591,14 +613,16 @@ namespace eval portal {
         #
 
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
-            append template "
-            <br>
-            <form method=post action=@action_string@>
+            append template "<p>
+            <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0><tr><td>
+	    <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
-            <b>Revert to the default arrangement:</b>
+            <h2 class=\"portal-page-name\">Revert the entire portal to the default arrangement</h2>
+	    <center>
             <input type=submit name=op value=\"Revert\">
-            </form>"
+            </form></center>
+	    </td></tr></table>"
         }
 
         #
@@ -641,69 +665,70 @@ namespace eval portal {
 
         switch $op {
             "Revert" {
-                db_transaction {
-                    set template_id [get_portal_template_id $portal_id]
+		#Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
+		#It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
 
-                    # revert theme
-                    set theme_id [get_theme_id -portal_id $template_id]
-                    db_dml revert_theme_update {}
+		set template_id [get_portal_template_id $portal_id]
 
-                    # revert pages
-                    # first equalize number of pages in the target
-                    set template_page_count [page_count -portal_id $template_id]
-                    set target_page_count [page_count -portal_id $portal_id]
-                    set difference [expr $template_page_count - $target_page_count]
-
-                    if {$difference > 0} {
-                        # less pages in target
-                        for {set x 0} {$x < $difference} {incr x} {
-
-                            set pretty_name "portal revert dummy page $x"
-                            page_create \
-                                    -pretty_name $pretty_name \
-                                    -portal_id $portal_id
-                        }
-                    } elseif {$difference < 0} {
-                        # more pages in target, delete them from the end,
-                        # putting any elements on them on the first page,
-                        # we put them in the right place later
-                        for {set x 0} {$x < [expr abs($difference)]} {incr x} {
-
-                            set max_page_id [db_string revert_max_page_id_select {}]
-                            set page_id [db_string revert_min_page_id_select {}]
-                            set region 1
-
-                            db_foreach revert_move_elements_for_del {} {
-                                portal::move_element_to_page \
+		# revert theme
+		set theme_id [get_theme_id -portal_id $template_id]
+		db_dml revert_theme_update {}
+		
+		# revert pages
+		# first equalize number of pages in the target
+		set template_page_count [page_count -portal_id $template_id]
+		set target_page_count [page_count -portal_id $portal_id]
+		set difference [expr $template_page_count - $target_page_count]
+		
+		if {$difference > 0} {
+		    # less pages in target
+		    for {set x 0} {$x < $difference} {incr x} {
+			
+			set pretty_name "portal revert dummy page $x"
+			page_create \
+				-pretty_name $pretty_name \
+				-portal_id $portal_id
+		    }
+		} elseif {$difference < 0} {
+		    # more pages in target, delete them from the end,
+		    # putting any elements on them on the first page,
+		    # we put them in the right place later
+		    for {set x 0} {$x < [expr abs($difference)]} {incr x} {
+			
+			set max_page_id [db_string revert_max_page_id_select {}]
+			set page_id [db_string revert_min_page_id_select {}]
+			set region 1
+			
+			db_foreach revert_move_elements_for_del {} {
+			    portal::move_element_to_page \
                                     -page_id $page_id \
                                     -element_id $element_id \
                                     -region 1
-                            }
+			}
 
-                            page_delete -page_id $max_page_id
-                        }
-                    }
+			page_delete -page_id $max_page_id
+		    }
+		}
+		
+		# now that they have the same number of pages, get to it
+		foreach source_page_id \
+			[list_pages_tcl_list -portal_id $template_id] {
+		    
+		    db_1row revert_get_source_page_info {}
 
-                    # now that they have the same number of pages, get to it
-                    foreach source_page_id \
-                            [list_pages_tcl_list -portal_id $template_id] {
-
-                        db_1row revert_get_source_page_info {}
-
-                        set target_page_id [db_string revert_get_target_page_id {}]
-
-                        db_dml revert_page_update {}
-
-                        # revert elements in two steps like "swap"
-                        db_foreach revert_get_source_elements {} {
-                            # the element might not be on the target page...
-                            set target_element_id \
-                                    [db_string revert_get_target_element {}]
-
-                            db_dml revert_element_update {}
-                        }
-                    }
-                }
+		    set target_page_id [db_string revert_get_target_page_id {}]
+		    
+		    db_dml revert_page_update {}
+		    
+		    # revert elements in two steps like "swap"
+		    db_foreach revert_get_source_elements {} {
+			# the element might not be on the target page...
+			set target_element_id \
+				[db_string revert_get_target_element {}]
+			
+			db_dml revert_element_update {}
+		    }
+		}
             }
             "Rename" {
                 portal::update_name $portal_id [ns_set get $form new_name]
@@ -987,6 +1012,7 @@ namespace eval portal {
         {-link_all 0}
         {-extra_td_html ""}
         {-table_html_args ""}
+	{-extra_td_selected_p 0}
     } {
         Wraps portal::dimensional to create a dotlrn navbar
 
@@ -1010,6 +1036,7 @@ namespace eval portal {
                 -pre_html $pre_html \
                 -post_html $post_html \
                 -extra_td_html $extra_td_html \
+		-extra_td_selected_p $extra_td_selected_p \
                 -table_html_args $table_html_args \
                 $ad_dim_struct \
                 $link]
@@ -1358,6 +1385,8 @@ namespace eval portal {
 
         db_dml update {}
 
+	util_memoize_flush "portal::element_params_not_cached $element_id"
+
         # ns_log notice "aks81 [get_element_param $element_id $key]"
         return 1
     }
@@ -1399,6 +1428,9 @@ namespace eval portal {
         @author ben@openforce
     } {
         db_dml insert {}
+
+	util_memoize_flush "portal::element_params_not_cached $element_id"
+
     }
 
     ad_proc -private remove_element_param_value {
@@ -1409,6 +1441,10 @@ namespace eval portal {
         removes a value for a param
     } {
         db_dml delete {}
+
+        # DRB: Remove the cached copy of this element, too.
+	util_memoize_flush "portal::element_params_not_cached $element_id"
+
     }
 
     ad_proc -private remove_all_element_param_values {
@@ -1435,6 +1471,12 @@ namespace eval portal {
                     1 "get_element_param: Invalid element_id ($element_id) and/or key ($key) given."
             ad_script_abort
         }
+    }
+
+    ad_proc -private element_params_not_cached element_id {
+	Return a list of lists of key value pairs for this portal element.
+    } {
+	return [db_list_of_lists params_select {}]
     }
 
     ad_proc -private get_element_id_from_unique_param {
@@ -1473,9 +1515,14 @@ namespace eval portal {
         db_1row element_select {} -column_array element
 
         # get the element's params
-        db_foreach params_select {} {
-            lappend config($key) $value
-        } if_no_rows {
+	set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
+	if [llength $element_params] {
+	    foreach param $element_params {
+		set key [lindex $param 0]
+		set value [lindex $param 1]
+		lappend config($key) $value
+	    }
+        } else {
             # this element has no config, set up some defaults
             set config(shaded_p) "f"
             set config(shadeable_p) "f"
@@ -2142,17 +2189,20 @@ namespace eval portal {
     } {
         return [db_list_of_ns_sets get_theme_info_select {}]
     }
-
+    
     ad_proc dimensional {
         {-no_header:boolean}
         {-no_bars:boolean}
         {-link_all 0}
+        {-names_in_cells_p 1}
         {-th_bgcolor "#ECECEC"}
         {-td_align "center"}
         {-extra_td_html ""}
         {-table_html_args "border=0 cellspacing=0 cellpadding=3 width=100%"}
+	{-class_html ""}
         {-pre_html ""}
         {-post_html ""}
+	{-extra_td_selected_p 0}
         option_list
         {url {}}
         {options_set ""}
@@ -2163,31 +2213,53 @@ namespace eval portal {
         if {[empty_string_p $option_list]} {
             return
         }
-
+	
         if {[empty_string_p $options_set]} {
             set options_set [ns_getform]
         }
-
+	
         if {[empty_string_p $url]} {
             set url [ad_conn url]
         }
-
-        set html "\n<table $table_html_args>\n <tr>\n"
-
+	
+        set html "\n<table $table_html_args>\n"
+	
         if {!$no_header_p} {
             foreach option $option_list {
-                append html "    <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
+                append html "<tr>    <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
             }
         }
-
-        append html "  </tr>\n  <tr>\n"
-
+    
+        append html "  <tr>\n"
+	
         foreach option $option_list {
-            append html "    <td align=$td_align>"
-
+	    
             if {!$no_bars_p} {
                 append html "\["
             }
+	    
+	    
+	    if { $names_in_cells_p } {
+		set pre_td_html "<td class=\"navbar\">"
+		set pre_selected_td_html "<td class=\"navbar-selected\">"
+		set post_html "$post_html</a></td>"
+		set end_html ""
+		set break_html ""
+		set post_selected_html "$post_html"
+	    } else {
+		append html "    <td align=$td_align>"
+		set td_html ""
+		set pre_selected_td_html "<strong>"
+		set post_selected_html "</strong>$post_html"
+		set end_html ""
+		set td_html ""
+		post_html "$post_html</a>"
+		if {!$no_bars_p} {
+		    set break_html " | "
+		} else {
+		    append break_html " &nbsp; "
+		}
+	    }
 
             # find out what the current option value is.
             # check if a default is set otherwise the first value is used
@@ -2196,7 +2268,7 @@ namespace eval portal {
             if {![empty_string_p $options_set]} {
                 set option_val [ns_set get $options_set $option_key]
             }
-
+	    
             set first_p 1
             foreach option_value [lindex $option 3] {
                 set thisoption_name [lindex $option_value 0]
@@ -2208,29 +2280,33 @@ namespace eval portal {
 
                 if {$first_p} {
                     set first_p 0
-                } else {
-                    if {!$no_bars_p} {
-                        append html " | "
-                    } else {
-                        append html " &nbsp; "
-                    }
+		} else {
+		    append html $break_html
                 }
-
+		
                 if {([string equal $option_val $thisoption_name] == 1 && !$link_all) || !$thisoption_link_p} {
-                    append html "${pre_html}<strong>${thisoption_value}</strong>${post_html}"
+                    append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
                 } else {
-                    append html "<a href=\"$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]\">${pre_html}${thisoption_value}${post_html}</a>"
+                    append html "${pre_td_html}<a href=\"$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]\">${pre_html}${thisoption_value}${post_html}\n"
                 }
             }
 
             if {!$no_bars_p} {
                 append html "\]"
             }
-
-            append html "$extra_td_html</td>\n"
+	    if {$extra_td_selected_p} {
+		append html "${pre_selected_td_html}${pre_html}$extra_td_html${post_html}\n"
+	    } else {
+		append html "${pre_td_html}$extra_td_html${post_html}\n"
+	    }
         }
 
-        append html "  </tr>\n</table>\n"
+        append html "  </tr>\n$end_html</table>\n"
     }
 
 }
+ 
+
+
+
+
