@@ -4,7 +4,7 @@
 <td align=center>
 
 <multiple name=element_multi>
-    <if @immutable_p@ ne 1><input type=checkbox name=element_ids value="@element_multi.element_id@"></if>
+    <if @state@ ne "locked"><input type=checkbox name=element_ids value="@element_multi.element_id@"></if>
     @element_multi.name@
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
