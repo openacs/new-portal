@@ -21,17 +21,20 @@
 <master>
 <property name="title">Welcome to Portals</property>
 
-Portals in the system:
 <P>
 
-<if @users_portals:rowcount@ eq 0>
+Portals in the system:
+
+<P>
+
+<if @portals:rowcount@ eq 0>
     You have not configured any portals. 
 </if>
 <else>
   <ul>
-    <multiple name=users_portals>
-      <li><a href="portal-show.tcl?portal_id=@users_portals.portal_id@&referer=index">@users_portals.name@</a> 
-      <small>[<a href="portal-config?portal_id=@users_portals.portal_id@&referer=index">edit</a>]</li></small>
+    <multiple name=portals>
+      <li><a href="portal-show.tcl?portal_id=@portals.portal_id@&referer=index">@portals.name@ (@portals.portal_id@ | @portals.template_id@)</a> 
+      <small>[<a href="portal-config?portal_id=@portals.portal_id@&referer=index">edit</a>]</li></small>
     </multiple>
   </ul>
 </else>

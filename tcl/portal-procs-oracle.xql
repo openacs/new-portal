@@ -4,7 +4,7 @@
 <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
 
 <fullquery name="portal::create.create_new_portal_and_perms">
-<querytext>
+  <querytext>
 
     begin
     
@@ -40,7 +40,7 @@
 
     end;
 
-</querytext>
+  </querytext>
 </fullquery>
 
 <fullquery name="portal::delete.delete_portal">
@@ -120,19 +120,23 @@
 </fullquery> 		
 
 <fullquery name="portal::page_create.page_create_insert">
-<querytext>
-
+  <querytext>
     begin
-    
-    :1 := portal_page.new ( 
-    pretty_name => :pretty_name,
-    portal_id => :portal_id,
-    layout_id => :layout_id
-    );
-
+      :1 := portal_page.new ( 
+      pretty_name => :pretty_name,
+      portal_id => :portal_id,
+      layout_id => :layout_id
+      );
     end;
+  </querytext>
+</fullquery>
 
-</querytext>
+<fullquery name="portal::page_delete.page_delete">
+  <querytext>
+    begin
+      portal_page.delete ( page_id => :page_id );
+    end;
+  </querytext>
 </fullquery>
 
 </queryset>

@@ -104,9 +104,34 @@ as
 		page_id         in portal_pages.page_id%TYPE
 	)
 	is
+		v_portal_id portal_pages.portal_id%TYPE;
+		v_sort_key portal_pages.sort_key%TYPE;
+		v_curr_sort_key portal_pages.sort_key%TYPE;
+		v_page_count_from_0 integer;
 	begin
-                delete from portal_pages where page_id = portal_page.delete.page_id;
-                
+                -- sort keys MUST be an unbroken sequece from 0 to max(sort_key)
+                select portal_id into v_portal_id 
+                from portal_pages
+                where page_id = portal_page.delete.page_id;
+
+                select sort_key into v_sort_key
+                from portal_pages
+                where page_id = portal_page.delete.page_id;
+
+                select (count(*) - 1) into v_page_count_from_0
+                from portal_pages
+                where portal_id = v_portal_id;
+
+                for i in 0..v_page_count_from_0 loop
+                  if i = v_sort_key then
+                    delete from portal_pages where page_id = portal_page.delete.page_id;
+                  elsif i > v_sort_key then
+                    -- raise_application_error(-20000, 'del ' || i || ' ' || v_sort_key );
+                    update portal_pages set sort_key = -1 where sort_key = i;
+                    update portal_pages set sort_key = i - 1 where sort_key = -1;
+                  end if;
+                end loop;
+
                 acs_object.delete(page_id);
 	end delete;
 

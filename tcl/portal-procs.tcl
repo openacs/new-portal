@@ -250,7 +250,6 @@ namespace eval portal {
         {-hide_links_p "f"} 
         {-render_style "individual"}
         portal_id
-        {theme_id ""} 
     } {
         Get a portal by id. If it's not found, say so.
         FIXME: right now the render style is totally ignored (ben)
@@ -273,9 +272,6 @@ namespace eval portal {
         # get the portal and layout
         db_1row portal_select {} -column_array portal
         set page_id $portal(page_id)
-
-        # theme_id override  
-        if { $theme_id != "" } { set portal(theme_id) $theme_id }
 
         db_foreach element_select {} -column_array entry {
             # put the element IDs into buckets by region...
@@ -367,7 +363,7 @@ namespace eval portal {
     ad_proc -public configure { 
         {-page_id ""}
         {-template_p "f"}
-        {-referer "f"}
+        {-referer ""}
         portal_id
         return_url
     } {
@@ -416,7 +412,7 @@ namespace eval portal {
 
         append theme_data "<input type=submit name=op value=\"Change Theme\">"
 
-        # XXXX page support 
+        # page support 
         if { $template_p == "f" } {
             set element_src "[portal::www_path]/place-element"
         }  else {
@@ -440,7 +436,7 @@ namespace eval portal {
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
-        <big>Change Theme:</big> 
+        <strong>Change Theme:</strong> 
         @theme_data@
         </form>
         <P>"
@@ -520,8 +516,21 @@ namespace eval portal {
          <input type=text name=pretty_name value=\"Page $new_page_num\">
         <input type=submit name=op value=\"Add Page\">
         </form>
-        <P>"
+        "
 
+
+        # reverting to template support 
+        # this is new code (4/15/02)
+        if {![empty_string_p [get_portal_template_id $portal_id]]} {
+            append template "
+            <br>
+            <form method=post action=@action_string@>
+            <input type=hidden name=portal_id value=@portal_id@>
+            <input type=hidden name=return_url value=@return_url@>
+            <b>Revert to the default arrangement:</b> 
+            <input type=submit name=op value=\"Revert\">
+            </form>"
+        }
 
         # This hack is to work around the acs-templating system
         set __adp_stub "[get_server_root][www_path]/."
@@ -559,6 +568,69 @@ namespace eval portal {
         set op [ns_set get $form op]
 
         switch $op {
+            "Revert" { 
+                db_transaction {
+                    set template_id [get_portal_template_id $portal_id]
+
+                    # revert theme
+                    set theme_id [get_theme_id -portal_id $template_id]
+                    db_dml revert_theme_update {}
+                    
+                    # revert pages
+                    # first equalize number of pages in the target
+                    set template_page_count [page_count -portal_id $template_id]
+                    set target_page_count [page_count -portal_id $portal_id]
+                    set difference [expr $template_page_count - $target_page_count]
+
+                    if {$difference > 0} {
+                        # less pages in target
+                        for {set x 0} {$x < $difference} {incr x} {
+
+                            set pretty_name "portal revert dummy page $x"
+                            page_create \
+                                    -pretty_name $pretty_name \
+                                    -portal_id $portal_id
+                        }
+                    } elseif {$difference < 0} {
+                        # more pages in target, delete them from the end, 
+                        # putting any elements on them on the first page, 
+                        # we put them in the right place later
+                        for {set x 0} {$x < [expr abs($difference)]} {incr x} {
+
+                            set max_page_id [db_string revert_max_page_id_select {}]
+                            set page_id [db_string revert_min_page_id_select {}]
+                            set region 1
+                            
+                            db_foreach revert_move_elements_for_del {} {
+                                db_dml move_to_page_update {}
+                            }
+                                
+                            page_delete -page_id $max_page_id
+                        }
+                    }
+                    
+                    # now that they have the same number of pages, get to it
+                    foreach source_page_id \
+                            [list_pages_tcl_list -portal_id $template_id] {
+                        
+                        db_1row revert_get_source_page_info {}
+
+                        set target_page_id \
+                                [db_string revert_get_target_page_id {}]
+
+                        db_dml revert_page_update {}
+
+                        # revert elements in two steps like "swap"
+                        db_foreach revert_get_source_elements {} {
+                            # the element might not be on the target page...
+                            set target_element_id \
+                                    [db_string revert_get_target_element {}]
+
+                            db_dml revert_element_update {}
+                        }
+                    }
+                }
+            }
             "Rename" { 
                 portal::update_name $portal_id [ns_set get $form new_name]
             }
@@ -801,7 +873,7 @@ namespace eval portal {
     } {
         deletes the page
     } {
-        return [db_dml page_delete {}]
+        return [db_exec_plsql page_delete {}]
     }
 
     ad_proc -public page_create {
@@ -1746,6 +1818,14 @@ namespace eval portal {
             set output [template::adp_eval code]
             return $output
         }
+    }
+
+    ad_proc -public get_theme_id { 
+        {-portal_id:required}
+    } {
+        self explanatory
+    } {
+        return [db_string get_theme_id_select {}]
     }
 
     ad_proc -public get_theme_id_from_name { 

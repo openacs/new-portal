@@ -27,10 +27,10 @@ ad_page_contract {
 permission::require_permission -object_id [ad_conn package_id] -privilege admin
 
 set query "select 
-           portal_id, name 
+           portal_id, name, template_id
            from portals"
 
-template::query get_users_portals users_portals multirow $query 
+template::query get_portals portals multirow $query 
 
 ad_return_template
 

@@ -132,6 +132,114 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::configure_dispatch.revert_theme_update">      
+  <querytext>
+    update portals set theme_id = :theme_id where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_max_page_id_select">      
+  <querytext>
+    select max(page_id) from portal_pages where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_min_page_id_select">      
+  <querytext>
+    select min(page_id) from portal_pages where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_move_elements_for_del">      
+  <querytext>
+    select element_id from portal_element_map where page_id = :max_page_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_get_source_page_info">      
+  <querytext>
+    select pretty_name, layout_id, sort_key 
+    from portal_pages
+    where page_id = :source_page_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_get_target_page_id">
+  <querytext>
+    select page_id 
+    from portal_pages
+    where portal_id = :portal_id 
+    and sort_key = :sort_key
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_page_update">
+  <querytext>
+    update portal_pages
+    set pretty_name = :pretty_name,
+    layout_id = :layout_id
+    where page_id = :target_page_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_get_source_elements">
+  <querytext>
+    select region, sort_key, state, 
+           pd.datasource_id as datasource_id,
+           pd.name as name
+    from portal_element_map pem, 
+         portal_datasources pd                            
+    where pem.page_id = :source_page_id
+    and pem.datasource_id = pd.datasource_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_get_target_element">
+  <querytext>
+    select element_id 
+    from portal_element_map pem, portal_pages pp
+    where pp.portal_id = :portal_id
+    and pem.page_id = pp.page_id
+    and pem.datasource_id = :datasource_id    
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_element_update">
+  <querytext>
+    update portal_element_map
+    set region = :region, 
+    sort_key = :sort_key, 
+    state = :state,
+    page_id = :target_page_id
+    where element_id = :target_element_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_update">      
+  <querytext>
+  update portals
+  set theme_id = :theme_id
+  where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::configure_dispatch.revert_update">      
+  <querytext>
+  update portals
+  set theme_id = :theme_id
+  where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
+
+<fullquery name="portal::configure_dispatch.revert_update">      
+  <querytext>
+  update portals
+  set theme_id = :theme_id
+  where portal_id = :portal_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::configure_dispatch.update_theme">      
   <querytext>
   update portals
@@ -211,12 +319,6 @@
   <querytext>
     update portal_pages set pretty_name = :pretty_name 
     where page_id = :page_id
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::page_delete.page_delete">
-  <querytext>
-    delete from portal_pages where page_id = :page_id
   </querytext>
 </fullquery> 
 
@@ -577,9 +679,9 @@ select portal_id from portal_pages where page_id = (select page_id from portal_e
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_theme_id_from_name.get_theme_id_from_name_select">      
+<fullquery name="portal::get_theme_id.get_theme_id_select">
   <querytext>
-    select theme_id from portal_element_themes where name = :theme_name
+    select theme_id from portals where portal_id = :portal_id
   </querytext>
 </fullquery> 
 
