@@ -168,6 +168,7 @@ create table portal_element_map (
 				constraint p_element_map_element_id_pk
 				primary key,
 	name			varchar(200) not null,
+	pretty_name		varchar(200) not null,
 	portal_id		constraint p_element_map_portal_id_fk
 				references portals on delete cascade
 				not null,
@@ -183,9 +184,9 @@ create table portal_element_map (
  	-- Two elements may not exist in the same place on a portal.
 	constraint p_element_map_pid_rgn_srt_un 
 	unique(portal_id,region,sort_key),
- 	-- Two elements may not have the same name on a portal.
+ 	-- Two elements may not have the same pretty name on a portal.
 	constraint p_element_map_pid_name_un 
-	unique(portal_id,name)
+	unique(portal_id,pretty_name)
 );
 
 create table portal_element_parameters (
