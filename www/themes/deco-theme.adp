@@ -43,13 +43,13 @@
     </font>
     </td>
 		<if @user_editable_p@ eq "t">	
-                  <td align=right width=7%>
+                  <td align=right width="7%">
 
 			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.gif" alt="edit"></a></td>
 		</if>
 
 		<if @shadeable_p@ eq "t">		
-                  <td align=right width=7%>
+                  <td align=right width="7%">
 		    <a href=configure-element?element_id=@element_id@&op=shade>
 		    <if @shaded_p@ eq "f">	
 		    <img border=0 src="@dir@/shade.gif" alt="shade"></a></td>
@@ -59,7 +59,7 @@
 		</if>
 
 		<if @hideable_p@ eq "t">		
-                  <td align=right width=7%>
+                  <td align=right width="7%">
 			<a href=configure-element?element_id=@element_id@&op=hide><img border=0 src="@dir@/x.gif" alt="hide"></a></td>
 		</if>
 
