@@ -19,10 +19,11 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::create.min_layout_id_select">      
+<fullquery name="portal::create.layout_id_select">      
   <querytext>
-    select min(layout_id) as layout_id from
-    portal_layouts 
+    select layout_id from
+    portal_layouts where
+    name = :layout_name 
   </querytext>
 </fullquery> 
 

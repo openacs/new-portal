@@ -96,7 +96,7 @@ namespace eval portal {
 	{-name "Untitled"} 
 	{-template_id ""} 
 	{-portal_template_p "f"} 
-	{-layout_name "'Simple 2-Column'"}
+	{-layout_name "Simple 2-Column"}
 	{-context_id ""} 
 	user_id 
     } {
@@ -106,7 +106,7 @@ namespace eval portal {
 	@param user_id
 	@param layout_name optional
     } {
-	db_1row min_layout_id_select {}
+	db_1row layout_id_select {}
 	return [ db_exec_plsql create_new_portal_and_perms {}]
     }
     
