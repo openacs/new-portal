@@ -25,6 +25,8 @@ if { ! [info exists portal_id] } {
     if { $owner_id != $user_id } {
 	# They are not allowed XXX perms
 	return
+    } else {
+	set owner_where $user_id
     }
 }
 
@@ -59,17 +61,14 @@ if {$create_p} {
     # there's no data at all.  Just return the template.
     set title "Create a New Portal"
     set name {}
-    set template_id {}
     ad_return_template
     return
 } else {
     set title "Edit Your Portal"
     # the portal we're editing exists.  Return it.
     db_1row get_portal "select
-       portal_id,
-       name,
-       template_id
-     from portals
-     where package_id = :package_id and $owner_where"
+    name
+    from portals
+    where portal_id = :portal_id"
     ad_return_template
 }
