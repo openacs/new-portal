@@ -2145,6 +2145,8 @@ namespace eval portal {
         upvar __cflist cflist
         set cflist $config_list
 
+        ns_log Debug "portal::show_proc_helper - package_key=$package_key, template=$template_src"
+
         uplevel 1 {
             set template "<include src=\"$__ts\" cf=\"$__cflist\">"
             set __adp_stub "[get_server_root]/packages/$__pk/www/."
