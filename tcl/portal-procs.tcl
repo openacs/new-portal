@@ -134,10 +134,10 @@ ad_proc -public portal_add_element { portal_id ds_name } {
     where datasource_id = :ds_id" {
 	set new_param_id [db_nextval acs_object_id_seq]
 	db_dml insert_into_params "
-	insert into partal_element_parameters
-	(parameter_id, element_id, config_required_p, configured_p)
+	insert into portal_element_parameters
+	(parameter_id, element_id, config_required_p, configured_p, key, value)
 	values
-	(:new_param_id, :new_element_id, :config_required_p, :configured_p)"
+	(:new_param_id, :new_element_id, :config_required_p, :configured_p, :key, :value)"
     }
 
     # The caller must now set the necessary params or else!
