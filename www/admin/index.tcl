@@ -14,11 +14,9 @@
 #  details.
 #
 
-# www/index.tcl
-
 ad_page_contract {
-    Page that displays a list of the user's portals and gives
-    the option to create a new/additional portal
+    Page that displays a system-wide list of portals and gives
+    the option to view or edit them
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 
@@ -26,8 +24,7 @@ ad_page_contract {
 } { }
 
 
-set user_id [ad_conn user_id]
-set master_template [ad_parameter master_template]
+permission::require_permission -object_id [ad_conn package_id] -privilege admin
 
 set query "select 
            portal_id, name 

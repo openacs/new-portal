@@ -17,7 +17,6 @@
 %>
 
 <master src="portal-admin-master">
-<property name=portal_id>@portal_id@</property>
+<property name=referer>@referer@</property>
 <property name=name>@name@</property>
-<property name=no_view_p>1</property>
 @html@

@@ -20,6 +20,7 @@
 
 <form method=post action=@action_string@>
 <input type=hidden name=portal_id value=@portal_id@>
+<input type=hidden name=return_url value=@return_url@>
 
 <if @other_page_avail_p@ ne 0>
   <input type=hidden name=element_id value=@element_id@>

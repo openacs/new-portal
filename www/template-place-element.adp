@@ -94,6 +94,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
              target_stub=@target_stub@
              portal_id=@portal_id@
              page_id=@element_multi.page_id@
+             return_url=@return_url@
              action_string=@action_string@>
 
 

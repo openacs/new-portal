@@ -94,6 +94,17 @@
   </querytext>
 </fullquery> 
 
+<fullquery name="portal::add_element_to_region.template_insert">      
+  <querytext>
+    insert into portal_element_map
+    (element_id, name, pretty_name, page_id, datasource_id, region, state, sort_key)
+    select 
+    :new_element_id, name, pretty_name, :target_page_id, :ds_id, region, state, sort_key
+    from portal_element_map pem
+    where pem.element_id = :template_element_id
+  </querytext>
+</fullquery> 
+
 <fullquery name="portal::move_element.update">      
   <querytext>
     update portal_element_map 

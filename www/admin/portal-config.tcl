@@ -23,6 +23,7 @@ ad_page_contract {
     @creation-date 10/20/2001
     @cvs-id $Id$
 } {
+    {referer:notnull}
     portal_id:naturalnum,notnull
 }
 
@@ -34,5 +35,5 @@ if {[portal::template_p $portal_id]} {
     set template_p "f"
 }
 
-set rendered_page [portal::configure -template_p $template_p $portal_id "index"]
+set rendered_page [portal::configure -referer $referer -template_p $template_p $portal_id ""]
 set name [portal::get_name $portal_id]

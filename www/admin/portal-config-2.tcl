@@ -25,10 +25,11 @@ ad_page_contract {
 
 set form [ns_getform]
 set portal_id [ns_set get $form portal_id]
+set return_url [ns_set get $form return_url]
 
 set user_id [ad_conn user_id]
 
 portal::configure_dispatch $portal_id $form
 
-ns_returnredirect "portal-config?portal_id=$portal_id"
+ns_returnredirect "portal-config?portal_id=$portal_id&referer=$return_url"
 

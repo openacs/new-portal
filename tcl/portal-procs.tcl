@@ -1,4 +1,4 @@
-#
+
 #  Copyright (C) 2001, 2002 OpenForce, Inc.
 #
 #  This file is part of dotLRN.
@@ -155,6 +155,10 @@ namespace eval portal {
         @param user_id
         @param layout_name optional
     } {
+        # aks debug
+        ns_log notice "aks1: portal::create name is $name / template_id is $template_id / csv $csv_list"
+
+
         # if we have a cvs list in the form "page_name1, layout1;
         # page_name2, layout2...", we get the required first page_name
         # and first page layout from it, overriding any other params
@@ -195,7 +199,8 @@ namespace eval portal {
 
             set portal_id [db_exec_plsql create_new_portal_and_perms {}]
 
-            if {![empty_string_p $csv_list]} {
+            # ignore the csv list if we have a template
+            if {![empty_string_p $csv_list] && [empty_string_p $template_id]} {
                 # if there are more pages in the csv_list, create them
                 for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
                     portal::page_create -portal_id $portal_id \
@@ -205,6 +210,8 @@ namespace eval portal {
             }
 
         }
+
+        ns_log notice "aks1: portal::create leaving  $name / $portal_id / $template_id"
 
         return $portal_id
     }
@@ -233,9 +240,7 @@ namespace eval portal {
         ad_require_permission $portal_id portal_read_portal
 
         if {[portal::exists_p $portal_id]} {
-            return [db_1row get_name_select {}]
-        } else {
-            return ""
+            return [db_string get_name_select {}]
         }
     }
 
@@ -362,6 +367,7 @@ namespace eval portal {
     ad_proc -public configure { 
         {-page_id ""}
         {-template_p "f"}
+        {-referer "f"}
         portal_id
         return_url
     } {
@@ -376,7 +382,11 @@ namespace eval portal {
         @return_url
         @return A portal configuration page        
     } {
-        set edit_p [permission::permission_p -object_id $portal_id -privilege portal_edit_portal]
+        set edit_p \
+                [permission::permission_p \
+                -object_id $portal_id \
+                -privilege portal_edit_portal
+        ]
 
         if {!$edit_p} {
             ad_require_permission $portal_id portal_admin_portal
@@ -406,15 +416,6 @@ namespace eval portal {
 
         append theme_data "<input type=submit name=op value=\"Change Theme\">"
 
-        # set up the page creation stuff
-        set new_page_num [expr [page_count -portal_id $portal_id] + 1]
-
-        set page_data \
-                "<br>
-        <input type=text name=pretty_name value=\"Page $new_page_num\">
-        <input type=submit name=op value=\"Add Page\">"
-
-
         # XXXX page support 
         if { $template_p == "f" } {
             set element_src "[portal::www_path]/place-element"
@@ -424,10 +425,17 @@ namespace eval portal {
 
         set portal_name [get_name $portal_id]
 
+        if {[empty_string_p $referer]} {
+            set return_text "<a href=@return_url@>Go back</a>"
+        } else {
+            set return_text ""
+            set return_url $referer
+        }
+
         set template "        
         <master src=\"@master_template@\">
         <p>
-        <big><a href=@return_url@>Go back</a></big>
+        $return_text
         <P>
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
@@ -464,30 +472,53 @@ namespace eval portal {
 
             set element_list [array get fake_element_ids]
 
+            set page_name_chunk "
+            <form method=post action=@action_string@>
+            <input type=hidden name=portal_id value=@portal_id@>
+            <input type=hidden name=page_id value=$page_id>
+            <input type=hidden name=return_url value=@return_url@>
+            <br><strong>Page:</strong>
+            <input type=text name=pretty_name value=\"$portal(page_name)\">
+            <input type=submit name=op value=\"Rename Page\">
+            </form>"            
+
             if {$element_count == 0} {
                 append template "
-                <P> <b>$portal(page_name)</b> has no Elements"
+                $page_name_chunk
+                No Elements
+                <form method=post action=@action_string@>
+                <input type=hidden name=portal_id value=$portal_id>
+                <input type=hidden name=page_id value=$page_id>
+                <input type=hidden name=return_url value=@return_url@>
+                <input type=submit name=op value=\"Remove Empty Page\">
+                </form>"
             } else {
                 append template "
-                <P> <b>$portal(page_name)</b> Page
-                <include src=\"$portal(template)\" element_list=\"$element_list\" 
+                $page_name_chunk
+                <include src=\"$portal(template)\" 
+                element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
-                hide_links_p=f page_id=$page_id layout_id=$layout_id edit_p=@edit_p@>
-                "
+                hide_links_p=f 
+                page_id=$page_id 
+                layout_id=$layout_id 
+                edit_p=@edit_p@>"
             }
 
             # clear out the region array
             array unset fake_element_ids
         }
 
+        # set up the page creation stuff
+        set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
         append template "
         <form method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
         <b>Add a new page:</b> 
-        @page_data@
+         <input type=text name=pretty_name value=\"Page $new_page_num\">
+        <input type=submit name=op value=\"Add Page\">
         </form>
         <P>"
 
@@ -514,8 +545,16 @@ namespace eval portal {
         @param formdata an ns_set with all the formdata
     } { 
 
-        ad_require_permission $portal_id portal_read_portal
-        ad_require_permission $portal_id portal_edit_portal
+        set edit_p \
+                [permission::permission_p \
+                -object_id $portal_id \
+                -privilege portal_edit_portal
+        ]
+
+        if {!$edit_p} {
+            ad_require_permission $portal_id portal_admin_portal
+            set edit_p 1
+        }
 
         set op [ns_set get $form op]
 
@@ -603,6 +642,20 @@ namespace eval portal {
                 }
                 page_create -pretty_name $pretty_name -portal_id $portal_id
             }
+            "Remove Empty Page" {
+                set page_id [ns_set get $form page_id]
+                page_delete -page_id $page_id
+            }
+            "Rename Page" {
+                set pretty_name [ns_set get $form pretty_name]
+                set page_id [ns_set get $form page_id]
+
+                if {[empty_string_p $pretty_name]} {
+                    ad_return_complaint 1 "You must enter new name for the page."
+                }
+                set_page_pretty_name \
+                        -pretty_name $pretty_name -page_id $page_id
+            }
             "toggle_pinned" {
                 set element_id [ns_set get $form element_id]
 
@@ -670,19 +723,11 @@ namespace eval portal {
         portal_id 
         return_url
     } {
-        Just a wrapper for the configure proc
+        Just a wrapper for the configure proc. 
 
         @param portal_id
         @return A portal configuration page        
     } {
-        if { ! [template_p $portal_id] } {
-            ns_log error "portal::template_configure called with portal_id 
-            $portal_id!"
-            ad_return_complaint 1 "There is an error in our code. 
-            Please inform your system administrator of the following error:
-            portal::template_configure called with portal_id $portal_id"
-        }
-
         portal::configure -template_p "t" $portal_id $return_url 
     }
 
@@ -719,7 +764,7 @@ namespace eval portal {
         if {![empty_string_p $page_name]} {
             return [db_string get_page_id_from_name {} -default ""]
         } else {
-                return [db_string get_page_id_select {}]
+            return [db_string get_page_id_select {}]
         }
     }
 
@@ -740,6 +785,23 @@ namespace eval portal {
         Gets the pn
     } {
         return [db_string get_page_pretty_name_select {}]
+    }
+
+    ad_proc -public set_page_pretty_name {
+        {-page_id:required}
+        {-pretty_name:required}
+    } {
+        Updates the pn
+    } {
+        return [db_dml set_page_pretty_name_update {}]
+    }
+
+    ad_proc -public page_delete {
+        {-page_id:required}
+    } {
+        deletes the page
+    } {
+        return [db_dml page_delete {}]
     }
 
     ad_proc -public page_create {
@@ -835,6 +897,8 @@ namespace eval portal {
         @param page_num the number of the portal page to add to, def 0 
         @param ds_name
     } {
+        ns_log notice "aks6: portal_id $portal_id"
+
         if {[empty_string_p $pretty_name]} {
             set pretty_name $ds_name
         }
@@ -939,12 +1003,15 @@ namespace eval portal {
         # so, copy stuff. If not, just insert normally. 
         if { [db_0or1row get_template_info_select {}] == 1 } {
 
-            db_transaction {
                 set new_element_id [db_nextval acs_object_id_seq]
                 db_1row get_target_page_id {}
+
+                set bar [db_string foobar { select name from portal_element_map pem where pem.page_id = :target_page_id and pem.sort_key = :template_element_sk and pem.region = 1} -default NONE ] 
+                
+                ns_log notice "aks5 $template_page_sort_key / $template_element_region  / $template_element_name / $template_element_sk / $bar" 
+                
                 db_dml template_insert {}
                 db_dml template_params_insert {}
-            }
 
         } else {
             # no template, or the template dosen't have this DS,

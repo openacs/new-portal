@@ -199,11 +199,24 @@
   </querytext>
 </fullquery> 
 
-<fullquery name="portal::get_page_pretty_name.get_page_pretty_name_select">      
+<fullquery name="portal::get_page_pretty_name.get_page_pretty_name_select">
   <querytext>
    select pretty_name
    from portal_pages
    where page_id = :page_id 
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::set_page_pretty_name.set_page_pretty_name_update">
+  <querytext>
+    update portal_pages set pretty_name = :pretty_name 
+    where page_id = :page_id
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::page_delete.page_delete">
+  <querytext>
+    delete from portal_pages where page_id = :page_id
   </querytext>
 </fullquery> 
 
@@ -253,7 +266,10 @@ order by sort_key
   <querytext>
      select pp.page_id as template_page_id, 
        pp.sort_key as template_page_sort_key,
-       pem.element_id as template_element_id
+       pem.element_id as template_element_id,
+       pem.sort_key as template_element_sk,
+       pem.name as template_element_name,
+       pem.region as template_element_region
      from portals p, portal_element_map pem, portal_pages pp
      where p.portal_id = :portal_id
        and p.template_id = pp.portal_id
@@ -268,24 +284,6 @@ order by sort_key
    from portal_pages pp
    where pp.portal_id = :portal_id 
    and pp.sort_key = :template_page_sort_key   
-  </querytext>
-</fullquery> 
-
-<fullquery name="portal::add_element_to_region.template_insert">      
-  <querytext>
-    insert into portal_element_map
-    (element_id, name, pretty_name, page_id, datasource_id, region,  sort_key, state)
-    select 
-    :new_element_id,
-    name, 
-    pretty_name,
-    :target_page_id,
-    :ds_id,
-    region,
-    sort_key,
-    state
-    from portal_element_map pem
-    where pem.element_id = :template_element_id
   </querytext>
 </fullquery> 
 

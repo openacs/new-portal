@@ -18,16 +18,10 @@
 
 <master>
 
-<P>
+<hr>
 Portal: <strong>@name@</strong>
 <P>
-Go to <a href=index>portal admin</a> 
-<if @no_edit_p@ nil>
-  or <a href=portal-config?portal_id=@portal_id@>edit this portal</a>
-</if>
-<if @no_view_p@ nil>
-  or <a href=portal-show?portal_id=@portal_id@>view this portal</a>
-</if>
-<P>
+<a href=@referer@>Go back</a>
+<hr>
 
 <slave>
