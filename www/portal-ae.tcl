@@ -67,7 +67,8 @@ if {$create_p} {
     set title "Edit Your Portal"
     # the portal we're editing exists.  Return it.
     db_1row get_portal "select
-    name
+    name,
+    layout_id
     from portals
     where portal_id = :portal_id"
     ad_return_template
