@@ -19,4 +19,4 @@
 <master src="portal-admin-master">
 <property name=referer>@referer@</property>
 <property name=name>@name@</property>
-@html@
+@html;noquote@

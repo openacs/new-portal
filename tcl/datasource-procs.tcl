@@ -36,15 +36,18 @@ namespace eval portal::datasource {
         post-install procedure is easier than writing PL/SQL for Oracle and PL/pgSQL
         for Oracle.
 
-        @author Don Baccus (dhogaza@pacifier.com)
-
         @param spec The specification (format described below)
+
+        @author Don Baccus (dhogaza@pacifier.com)
+        @see acs_sc::impl::new_from_spec
 
         The specification is a list of name-value pairs.  Possible names are
 
         name          The name of the new datasource
+        owner         The package that owns this portlet
         description   A human-readable description (defaults to name)
         params        A list of param key/attributes and their values
+        aliases       Service contract aliases clause for acs_sc::impl::new_from_spec
 
         Each parameter key can be followed by a comma-separated list of attributes
         in the familiar style of ad_page_contract or ad_form.  Do not include spaces
@@ -52,15 +55,6 @@ namespace eval portal::datasource {
         and "configured_p".
 
         See the portal package documentation for the meaning of these two attributes.
-
-        An example of a specification:
-
-        { name "my_name"
-          description "my_description"
-          spec { shadeable_p,config_required t
-                 hideable_p,configured t
-               }
-        }
 
     } {
 
@@ -75,11 +69,11 @@ namespace eval portal::datasource {
 
             set datasource_id [new -name $datasource(name) -description $datasource(description)]
 
-            foreach param $datasource(params) {
+            foreach {param value} $datasource(params) {
 
-                if { ![regexp {^([^ \t:]+)(?::([a-zA-Z0-9_,(|)]*))([ \t]+)(.+)$} \
-                           $param match param_name flags blanks value] } {
-                    ad_return -code error "Parameter '$param' doesn't have the right format. It must be var\[:flag\[,flag ...\]\] value"
+                if { ![regexp {^([^ \t:]+)(?::([a-zA-Z0-9_,(|)]*))} \
+                           $param match param_name flags] } {
+                    ad_return -code error "Parameter name '$param' doesn't have the right format. It must be var\[:flag\[,flag ...\]\]"
                 }
 
                 # set defaults for attributes
@@ -103,6 +97,13 @@ namespace eval portal::datasource {
                     -value $value
 
             }
+
+            acs_sc::impl::new_from_spec \
+                -spec [list name $datasource(name) \
+                            contract_name portal_datasource \
+                            owner $datasource(owner) \
+                            aliases $datasource(aliases)]
+
         }
     }
 
@@ -140,9 +141,12 @@ namespace eval portal::datasource {
     } {
 
         if { ![db_0or1row get_datasource_id {}] } {
-            ad_return -code error "Datasource \"$name\" does not exist"
+            # Returning an error here is a PITA developing, so we'll just log an error
+            ns_log Error "Datasource \"$name\" does not exist"
+            return
         }
 
+        acs_sc::impl::delete -contract_name portal_datasource -impl_name $name
         return [db_exec_plsql delete_datasource {}]
 
     }
