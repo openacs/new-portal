@@ -11,15 +11,16 @@
 <!-- Title/button bar begin -->
 <tr>
 <td height="15" background="@dir@/tbl-left.png" rowspan="2"><img src="@dir@/tbl-left.png" alt=" " width="11" height="1"></td>
-<td align="left" valign="middle" bgcolor="#eeeee7">
+<td>
 
-	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#eeeeee">
               <tbody>
                 <tr>
-                  <td valign=middle width=85%><font face="arial,helvetica,lucida" size="+1"><b>&nbsp; @name@</b></font></td>
-                  <td align=right width=5%><img src="@dir@/edit.png" alt="edit"></td>
-                  <td align=right width=5%><img src="@dir@/shade.png" alt="shade"></td>
-                  <td align=right width=5%><img src="@dir@/x.png" alt="hide"></td>
+                  <td align=left valign=middle width=88%  bgcolor="#eeeee7">
+			<font face="arial,helvetica,lucida" size="+1"><b>&nbsp; @name@</b></font></td>
+                  <td align=right width=7%><img src="@dir@/edit.png" alt="edit"></td>
+                  <td align=right width=7%><img src="@dir@/shade.png" alt="shade"></td>
+                  <td align=right width=7%><img src="@dir@/x.png" alt="hide"></td>
                 </tr>
               </tbody>
             </table>
