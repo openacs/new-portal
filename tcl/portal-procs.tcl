@@ -674,7 +674,10 @@ namespace eval portal {
                             set region 1
 
                             db_foreach revert_move_elements_for_del {} {
-                                db_dml move_to_page_update {}
+                                portal::move_element_to_page \
+                                    -page_id $page_id \
+                                    -element_id $element_id \
+                                    -region 1
                             }
 
                             page_delete -page_id $max_page_id
@@ -1274,10 +1277,16 @@ namespace eval portal {
     ad_proc -private move_element_to_page {
         {-page_id:required}
         {-element_id:required}
+        {-region ""}
     } {
         Moves a PE to the given page
     } {
-        set curr_reg [get_element_region -element_id $element_id]
+        if {[empty_string_p $region]} {
+            set curr_reg [get_element_region -element_id $element_id]
+        } else {
+            set curr_reg $region
+        }
+
         set target_reg_num [get_layout_region_count_not_cached \
             -layout_id [get_layout_id -page_id $page_id]
         ]

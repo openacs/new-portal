@@ -46,13 +46,17 @@
 
 <fullquery name="portal::render.element_select">      
   <querytext>
-    select element_id, region, pem.sort_key
-    from portal_element_map pem, portal_pages pp
-    where pp.portal_id = :portal_id
-    and pem.page_id = :page_id
-    and pem.page_id = pp.page_id
-    and state != 'hidden'
-    order by region, sort_key
+    select portal_element_map.element_id, 
+           portal_element_map.region, 
+           portal_element_map.sort_key
+    from portal_element_map, 
+         portal_pages
+    where portal_pages.portal_id = :portal_id
+    and portal_element_map.page_id = :page_id
+    and portal_element_map.page_id = portal_pages.page_id
+    and portal_element_map.state != 'hidden'
+    order by portal_element_map.region, 
+             portal_element_map.sort_key
   </querytext>
 </fullquery> 
 
