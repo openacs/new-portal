@@ -14,7 +14,7 @@ ad_page_contract {
 # if there's an error, report it.
 if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] } errmsg ] } {
     if { [ad_parameter log_datasource_errors_p] == 1} {
-	ns_log Error "portal: $errmsg"
+	ns_log Error "render-element.tcl (after eval): $errmsg"
     }
     
     if { [ad_parameter show_datasource_errors_p] == 1} {
@@ -26,13 +26,5 @@ if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] }
     array set element $element_data
 }
 
-# consistency is good. XXX
-set element(region) $region
-set new_name ""
-regsub -all -- {-} $element(name) "_" new_name
-append new_name "::get_pretty_name"
-set element(name) [$new_name]
-
-# return the appropriate template for that element.
 ad_return_template
 
