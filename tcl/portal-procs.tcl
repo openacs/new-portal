@@ -455,7 +455,7 @@ namespace eval portal {
             # Page rename chunk
             #
             set page_name_chunk "<table border=0 width=\"100%\" class=\"portal-page-config\" cellpadding=0 cellspacing=0 border=0>
-	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">$page_name</h2></a></td>
+	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">[ad_quotehtml $page_name]</h2></a></td>
             <td align=right><name=$page_id></a>
             <form method=post align=right action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
@@ -463,7 +463,7 @@ namespace eval portal {
             <input type=hidden name=return_url value=@return_url@#$page_id>
             <input type=hidden name=anchor value=$page_id>
             <input type=submit name=\"op_rename_page\" value=\"[_ new-portal.Rename_Page]\">
-            <input type=text name=pretty_name value=\"$page_name\">
+            <input type=text name=pretty_name value=\"[ad_quotehtml $page_name]\">
             </form> 
 	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
 	    </td></tr>"
@@ -2277,7 +2277,7 @@ namespace eval portal {
                 set thisoption_name [lindex $option_value 0]
                 # We allow portal page names to have embedded message catalog keys
                 # that we localize on the fly
-                set thisoption_value [lang::util::localize [lindex $option_value 1]]
+                set thisoption_value [ad_quotehtml [lang::util::localize [lindex $option_value 1]]]
                 set thisoption_link_p 1
                 if {[llength $option_value] > 3} {
                     set thisoption_link_p [lindex $option_value 3]
