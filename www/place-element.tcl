@@ -51,22 +51,18 @@ set add_avail_p 0
 set add_html ""
 set new_package_id [db_nextval acs_object_id_seq]
 
-append add_html "<select name=ds_id>"
+append add_html "<select name=element_id>"
 
-db_foreach datasource_avail {
-    select name, pd.datasource_id 
-    from portal_datasources pd, portal_datasource_avail_map pdam
-    where pdam.portal_id = :portal_id
-    and pd.datasource_id = pdam.datasource_id
-    and pd.datasource_id  in (
-      select datasource_id
-      from portal_element_map
-      where portal_id = :portal_id
-      and state = 'hidden')
+db_foreach hidden_elements {
+    select element_id, name
+     from portal_element_map pem
+     where
+       pem.portal_id = :portal_id 
+       and pem.state = 'hidden'
     order by name
 } {
     set add_avail_p 1
-    append add_html "<option value=$datasource_id>$name</option>\n"
+    append add_html "<option value=$element_id>$name</option>\n"
 }
 
 append add_html ""

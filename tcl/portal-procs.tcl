@@ -629,11 +629,22 @@ nope} {
 			"portal-config.tcl?[export_url_vars portal_id]"
 	    }
 	} 
-	"add a new element here" {
-	    db_dml unhide_element \
-		    "update portal_element_map 
-	            set state = 'full' 
-	            where element_id = :element_id"
+	"add here" {
+
+	    regexp {[&]*element_id=(\d+)} $query "" element_id
+
+	    db_transaction {
+		db_dml set_region_element \
+			"update portal_element_map 
+		set region = :target_region
+		where element_id = :element_id"
+		
+		db_dml unhide_element \
+			"update portal_element_map 
+		set state = 'full' 
+		where element_id = :element_id"
+	    }
+		
 	}
 	"remove all checked" {
 
