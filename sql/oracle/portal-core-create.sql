@@ -180,6 +180,8 @@ create table portal_pages (
 	unique(portal_id,sort_key)
 );
 
+create index portal_pages_prtl_page_idx on portal_pages (portal_id, page_id);
+
 -- **** Portal Elements (PEs) ****
 
 
@@ -244,7 +246,7 @@ create table portal_element_parameters (
 	value			varchar(200) 
 );
 
-create index p_element__prms_elem_id_idx on portal_element_parameters (element_id);
+create index p_element_prms_elem_id_idx on portal_element_parameters (element_id);
 create index p_element_prms_elem_key_idx on portal_element_parameters (element_id, key);
 
 -- This table maps the datasources that are available for portals to
