@@ -9,6 +9,7 @@ ad_page_contract {
 }
 
 
+# XXX fix me themes
 # AKS: most of the references to "element" here are really
 # to DS
 
@@ -48,7 +49,7 @@ foreach element_id $element_ids {
     :name
     :portal_id,
     :element_id,
-    XXX:theme_id,
+    nvl((select max(theme_id) from portal_element_themes), 1))
     :region,
     nvl((select max(sort_key) + 1 from portal_element_map where region = :region), 1))"
 }
