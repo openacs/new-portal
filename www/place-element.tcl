@@ -19,30 +19,20 @@ set my_url [ad_conn url]
 
 set portal_id $element_id
 
-# can this region be edited?
-if { [portal::region_immutable_p $region] } {
-    set immutable_p 1
-    set would_be_immutable_p 0
-} else {
-    set immutable_p 0
-    set would_be_immutable_p 0
-}
-
 # get the elements for this region.
 set region_count 0
-template::multirow create element_multi element_id name sort_key
+template::multirow create element_multi element_id name sort_key state
 db_foreach select_elements_by_region \
-    "select pe.element_id, pe.name, pe.sort_key
-     from portal_element_map pe
+    "select element_id, name, sort_key, state
+     from portal_element_map
      where
-       pe.portal_id = :portal_id and
-       pe.region = :region 
-     order by pe.sort_key" \
+       portal_id = :portal_id 
+       and region = :region 
+       and state != 'hidden'
+     order by sort_key" 
 {
-    template::multirow append element_multi $element_id $name $sort_key
-    if {![portal::region_immutable_p $region]} {
-	incr region_count
-    }
+    template::multirow append element_multi $element_id $name $sort_key $state
+    incr region_count
 }
 
 
@@ -66,10 +56,11 @@ db_foreach datasource_avail {
     from portal_datasources pd, portal_datasource_avail_map pdam
     where pdam.portal_id = :portal_id
     and pd.datasource_id = pdam.datasource_id
-    and pd.datasource_id not in (
+    and pd.datasource_id  in (
     select datasource_id
     from portal_element_map
     where portal_id = :portal_id
+    and state = 'hidden')
 )
     order by name
 } {
