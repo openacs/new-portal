@@ -201,10 +201,37 @@ ad_proc -public add_element { portal_id ds_name } {
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
 } {
-    # get the regions that the layout supports
-    # portal_get_regions [portal_get_layout_id $portal_id]
-    # AKS: for now _always_ insert the new PE into region 1
-    return [add_element_to_region $portal_id $ds_name 1]
+    # Add the new element to the region with the fewest 
+    # number of elements. Go with the first region with 0 elements
+    # AKS: Maybe support portals chosing their region later
+
+    set min_num 99999
+    set min_region 0
+
+    foreach region [get_regions [get_layout_id $portal_id]] {
+	db_1row min_num_select \
+		"select count(*) as count
+	         from portal_element_map 
+	         where portal_id = :portal_id 
+	         and region = :region"
+
+	if { $count == 0 } {
+	    set min_region $region
+	    break
+	}
+	
+	if { $min_num > $count } {
+	    set min_num $count
+	    set min_region $region
+	} 
+
+    }
+
+    if { $min_region == 0 } {
+	set min_region 1
+    }
+    
+    return [add_element_to_region $portal_id $ds_name $min_region]
 }
 
 ad_proc -public remove_element {element_id} {
@@ -738,7 +765,7 @@ ad_proc -public render { portal_id } {
 	and p.portal_id = :portal_id" -column_array portal
 
     if { ! [exists_p $portal_id] } {
-	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
+	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist. This is a bug!."
 	ad_script_abort
     }
 
