@@ -55,8 +55,7 @@ and region not like 'i%'"
 
 # Set up the form target
 set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-
-# create the fancy drop down for add
+set add_avail_p 0
 set add_html ""
 set new_package_id [db_nextval acs_object_id_seq]
 
@@ -74,6 +73,7 @@ db_foreach datasource_avail {
 )
     order by name
 } {
+    set add_avail_p 1
     append add_html "<option value=$datasource_id>$name</option>\n"
 }
 
