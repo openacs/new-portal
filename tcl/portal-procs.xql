@@ -365,6 +365,7 @@
             and p.template_id = pp.portal_id
             and pp.page_id = pem.page_id
             and pem.datasource_id = :ds_id
+	    and pem.name <> 'static_portlet'
         </querytext>
     </fullquery>
 
@@ -651,6 +652,7 @@
             where portal_pages.portal_id = :portal_id
             and portal_element_map.datasource_id = :ds_id
             and portal_element_map.page_id = portal_pages.page_id
+	    order by portal_element_map.pretty_name
         </querytext>
     </fullquery>
 
