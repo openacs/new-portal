@@ -130,11 +130,13 @@ as
 
                 update portal_pages
                 set sort_key = -1
-                where sort_key = i;
+                where sort_key = i
+		and page_id = portal_page.del.page_id;
 
                 update portal_pages
                 set sort_key = i - 1
-                where sort_key = -1;
+                where sort_key = -1
+		and page_id = portal_page.del.page_id;
 
             end if;
 

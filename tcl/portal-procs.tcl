@@ -521,7 +521,6 @@ namespace eval portal {
 
 
 
-                if { $page_id == $last_page } {
                     append template "
                     <tr valign=middle><td valign=middle>
                     <center>
@@ -533,7 +532,7 @@ namespace eval portal {
                     </center>
                     </td>
                     </tr>"
-                }
+
 
                 #
                 # Layout change chunk - only shown when there are no visible elements on the page

@@ -4,10 +4,10 @@
   <msg key="Add_Page">Toevoegen Pagina</msg>
   <msg key="Bad_direction">Onjuiste richting:</msg>
   <msg key="Bad_direction_1">Onjuiste richting!</msg>
-  <msg key="Change_Page_Layout">Wijzig Paginaindeling</msg>
-  <msg key="Change_page_layout">Wijzig paginaindeling</msg>
-  <msg key="Change_Theme">Wijzig Thema:</msg>
-  <msg key="Change_Theme_1">Wijzig Thema</msg>
+  <msg key="Change_Page_Layout">Pagina-indeling veranderen</msg>
+  <msg key="Change_page_layout">Pagina-indeling veranderen</msg>
+  <msg key="Change_Theme">Thema veranderen:</msg>
+  <msg key="Change_Theme_1">Thema veranderen</msg>
   <msg key="Create_a_new_page">Aanmaken nieuwe pagina</msg>
   <msg key="deco_theme_description">Art Deco thema</msg>
   <msg key="deco_theme_name">deco</msg>
