@@ -58,6 +58,9 @@ ad_proc -public portal_render_portal { portal_id } {
     @creation-date 9/28/2001
 } {
 
+
+set user_id [ad_conn user_id]
+
 db_0or1row select_portal_and_layout "
   select
     p.portal_id,
@@ -65,30 +68,12 @@ db_0or1row select_portal_and_layout "
     p.owner_id,
     l.filename as layout
   from portals p, portal_layouts l
-  where  p.portal_id = :portal_id" -column_array portal
+  where  p.portal_id = :portal_id
+  and l.layout_id = p.layout_id
+  and p.owner_id = :user_id" -column_array portal
 
-if { ! [info exists portal(portal_id)] } {
-    if { ! [info exists portal_id] } {
-	if { $admin_p } {
-	    ad_returnredirect "portal-ae?edit_default_p=1"
-	} else {
-	    ad_return_abort_complaint 1 "This portal is not yet configured.  Please try again later."
-	}
-    } else {
-	ad_return_complaint 1 "That portal (portal_id $portal_id) doesn't exist in this instance.  Perhaps it's been deleted?"
-    }
-    ad_script_abort
-}
+# XXX some security needed here
 
-if { ! $read_p } {
-    if { ! [ info exists portal_id ] } {
-	ad_return_complaint 1 "You don't have permission to view this portal."
-    } else {
-	# fix this link.  There's little chance it's right.
-	ad_return_complaint 1 "You don't have permission to view this portal.  You could try the <a href=\"[ad_conn url]\">default.</a>"
-    }
-    ad_script_abort
-}
 
 # put the element IDs into buckets by region...
 foreach entry_list [portal_get_elements $portal(portal_id)] {
@@ -343,8 +328,7 @@ ad_proc -private portal_get_elements { portal_id } {
     db_foreach select_p_e_map "
     select m.element_id, m.region, m.sort_key
     from portal_element_map m
-    where m.portal_id = :portal_id and
-    acs_permission.permission_p(m.element_id, :user_id, 'read') = 't'
+    where m.portal_id = :portal_id
     order by region, sort_key, element_id" -column_array entry {
 	lappend entries [array get entry]
     } if_no_rows {
