@@ -41,7 +41,8 @@ create table portal_datasources (
 				constraint p_datasources_datasource_id_pk
 				primary key,
 	description		varchar(200),
-	name			varchar(200) not null
+	name			varchar(200) not null,
+	pretty_name		varchar(200) not null
 );
 
 

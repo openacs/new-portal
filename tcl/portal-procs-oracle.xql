@@ -57,9 +57,8 @@
     set region = :region,
     page_id = :page_id,
     sort_key = (select nvl((select max(pem.sort_key) + 1
-	                    from portal_element_map pem, portal_pages pp
-	                    where pp.portal_id = :portal_id 
-                            and pp.page_id = pem.page_id
+	                    from portal_element_map pem
+                            where pem.page_id = :page_id
 		            and region = :region), 
                             1) 
 		 from dual)
@@ -90,7 +89,16 @@
     (:new_element_id, :ds_name, :ds_name, :page_id, :ds_id, :region,  
     nvl((select max(sort_key) + 1 
          from portal_element_map
-         where region = :region), 1))
+         where region = :region
+         and page_id = :page_id), 1))
+  </querytext>
+</fullquery> 
+
+<fullquery name="portal::move_element.get_my_page_id">      
+  <querytext>
+  select page_id as my_page_id
+  from portal_element_map 
+  where element_id = :element_id
   </querytext>
 </fullquery> 
 
@@ -99,9 +107,8 @@
     update portal_element_map 
     set region = :target_region, 
     sort_key = (select nvl((select max(pem.sort_key) + 1
-	                    from portal_element_map pem, portal_pages pp
-	                    where pp.portal_id = :portal_id
-                            and pp.page_id = pem.page_id
+	                    from portal_element_map pem
+	                    where page_id = :my_page_id         
                             and region = :target_region), 
                            1) 
                 from dual)
@@ -124,12 +131,6 @@
 
 </querytext>
 </fullquery>
-
-
-
-
-
-
 
 </queryset>
 

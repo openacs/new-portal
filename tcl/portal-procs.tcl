@@ -454,7 +454,6 @@ namespace eval portal {
             "swap" {  
                 portal::swap_element $portal_id \
                         [ns_set get $form element_id] \
-                        [ns_set get $form sort_key] \
                         [ns_set get $form region] \
                         [ns_set get $form direction]
             }
@@ -878,7 +877,6 @@ namespace eval portal {
     ad_proc -private swap_element {
         portal_id
         element_id
-        sort_key
         region
         dir
     } {
@@ -886,13 +884,15 @@ namespace eval portal {
 
         @param portal_id 
         @param element_id 
-        @param sort_key of the element to be moved
         @param region
         @param dir either up or down
     } {
 
         ad_require_permission $portal_id portal_read_portal
         ad_require_permission $portal_id portal_edit_portal
+
+        # get this element's sk
+        db_1row get_my_sort_key_and_page_id {}
 
         if { $dir == "up" } {
             # get the sort_key and id of the element above
@@ -952,7 +952,9 @@ namespace eval portal {
             ad_return_complaint 1 "portal::move_element Bad direction!"
         }
 
-        # just move the element to the bottom of the region
+        # get this element's page_id
+        db_1row get_my_page_id {}
+
         db_dml update {} 
     }
 
