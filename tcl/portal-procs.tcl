@@ -1469,6 +1469,7 @@ namespace eval portal {
         {-value_id:required}
         {-key "instance_id"}
         {-extra_params ""}
+        {-force_region ""}
     } {
         A helper proc for portlet "add_self_to_page" procs.
         Adds the given portlet as an portal element to the given
@@ -1491,8 +1492,12 @@ namespace eval portal {
             db_transaction {
 
                 # Tell portal to add this element to the page
-                set element_id [add_element -pretty_name $pretty_name \
-                        -page_id $page_id $portal_id $portlet_name]
+                set element_id [add_element \
+                        -pretty_name $pretty_name \
+                        -page_id $page_id \
+                        -force_region $force_region \
+                        $portal_id \
+                        $portlet_name ]
 
                 # There is already a value for the param which is overwritten
                 set_element_param $element_id $key $value_id
