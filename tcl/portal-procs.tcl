@@ -10,6 +10,88 @@ ad_library {
 
 namespace eval portal {
 
+# helper procs for datasources
+ad_proc -public get_datasource_name { ds_id } {
+    Get the ds name from the id or the null string if not found.
+
+    @param ds_id
+    @return ds_name
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date Spetember 2001
+} { 
+    if {[db_0or1row get_ds_name_from_id "select name from portal_datasources where datasource_id = :ds_id"]} {
+	return $name
+    } else {
+	return ""
+    }
+}
+
+ad_proc -public get_datasource_id { ds_name } {
+    Get the ds is from the name or the null string if not found.
+
+    @param ds_name
+    @return ds_id
+    @creation-date Spetember 2001
+} { 
+    if {[db_0or1row get_ds_id_from_name "select datasource_id from portal_datasources where datasource_name = :ds_name"]} {
+	return $datasource_id
+    } else {
+	return ""
+    }
+}
+
+ad_proc -public make_datasource_available {portal_id ds_id} {
+    Make the datasource available to the given portal.  
+
+    @param portal_id
+    @param ds_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 10/30/2001
+} {
+
+    set new_p_ds_id [db_nextval acs_object_id_seq]
+
+    db_dml insert_into_portal_datasource_avail_map "
+    insert into portal_datasource_avail_map
+    (portal_datasource_id, portal_id, datasource_id)
+    values
+    (:new_element_id, :portal_id, :ds_id)"
+}
+
+ad_proc -public make_datasource_unavailable {portal_id ds_id} {
+    Make the datasource unavailable to the given portal.  
+
+    @param portal_id
+    @param ds_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 10/30/2001
+} {
+
+    db_dml delete_from_portal_datasource_avail_map "
+    delete from portal_datasource_avail_map
+    where portal_id =  :portal_id
+          and datasource_id = :datasource_id"
+}
+
+ad_proc -public toggle_datasource_availability {portal_id ds_id} {
+    Toggle
+
+    @param portal_id
+    @param ds_id
+    @author Arjun Sanyal (arjun@openforce.net)
+    @creation-date 10/30/2001
+} {
+    if { [db_0or1row datasource_avail_check "select 1  
+    from portal_datasource_avail_map
+    where portal_id = :portal_id and
+    datasource_id = :ds_id"] } {
+	[make_datasource_unavailable $portal_id $ds_id]
+    } else {
+	[make_datasource_available $portal_id $ds_id]
+    }
+}
+
+
     ad_proc -public create {user_id {layout_name "'Simple 2-Column'"}} {
     Create a new portal for the passed in user id. 
 
@@ -141,10 +223,7 @@ ad_proc -public add_element_to_region { portal_id ds_name region } {
     @creation-date 9/28/2001
 } {
 
-    # get the ds_id from the ds_name
-    db_1row ds_name_select "select datasource_id as ds_id
-    from portal_datasources 
-    where name = :ds_name"
+    set datasource_id [get_datasource_id $ds_name]
 
     # set up a unique prett_name for the PE
     if { [db_0or1row pe_prety_name_unique_check "select 1  
@@ -849,10 +928,7 @@ ad_proc -private get_elements { portal_id } {
 ad_proc -private get_element_ids_by_ds {portal_id ds_name} {
     Get element IDs for a particular portal and a datasource name
 } {
-    # get the ds_id from the ds_name
-    db_1row ds_name_select "select datasource_id as ds_id
-    from portal_datasources 
-    where name = :ds_name"
+    set ds_id [get_datasource_id $ds_name]
 
     return [db_list select_element_ids "select element_id from portal_element_map 
     where portal_id= :portal_id and datasource_id= :ds_id"]
@@ -961,18 +1037,6 @@ ad_proc -public exists_p { portal_id } {
     }
 }
 
-ad_proc -public get_datasource_name { ds_id } {
-    Get the ds name from the id or the null string if not found.
-
-    @return ds_name
-    @creation-date Spetember 2001
-} { 
-    if {[db_0or1row get_ds_name_from_id "select name from portal_datasources where datasource_id = :ds_id"]} {
-	return $name
-    } else {
-	return ""
-    }
-}
 
 ad_proc -public layout_elements { 
     element_list 
