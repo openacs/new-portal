@@ -75,8 +75,7 @@ as
 		);
 
 		insert into portals (portal_id, layout_id, name, owner_id) 
-			     values (v_portal_id, layout_id, (name || to_char(v_portal_id)), owner_id)
-		);
+			     values (v_portal_id, layout_id, 'Untitled', owner_id);
 
 		return v_portal_id;
 	end new;
