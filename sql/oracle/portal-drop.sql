@@ -6,6 +6,7 @@
 -- Arjun Sanyal (arjun@openforce.net)
 -- $Id$
 --
+@@ datasource-sc-drop.sql
 @@ api-drop.sql
 @@ portal-core-drop.sql
 @@ objects-drop.sql

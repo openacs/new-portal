@@ -11,5 +11,5 @@
 @@ portal-core-create.sql
 @@ objects-create.sql
 @@ api-create.sql
-@@ portal-element-sc-create.sql
+@@ datasource-sc-create.sql
 @@ defaults.sql
