@@ -68,6 +68,8 @@ create table portal_datasources (
 	link			varchar(200),
 	description		varchar(4000),
 	config_path		varchar(200),
+	-- the name of a tcl proc, like content, that returns the edit html
+	edit_content		varchar(200) default NULL,	
 	content			varchar(4000)
 );
 
