@@ -23,4 +23,12 @@
 <property name=referer>@referer@</property>
 <property name=name>@name@</property>
 
+<a href=@page_url@?&portal_id=@portal_id@&referer=@referer@&anchor=#custom>Manage Custom Portlets</a>
+
 @rendered_page@
+<hr>
+
+<a name="custom"><h2></a>Custom Portlets</h2> - Note custom portlets for portal templates are very fragile right now. Only use this during system set up before any portlets have been created with this template.  Better solution coming soon.
+<include src="/packages/static-portlet/www/static-admin-portlet" package_id="@portal_id@" template_portal_id="@portal_id@" return_url="@return_url@">
+
+
