@@ -370,7 +370,7 @@ namespace eval portal {
 	    # the <include> sources /www/place-element.tcl
 	    set template "	
 	    <master src=\"@master_template@\">
-	    <b>Return to <a href=@return_url@>@name@</a></b>
+	    <b>Return to <a href=@return_url@>@portal.name@</a></b>
 	    <p>
 	    <form action=@action_string@>
 	    <b>Change Your Portal's Name:</b>
