@@ -16,12 +16,9 @@
 
 --
 -- The "New" Portal Package
--- copyright 2001, OpenForce, Inc.
--- distributed under the GNU GPL v2
 --
---
--- arjun@openforce.net
--- $Id$
+-- @author arjun@openforce.net
+-- @version $Id$
 --
 
 @@ portal-core-create.sql
@@ -29,4 +26,3 @@
 @@ api-create.sql
 @@ datasource-sc-create.sql
 @@ defaults.sql
-@@ portal-node-mapping-create.sql

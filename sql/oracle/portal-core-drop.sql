@@ -14,23 +14,37 @@
 --  details.
 --
 
--- The New Portal Package
--- copyright 2001, OpenForce, Inc.
--- distributed under the GNU GPL v2
---
--- arjun@openforce.net
 -- 
--- $Id$
+-- The New Portal Package
+--
+-- @author arjun@openforce.net
+-- @version $Id$
+-- 
 
--- Reverse order from the creation script
-
+drop sequence portal_element_map_sk_seq;
 
 drop table portal_datasource_avail_map;
 drop table portal_element_parameters;
 drop table portal_element_map;
+drop table portal_pages;
 drop table portals;
 drop table portal_element_themes;
 drop table portal_supported_regions;
 drop table portal_layouts;
 drop table portal_datasource_def_params;
 drop table portal_datasources;
+
+declare
+begin
+    acs_privilege.remove_child('read','portal_read_portal');
+    acs_privilege.remove_child('portal_edit_portal','portal_read_portal');
+    acs_privilege.remove_child('portal_admin_portal','portal_edit_portal');
+    acs_privilege.remove_child('create','portal_create_portal');
+    acs_privilege.remove_child('delete','portal_delete_portal');
+    acs_privilege.remove_child('admin','portal_admin_portal');
+    acs_privilege.drop_privilege('portal_create_portal');
+    acs_privilege.drop_privilege('portal_delete_portal');
+    acs_privilege.drop_privilege('portal_read_portal');
+    acs_privilege.drop_privilege('portal_edit_portal');
+    acs_privilege.drop_privilege('portal_admin_portal');
+end;

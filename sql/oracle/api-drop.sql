@@ -19,10 +19,11 @@
 -- copyright 2001, OpenForce, Inc.
 -- distributed under the GNU GPL v2
 --
--- Arjun Sanyal (arjun@openforce.net)
--- $Id$
+-- @author Arjun Sanyal (arjun@openforce.net)
+-- @version $Id$
 --
 
+drop package portal_page;
 drop package portal;
 drop package portal_element_theme;
 drop package portal_layout;
