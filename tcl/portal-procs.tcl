@@ -1108,14 +1108,14 @@ namespace eval portal {
                 set new_element_id [db_nextval acs_object_id_seq]
                 set target_page_id [get_page_id -portal_id $portal_id -page_name $page_name -sort_key $template_page_sort_key]
 
-                set bar [db_string foobar {
-                    select name
-                    from portal_element_map pem
-                    where pem.page_id = :target_page_id
-                    and pem.sort_key = :template_element_sk
-                    and pem.region = 1
-                } -default NONE] 
-                
+                # set bar [db_string foobar {
+                #     select name
+                #     from portal_element_map pem
+                #     where pem.page_id = :target_page_id
+                #     and pem.sort_key = :template_element_sk
+                #     and pem.region = 1
+                # } -default NONE] 
+                # 
                 # ns_log notice "aks5 $template_page_sort_key / $template_element_region / $template_element_name / $template_element_sk / $bar" 
                 
                 db_dml template_insert {}
