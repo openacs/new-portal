@@ -918,7 +918,7 @@ namespace eval portal {
 	@param ds_name
 	@return ds_id
     } { 
-	if {[db_0or1row get_datasource_id_select {}]} {
+	if {[db_0or1row select {}]} {
 	    return $datasource_id
 	} else {
 	    return ""
