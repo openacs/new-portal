@@ -5,16 +5,14 @@
 <form method=get action="element-add-2">
 <%= [export_form_vars portal_id region] %>
 
-Elements that you aren't currently using:<br>
-<select name=element_ids size=8 multiple>
-<multiple name=element_ids>
-  <option value=@element_ids.element_id@>@element_ids.name@</option>
+<multiple name="datasources">
+   <input type=radio name=datasource_id value="@datasources.datasource_id@">
+    <b>@datasources.name@</b> @datasources.description@<br>
 </multiple>
-</select>
 
 <p>
 What should this element be named (XXX - fixme unique names):<br>
-<b>Name:</b> <input type="text" name="name" value="Untitled-1">
+<b>Name:</b> <input type="text" name="name" value="Untitled">
 </p>
 
 
