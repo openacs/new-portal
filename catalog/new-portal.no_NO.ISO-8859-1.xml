@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<message_catalog package_key="new-portal" package_version="0.1a" locale="no_NO" charset="ISO-8859-1">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="new-portal" package_version="0.2d1" locale="no_NO" charset="ISO-8859-1">
 
   <msg key="Add_Page">Legg til side</msg>
   <msg key="Bad_direction">Dårlig retning:</msg>
