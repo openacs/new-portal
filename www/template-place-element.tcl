@@ -64,7 +64,7 @@ db_foreach select_elements_by_region {
     append show_html "<select name=element_id>"
     
     db_foreach hidden_elements {
-	select element_id, name
+	select element_id, pem.pretty_name
 	from portal_element_map pem, portal_pages pp
 	where
 	pp.portal_id = :portal_id 
@@ -74,7 +74,7 @@ db_foreach select_elements_by_region {
 	order by name
     } {
 	set show_avail_p 1
-	append show_html "<option value=$element_id>$name</option>\n"
+	append show_html "<option value=$element_id>$pretty_name</option>\n"
     }
     
     
