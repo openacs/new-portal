@@ -15,8 +15,7 @@ set master_template [ad_parameter master_template]
 
 set query "select 
            portal_id, name 
-           from portals
-           where portals.owner_id = :user_id"
+           from portals"
 
 template::query get_users_portals users_portals multirow $query 
 

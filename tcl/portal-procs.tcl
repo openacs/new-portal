@@ -116,8 +116,7 @@ ad_proc -public toggle_datasource_availability {portal_id ds_id} {
 	begin
 	    
 	:1 := portal.new ( 
-	layout_id => :layout_id,
-	owner_id => :user_id
+	layout_id => :layout_id
 	);
 	    
 	acs_permission.grant_permission ( 
@@ -713,7 +712,6 @@ ad_proc -public render { portal_id } {
 	select
 	p.portal_id,
 	p.name,
-	p.owner_id,
 	t.filename as layout_template,
 	't' as portal_read_p,
 	't' as layout_read_p
