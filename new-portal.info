@@ -32,8 +32,8 @@
             <file type="data_model" db_type="oracle" path="sql/oracle/objects-drop.sql"/>
             <file type="data_model" db_type="oracle" path="sql/oracle/portal-core-create.sql"/>
             <file type="data_model" db_type="oracle" path="sql/oracle/portal-core-drop.sql"/>
-            <file type="data_model_create" db_type="oracle" path="sql/oracle/portal-create.sql"/>
-            <file type="data_model_drop" db_type="oracle" path="sql/oracle/portal-drop.sql"/>
+            <file type="data_model_create" db_type="oracle" path="sql/oracle/new-portal-create.sql"/>
+            <file type="data_model_drop" db_type="oracle" path="sql/oracle/new-portal-drop.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/api-create.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/api-drop.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/datasource-sc-create.sql"/>
@@ -43,8 +43,8 @@
             <file type="data_model" db_type="postgresql" path="sql/postgresql/objects-drop.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-core-create.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-core-drop.sql"/>
-            <file type="data_model_create" db_type="postgresql" path="sql/postgresql/portal-create.sql"/>
-            <file type="data_model_drop" db_type="postgresql" path="sql/postgresql/portal-drop.sql"/>
+            <file type="data_model_create" db_type="postgresql" path="sql/postgresql/new-portal-create.sql"/>
+            <file type="data_model_drop" db_type="postgresql" path="sql/postgresql/new-portal-drop.sql"/>
             <file type="query_file" db_type="oracle" path="tcl/portal-procs-oracle.xql"/>
             <file type="query_file" db_type="postgresql" path="tcl/portal-procs-postgresql.xql"/>
             <file type="tcl_procs" path="tcl/portal-procs.tcl"/>
