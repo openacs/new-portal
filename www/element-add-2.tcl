@@ -57,9 +57,9 @@ db_transaction {
 	set new_param_id [db_nextval acs_object_id_seq]
 	db_dml insert_into_params "
 	insert into portal_element_parameters
-	(parameter_id, element_id, config_required_p, configured_p)
+	(parameter_id, element_id, config_required_p, configured_p, key, value)
 	values
-	(:new_param_id, :new_element_id, :config_required_p, :configured_p)"
+	(:new_param_id, :new_element_id, :config_required_p, :configured_p, :key, :value)"
     }
     
 }   on_error {
