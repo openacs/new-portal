@@ -308,26 +308,28 @@
 <fullquery name="portal::swap_element.get_prev_sort_key">      
   <querytext>
     select sort_key as other_sort_key, element_id as other_element_id
-    from (select sort_key, element_id 
-          from portal_element_map
-          where portal_id = :portal_id 
+    from (select pem.sort_key, element_id 
+          from portal_element_map pem, portal_pages pp
+          where pp.portal_id = :portal_id 
+          and pp.page_id = pem.page_id
           and region = :region 
-          and sort_key < :sort_key
+          and pem.sort_key < :sort_key
           and state != 'pinned'
-          order by sort_key desc) where rownum = 1
+          order by pem.sort_key desc) where rownum = 1
   </querytext>
 </fullquery> 
 
 <fullquery name="portal::swap_element.get_next_sort_key">      
   <querytext>
     select sort_key as other_sort_key, element_id as other_element_id
-    from (select sort_key, element_id
-          from portal_element_map
-          where portal_id = :portal_id 
+    from (select pem.sort_key, element_id
+          from portal_element_map pem, portal_pages pp
+          where pp.portal_id = :portal_id 
+          and pem.page_id = pp.page_id
           and region = :region 
-          and sort_key > :sort_key 
+          and pem.sort_key > :sort_key 
           and state != 'pinned'
-          order by sort_key) where rownum = 1 
+          order by pem.sort_key) where rownum = 1 
   </querytext>
 </fullquery> 
 
