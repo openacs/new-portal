@@ -258,7 +258,7 @@ ad_proc -public render_portal { portal_id } {
 	ns_return 200 $mime_type "$header_preamble $output"
     }
     
-    return
+#    return $output
 
 }
 
@@ -586,19 +586,6 @@ ad_proc -private region_immutable_p { region } {
     return $portal_region_immutable_p($region)
 }
 
-ad_proc -public full_portal_path { } {
-    The path to the portal package.
-
-    @return path to portal package
-    @creation-date Spetember 2001
-} { return "/web/arjun/openacs-4/packages/new-portal" }
-
-ad_proc -public portal_path { } {
-    The path to the portal package from acs root. 
-    
-    @return path to portal package
-    @creation-date Spetember 2001
-} { return "/packages/new-portal" }
 
 ad_proc -public exists_p { portal_id } {
     Check if a portal by that id exists.
@@ -628,16 +615,10 @@ ad_proc -public get_datasource_name { ds_id } {
     }
 }
 
-ad_proc -public portal_path { } {
-    The path to the portal package from acs root. 
-    
-    @return path to portal package
-    @creation-date Spetember 2001
-} { 
-    return "/packages/new-portal" 
-}
-
-ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
+ad_proc -public layout_elements { 
+    element_list 
+    {var_stub "element_ids"} 
+} {
     Split a list up into a bunch of variables for inserting into a layout
     template.  This seems pretty kludgy (probably because it is), but a
     template::multirow isn't really well suited to data of this shape.  
@@ -659,9 +640,26 @@ ad_proc -public layout_elements { element_list {var_stub "element_ids"} } {
 	 } else {
 	     set group {}
 	 }
-    }
+     }
+ }
+
+ad_proc -public  full_portal_path {} {
+    Stuff
+} {
+     return "/web/arjun/openacs-4/packages/new-portal" 
 }
 
+ad_proc -public  portal_path {} {
+    Other Stuff
+} { 
+     return "/packages/new-portal" 
+}
+
+ad_proc -public  dummy {} {
+    There's really something wrong with ad_proc
+} { 
+     return 1
+}
 
 
 } # namespace
