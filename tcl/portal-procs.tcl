@@ -146,7 +146,7 @@ namespace eval portal {
 
         set page_name_list [list "Page 1"]
         set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
-
+	ns_log Warning "CREATING A NEW PORTAL"
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
             set page_name_list [list]
@@ -512,15 +512,18 @@ namespace eval portal {
                 # Remove page chunk - don't allow removal of the first page
                 #
 
-		append template "<tr><td><include src=\"show-here\" portal_id=$portal_id
+		
+		if {! $first_page_p } {
+		    
+		    append template "<tr><td> <include src=\"show-here\" portal_id=$portal_id
 		    action_string=@action_string@
-		    region=@region@
+		    region=1
 		    page_id=$page_id
 		    anchor=$page_id
 		    return_url=@return_url@></tr></td>"
-
-
-
+		    
+		    
+		    
                     append template "
                     <tr valign=middle><td valign=middle>
                     <center>
@@ -532,7 +535,7 @@ namespace eval portal {
                     </center>
                     </td>
                     </tr>"
-
+		}
 
                 #
                 # Layout change chunk - only shown when there are no visible elements on the page
@@ -715,6 +718,17 @@ namespace eval portal {
 		    
 		    db_dml revert_page_update {}
 		    
+		    # First, hide all elements.  
+		    # If there are new content portlets that are not
+		    # in the default template, this will ensure they don't come
+		    # up.
+
+		    db_dml hide_all_elements {
+			update portal_element_map
+			set  state = 'hidden'
+			where page_id = :target_page_id
+		    }
+
 		    # revert elements in two steps like "swap"
 		    db_foreach revert_get_source_elements {} {
 			# the element might not be on the target page...
@@ -1995,8 +2009,7 @@ namespace eval portal {
 
         if {[llength $element_id_list] == 0} {
             db_transaction {
-
-                # Tell portal to add this element to the page
+		# Tell portal to add this element to the page
                 set element_id [add_element \
                         -portal_id $portal_id \
                         -portlet_name $portlet_name \
