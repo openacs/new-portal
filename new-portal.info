@@ -109,6 +109,7 @@
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="master_template"  default="/packages/new-portal/www/master" description="The path to the master template for this portal." section_name="Look and Feel"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="render_immutable_p"  default="0" description="When editing, render elements in immutable regions instead of merely displaying their names." section_name="Portal Editing"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="local_remove_p"  default="0" description="When editing, render elements in immutable regions instead of merely displaying their names." section_name="Portal Editing"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="default_theme_name"  default="simple" description="the default theme"/>
         </parameters>
 
     </version>
