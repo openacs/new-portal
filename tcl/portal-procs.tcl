@@ -1314,12 +1314,15 @@ namespace eval portal {
         if {[db_0or1row select {}]} {
             return $name
         } else {
-            return ""
+            ns_log error "portal::get_datasource_name error! No datasource
+            by that name found!"
+            ad_return_complaint 1 "portal::get_datasource_name error! No datasource
+            by that name found!"
         }
     }
 
     ad_proc -private get_datasource_id { ds_name } {
-        Get the ds id from the name or the null string if not found.
+        Get the ds id from the name
 
         @param ds_name
         @return ds_id
@@ -1327,7 +1330,10 @@ namespace eval portal {
         if {[db_0or1row select {}]} {
             return $datasource_id
         } else {
-            return ""
+            ns_log error "portal::get_datasource_id error! No datasource
+            by that name found!"
+            ad_return_complaint 1 "portal::get_datasource_id error! No datasource
+            by that name found!"
         }
     }
 
