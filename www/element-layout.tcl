@@ -25,12 +25,12 @@ db_1row select_portal {
 } -column_array portal
 
 # fake some elements so that the <list> in the template has something to do.
-foreach region [ portal_get_regions $portal(layout_id) ] {
+foreach region [ portal::get_regions $portal(layout_id) ] {
     # pass the portal_id along here instead of the element_id.
     lappend fake_element_ids($region) $portal_id
 }
 
 set element_list [array get fake_element_ids]
-set element_src "[portal_path]/www/place-element"
+set element_src "[portal::portal_path]/www/place-element"
 
 ad_return_template

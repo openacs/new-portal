@@ -21,7 +21,7 @@ set my_url [ad_conn url]
 set portal_id $element_id
 
 # can this region be edited?
-if { [portal_region_immutable_p $region] } {
+if { [portal::region_immutable_p $region] } {
     set immutable_p 1
     set would_be_immutable_p 0
 } else {
@@ -41,7 +41,7 @@ db_foreach select_elements_by_region \
      order by pe.sort_key" \
 {
     template::multirow append element_multi $element_id $name $sort_key
-    if {![portal_region_immutable_p $region]} {
+    if {![portal::region_immutable_p $region]} {
 	incr region_count
     }
 }
