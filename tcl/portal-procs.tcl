@@ -429,7 +429,7 @@ namespace eval portal {
             append theme_chunk "</label><br>\n"
         }
 
-        append theme_chunk "<input type=submit name=op value=\"[_ new-portal.Change_Theme_1]\"></form>"
+        append theme_chunk "<input type=submit name=\"op_change_theme\" value=\"[_ new-portal.Change_Theme_1]\"></form>"
 	if {$allow_theme_change_p} {
             append template "$theme_chunk"
 	}
@@ -462,7 +462,7 @@ namespace eval portal {
             <input type=hidden name=page_id value=$page_id>
             <input type=hidden name=return_url value=@return_url@#$page_id>
             <input type=hidden name=anchor value=$page_id>
-            <input type=submit name=op value=\"[_ new-portal.Rename_Page]\">
+            <input type=submit name=\"op_rename_page\" value=\"[_ new-portal.Rename_Page]\">
             <input type=text name=pretty_name value=\"$page_name\">
             </form> 
 	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
@@ -530,7 +530,7 @@ namespace eval portal {
                     <input type=hidden name=portal_id value=$portal_id>
                     <input type=hidden name=page_id value=$page_id>
                     <input type=hidden name=return_url value=@return_url@>
-                    <input type=submit name=op value=\"[_ new-portal.Remove_Empty_Page]\">
+                    <input type=submit name=\"op_remove_empty_page\" value=\"[_ new-portal.Remove_Empty_Page]\">
                     </form>
                     </center>
                     </td>
@@ -572,7 +572,7 @@ namespace eval portal {
                 <input type=hidden name=page_id value=$page_id>
                 <input type=hidden name=return_url value=@return_url@>
                 $layout_chunk
-                <input type=submit name=op value=\"[_ new-portal.Change_Page_Layout]\">
+                <input type=submit name=\"op_change_page_layout\" value=\"[_ new-portal.Change_Page_Layout]\">
                 </small>
                 </form>
                 </td></tr>"
@@ -603,7 +603,7 @@ namespace eval portal {
         <input type=hidden name=anchor value=add_a_new_page>
         <center>
          <input type=text name=pretty_name value=\"[_ new-portal.Page] $new_page_num\">
-        <input type=submit name=op value=\"[_ new-portal.Add_Page]\">
+        <input type=submit name=\"op_add_page\" value=\"[_ new-portal.Add_Page]\">
 	<center>
         </form>
 	</td></tr></table>
@@ -621,7 +621,7 @@ namespace eval portal {
             <input type=hidden name=return_url value=@return_url@>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_the_entire_por]</h2>
 	    <center>
-            <input type=submit name=op value=\"[_ new-portal.Revert]\">
+            <input type=submit name=\"op_revert\" value=\"[_ new-portal.Revert]\">
             </form></center>
 	    </td></tr></table>"
         }
@@ -662,58 +662,55 @@ namespace eval portal {
             set edit_p 1
         }
 
-        set op [ns_set get $form op]
+        if { ![empty_string_p [ns_set get $form "op_revert"]] } {
+            #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
+            #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
 
-        switch $op {
-            "Revert" {
-		#Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
-		#It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
+            set template_id [get_portal_template_id $portal_id]
 
-		set template_id [get_portal_template_id $portal_id]
+            # revert theme
+            set theme_id [get_theme_id -portal_id $template_id]
+            db_dml revert_theme_update {}
+            
+            # revert pages
+            # first equalize number of pages in the target
+            set template_page_count [page_count -portal_id $template_id]
+            set target_page_count [page_count -portal_id $portal_id]
+            set difference [expr $template_page_count - $target_page_count]
+            
+            if {$difference > 0} {
+                # less pages in target
+                for {set x 0} {$x < $difference} {incr x} {
+                    
+                    set pretty_name "portal revert dummy page $x"
+                    page_create \
+                        -pretty_name $pretty_name \
+                        -portal_id $portal_id
+                }
+            } elseif {$difference < 0} {
+                # more pages in target, delete them from the end,
+                # putting any elements on them on the first page,
+                # we put them in the right place later
+                for {set x 0} {$x < [expr abs($difference)]} {incr x} {
+                    
+                    set max_page_id [db_string revert_max_page_id_select {}]
+                    set page_id [db_string revert_min_page_id_select {}]
+                    set region 1
+                    
+                    db_foreach revert_move_elements_for_del {} {
+                        portal::move_element_to_page \
+                            -page_id $page_id \
+                            -element_id $element_id \
+                            -region 1
+                    }
 
-		# revert theme
-		set theme_id [get_theme_id -portal_id $template_id]
-		db_dml revert_theme_update {}
-		
-		# revert pages
-		# first equalize number of pages in the target
-		set template_page_count [page_count -portal_id $template_id]
-		set target_page_count [page_count -portal_id $portal_id]
-		set difference [expr $template_page_count - $target_page_count]
-		
-		if {$difference > 0} {
-		    # less pages in target
-		    for {set x 0} {$x < $difference} {incr x} {
-			
-			set pretty_name "portal revert dummy page $x"
-			page_create \
-				-pretty_name $pretty_name \
-				-portal_id $portal_id
-		    }
-		} elseif {$difference < 0} {
-		    # more pages in target, delete them from the end,
-		    # putting any elements on them on the first page,
-		    # we put them in the right place later
-		    for {set x 0} {$x < [expr abs($difference)]} {incr x} {
-			
-			set max_page_id [db_string revert_max_page_id_select {}]
-			set page_id [db_string revert_min_page_id_select {}]
-			set region 1
-			
-			db_foreach revert_move_elements_for_del {} {
-			    portal::move_element_to_page \
-                                    -page_id $page_id \
-                                    -element_id $element_id \
-                                    -region 1
-			}
-
-			page_delete -page_id $max_page_id
-		    }
-		}
-		
-		# now that they have the same number of pages, get to it
-		foreach source_page_id \
-			[list_pages_tcl_list -portal_id $template_id] {
+                    page_delete -page_id $max_page_id
+                }
+            }
+            
+            # now that they have the same number of pages, get to it
+            foreach source_page_id \
+                [list_pages_tcl_list -portal_id $template_id] {
 		    
 		    db_1row revert_get_source_page_info {}
 
@@ -725,28 +722,25 @@ namespace eval portal {
 		    db_foreach revert_get_source_elements {} {
 			# the element might not be on the target page...
 			set target_element_id \
-				[db_string revert_get_target_element {}]
+                            [db_string revert_get_target_element {}]
 			
 			db_dml revert_element_update {}
 		    }
 		}
-            }
-            "Rename" {
+        } elseif { ![empty_string_p [ns_set get $form "op_rename"]] } {
                 portal::update_name $portal_id [ns_set get $form new_name]
-            }
-            "swap" {
+
+        } elseif { ![empty_string_p [ns_set get $form "op_swap"]] } {
                 portal::swap_element $portal_id \
                         [ns_set get $form element_id] \
                         [ns_set get $form region] \
                         [ns_set get $form direction]
-            }
-            "move" {
+        } elseif { ![empty_string_p [ns_set get $form "op_move"]] } {
                 portal::move_element $portal_id \
                         [ns_set get $form element_id] \
                         [ns_set get $form region] \
                         [ns_set get $form direction]
-            }
-            "Show Here" {
+        } elseif { ![empty_string_p [ns_set get $form "op_show_here"]] } {
                 set region [ns_set get $form region]
                 set element_id [ns_set get $form element_id]
                 set page_id [ns_set get $form page_id]
@@ -756,13 +750,11 @@ namespace eval portal {
                     db_dml show_here_update_sk {}
                     db_dml show_here_update_state {}
                 }
-            }
-            "Move to page" {
+        } elseif { ![empty_string_p [ns_set get $form "op_move_to_page"]] } {
                 portal::move_element_to_page \
                     -page_id [ns_set get $form page_id] \
                     -element_id [ns_set get $form element_id]
-            }
-            "hide" {
+        } elseif { ![empty_string_p [ns_set get $form "op_hide"]] } {
                 set element_id_list [list]
 
                 # iterate through the set, destructive!
@@ -785,29 +777,24 @@ namespace eval portal {
                         }
                     }
                 }
-            }
-            "Change Theme" {
+        } elseif { ![empty_string_p [ns_set get $form "op_change_theme"]] } {
                 set theme_id [ns_set get $form theme_id]
 
                 db_dml update_theme {}
-            }
-            "Add Page" {
+        } elseif { ![empty_string_p [ns_set get $form "op_add_page"]] } {
                 set pretty_name [ns_set get $form pretty_name]
                 if {[empty_string_p $pretty_name]} {
                     ad_return_complaint 1 "You must enter a name for the new page."
                 }
                 page_create -pretty_name $pretty_name -portal_id $portal_id
-            }
-            "Remove Empty Page" {
+        } elseif { ![empty_string_p [ns_set get $form "op_remove_empty_page"]] } {
                 set page_id [ns_set get $form page_id]
                 page_delete -page_id $page_id
-            }
-            "Change Page Layout" {
+        } elseif { ![empty_string_p [ns_set get $form "op_change_page_layout"]] } {
                 set_layout_id \
                     -page_id [ns_set get $form page_id] \
                     -layout_id [ns_set get $form layout_id]
-            }
-            "Rename Page" {
+        } elseif { ![empty_string_p [ns_set get $form "op_rename_page"]] } {
                 set pretty_name [ns_set get $form pretty_name]
                 set page_id [ns_set get $form page_id]
 
@@ -815,8 +802,7 @@ namespace eval portal {
                     ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
                 }
                 set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
-            }
-            "toggle_pinned" {
+        } elseif { ![empty_string_p [ns_set get $form "op_toggle_pinned"]] } {
                 set element_id [ns_set get $form element_id]
 
                 if {[db_string toggle_pinned_select {}] == "full"} {
@@ -830,21 +816,12 @@ namespace eval portal {
                 } else {
                     db_dml toggle_pinned_update_unpin {}
                 }
-            }
-            "toggle_hideable" {
+        } elseif { ![empty_string_p [ns_set get $form "op_toggle_hideable"]] } {
                 set element_id [ns_set get $form element_id]
                 toggle_element_param -element_id $element_id -key "hideable_p"
-            }
-            "toggle_shadeable" {
+        } elseif { ![empty_string_p [ns_set get $form "op_toggle_shadeable"]] } {
                 set element_id [ns_set get $form element_id]
                 toggle_element_param -element_id $element_id -key "shadeable_p"
-            }
-            default {
-                ns_log Error \
-                        "portal::config_dispatch: Bad op = $op!"
-                ad_return_complaint 1 \
-                        "portal::config_dispatch: Bad Op! \n op $op"
-            }
         }
     }
 
@@ -2331,8 +2308,3 @@ namespace eval portal {
     }
 
 }
- 
-
-
-
-

@@ -102,7 +102,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
 <form method=post action=@action_string@>
 
 @show_html;noquote@
-</select><input type=submit name="op" value="Show Here">
+</select><input type=submit name="op_show_here" value="Show Here">
 <input type=hidden name=portal_id value=@portal_id@>
 <input type=hidden name=page_id value=@page_id@>
 <input type=hidden name=region value=@region@>
