@@ -7,4 +7,8 @@ ad_page_contract {
     action_string:onevalue
 }
 
+if { ![info exists action_string]} {
+    set action_string ""
+}
+
 portal::layout_elements $element_list
