@@ -232,6 +232,14 @@ begin
 	    );
 
 
+	    -- drop the contract 
+	    contract_id := acs_sc_contract.get_id ('portal_datasource');
+	    acs_sc_contract.delete (
+	    contract_id => contract_id,
+	    contract_name => 'portal_datasource'
+	    );
+
+
 end;
 /
 show errors
