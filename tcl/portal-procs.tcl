@@ -741,6 +741,7 @@ namespace eval portal {
         {-force_region ""}
         {-page_id ""}
         {-page_num ""}
+        {-pretty_name ""}
         portal_id
         ds_name
     } {
@@ -752,6 +753,10 @@ namespace eval portal {
         @param page_num the number of the portal page to add to, def 0 
         @param ds_name
     } {
+        if {[empty_string_p $pretty_name]} {
+            set pretty_name $ds_name
+        }
+
         if { [empty_string_p $page_num] && [empty_string_p $page_id] } {
             # neither page_num or page_id given, default to 0
             set page_id [portal::get_page_id -portal_id $portal_id -sort_key 0]
@@ -810,6 +815,7 @@ namespace eval portal {
         return [add_element_to_region \
                     -page_id $page_id \
                     -layout_id $layout_id \
+                    -pretty_name $pretty_name \
                     $portal_id $ds_name $min_region]
     }
 
@@ -825,6 +831,7 @@ namespace eval portal {
     ad_proc -private add_element_to_region { 
         {-layout_id:required}
         {-page_id ""}
+        {-pretty_name ""}
         portal_id
         ds_name
         region
@@ -835,6 +842,9 @@ namespace eval portal {
         @param portal_id 
         @param ds_name
     } {
+        if {[empty_string_p $pretty_name]} {
+            set pretty_name $ds_name
+        }
 
         set ds_id [get_datasource_id $ds_name]        
 
