@@ -16,7 +16,7 @@
 # tcl/portal-procs.tcl
 
 ad_library {
-    Portal. 
+    Portal.
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date Sept 2001
@@ -38,7 +38,7 @@ namespace eval portal {
         } else {
             set diff [expr "$time - $old_time"]
         }
-        
+
         set old_time $time
 
         ns_log Notice "DEBUG-TIME: $time ($diff) - $str"
@@ -55,7 +55,7 @@ namespace eval portal {
         if {[empty_string_p $datasource_name]} {
             set datasource_name [get_datasource_name $ds_id]
         }
-        
+
         return [acs_sc_call portal_datasource $op $list_args $datasource_name]
     }
 
@@ -93,9 +93,9 @@ namespace eval portal {
 
     # The mangement is not responsible for the results of multi-mounting
 
-    ad_proc -private  package_key {} {
+    ad_proc -private package_key {} {
         Returns the package_key
-    } { 
+    } {
         return "new-portal"
     }
 
@@ -106,18 +106,18 @@ namespace eval portal {
     }
 
     # Work around for template::util::url_to_file
-    ad_proc -private  www_path {} {
+    ad_proc -private www_path {} {
         Returns the path of the www dir of the portal package. We
         need this for stupid template tricks.
-    } { 
+    } {
         return "/packages/[package_key]/www"
     }
 
     ad_proc -private mount_point_no_cache {} {
-        Returns the mount point of the portal package. 
-        Sometimes we need to know this for like <include>ing 
+        Returns the mount point of the portal package.
+        Sometimes we need to know this for like <include>ing
         templates from tcl
-    } { 
+    } {
         return [site_nodes::get_info -return param \
                 -param url \
                 -package_key [package_key]]
@@ -129,25 +129,25 @@ namespace eval portal {
         return [util_memoize portal::mount_point_no_cache]
     }
 
-    ad_proc -public  automount_point {} {
+    ad_proc -public automount_point {} {
         packages such as dotlrn can automount the portal here
-    } { return "portal"  }
+    } { return "portal" }
 
     #
     # Main portal procs
     #
 
     ad_proc -public create {
-        {-name "Untitled"} 
-        {-template_id ""} 
+        {-name "Untitled"}
+        {-template_id ""}
         {-layout_name ""}
         {-theme_name ""}
         {-default_page_name ""}
-        {-context_id ""} 
+        {-context_id ""}
         {-csv_list ""}
-        user_id 
+        user_id
     } {
-        Create a new portal for the passed in user id. 
+        Create a new portal for the passed in user id.
 
         @return The newly created portal's id
         @param user_id
@@ -184,7 +184,7 @@ namespace eval portal {
         # get the default theme name from param, if no theme given
         if {[empty_string_p $theme_name]} {
             set theme_name [ad_parameter -package_id [get_package_id] default_theme_name]
-        } 
+        }
 
         set theme_id [get_theme_id_from_name -theme_name $theme_name]
 
@@ -209,7 +209,7 @@ namespace eval portal {
     }
 
     ad_proc -public delete {
-        portal_id 
+        portal_id
     } {
         Destroy the portal
         @param portal_id
@@ -221,7 +221,7 @@ namespace eval portal {
         return [db_exec_plsql delete_portal {}]
     }
 
-    ad_proc -public get_name { 
+    ad_proc -public get_name {
         portal_id
     } {
         Get the name of this portal
@@ -229,7 +229,7 @@ namespace eval portal {
         return [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]
     }
 
-    ad_proc -private get_name_not_cached { 
+    ad_proc -private get_name_not_cached {
         {-portal_id:required}
     } {
         Memoizing helper
@@ -237,10 +237,10 @@ namespace eval portal {
         return [db_string get_name_select {} -default ""]
     }
 
-    ad_proc -public render { 
+    ad_proc -public render {
         {-page_id ""}
         {-page_num ""}
-        {-hide_links_p "f"} 
+        {-hide_links_p "f"}
         {-render_style "individual"}
         portal_id
     } {
@@ -260,7 +260,7 @@ namespace eval portal {
             set sort_key 0
         } elseif {![empty_string_p $page_num]} {
             set sort_key $page_num
-        } 
+        }
 
         # get the portal and layout
         db_1row portal_select {} -column_array portal
@@ -285,32 +285,32 @@ namespace eval portal {
             set element_src "[www_path]/render_styles/${render_style}/render-element"
             set template "<master src=\"@master_template@\">
             <property name=\"title\">@portal.name@</property>
-            <include src=\"@portal.layout_filename@\" 
+            <include src=\"@portal.layout_filename@\"
             element_list=\"@element_list@\"
             element_src=\"@element_src@\"
             theme_id=@portal.theme_id@
             portal_id=@portal.portal_id@
             edit_p=@edit_p@
             hide_links_p=@hide_links_p@
-            page_id=@page_id@ 
+            page_id=@page_id@
             layout_id=@portal.layout_id@>"
         }
 
         # Necessary hack to work around the acs-templating system
         set __adp_stub "[get_server_root][www_path]/."
-        set {master_template} \"master\" 
+        set {master_template} \"master\"
 
         # Compile and evaluate the template
         set code [template::adp_compile -string $template]
         return [template::adp_eval code]
     }
 
-    ad_proc -private layout_elements { 
-        element_list 
-        {var_stub "element_ids"} 
+    ad_proc -private layout_elements {
+        element_list
+        {var_stub "element_ids"}
     } {
         Split a list up into a bunch of variables for inserting into a
-        layout template.  This seems pretty kludgy (probably because it is), 
+        layout template. This seems pretty kludgy (probably because it is),
         but a template::multirow isn't really well suited to data of this
         shape. It'll setup a set of variables, $var_stub_1 - $var_stub_8
         and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
@@ -319,7 +319,7 @@ namespace eval portal {
         @param element_id_list An [array get]'d array, keys are regions, \
                 values are lists of element_ids.
         @param var_stub A name upon which to graft the bits that will be \
-                passed to the template. 
+                passed to the template.
     } {
        array set elements $element_list
 
@@ -337,7 +337,7 @@ namespace eval portal {
     # Portal configuration procs
     #
 
-    ad_proc -private update_name { 
+    ad_proc -private update_name {
         portal_id new_name
     } {
         Update the name of this portal
@@ -353,13 +353,13 @@ namespace eval portal {
     }
 
 
-    ad_proc -public configure { 
+    ad_proc -public configure {
         {-referer ""}
         {-template_p f}
         portal_id
         return_url
     } {
-        Return a portal or portal template configuration page. 
+        Return a portal or portal template configuration page.
         All form targets point to file_stub-2.
 
         FIXME REFACTOR ME
@@ -380,13 +380,13 @@ namespace eval portal {
         }
 
         #
-        # Set up some whole page stuff 
+        # Set up some whole page stuff
         #
         set master_template [ad_parameter master_template]
         set action_string [generate_action_string]
         if { $template_p == "f" } {
             set element_src "[portal::www_path]/place-element"
-        }  else {
+        } else {
             set element_src "[portal::www_path]/template-place-element"
         }
 
@@ -399,8 +399,8 @@ namespace eval portal {
 
         #
         # Begin creating the template
-        # 
-        set template "        
+        #
+        set template "
         <master src=\"@master_template@\">
         <p>
         $return_text
@@ -408,12 +408,12 @@ namespace eval portal {
 
         #
         # Theme selection chunk
-        # 
+        #
         set theme_chunk "
             <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
-            <strong>Change Theme:</strong> 
+            <strong>Change Theme:</strong>
             <br>"
         set current_theme_id [portal::get_theme_id -portal_id $portal_id]
 
@@ -432,13 +432,13 @@ namespace eval portal {
             }
             append theme_chunk "</label><br>\n"
         }
-        
+
         append theme_chunk "<input type=submit name=op value=\"Change Theme\"></form>"
         append template "$theme_chunk"
 
         #
         # Per-page template chunks
-        # 
+        #
         set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
         foreach page_id $list_of_page_ids {
@@ -451,7 +451,7 @@ namespace eval portal {
 
             #
             # Page rename chunk
-            # 
+            #
             set page_name_chunk "
             <a name=$page_id></a>
             <form method=post action=@action_string@>
@@ -462,7 +462,7 @@ namespace eval portal {
             <br><strong>Page:</strong>
             <input type=text name=pretty_name value=\"$page_name\">
             <input type=submit name=op value=\"Rename Page\">
-            </form>"            
+            </form>"
             append template "$page_name_chunk"
 
             if {[portal::non_hidden_elements_p -page_id $page_id] || $first_page_p} {
@@ -470,25 +470,25 @@ namespace eval portal {
                 #
                 # Page with non-hidden elements OR the first page of the portal
                 #
-                
+
                 db_1row portal_and_page_info_select {} -column_array portal
-            
-                # fake some elements for the <list> in the template 
+
+                # fake some elements for the <list> in the template
                 foreach region [get_layout_region_list -layout_id $portal(layout_id)] {
                     lappend fake_element_ids($region) $portal_id
                 }
-                
+
                 set element_list [array get fake_element_ids]
 
                 append template "
                 <table bgcolor=#eeeeee border=0 width=\"100%\">
                 <tr valign=middle><td valign=middle>
-                <include src=\"$portal(template)\" 
-                element_list=\"$element_list\" 
+                <include src=\"$portal(template)\"
+                element_list=\"$element_list\"
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
-                hide_links_p=f 
-                page_id=$page_id 
+                hide_links_p=f
+                page_id=$page_id
                 layout_id=$portal(layout_id)
                 edit_p=@edit_p@>
                 </td></tr>"
@@ -498,14 +498,14 @@ namespace eval portal {
             }
 
             if {![portal::non_hidden_elements_p -page_id $page_id]} {
-                
-                # 
+
+                #
                 # Non first page with all hidden elements
-                # 
+                #
 
                 #
                 # Remove page chunk - don't allow removal of the first page
-                # 
+                #
 
                 if {!$first_page_p} {
                     append template "
@@ -523,9 +523,9 @@ namespace eval portal {
                     </tr>"
                 }
 
-                # 
+                #
                 # Layout change chunk - only shown when there are no visible elements on the page
-                # 
+                #
                 set layout_chunk ""
 
                 foreach layout [get_layout_info] {
@@ -540,10 +540,10 @@ namespace eval portal {
                     } else {
                         append layout_chunk ">$one_layout_chunk"
                     }
-                    
+
                     append layout_chunk "</label><br>\n"
                 }
-                
+
 
                 append template "
                 <tr>
@@ -562,14 +562,14 @@ namespace eval portal {
                 </form>
                 </td></tr>"
 
-            } 
+            }
 
-            
+
             # close the page's table
             append template "</table>"
 
         }
-        
+
         #
         # New page chunk
         #
@@ -582,14 +582,14 @@ namespace eval portal {
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@>
         <input type=hidden name=anchor value=add_a_new_page>
-        <b>Add a new page:</b> 
+        <b>Add a new page:</b>
          <input type=text name=pretty_name value=\"Page $new_page_num\">
         <input type=submit name=op value=\"Add Page\">
         </form>
         "
-        
+
         #
-        # Revert page chunk 
+        # Revert page chunk
         #
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
             append template "
@@ -597,7 +597,7 @@ namespace eval portal {
             <form method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
-            <b>Revert to the default arrangement:</b> 
+            <b>Revert to the default arrangement:</b>
             <input type=submit name=op value=\"Revert\">
             </form>"
         }
@@ -606,7 +606,7 @@ namespace eval portal {
         # Templating system hacks
         #
         set __adp_stub "[get_server_root][www_path]/."
-        set {master_template} \"master\" 
+        set {master_template} \"master\"
 
         set code [template::adp_compile -string $template]
         set output [template::adp_eval code]
@@ -614,17 +614,17 @@ namespace eval portal {
         return $output
     }
 
-    ad_proc -public configure_dispatch { 
+    ad_proc -public configure_dispatch {
         {-template_p "f"}
         {-portal_id:required}
         {-form:required}
     } {
-        Dispatches the configuration operation. 
+        Dispatches the configuration operation.
         We get the target region number from the op.
 
         @param portal_id the portal to edit
         @param formdata an ns_set with all the formdata
-    } { 
+    } {
 
         set edit_p \
                 [permission::permission_p \
@@ -640,14 +640,14 @@ namespace eval portal {
         set op [ns_set get $form op]
 
         switch $op {
-            "Revert" { 
+            "Revert" {
                 db_transaction {
                     set template_id [get_portal_template_id $portal_id]
 
                     # revert theme
                     set theme_id [get_theme_id -portal_id $template_id]
                     db_dml revert_theme_update {}
-                    
+
                     # revert pages
                     # first equalize number of pages in the target
                     set template_page_count [page_count -portal_id $template_id]
@@ -664,27 +664,27 @@ namespace eval portal {
                                     -portal_id $portal_id
                         }
                     } elseif {$difference < 0} {
-                        # more pages in target, delete them from the end, 
-                        # putting any elements on them on the first page, 
+                        # more pages in target, delete them from the end,
+                        # putting any elements on them on the first page,
                         # we put them in the right place later
                         for {set x 0} {$x < [expr abs($difference)]} {incr x} {
 
                             set max_page_id [db_string revert_max_page_id_select {}]
                             set page_id [db_string revert_min_page_id_select {}]
                             set region 1
-                            
+
                             db_foreach revert_move_elements_for_del {} {
                                 db_dml move_to_page_update {}
                             }
-                                
+
                             page_delete -page_id $max_page_id
                         }
                     }
-                    
+
                     # now that they have the same number of pages, get to it
                     foreach source_page_id \
                             [list_pages_tcl_list -portal_id $template_id] {
-                        
+
                         db_1row revert_get_source_page_info {}
 
                         set target_page_id [db_string revert_get_target_page_id {}]
@@ -702,10 +702,10 @@ namespace eval portal {
                     }
                 }
             }
-            "Rename" { 
+            "Rename" {
                 portal::update_name $portal_id [ns_set get $form new_name]
             }
-            "swap" {  
+            "swap" {
                 portal::swap_element $portal_id \
                         [ns_set get $form element_id] \
                         [ns_set get $form region] \
@@ -724,9 +724,9 @@ namespace eval portal {
 
                 db_transaction {
                     # The new element's sk will be the last in the region
-                    db_dml show_here_update_sk {} 
+                    db_dml show_here_update_sk {}
                     db_dml show_here_update_state {}
-                }                
+                }
             }
             "Move to page" {
                 portal::move_element_to_page \
@@ -737,7 +737,7 @@ namespace eval portal {
                 set element_id_list [list]
 
                 # iterate through the set, destructive!
-                while { [expr [ns_set find $form "element_id"] + 1 ]  } {
+                while { [expr [ns_set find $form "element_id"] + 1 ] } {
                     lappend element_id_list [ns_set get $form "element_id"]
                     ns_set delkey $form "element_id"
                 }
@@ -746,7 +746,7 @@ namespace eval portal {
                     db_transaction {
                         foreach element_id $element_id_list {
                             db_dml hide_update {}
-                            
+
                             # after hiding an element, add
                             # it to the _first_ page
                             # of the portal.
@@ -755,10 +755,10 @@ namespace eval portal {
                                 -element_id $element_id
                         }
                     }
-                } 
+                }
             }
             "Change Theme" {
-                set theme_id [ns_set get $form theme_id] 
+                set theme_id [ns_set get $form theme_id]
 
                 db_dml update_theme {}
             }
@@ -776,7 +776,7 @@ namespace eval portal {
             "Change Page Layout" {
                 set_layout_id \
                     -page_id [ns_set get $form page_id] \
-                    -layout_id [ns_set get $form layout_id] 
+                    -layout_id [ns_set get $form layout_id]
             }
             "Rename Page" {
                 set pretty_name [ns_set get $form pretty_name]
@@ -823,32 +823,32 @@ namespace eval portal {
     #
     # portal template procs - util and configuration
     #
-    ad_proc -private get_portal_template_id { 
+    ad_proc -private get_portal_template_id {
         portal_id
     } {
         Returns this portal's template_id or the null string if it
         doesn't have a portal template
     } {
-        if { [db_0or1row select {}] } { 
+        if { [db_0or1row select {}] } {
             return $template_id
-        } else { 
+        } else {
             return ""
         }
     }
 
     ad_proc -public template_configure {
-        portal_id 
+        portal_id
         return_url
     } {
-        Just a wrapper for the configure proc. 
+        Just a wrapper for the configure proc.
 
         @param portal_id
-        @return A portal configuration page        
+        @return A portal configuration page
     } {
-        portal::configure -template_p "t" $portal_id $return_url 
+        portal::configure -template_p "t" $portal_id $return_url
     }
 
-    ad_proc -public template_configure_dispatch { 
+    ad_proc -public template_configure_dispatch {
         portal_id
         form
     } {
@@ -856,8 +856,8 @@ namespace eval portal {
 
         @param portal_id
         @param formdata an ns_set with all the formdata
-    } { 
-        configure_dispatch -template_p "t" $portal_id $form 
+    } {
+        configure_dispatch -template_p "t" $portal_id $form
     }
 
 
@@ -872,20 +872,20 @@ namespace eval portal {
     } {
         Gets the id of the page with the given portal_id and sort_key
         if no sort_key is given returns the first page of the portal
-        which is always there. 
+        which is always there.
 
         @return the id of the page
-        @param portal_id 
+        @param portal_id
         @param sort_key - optional, defaults to page 0
     } {
         if {![empty_string_p $page_name]} {
-            set page_id [db_string get_page_id_from_name {} -default ""] 
+            set page_id [db_string get_page_id_from_name {} -default ""]
             if {[empty_string_p $page_id]} {
                 # there is no page by that name in the portal, return page 0
-                return  [get_page_id -portal_id $portal_id]
+                return [get_page_id -portal_id $portal_id]
             } else {
                 return $page_id
-            }                
+            }
         } else {
             return [db_string get_page_id_select {}]
         }
@@ -909,8 +909,8 @@ namespace eval portal {
     } {
         1 when there's only one page
 
-        @param portal_id 
-        @param page_id 
+        @param portal_id
+        @param page_id
     } {
         return [db_string page_count_select {}]
     }
@@ -945,10 +945,10 @@ namespace eval portal {
         {-pretty_name:required}
         {-portal_id:required}
     } {
-        Appends a new blank page for the given portal_id. 
+        Appends a new blank page for the given portal_id.
 
         @return the id of the page
-        @param portal_id 
+        @param portal_id
     } {
         # get the layout_id
         if {![empty_string_p $layout_name]} {
@@ -966,13 +966,13 @@ namespace eval portal {
         Returns a tcl list of the page_ids for the given portal_id
 
         @return tcl list of the pages
-        @param portal_id 
+        @param portal_id
     } {
         set foo [list]
 
         db_foreach list_pages_tcl_list_select {} {
             lappend foo $page_id
-        } 
+        }
         return $foo
     }
 
@@ -989,7 +989,7 @@ namespace eval portal {
         Wraps portal::dimensional to create a dotlrn navbar
 
         @return the id of the page
-        @param portal_id 
+        @param portal_id
         @param link the relative link to set for hrefs
         @param current_page_link f means that there is no link for the current page
     } {
@@ -997,9 +997,9 @@ namespace eval portal {
 
         db_foreach list_page_nums_select {} {
             lappend ad_dim_struct [list $page_num $pretty_name [list]]
-        } 
+        }
 
-        set ad_dim_struct "{ page_num \"Page:\" 0  [list $ad_dim_struct] }"
+        set ad_dim_struct "{ page_num \"Page:\" 0 [list $ad_dim_struct] }"
 
         return [dimensional -no_header \
                 -no_bars \
@@ -1017,7 +1017,7 @@ namespace eval portal {
     # Element Procs
     #
 
-    ad_proc -public add_element { 
+    ad_proc -public add_element {
         {-portal_id:required}
         {-portlet_name:required}
         {-force_region ""}
@@ -1062,10 +1062,10 @@ namespace eval portal {
                 if { $min_num > $count } {
                     set min_num $count
                     set min_region $region
-                } 
+                }
             }
 
-            if { $min_region == 0 } { 
+            if { $min_region == 0 } {
                 set min_region 1
             }
         } else {
@@ -1082,7 +1082,7 @@ namespace eval portal {
             if {$min_region == 0} {
                 # the region asked for was not in the list
                 ns_log error "portal::add_element region $force_region not in layout $layout_id"
-                ad_return_complaint 1  "portal::add_element region $force_region not in layout $layout_id"
+                ad_return_complaint 1 "portal::add_element region $force_region not in layout $layout_id"
             }
         }
 
@@ -1126,7 +1126,7 @@ namespace eval portal {
         }
     }
 
-    ad_proc -private add_element_to_region { 
+    ad_proc -private add_element_to_region {
         {-layout_id:required}
         {-page_name ""}
         {-pretty_name ""}
@@ -1137,11 +1137,11 @@ namespace eval portal {
         Add an element to a portal in a region, given a datasource name
 
         @return the id of the new element
-        @param portal_id 
+        @param portal_id
         @param ds_name
     } {
 
-        # XXX AKS: The whole issue of datasource/portlet naming must 
+        # XXX AKS: The whole issue of datasource/portlet naming must
         # be cleaned up! FIXME
 
         if {[empty_string_p $pretty_name]} {
@@ -1149,11 +1149,11 @@ namespace eval portal {
         }
 
         set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
-        set ds_id [get_datasource_id $ds_name]        
+        set ds_id [get_datasource_id $ds_name]
 
         # First, check if this portal 1) has a portal template and
-        # 2) that that template has an element of this DS in it. If 
-        # so, copy stuff. If not, just insert normally. 
+        # 2) that that template has an element of this DS in it. If
+        # so, copy stuff. If not, just insert normally.
         if {[db_0or1row get_template_info_select {}] == 1} {
 
                 set new_element_id [db_nextval acs_object_id_seq]
@@ -1187,8 +1187,8 @@ namespace eval portal {
     } {
         Moves a PE in the up or down by swapping its sk with its neighbor's
 
-        @param portal_id 
-        @param element_id 
+        @param portal_id
+        @param element_id
         @param region
         @param dir either up or down
     } {
@@ -1210,13 +1210,13 @@ namespace eval portal {
                 return
             }
         } else {
-            ad_return_complaint 1 \ 
+            ad_return_complaint 1 \
             "portal::swap_element: Bad direction: $dir"
         }
 
         db_transaction {
             # because of the uniqueness constraint on sort_keys we
-            # need to set a dummy key, then do the swap. 
+            # need to set a dummy key, then do the swap.
             set dummy_sort_key [db_nextval portal_element_map_sk_seq]
 
             # Set the element to be moved to the dummy key
@@ -1240,7 +1240,7 @@ namespace eval portal {
     } {
         Moves a PE to a neighboring region
 
-        @param portal_id 
+        @param portal_id
         @param element_id
         @param region the PEs current region
         @param direction up or down
@@ -1260,7 +1260,7 @@ namespace eval portal {
         # get this element's page_id
         db_1row get_my_page_id {}
 
-        db_dml update {} 
+        db_dml update {}
     }
 
     ad_proc -private get_element_region {
@@ -1289,18 +1289,18 @@ namespace eval portal {
             set region $curr_reg
         }
 
-        db_dml update {} 
+        db_dml update {}
     }
 
-    ad_proc -private hideable_p { 
+    ad_proc -private hideable_p {
         {-element_id:required}
     } {
         Check if an element is hideable
-    } {        
+    } {
         return [util_memoize "portal::hideable_p_not_cached -element_id $element_id"]
     }
 
-    ad_proc -private hideable_p_not_cached { 
+    ad_proc -private hideable_p_not_cached {
         {-element_id:required}
     } {
         Check if an element is hideable
@@ -1308,16 +1308,16 @@ namespace eval portal {
         return [db_string select_hideable_p {}]
     }
 
-    ad_proc -private hidden_elements_list { 
+    ad_proc -private hidden_elements_list {
         {-portal_id:required}
     } {
         Returns a list of "hidden" element avaliable to a portal. Use a 1 second cache here
         to fake a per-connection cache.
-    } {        
+    } {
         return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id" 1]
     }
 
-    ad_proc -private hidden_elements_list_not_cached { 
+    ad_proc -private hidden_elements_list_not_cached {
         {-portal_id:required}
     } {
         Memoizing helper
@@ -1325,16 +1325,16 @@ namespace eval portal {
         return [db_list_of_lists select_hidden_elements {}]
     }
 
-    ad_proc -private non_hidden_elements_p { 
+    ad_proc -private non_hidden_elements_p {
         {-page_id:required}
     } {
         Returns 1 when this page has at least 1 non-hidden element on it.
-    } {        
+    } {
         return [db_string non_hidden_elements_p_select {} -default 0]
 
     }
 
-    ad_proc -private set_element_param { 
+    ad_proc -private set_element_param {
         element_id
         key
         value
@@ -1344,7 +1344,7 @@ namespace eval portal {
         @param element_id
         @param key
         @param value
-    } {        
+    } {
         #ns_log notice "aks80 set_element_param $element_id / $key / $value / [db_list_of_lists foo {
         # select * from portal_element_parameters where element_id = :element_id}] "
 
@@ -1354,11 +1354,11 @@ namespace eval portal {
         return 1
     }
 
-    ad_proc -private toggle_element_param { 
+    ad_proc -private toggle_element_param {
         {-element_id:required}
         {-key:required}
     } {
-        toggles a boolean (t or f)  element_param
+        toggles a boolean (t or f) element_param
 
         @param element_id
         @param key
@@ -1429,18 +1429,18 @@ namespace eval portal {
         }
     }
 
-    ad_proc -private evaluate_element { 
+    ad_proc -private evaluate_element {
         {-portal_id:required}
         {-edit_p:required}
         element_id
-        theme_id 
+        theme_id
     } {
-        Combine the datasource, template, etc.  Return a chunk of HTML.
+        Combine the datasource, template, etc. Return a chunk of HTML.
 
         @return A string containing the fully-rendered content for $element_id.
     } {
         # get the element data and theme
-        db_1row element_select {} -column_array element 
+        db_1row element_select {} -column_array element
 
         # get the element's params
         db_foreach params_select {} {
@@ -1477,21 +1477,21 @@ namespace eval portal {
                 errmsg \
              ] \
             } {
-        
-        ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+
+        ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
-        
-        set element(content)  " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n" 
-        
+
+        set element(content) " You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::render_element show callback Error! ***\n\n $errmsg</small></pre>\n\n"
+
     }
-    
+
     # trim the element's content
     set element(content) [string trim $element(content)]
 
         # We use the actual pretty name from the DB (ben)
         # FIXME: this is not as good as it should be
         if {$element(ds_name) == $element(pretty_name)} {
-            
+
             set element(name) \
                     [datasource_call \
                         -datasource_name $element(ds_name) \
@@ -1499,7 +1499,7 @@ namespace eval portal {
                         "GetPrettyName" \
                         [list]]
         } else {
-            set element(name) $element(pretty_name) 
+            set element(name) $element(pretty_name)
         }
 
         # The idea for the link proc in the datasource API is that
@@ -1507,16 +1507,16 @@ namespace eval portal {
         # but since we are using "hide_links_p" all the time, the
         # value this returns is ignored
         set element(link) \
-                [datasource_call  \
+                [datasource_call \
                     -datasource_name $element(ds_name) \
                     $element(datasource_id) \
                     "Link" \
                     [list]]
-        
+
         # done with callbacks, now set config params
-        set element(shadeable_p) $config(shadeable_p) 
-        set element(shaded_p) $config(shaded_p) 
-        set element(hideable_p) $config(hideable_p) 
+        set element(shadeable_p) $config(shadeable_p)
+        set element(shaded_p) $config(shaded_p)
+        set element(hideable_p) $config(hideable_p)
         set element(user_editable_p) $config(user_editable_p)
         set element(link_hideable_p) $config(link_hideable_p)
 
@@ -1537,7 +1537,7 @@ namespace eval portal {
     } {
 
         # get the element data and theme
-        db_1row element_select {} -column_array element 
+        db_1row element_select {} -column_array element
 
         # get the element's params
         db_foreach params_select {} {
@@ -1553,11 +1553,11 @@ namespace eval portal {
 
         # do the callback for the ::show proc
         # evaulate the datasource.
-        if { [catch {        set element(content) \
+        if { [catch {set element(content) \
                 [datasource_call \
                 $element(datasource_id) "Show" [list [array get config] ]] } \
                 errmsg ] } {
-            ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"        
+            ns_log error "*** portal::render_element show callback Error! ***\n\n $errmsg\n\n"
             ad_return -error
             ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
@@ -1565,15 +1565,15 @@ namespace eval portal {
 
         set element(name) \
                 [datasource_call \
-                $element(datasource_id) "GetPrettyName" [list]] 
+                $element(datasource_id) "GetPrettyName" [list]]
 
         # no "Link" for raw elements
         set element(link) {}
 
         # done with callbacks, now set config params
-        set element(shadeable_p) $config(shadeable_p) 
-        set element(shaded_p) $config(shaded_p) 
-        set element(hideable_p) $config(hideable_p) 
+        set element(shadeable_p) $config(shadeable_p)
+        set element(shaded_p) $config(shaded_p)
+        set element(hideable_p) $config(hideable_p)
         set element(user_editable_p) $config(user_editable_p)
         set element(link_hideable_p) $config(link_hideable_p)
 
@@ -1589,11 +1589,11 @@ namespace eval portal {
     }
 
 
-    ad_proc -public configure_element { 
+    ad_proc -public configure_element {
         {-noconn ""}
-        element_id 
-        op 
-        return_url 
+        element_id
+        op
+        return_url
     } {
         Dispatch on the element_id and op requested
 
@@ -1613,13 +1613,13 @@ namespace eval portal {
         }
 
         switch $op {
-            "edit" {                 
+            "edit" {
                 # Get the edit html by callback
                 # Notice that the "edit" proc takes only the element_id
                 set html_string [datasource_call $datasource_id "Edit" \
-                        [list $element_id]]                
+                        [list $element_id]]
 
-                if { $html_string == ""  } { 
+                if { $html_string == "" } {
                     ns_log Error "portal::configure_element op = edit, but
                     portlet's edit proc returned null string"
 
@@ -1631,19 +1631,19 @@ namespace eval portal {
                 set action_string [generate_action_string]
 
                 # the <include> sources /www/place-element.tcl
-                set template "        
+                set template "
                 <master src=\"@master_template@\">
                 <b><a href=@return_url@>Return to your portal</a></b>
                 <p>
                 <form action=@action_string@>
                 <b>Edit this element's parameters:</b>
                 <P>
-                @html_string@ 
+                @html_string@
                 <P>
                 </form>
                 "
                 set __adp_stub "[get_server_root][www_path]/."
-                set {master_template} \"master\" 
+                set {master_template} \"master\"
 
                 set code [template::adp_compile -string $template]
                 set output [template::adp_eval code]
@@ -1651,7 +1651,7 @@ namespace eval portal {
                 return $output
 
             }
-            "shade" {  
+            "shade" {
                 set shaded_p [get_element_param $element_id "shaded_p"]
 
                 if { $shaded_p == "f" } {
@@ -1680,7 +1680,7 @@ namespace eval portal {
 
         @param ds_id
         @return ds_name
-    } { 
+    } {
         if {[db_0or1row select {}]} {
             return $name
         } else {
@@ -1696,7 +1696,7 @@ namespace eval portal {
 
         @param ds_name
         @return ds_id
-    } { 
+    } {
         if {[db_0or1row select {}]} {
             return $datasource_id
         } else {
@@ -1708,14 +1708,14 @@ namespace eval portal {
     }
 
     ad_proc -private make_datasource_available {portal_id ds_id} {
-        Make the datasource available to the given portal.  
+        Make the datasource available to the given portal.
 
         @param portal_id
         @param ds_id
     } {
         if {![datasource_available_p -portal_id $portal_id -datasource_id $ds_id]} {
             set new_p_ds_id [db_nextval acs_object_id_seq]
-            db_dml insert {} 
+            db_dml insert {}
         }
     }
 
@@ -1732,12 +1732,12 @@ namespace eval portal {
     }
 
     ad_proc -private make_datasource_unavailable {portal_id ds_id} {
-        Make the datasource unavailable to the given portal.  
+        Make the datasource unavailable to the given portal.
 
         @param portal_id
         @param ds_id
     } {
-        #    ad_require_permission $portal_id portal_admin_portal
+        # ad_require_permission $portal_id portal_admin_portal
         db_dml delete {}
     }
 
@@ -1762,8 +1762,8 @@ namespace eval portal {
 
     ad_proc -private generate_action_string {
     } {
-        Portal configuration pages need this to set up 
-        the target for the generated links. It's just the 
+        Portal configuration pages need this to set up
+        the target for the generated links. It's just the
         current location with "-2" appended to the name of the
         page.
     } {
@@ -1781,21 +1781,21 @@ namespace eval portal {
         {-portal_id:required}
         {-pretty_name:required}
     } {
-        Get the element IDs with the given pn on the portal, returns 
+        Get the element IDs with the given pn on the portal, returns
         the empty string if none is found
     } {
         return [db_string select {} -default ""]
     }
 
-    ad_proc -private get_layout_region_count { 
+    ad_proc -private get_layout_region_count {
         {-layout_id:required}
     } {
         Get the number of regions (aka columns) this layout supports
-    } { 
+    } {
         return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
     }
 
-    ad_proc -private get_layout_region_count_not_cached { 
+    ad_proc -private get_layout_region_count_not_cached {
         {-layout_id:required}
     } {
         return [db_string select {}]
@@ -1819,7 +1819,7 @@ namespace eval portal {
 
     ad_proc -private get_layout_info {
     } {
-        Returns a list of all the layouts in the system asns_sets with 
+        Returns a list of all the layouts in the system asns_sets with
         keys being: name, description, and number of regions.
     } {
         return [db_list_of_ns_sets select_layout_info {}]
@@ -1834,7 +1834,7 @@ namespace eval portal {
         db_dml update_layout_id {}
     }
 
-    ad_proc -private get_layout_id { 
+    ad_proc -private get_layout_id {
         {-page_num ""}
         {-page_id ""}
         {-layout_name "Simple 2-Column"}
@@ -1858,7 +1858,7 @@ namespace eval portal {
         }
 
         return $layout_id
-    }    
+    }
 
     ad_proc -private exists_p { portal_id } {
         Check if a portal by that id exists.
@@ -1866,15 +1866,15 @@ namespace eval portal {
         @return 1 on success, 0 on failure
         @param a portal_id
     } {
-        if { [db_0or1row select {} ]} { 
+        if { [db_0or1row select {} ]} {
             return 1
-        } else { 
-            return 0 
+        } else {
+            return 0
         }
     }
 
 
-    ad_proc -public add_element_parameters { 
+    ad_proc -public add_element_parameters {
         {-portal_id:required}
         {-portlet_name:required}
         {-value:required}
@@ -1888,10 +1888,10 @@ namespace eval portal {
         A helper proc for portlet "add_self_to_page" procs.
         Adds the given portlet as an portal element to the given
         page. If the portlet is already in the given portal page,
-        it appends the value to the element's parameters with the 
+        it appends the value to the element's parameters with the
         given key. Returns the element_id used.
 
-        IMPROVE ME: refactor 
+        IMPROVE ME: refactor
 
         @return element_id The new element's id
         @param portal_id The page to add the portlet to
@@ -1930,7 +1930,7 @@ namespace eval portal {
                         set_element_param $element_id \
                                 [lindex $extra_params $x] \
                                 [lindex $extra_params [expr $x + 1]]
-                    }        
+                    }
                 }
             }
         } else {
@@ -1943,8 +1943,8 @@ namespace eval portal {
                     set_element_param $element_id $key $value
                 } else {
                     error "portal::add_element_parameters error: bad param action! $param_action 1"
-                } 
-            
+                }
+
                 if {![empty_string_p $extra_params]} {
                     check_key_value_list $extra_params
 
@@ -1955,10 +1955,10 @@ namespace eval portal {
                                 -key [lindex $extra_params $x] \
                                 -value [lindex $extra_params [expr $x + 1]]
                         } elseif {[string equal $param_action "overwrite"]} {
-                            set_element_param $element_id [lindex $extra_params $x]  [lindex $extra_params [expr $x + 1]]
+                            set_element_param $element_id [lindex $extra_params $x] [lindex $extra_params [expr $x + 1]]
                         } else {
                             error "portal::add_element_parameters error: bad param action! $param_action 2"
-                        } 
+                        }
                     }
                 }
             }
@@ -1966,8 +1966,8 @@ namespace eval portal {
         return $element_id
     }
 
-    ad_proc -public remove_element_parameters { 
-        {-portal_id:required} 
+    ad_proc -public remove_element_parameters {
+        {-portal_id:required}
         {-portlet_name:required}
         {-value:required}
         {-key "package_id"}
@@ -1976,13 +1976,13 @@ namespace eval portal {
         A helper proc for portlet "remove_self_from_page" procs.
         The inverse of the above proc.
 
-        Removes the given parameters from all the the portlets 
-        of this type on the given page. If by removing this param, 
+        Removes the given parameters from all the the portlets
+        of this type on the given page. If by removing this param,
         there are no more params (say instace_id's) of this type,
         that means that the portlet has become empty and can be
 
         @param portal_id The portal page to act on
-        @param portlet_name The name of the portlet to (maybe) remove 
+        @param portlet_name The name of the portlet to (maybe) remove
         @param key the key for the value (defaults to package_id)
         @param value the value of the key
         @param extra_params a list of extra key/value pairs to remove
@@ -2008,11 +2008,11 @@ namespace eval portal {
                                 -key [lindex $extra_params $x] \
                                 -value [lindex $extra_params [expr $x + 1]]
                     }
-                }                
+                }
             }
         }
 
-        # step 2:  Check if we should really remove the element
+        # step 2: Check if we should really remove the element
         db_transaction {
             foreach element_id $element_ids {
                 if {[llength [get_element_param_list \
@@ -2024,18 +2024,18 @@ namespace eval portal {
         }
     }
 
-    ad_proc -private check_key_value_list { 
+    ad_proc -private check_key_value_list {
         list_to_check
     } {
         rat-simple consistency check for the above 2 procs
-    } {              
+    } {
         if {[expr [llength $list_to_check] % 2] != 0} {
             ns_log error "portal::check_key_value_list bad var list_to_check!"
-            ad_return_complaint 1  "portal::check_key_value_list bad var list_to_check!"
-        }    
+            ad_return_complaint 1 "portal::check_key_value_list bad var list_to_check!"
+        }
     }
 
-    ad_proc -public show_proc_helper { 
+    ad_proc -public show_proc_helper {
         {-template_src ""}
         {-package_key:required}
         {-config_list:required}
@@ -2060,13 +2060,13 @@ namespace eval portal {
         uplevel 1 {
             set template "<include src=\"$__ts\" cf=\"$__cflist\">"
             set __adp_stub "[get_server_root]/packages/$__pk/www/."
-            set code [template::adp_compile -string $template]        
+            set code [template::adp_compile -string $template]
             set output [template::adp_eval code]
             return $output
         }
     }
 
-    ad_proc -public get_theme_id { 
+    ad_proc -public get_theme_id {
         {-portal_id:required}
     } {
         self explanatory
@@ -2074,14 +2074,14 @@ namespace eval portal {
         return [db_string get_theme_id_select {}]
     }
 
-    ad_proc -public get_theme_id_from_name { 
+    ad_proc -public get_theme_id_from_name {
         {-theme_name:required}
     } {
         self explanatory
     } {
-        if { [db_0or1row get_theme_id_from_name_select {} ]} { 
+        if { [db_0or1row get_theme_id_from_name_select {} ]} {
             return $theme_id
-        } else { 
+        } else {
             ns_log error "portal::get_theme_id_from_name_select bad theme_id!"
             ad_return_complaint 1 "portal::get_theme_id_from_name_select bad theme_id!"
         }
@@ -2090,7 +2090,7 @@ namespace eval portal {
 
     ad_proc -private get_theme_info {
     } {
-        Returns a list of all the themes in the system as ns_sets with 
+        Returns a list of all the themes in the system as ns_sets with
         keys being: theme_id, name, description
     } {
         return [util_memoize "portal::get_theme_info_not_cached"]
@@ -2113,9 +2113,9 @@ namespace eval portal {
         {-table_html_args "border=0 cellspacing=0 cellpadding=3 width=100%"}
         {-pre_html ""}
         {-post_html ""}
-        option_list 
-        {url {}} 
-        {options_set ""} 
+        option_list
+        {url {}}
+        {options_set ""}
         {optionstype url}
     } {
         An enhanced ad_dimensional. see that proc for usage details
@@ -2132,17 +2132,17 @@ namespace eval portal {
             set url [ad_conn url]
         }
 
-        set html "\n<table $table_html_args>\n  <tr>\n"
+        set html "\n<table $table_html_args>\n <tr>\n"
 
         if {!$no_header_p} {
-            foreach option $option_list { 
+            foreach option $option_list {
                 append html "    <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
             }
         }
 
         append html "  </tr>\n  <tr>\n"
 
-        foreach option $option_list { 
+        foreach option $option_list {
             append html "    <td align=$td_align>"
 
             if {!$no_bars_p} {
@@ -2158,7 +2158,7 @@ namespace eval portal {
             }
 
             set first_p 1
-            foreach option_value [lindex $option 3] { 
+            foreach option_value [lindex $option 3] {
                 set thisoption_name [lindex $option_value 0]
                 set thisoption_value [lindex $option_value 1]
                 set thisoption_link_p 1
@@ -2172,9 +2172,9 @@ namespace eval portal {
                     if {!$no_bars_p} {
                         append html " | "
                     } else {
-                        append html " &nbsp; "                    
+                        append html " &nbsp; "
                     }
-                } 
+                }
 
                 if {([string equal $option_val $thisoption_name] == 1 && !$link_all) || !$thisoption_link_p} {
                     append html "${pre_html}<strong>${thisoption_value}</strong>${post_html}"
@@ -2185,7 +2185,7 @@ namespace eval portal {
 
             if {!$no_bars_p} {
                 append html "\]"
-            } 
+            }
 
             append html "$extra_td_html</td>\n"
         }

@@ -34,7 +34,6 @@
             <file type="data_model" db_type="oracle" path="sql/oracle/portal-core-drop.sql"/>
             <file type="data_model_create" db_type="oracle" path="sql/oracle/portal-create.sql"/>
             <file type="data_model_drop" db_type="oracle" path="sql/oracle/portal-drop.sql"/>
-            <file type="data_model" db_type="oracle" path="sql/oracle/portal-node-mapping-create.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/api-create.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/api-drop.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/datasource-sc-create.sql"/>
@@ -46,11 +45,6 @@
             <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-core-drop.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-create.sql"/>
             <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-drop.sql"/>
-            <file type="data_model" db_type="postgresql" path="sql/postgresql/portal-node-mapping-create.sql"/>
-            <file type="query_file" db_type="oracle" path="tcl/portal-node-mapping-procs-oracle.xql"/>
-            <file type="query_file" db_type="postgresql" path="tcl/portal-node-mapping-procs-postgresql.xql"/>
-            <file type="tcl_procs" path="tcl/portal-node-mapping-procs.tcl"/>
-            <file type="query_file" path="tcl/portal-node-mapping-procs.xql"/>
             <file type="query_file" db_type="oracle" path="tcl/portal-procs-oracle.xql"/>
             <file type="query_file" db_type="postgresql" path="tcl/portal-procs-postgresql.xql"/>
             <file type="tcl_procs" path="tcl/portal-procs.tcl"/>
