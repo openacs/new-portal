@@ -143,7 +143,7 @@ create table portal_element_themes (
 -- Roles and perms issues?
 create table portals (
     portal_id                       constraint portal_portal_id_fk
-                                    references acs_objects(object_id)
+                                    references acs_objects (object_id)
                                     constraint p_portal_id_pk
                                     primary key,
     name                            varchar(200)
@@ -152,7 +152,7 @@ create table portals (
                                     not null,
     theme_id                        constraint portal_theme_id_fk
                                     references portal_element_themes (theme_id)
-                                    portal_theme_id_nn
+                                    constraint portal_theme_id_nn
                                     not null,
     template_id                     constraint template_id_fk
                                     references portals (portal_id)
