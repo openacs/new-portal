@@ -1028,7 +1028,7 @@ namespace eval portal {
             lappend ad_dim_struct [list $page_num $pretty_name [list]]
         }
 
-        set ad_dim_struct "{ page_num \"[_ new-portal.Page_1]\" 0 [list $ad_dim_struct] }"
+        set ad_dim_struct "{ page_num [list [_ new-portal.Page_1]] 0 [list $ad_dim_struct] }"
 
         return [dimensional -no_header \
                 -no_bars \
