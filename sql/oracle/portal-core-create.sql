@@ -222,8 +222,10 @@ create table portal_element_map (
 				check(state in ('full', 'shaded', 'hidden', 
 					        'pinned')),
  	-- Two elements may not exist in the same place on a portal.
-	constraint p_element_map_pid_rgn_srt_un 
-	unique(page_id,region,sort_key),
+        -- constraint p_element_map_pid_rgn_srt_un 
+        -- FIXME: we want a constraint _like_ this, but it makes 
+        -- reverting very complicated. XXX
+        --	unique(page_id,region,sort_key),
  	-- Two elements may not have the same pretty name on a portal.
 	constraint p_element_map_pid_name_un 
 	unique(page_id,pretty_name)
