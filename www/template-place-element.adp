@@ -59,7 +59,15 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_sh
 <else>User Shadeable? No [<a href="@target_stub@-2?portal_id=@portal_id@&op=toggle_shadeable&element_id=@element_multi.element_id@&return_url=@return_url@">allow shading</a>]
 </else>
 
-<p>
+<br>
+
+    <include src=place-element-other-page &="element_multi" 
+             target_stub=@target_stub@
+             portal_id=@portal_id@
+             page_id=@element_multi.page_id@>
+    <br>
+<P>
+
 </multiple>
 
 

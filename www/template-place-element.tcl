@@ -21,9 +21,9 @@ where layout_id = :layout_id"
 
 # get the elements for this region.
 set region_count 0
-template::multirow create element_multi element_id name sort_key state hideable_p shadeable_p description
+template::multirow create element_multi element_id name sort_key state hideable_p shadeable_p description page_id
 db_foreach select_elements_by_region {
-    select pem.element_id, pem.name, pem.sort_key, state, pd.description
+    select element_id, pem.pretty_name as name, pem.sort_key, state, pp.page_id, pd.description
      from portal_element_map pem, portal_datasources pd, portal_pages pp
      where
        pp.portal_id = :portal_id 
@@ -41,7 +41,7 @@ db_foreach select_elements_by_region {
 		"select value as hideable_p from portal_element_parameters where key = 'hideable_p' and element_id = :element_id"
 	
 	template::multirow append element_multi \
-		$element_id $name $sort_key $state $hideable_p $shadeable_p $description
+		$element_id $name $sort_key $state $hideable_p $shadeable_p $description $page_id
 	incr region_count
 	
     }

@@ -164,6 +164,7 @@ namespace eval portal {
     
     ad_proc -public render { 
         {-page_id ""}
+        {-page_num ""}
         {-hide_links_p "f"} 
         {-render_style "individual"}
         portal_id
@@ -182,10 +183,12 @@ namespace eval portal {
 	set master_template [ad_parameter master_template]
 	set css_path [ad_parameter css_path]
 	
-        # if no page_id set, render current
-        if {[empty_string_p $page_id]} {
-            set page_id [get_current_page -portal_id $portal_id]
-        }
+        # if no page_num set, render page 0
+        if {[empty_string_p $page_id] && [empty_string_p $page_num]} {
+            set page_id [get_page_id -portal_id $portal_id -sort_key 0]
+        } elseif {![empty_string_p $page_num]} {
+            set page_id [get_page_id -portal_id $portal_id -sort_key $page_num]
+        } 
 
 	# get the portal and layout
 	db_1row portal_select {} -column_array portal
@@ -212,7 +215,7 @@ namespace eval portal {
             set element_src "[www_path]/render_styles/${render_style}/render-element"
             set template "<master src=\"@master_template@\">
             <property name=\"title\">@portal.name@</property>
-            <include src=\"@portal.layout_template@\" 
+            <include src=\"@portal.layout_filename@\" 
             element_list=\"@element_list@\"
             element_src=\"@element_src@\"
             theme_id=@portal.theme_id@
@@ -404,7 +407,7 @@ namespace eval portal {
                 <P>Page <b>$portal(page_name)</b> has no Elements"
             } else {
                 append template "
-                <P>Page <b>$portal(page_name)</b> Elements</>
+                <P>Page <b>$portal(page_name)</b>
                 <include src=\"$portal(template)\" element_list=\"$element_list\" 
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
@@ -611,7 +614,6 @@ namespace eval portal {
         {-portal_id:required}
         {-page_name ""}
         {-sort_key "0"}
-        {-current "f"}
     } {
         Gets the id of the page with the given portal_id and sort_key
         if no sort_key is given returns the first page of the portal
@@ -619,51 +621,13 @@ namespace eval portal {
 
 	@return the id of the page
 	@param portal_id 
-	@param current boolean get the current page if true
 	@param sort_key - optional, defaults to page 0
     } {
         if {![empty_string_p $page_name]} {
             return [db_string get_page_id_from_name {} -default ""]
         } else {
-            if {$current == "f"} {
                 return [db_string get_page_id_select {}]
-            } else {
-                # aks hack - bug - we sometimes lose the current page
-                if {[db_0or1row get_current_page_id_select {}] == 0} {
-                    set page_id [db_string get_page_id_select {}]
-                    db_dml aks_hack_current_page_insert {
-                        insert into portal_current_page 
-                        (portal_id, page_id) values (:portal_id, :page_id)
-                    }
-                    
-                }
-                
-                return $page_id
-            }
         }
-    }
-    
-
-    ad_proc -public set_current_page {
-        {-portal_id:required}
-        {-page_id:required}
-    } {
-        Sets the current page id 
-
-	@param portal_id 
-	@param page_id 
-    } {
-        db_dml set_current_page_update {}
-    }
-
-    ad_proc -public get_current_page {
-        {-portal_id:required}
-    } {
-        gets the current page id 
-
-	@param portal_id 
-    } {
-        return [get_page_id -current "t" -portal_id $portal_id]
     }
 
     ad_proc -public page_count {
@@ -721,48 +685,45 @@ namespace eval portal {
         return $foo
     }
 
-    ad_proc -public list_pages {
+    ad_proc -public navbar {
         {-portal_id:required}
+        {-td_align "left"}
         {-link ""}
         {-pre_html ""}
         {-post_html ""}
-        {-separator "&nbsp;"}
-        {-return_url ""}
         {-link_all 0}
+        {-extra_td_html ""}
+        {-table_html_args ""}
     } {
-        Returns an html string of the pretty names of the pages in the 
-        given portal. 
+        Wraps ad_dimensional to create a dotlrn navbar
 
 	@return the id of the page
 	@param portal_id 
 	@param link the relative link to set for hrefs
         @param current_page_link f means that there is no link for the current page
     } {
-        set html $pre_html
-        set current_page_id [get_page_id -current "t" -portal_id $portal_id]
+        set ad_dim_struct [list]
+       
+        db_foreach list_page_nums_select {
+            select pretty_name, sort_key as page_num from portal_pages where
+            portal_id = :portal_id
+            order by sort_key
+        } {
+            lappend ad_dim_struct [list $page_num $pretty_name [list]]
+        } 
 
-        foreach page [list_pages_tcl_list -portal_id $portal_id] {
-            if {$page == $current_page_id && !$link_all} {
-                append html "[get_page_pretty_name -page_id $page]"
-            } else {
-                if {[empty_string_p $return_url]} {
-                    set url_length [string length [ns_conn url]]
-                    if {[string range [ns_conn url] [expr $url_length - 1] end] != "/"} {
-                        # if the url dosen't end in a /, set the return_url to the filename
-                        set return_url [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
-                    } else {
-                        set return_url ""
-                    }
-                } 
+        set ad_dim_struct "{ page_num \"Page:\" 0  [list $ad_dim_struct] }"
 
-                append html "<a href=$link?portal_id=$portal_id&page_id=$page"
-                append html "&return_url=$return_url>[get_page_pretty_name -page_id $page]</a>"
-            }
-            append html $separator
-        }
-        
-        return [append html $post_html]
-        
+        return [ad_dimensional -no_header \
+                -no_bars \
+                -link_all $link_all \
+                -td_align $td_align \
+                -pre_html $pre_html \
+                -post_html $post_html \
+                -extra_td_html $extra_td_html \
+                -table_html_args $table_html_args \
+                $ad_dim_struct \
+                $link]
     }
 
     #
@@ -873,12 +834,11 @@ namespace eval portal {
 	# First, check if this portal 1) has a portal template and
 	# 2) that that template has an element of this DS in it. If 
 	# so, copy stuff. If not, just insert normally. 
-
-	if { [db_0or1row check_new {}] == 1 } {
+	if { [db_0or1row get_template_info_select {}] == 1 } {
 
             db_transaction {
                 set new_element_id [db_nextval acs_object_id_seq]
-                db_dml template_page_insert {}
+                db_1row get_target_page_id {}
                 db_dml template_insert {}
                 db_dml template_params_insert {}
             }

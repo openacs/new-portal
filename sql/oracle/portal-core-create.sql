@@ -167,19 +167,6 @@ create table portal_pages (
 	unique(portal_id,sort_key)
 );
 
--- what's the current page for this portal?
-create table portal_current_page (
-	portal_id		constraint portal_cur_page_portal_id_fk
-				references portals
-                                on delete cascade
-                                not null,
-	page_id                 constraint portal_cur_page_id_fk
-				references portal_pages
-                                not null,
-	constraint portal_curr_page_un
-	unique(portal_id,page_id)
-);
-
 -- **** Portal Elements (PEs) ****
 
 
