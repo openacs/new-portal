@@ -102,14 +102,16 @@ namespace eval portal {
 	portal_layouts where
 	name = $layout_name "
 
-	# insert the portal and grant user-level permission on it.    
+	# insert the portal and grant user or admin permission on it.    
 	return [ db_exec_plsql insert_portal {
 	    begin
 	    
 	    :1 := portal.new ( 
 	    name => :name,
 	    layout_id => :layout_id,
-	    template_id => :template_id
+	    template_id => :template_id,
+	    portal_template_p => :portal_template_p
+
 	    );
 	    
 	    acs_permission.grant_permission ( 
@@ -123,6 +125,15 @@ namespace eval portal {
 	    grantee_id => :user_id,
 	    privilege => 'portal_edit_portal'
 	    );
+
+	    if :portal_template_p = 't' then
+	    acs_permission.grant_permission ( 
+	    object_id => :1,
+	    grantee_id => :user_id,
+	    privilege => 'portal_admin_portal'
+	    );
+	    end if;
+
 	    end;
 	}]
     }
