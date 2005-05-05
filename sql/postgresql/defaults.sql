@@ -91,6 +91,13 @@ begin
               ''themes/sloan-theme'' -- directory
             );
 
+    perform portal_element_theme__new (
+              ''KELP'',    -- name
+              ''Knowledge E-Learning Portal'', -- description
+              ''themes/kelp-theme'', -- filename
+              ''themes/kelp-theme'' -- directory
+            );
+
     return 0;
 
 end;' language 'plpgsql';
