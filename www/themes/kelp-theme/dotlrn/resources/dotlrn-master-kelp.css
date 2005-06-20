@@ -180,13 +180,27 @@ h1 {
   padding-right: 5px;
   }
 
+div#container-shadows-direita {
+	background-image: url(01_contorno_direito.png);
+	background-repeat: repeat-y;
+	background-position: right;
+}  
+
+
+div#container-shadows-esquerda {
+	background-image: url(01_contorno_esquerdo.png);
+	background-repeat: repeat-y;	
+	background-position: left;
+}
+
 #breadcrumbs {
-  margin: -3px;
+  margin: 0px;
   padding: 0;
   font-size: 80%;
-  float: left;
-  padding-bottom: 5px;
+  padding-bottom: 1px;
+  padding-top: 1px;
   margin-left: 5px;
+  
   }
 
 #breadcrumbs li {
