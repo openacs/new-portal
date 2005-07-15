@@ -446,9 +446,14 @@ namespace eval portal {
 
             set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
             # We allow portal page names to have embedded message keys that we localize on the fly
-            set page_name [lang::util::localize [portal::get_page_pretty_name -page_id $page_id]]
+            db_1row get_page_info {} 
+            set page_name [lang::util::localize $pretty_name_unlocalized]
             set page_layout_id [portal::get_layout_id -page_id $page_id]
-
+            if { [string equal $hidden_p t] } {
+                set tab_toggle_label [lang::util::localize "\#new-portal.Show_in_main_navigation\#"]
+            } else {
+                set tab_toggle_label [lang::util::localize "\#new-portal.Hide_in_main_navigation\#"]
+            }
             append template "<table bgcolor=#eeeeee border=0 width=\"100%\">"
 
             #
@@ -464,7 +469,14 @@ namespace eval portal {
             <input type=hidden name=anchor value=$page_id>
             <input type=submit name=\"op_rename_page\" value=\"[_ new-portal.Rename_Page]\">
             <input type=text name=pretty_name value=\"[ad_quotehtml $page_name]\">
-            </form> 
+            </form>
+            <form name=\"op_toggle_tab_visibility\" method=post align=right action=@action_string@>
+            <input type=hidden name=portal_id value=@portal_id@>
+            <input type=hidden name=page_id value=$page_id>
+            <input type=hidden name=return_url value=@return_url@#$page_id>
+            <input type=hidden name=anchor value=$page_id>
+            <input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\">
+            </form>
 	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
 	    </td></tr>"
 
@@ -819,6 +831,9 @@ namespace eval portal {
                     ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
                 }
                 set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
+        } elseif { ![empty_string_p [ns_set get $form "op_toggle_tab_visibility"]] } {
+            set page_id [ns_set get $form page_id]
+            db_dml toggle_tab_visibility {}
         } elseif { ![empty_string_p [ns_set get $form "op_toggle_pinned"]] } {
                 set element_id [ns_set get $form element_id]
 
