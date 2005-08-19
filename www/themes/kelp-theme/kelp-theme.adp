@@ -33,38 +33,65 @@
                   <if @hideable_p@ eq "t"><a href=configure-element?element_id=@element_id@&op=hide>&nbsp;<img border=0 src="@dir@/00_headport_puls_chiudi.png" alt="hide"></a></if>
 			</div>		 
 			</div>
-		 <switch @name@>			
-			    <case value="Groups">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_group.jpg" alt="hide"></div>
-			    </case>
-			    <case value="Forums">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_forum.jpg" alt="hide"></div>
-			    </case>
-			    <case value="Frequently Asked Questions (FAQs)">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_faq.jpg" alt="hide"></div>
-			    </case>
-			    <case value="Day Summary">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
-			    </case>				
-			    <case value="Learning Materials">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_lobj.jpg" alt="hide"></div>
-			    </case>					
-			    <case value="Full Calendar">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
-			    </case>			
-			    <case value="Survey">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
-			    </case>	
-			    <case value="News">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
-			    </case>	
-			    <case value="Documents">
-				<div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
-			    </case>					
-				<default>
-			    </default>
-			</switch>
-			<div id="scheda-contenuto"><slave></div>
+                   <% 	 
+                        set groups_name [lang::util::localize #dotlrn.dotlrn_main_portlet_pretty_name#]
+                        set forums_name [lang::util::localize #forums-portlet.pretty_name#]
+                        set faqs_name [lang::util::localize #faq-portlet.pretty_name#]
+                        set day_summary_name [lang::util::localize #dotlrn-calendar.Day_Summary#]
+                        set lorsm_name [lang::util::localize #lorsm-portlet.Learning_materials#]
+                        set full_calendar_name [lang::util::localize #calendar-portlet.full_portlet_pretty_name#]
+                        set survey_name [lang::util::localize #survey.Survey#]
+                        set calendar_name [lang::util::localize #calendar-portlet.pretty_name#]
+                        set news_name [lang::util::localize #news-portlet.pretty_name#]
+                        set documents_name [lang::util::localize #fs-portlet.pretty_name#]
+                        set subgroups_name [lang::util::localize #dotlrn.subcommunities_pretty_plural#]
+                   %>
+
+                   <if @name@ eq @groups_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_group.jpg" alt="hide"></div>
+		   </if>
+                 
+		   <if @name@ eq @forums_name@>
+                    <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_forum.jpg" alt="hide"></div>
+		   </if> 
+                   
+		   <if @name@ eq @faqs_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_faq.jpg" alt="hide"></div>
+		   </if> 
+                   
+		   <if @name@ eq @day_summary_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+		   </if> 
+
+                   <if @name@ eq @lorsm_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_lobj.jpg" alt="hide"></div>
+	     	   </if>
+                   
+		   <if @name@ eq @full_calendar_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+		   </if>
+
+                   <if @name@ eq @calendar_name@>
+                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+		   </if>
+
+                    <if @name@ eq @survey_name@>
+                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
+		    </if>
+
+                    <if @name@ eq @news_name@>
+                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
+		    </if>
+                    
+		    <if @name@ eq @documents_name@>
+                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
+		    </if>         	
+
+                    <if @name@ eq @subgroups_name@>
+                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_group.jpg" alt="hide"></div>
+		    </if>
+
+		    <div id="scheda-contenuto"><slave></div>
 		  </div> 
 		 </div>
 		</div>
@@ -74,7 +101,6 @@
     </div>  
 
         
-
 
 
 
