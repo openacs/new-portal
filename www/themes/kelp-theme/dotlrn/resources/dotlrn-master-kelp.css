@@ -777,6 +777,7 @@ div#container-shadows-des{
 	background-image: url(01_cont_shadow_des.png);
 	background-repeat: repeat-y;
 	background-position: right;
+	width: 100%;
 }
 
 div#container-gen{
