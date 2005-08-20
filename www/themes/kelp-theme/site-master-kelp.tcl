@@ -17,7 +17,7 @@ if { [template::util::is_nil subnavbar_link] } {
 }
 
 # Where to find the stylesheet
-set css_url "/resources/acs-subsite/site-master.css"
+set css_url "/resources/acs-subsite/site-master-kelp.css"
 
 # Get system name
 set system_name [ad_system_name]

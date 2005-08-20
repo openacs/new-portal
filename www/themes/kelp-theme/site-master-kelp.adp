@@ -32,6 +32,32 @@
 </div>		 
       </div> <!-- header-top-gen -->  
    </div> <!-- header-00-gen -->	
+
+<br>
+         <div id="context-bar">
+            <if @context_bar@ not nil>
+               <div id="breadcrumbs"></div>
+            </if>
+            <else>
+            <if @context:rowcount@ not nil>
+               <div id="breadcrumbs">
+                  <ul>
+                     <multiple name="context">
+                       <if @context.url@ not nil>
+                          <li><a href="@context.url@" title="@context.label@"><img border=0 src="/resources/folder.gif" class="imm-header"></a> &#187;</li>
+                       </if>
+                       <else>
+                          <li>@context.label@</li>
+                       </else>
+                    </multiple>
+                 </ul>
+              </div> <!-- breadcrumbs -->
+              </if>
+              </else>
+              <div id="navlinks">@subnavbar_link;noquote@</div>
+                   </div> <!-- context-bar -->
+<div style="clear: both;"></div>
+
    <div id="header-dati">
 	     <div id="header-dati-des">
             <div class="action-list permanent-navigation">
