@@ -22,7 +22,7 @@
 <tr> 
   <td class="element-header-text">
     <if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
-      <big><strong>@name@</strong></big>
+      <big><strong>@name;noquote@</strong></big>
     </if>
     <else>
       <!-- set up the link; a workaround for now-->

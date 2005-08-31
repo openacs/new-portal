@@ -20,7 +20,7 @@
 
 <if @empty_p@ eq 0>
 <master src="@element.filename@">
-<property name="name">@element.name@</property>
+<property name="name">@element.name;noquote@</property>
 <property name="dir">@element.resource_dir@</property>
 <property name="element_id">@element.element_id@</property>
 <property name="link">@element.link@</property>
