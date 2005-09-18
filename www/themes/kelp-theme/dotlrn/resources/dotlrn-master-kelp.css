@@ -6,7 +6,7 @@ html {
   }
 
 body {
-  background-color: #DFE2E5;
+  background-color: #DFE2E5;  
   font-family: tahoma, helvetica, sans-Serif;
   font-size: 75%;
   margin:0;
@@ -137,10 +137,17 @@ TR.table-header {BACKGROUND: #6DB2C9; COLOR: white; FONT-FAMILY: Arial, Helvetic
 
 /* dotlrn-overrides of standard CSS nodes */
 
-a:link, a:visited {
-  text-decoration: none;
+a:link{
+  text-decoration: underline;
   /*border-bottom: 1px solid #003366; border sotto le voci della context-bar*/ 
   color: #003366;
+
+  }
+ a:visited {
+  text-decoration: underline;
+  /*border-bottom: 1px solid #003366; border sotto le voci della context-bar*/ 
+  color: #003366;  
+
   }
 
 /* This messes up the tabs in IE6 -- they unpredictably jump up and
@@ -157,7 +164,7 @@ a:hover {
 
 a:active {
 
-  text-decoration: none;
+  text-decoration: underline;
   /*border-bottom: 1px solid #003366;*/
   color: #003366;
   }
@@ -181,17 +188,21 @@ h1 {
   }
 
 div#container-shadows-direita {
-	background-image: url(01_contorno_direito.png);
-	background-repeat: repeat-y;
-	background-position: right;
-}  
+        background-image: url(01_contorno_direito.png);
+        background-repeat: repeat-y;
+        background-position: right;
+}
 
 
 div#container-shadows-esquerda {
-	background-image: url(01_contorno_esquerdo.png);
-	background-repeat: repeat-y;	
-	background-position: left;
+        background-image: url(01_contorno_esquerdo.png);
+        background-repeat: repeat-y;
+        background-position: left;
 }
+
+
+
+
 
 #breadcrumbs {
   margin: 0px;
@@ -200,7 +211,7 @@ div#container-shadows-esquerda {
   padding-bottom: 1px;
   padding-top: 1px;
   margin-left: 5px;
-  
+
   }
 
 #breadcrumbs li {
@@ -668,7 +679,7 @@ div#header-footer-des{
           [ SCHEDA ] Added by www.sii.it 
 ************************************************************/
 div#scheda-container-sfondo{
-	width: inherit;
+	width: 100%;
 	background-image:url(00_headport_shadow_des.png);
 	background-repeat: repeat-y;
 	background-position: top right;
@@ -727,8 +738,8 @@ div#scheda-contenuto{
 }
 
 div#scheda-footer{
-	width: inherit;
-    height: 20px;
+	width: 100%;
+        height: 20px;
 	background-image:url(00_headport_shadow_base.png);
 	background-repeat: repeat-x;
 	margin-bottom: 10px;
@@ -779,7 +790,7 @@ div#container-00-gen{
 }
 
 div#container-shadows-sin{
-    white-space:normal; /* corregge l'errore del control panel della classe*/
+        white-space:normal; /* corregge l'errore del control panel della classe*/
 	width: 100%;
 	height:100%;
 	background-image:url(01_cont_shadow_sin.png);
@@ -787,7 +798,8 @@ div#container-shadows-sin{
 }
 
 div#container-shadows-des{
-    float: right;
+        float: right;
+	width:100%;
 	background-image: url(01_cont_shadow_des.png);
 	background-repeat: repeat-y;
 	background-position: right;
