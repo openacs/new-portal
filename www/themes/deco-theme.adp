@@ -38,7 +38,7 @@
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
           <b>@name;noquote@</b>
         </if><else>
-          <a style="text-decoration: none" href=@link@><b>@name@</b></a>
+          <a style="text-decoration: none" href=@link@><b>@name;noquote@</b></a>
         </else>
     </font>
     </td>

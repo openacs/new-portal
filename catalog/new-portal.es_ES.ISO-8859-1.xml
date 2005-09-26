@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="es_ES" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.1.1" locale="es_ES" charset="ISO-8859-1">
 
   <msg key="Add_Page">Añadir página</msg>
   <msg key="Bad_direction">Dirección errónea:</msg>
@@ -9,11 +9,14 @@
   <msg key="Change_Theme">Cambiar tema:</msg>
   <msg key="Change_Theme_1">Cambiar tema</msg>
   <msg key="Create_a_new_page">Crear una página nueva</msg>
+  <msg key="Custom_Portlets">Customizar Portlets</msg>
   <msg key="deco_theme_description">Art deco</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Volver</msg>
+  <msg key="lt_-_Note_custom_portlet">- Note que los portlets customizados para los templates de portales es algo muy delicado y no muy flexible, de todas formas usted puede agregar portlets customizados en cualquier momento al template, y serán agregados a todos los portales relacionados (usuarios, clases, etc.), usted puede editarlos y los cambios tambien serán reflejados en los portales. Los portlets customizados para clases y comunidades pueden ser modificados manualmente por el administrador de la clase, pero usted siempre puede sobreescribirlos cuando edita los portlets customizados a través de los templates principales (aquí).</msg>
   <msg key="lt_Add_This_Portlet_Here">Añadir el portlet aqui</msg>
   <msg key="lt_Error_bad_params_n___">Error, ¡parámetros erróneos! \n Por favor, informe al administrador del sistema de este error. Gracias.</msg>
+  <msg key="lt_Manage_Custom_Portlet">Manejar Portlets Customizados</msg>
   <msg key="lt_No_Elements_on_this_p">No hay portlets en esta página</msg>
   <msg key="lt_None_You_can_not_add_">Ninguno. No puede añadir portlets a esta página ya que están siendo todos utilizados.</msg>
   <msg key="lt_Revert_the_entire_por">Volver a la configuración por defecto</msg>

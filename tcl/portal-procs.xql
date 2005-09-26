@@ -80,6 +80,15 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::configure.get_page_info">
+        <querytext>
+            select pretty_name as pretty_name_unlocalized,
+                   hidden_p
+            from portal_pages
+            where page_id = :page_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::configure.portal_and_page_info_select">
         <querytext>
             select portals.name,
@@ -251,6 +260,14 @@
             select state
             from portal_element_map
             where element_id = :element_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.toggle_tab_visibility">
+        <querytext>
+            update portal_pages
+            set hidden_p = case when hidden_p = 't' then 'f' else 't' end
+            where page_id = :page_id
         </querytext>
     </fullquery>
 

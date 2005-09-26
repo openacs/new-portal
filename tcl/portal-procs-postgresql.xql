@@ -125,6 +125,7 @@
                 :pretty_name,
                 :portal_id,
                 :layout_id,
+                'f',
                 'portal_page',
                 now(),
                 null,
