@@ -251,7 +251,8 @@
         <querytext>
             update portals
             set theme_id = :theme_id
-            where portal_id = :portal_id
+            where portal_id = :portal_id  or template_id=:portal_id
+            
         </querytext>
     </fullquery>
 
