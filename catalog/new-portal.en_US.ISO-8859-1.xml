@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.1" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.1.2d2" locale="en_US" charset="ISO-8859-1">
 
   <msg key="Add_Page">Add Page</msg>
   <msg key="Bad_direction">Bad direction:</msg>
@@ -13,6 +13,7 @@
   <msg key="deco_theme_description">An Art Deco theme</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Go back</msg>
+  <msg key="Hide_in_main_navigation">Hide this Page</msg>
   <msg key="kelp_theme_description">Knowledge E-Learning Portal</msg>
   <msg key="kelp_theme_name">KELP</msg>
   <msg key="lt_-_Note_custom_portlet">- Note custom portlets for portal templates are somewhat fragile and not fully flexible, anyway you can add custom portlets at any time to the template, and will be added to all the portals related (users, classes, etc.), you can edit them and the change will be reflected in all the portals as well, also in the class &amp; community the custom portlets added through the template can be changed manually by the class admin, but you can always override when editing the custom portlet through the main templates (here).</msg>
@@ -32,6 +33,7 @@
   <msg key="Remove_Empty_Page">Remove Empty Page</msg>
   <msg key="Rename_Page">Rename Page</msg>
   <msg key="Revert">Revert</msg>
+  <msg key="Show_in_main_navigation">Show this Page</msg>
   <msg key="simple_1column_layout_description">A simple 1-column layout</msg>
   <msg key="simple_1column_layout_name">Simple 1-Column</msg>
   <msg key="simple_2column_layout_description">A simple 2-column layout</msg>
