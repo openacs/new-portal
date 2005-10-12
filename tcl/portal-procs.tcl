@@ -685,40 +685,40 @@ namespace eval portal {
             db_dml revert_theme_update {}
             
             # revert pages
-            # first equalize number of pages in the target
-            set template_page_count [page_count -portal_id $template_id]
-            set target_page_count [page_count -portal_id $portal_id]
-            set difference [expr $template_page_count - $target_page_count]
-            
-            if {$difference > 0} {
-                # less pages in target
-                for {set x 0} {$x < $difference} {incr x} {
-                    
-                    set pretty_name "portal revert dummy page $x"
-                    page_create \
-                        -pretty_name $pretty_name \
-                        -portal_id $portal_id
-                }
-            } elseif {$difference < 0} {
-                # more pages in target, delete them from the end,
-                # putting any elements on them on the first page,
-                # we put them in the right place later
-                for {set x 0} {$x < [expr abs($difference)]} {incr x} {
-                    
-                    set max_page_id [db_string revert_max_page_id_select {}]
-                    set page_id [db_string revert_min_page_id_select {}]
-                    set region 1
+
+	    # Roel - 03-10-2005, fix for revert problems
+	    # This fix tries to match the target portal with the
+	    # template before the revert via the pages' sort keys
+	                
+	    # First, create source pages that aren't in the target portal
+ 	    db_foreach revert_source_pages {} {
+		if { ! [db_0or1row revert_get_target_page_id {}] } {
+                    set pretty_name "portal revert dummy page $sort_key"
+		    set page_id [page_create \
+				     -pretty_name $pretty_name \
+				     -portal_id $portal_id]
+		    
+		    # Now set the page's sort_key
+		    db_dml revert_set_target_page_sort_key {}
+		}
+	    }
+	    
+	    # Second, delete target pages that aren't in the source
+	    # portal
+ 	    db_foreach revert_target_pages {} {
+		if { ! [db_0or1row revert_get_source_page_id {}] } {
+                    set move_to_page_id [db_string revert_min_page_id_select {}]
                     
                     db_foreach revert_move_elements_for_del {} {
                         portal::move_element_to_page \
-                            -page_id $page_id \
+                            -page_id $move_to_page_id \
                             -element_id $element_id \
                             -region 1
                     }
 
-                    page_delete -page_id $max_page_id
-                }
-            }
+                    page_delete -page_id $page_id
+		}
+	    }
             
             # now that they have the same number of pages, get to it
             foreach source_page_id \
