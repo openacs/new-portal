@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.1" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.1.2d2" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="Add_Page">Seite hinzufügen</msg>
   <msg key="Bad_direction">Falsche Richtung:</msg>
@@ -13,8 +13,10 @@
   <msg key="deco_theme_description">eine Art-Deco-Oberfläche</msg>
   <msg key="deco_theme_name">Deco</msg>
   <msg key="Go_back">Zurück</msg>
+  <msg key="Hide_in_main_navigation">Diese Seite verbergen</msg>
   <msg key="kelp_theme_description">Knowledge E-Learning Portal Beschreibung</msg>
   <msg key="kelp_theme_name">KELP</msg>
+  <msg key="lt_-_Note_custom_portlet">Custom portlets sind ein wenig instabil und nicht voll flexibel. Sie können jedoch trotzdem Custom Portlets jeder Zeit zu dem Template hinzufügen und es wird bei allen Verknüpften Portalen (Benutzer, Klassen, usw.) hinzugefügt. Sie können diese ändern und die Änderungen werden in allen Portalen sich wiederfinden. Ebenso können Klassen und Community custom portlets die durch ein Template hinzugefügt wurden manuell vom Kursadministrator angepasst werden, aber Sie können das immer übergenen wenn Sie das custom portlet über das Haupt Template (hier) hinzufügen.</msg>
   <msg key="lt_Add_This_Portlet_Here">Dieses Portlet hier hinzufügen</msg>
   <msg key="lt_Error_bad_params_n___">Fehler: Falsche Parameter. Bitte informieren Sie den Systemadministrator.</msg>
   <msg key="lt_Manage_Custom_Portlet">Individuelle Porlets verwalten</msg>
@@ -30,6 +32,7 @@
   <msg key="Remove_Empty_Page">Leere Seite entfernen</msg>
   <msg key="Rename_Page">Seite umbenennen </msg>
   <msg key="Revert">Zurücksetzen</msg>
+  <msg key="Show_in_main_navigation">Diese Seite anzeigen</msg>
   <msg key="simple_1column_layout_description">&amp;nbsp;</msg>
   <msg key="simple_1column_layout_name">Einspaltig</msg>
   <msg key="simple_2column_layout_description">&amp;nbsp;</msg>
