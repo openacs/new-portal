@@ -22,7 +22,7 @@
 
 <table border="0" width="100%">
   <tr>
-    <td class="leftColumn">
+    <td class="leftColumn" valign="top">
       <list name="element_ids_1">
         <include src="@element_src@"
                  element_id="@element_ids_1:item@"
@@ -38,7 +38,7 @@
         <br>
       </list>
     </td>
-    <td class="rightColumn">
+    <td class="rightColumn" valign="top">
       <list name="element_ids_2">
         <include src="@element_src@"
                  element_id="@element_ids_2:item@"
