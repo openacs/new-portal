@@ -460,7 +460,7 @@ namespace eval portal {
             # Page rename chunk
             #
             set page_name_chunk "<table border=0 width=\"100%\" class=\"portal-page-config\" cellpadding=0 cellspacing=0 border=0>
-	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">[ad_quotehtml $page_name]</h2></a></td>
+	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">$page_name</h2></a></td>
             <td align=right><name=$page_id></a>
             <form name=\"op_rename_page\" method=post align=right action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>

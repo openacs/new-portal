@@ -41,7 +41,7 @@ template::multirow create element_multi \
 set region_count 0
 
 db_foreach select_elements_by_region {} {
-    
+    set name [lang::util::localize "$name"]    
     template::multirow append element_multi \
 	    $element_id \
             $name \
