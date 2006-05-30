@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="ro_RO" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="ro_RO" charset="utf-8">
 
+  <msg key="Add_Page">Adaugă o pagină</msg>
+  <msg key="Bad_direction">Direcţie greşită:</msg>
+  <msg key="Bad_direction_1">Direcţie greşită</msg>
+  <msg key="Change_Page_Layout">Schimbă Aşezarea în Pagină</msg>
+  <msg key="Change_page_layout">Schimbă aşezarea în pagină:</msg>
+  <msg key="Change_Theme">Schimbă Tema:</msg>
+  <msg key="Change_Theme_1">Schimbă Tema</msg>
+  <msg key="Create_a_new_page">Creează o pagină nouă</msg>
+  <msg key="Custom_Portlets">Mici Portaluri Adaptate</msg>
+  <msg key="deco_theme_description">O temă ArtDeco</msg>
+  <msg key="deco_theme_name">deco</msg>
+  <msg key="Go_back">Înapoi</msg>
+  <msg key="lt_-_Note_custom_portlet">- De observat că portlet-urile personalizate pentru modelele de portaluri sunt cam fragile şi nu pe deplin flexibil; în orice caz puteţi adăuga portlet-uri personalizate oricând, modelelului, şi vor fi adăugate tuturor portalurilor relevante (utilizatori, clase, etc); le puteţi modifica şi schimbările vor fi regăsite în toate portalurile de asemenea. În class&amp;community portletele personalizate adăugate pot fi schimbate manual de către administratorul clasei, dar poţi oricând să anulezi aceste schimbări prin modelele principale (aici).</msg>
+  <msg key="lt_Add_This_Portlet_Here">Adaugă Acest Portlet Aici</msg>
+  <msg key="lt_Error_bad_params_n___">Eroare, parametri greşiţi ! \n Vă rugăm semnalaţi această eroare administratorului. Vă mulţumim</msg>
+  <msg key="lt_Manage_Custom_Portlet">Administrează Portlet-uri Adaptate</msg>
+  <msg key="lt_No_Elements_on_this_p">Nu sunt Elemente în această pagină</msg>
+  <msg key="lt_None_You_can_not_add_">Nici unul. Nu poţi adăuga nici un portlet la această pagină pentru că toţi sunt în uz</msg>
+  <msg key="lt_You_must_enter_new_na">Trebuie să introduceţi un nou nume pentru pagină</msg>
+  <msg key="nada_theme_name">nada</msg>
+  <msg key="Page">Pagină</msg>
   <msg key="Page_1">Pagina</msg>
+  <msg key="Rename_Page">Rename Page</msg>
+  <msg key="simple_red_theme_name">simplu</msg>
+  <msg key="sloan_theme_name">Sloan</msg>
+  <msg key="transaction_failed">transaction failed</msg>
+  <msg key="Unused_Portlets">Unused Portlets</msg>
 </message_catalog>

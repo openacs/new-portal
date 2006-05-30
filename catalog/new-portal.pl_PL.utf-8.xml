@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="pl_PL" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="pl_PL" charset="utf-8">
 
   <msg key="Add_Page">Dodaj Stronę</msg>
   <msg key="Bad_direction">Zła instrukacja:</msg>
@@ -13,8 +13,12 @@
   <msg key="deco_theme_description">Temat Art Deco</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Wróć</msg>
+  <msg key="Hide_in_main_navigation">Ukryj tę Stronę</msg>
+  <msg key="kelp_theme_description">Portal Wiedzy E-Learning</msg>
+  <msg key="kelp_theme_name">KELP</msg>
   <msg key="lt_Add_This_Portlet_Here">Dodaj Ten Portal Tutaj</msg>
   <msg key="lt_Error_bad_params_n___">Błąd, złe parametry! \n Proszę zawiadomić administratora systemu. Dziękujemy.</msg>
+  <msg key="lt_Manage_Custom_Portlet">Zarządzaj Portletami</msg>
   <msg key="lt_No_Elements_on_this_p">Brak Elementów na tej stronnie</msg>
   <msg key="lt_None_You_can_not_add_">Brak. Nie możesz dodać żadnego portalu do tej strony, ponieważ wszystkie są już używane.</msg>
   <msg key="lt_Revert_the_entire_por">Przywróć pierwotne ustawienie elementów na stronie</msg>
@@ -28,6 +32,7 @@
   <msg key="Rename_Page">Zmień Nazwę Strony
 </msg>
   <msg key="Revert">Przywróć</msg>
+  <msg key="Show_in_main_navigation">Pokaż tę Stronę</msg>
   <msg key="simple_1column_layout_description">Rozkład prosty 1-kolumnowy </msg>
   <msg key="simple_1column_layout_name">Prosty 1-Kolumnowy</msg>
   <msg key="simple_2column_layout_description">Rozkłąd prosty 2-kolumnowy</msg>
@@ -36,6 +41,7 @@
   <msg key="simple_3column_layout_name">Prosty 3-kolumnowy</msg>
   <msg key="simple_red_theme_description">Prosty temat (czerwone tabelki)</msg>
   <msg key="simple_red_theme_name">prosty</msg>
+  <msg key="sloan_theme_name">Sloan</msg>
   <msg key="transaction_failed">transakcja nie powiodła się</msg>
   <msg key="Unused_Portlets">Nieużywane Portale</msg>
 </message_catalog>

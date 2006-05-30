@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="pt_BR" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="pt_BR" charset="ISO-8859-1">
 
   <msg key="Add_Page">Adicionar Página</msg>
   <msg key="Bad_direction">Direção Inválida:</msg>
@@ -9,11 +9,14 @@
   <msg key="Change_Theme">Mudar Tema:</msg>
   <msg key="Change_Theme_1">Mudar Tema</msg>
   <msg key="Create_a_new_page">Criar uma nova página</msg>
+  <msg key="Custom_Portlets">Portlets Personalizados</msg>
   <msg key="deco_theme_description">Um tema &quot;Art Deco&quot;</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Voltar</msg>
+  <msg key="lt_-_Note_custom_portlet">- Observe que portlets customizados para templates de portal possuem limitações consideráveis e ainda não são totalmente flexíveis. De qualquer forma você pode adicioná-los a qualquer momento para um template, e eles serão adicionados em todos os portais relacionados (usuários, grupos, etc.); você poderá editá-los e modificá-los de forma que as alterações serão verificadas em todos os portais; também em grupos &amp; comunidades os portlets customizados adicionados ao template de portal poderão ser manualmente modificadas na administração  correspondente mas você poderá sempre sobrescrevê-los quando editar um portlet customizado por meio dos templates principais (aqui).</msg>
   <msg key="lt_Add_This_Portlet_Here">Adicionar este &quot;Portlet&quot; Aqui</msg>
   <msg key="lt_Error_bad_params_n___">Erro: parâmetros inválidos! \n Por favor notifique o administrador do sistema sobre este erro. Obrigado.</msg>
+  <msg key="lt_Manage_Custom_Portlet">Gerenciar Portlets Personalizados</msg>
   <msg key="lt_No_Elements_on_this_p">Nenhum elemento nesta página</msg>
   <msg key="lt_None_You_can_not_add_">Nenhum. Você não pode adicionar &quot;portlets&quot; a esta página por que todos estão em uso.</msg>
   <msg key="lt_Revert_the_entire_por">Reverter o portal inteiro para o arranjo padrão</msg>

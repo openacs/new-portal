@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="da_DK" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="da_DK" charset="ISO-8859-1">
 
   <msg key="Add_Page">Vis Side</msg>
   <msg key="Bad_direction">Forkert retning:</msg>
@@ -9,11 +9,13 @@
   <msg key="Change_Theme">Ændr Tema:</msg>
   <msg key="Change_Theme_1">Ændr Tema</msg>
   <msg key="Create_a_new_page">Opret en ny side</msg>
+  <msg key="Custom_Portlets">Brugerdefineret portlet</msg>
   <msg key="deco_theme_description">Et Art Deco-tema</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Gå tilbage</msg>
   <msg key="lt_Add_This_Portlet_Here">Tilføj Denne Portlet Hér</msg>
   <msg key="lt_Error_bad_params_n___">Fejl, forkerte parametre! \n Kontakt venligt systemadministratoren angående denne fejl. Tak.</msg>
+  <msg key="lt_Manage_Custom_Portlet">Håndtér brugerdefinerede portlet</msg>
   <msg key="lt_No_Elements_on_this_p">Ingen elementer på denne side</msg>
   <msg key="lt_None_You_can_not_add_">Ingen. Du kan ikke tilføje en portlet til denne side, fordi de allerede er i brug.</msg>
   <msg key="lt_Revert_the_entire_por">Konfigurér hele portalen, så der vendes tilbage til standardopsætningen</msg>

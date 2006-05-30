@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="it_IT" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="it_IT" charset="ISO-8859-1">
 
   <msg key="Add_Page">Aggiungi una pagina</msg>
   <msg key="Bad_direction">Direzione sbagliata:</msg>
@@ -9,11 +9,14 @@
   <msg key="Change_Theme">Cambia Tema</msg>
   <msg key="Change_Theme_1">Cambia Tema</msg>
   <msg key="Create_a_new_page">Crea una nuova pagina</msg>
+  <msg key="Custom_Portlets">Portlet Custom</msg>
   <msg key="deco_theme_description">Un tema Art Deco</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Torna indietro</msg>
+  <msg key="lt_-_Note_custom_portlet">- Nota: i portlet custom non sono del tutto flessibili; puoi comunque aggiungere dei portlet custom ad ogni momento al template e saranno aggiunti al relativo portale; puoi editarli e il cambiamento apparirà in tutti i portali, ma puoi anche correggere e il custom portlet via i template principali (qui).</msg>
   <msg key="lt_Add_This_Portlet_Here">Aggiungi questa portlet qui</msg>
   <msg key="lt_Error_bad_params_n___">Errore, parametri non corretti! \n Per cortesia comunica questo errore all'amministratore di sistema. Grazie</msg>
+  <msg key="lt_Manage_Custom_Portlet">Amministra Portlet Custom</msg>
   <msg key="lt_No_Elements_on_this_p">Nessun Elemento su questa pagina</msg>
   <msg key="lt_None_You_can_not_add_">Nessuna. Non puoi aggiungere nessuna portlet a questa pagina perchè sono tutte in uso.</msg>
   <msg key="lt_Revert_the_entire_por">Ripristina per l'impaginazione di default per tutto il portale</msg>

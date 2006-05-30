@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.2d2" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="Add_Page">Seite hinzufügen</msg>
   <msg key="Bad_direction">Falsche Richtung:</msg>
@@ -9,17 +9,18 @@
   <msg key="Change_Theme">Oberflächendesign ändern:</msg>
   <msg key="Change_Theme_1">Oberflächendesign ändern</msg>
   <msg key="Create_a_new_page">Neue Seite hinzufügen</msg>
-  <msg key="Custom_Portlets">Individuelle Portlets</msg>
+  <msg key="Custom_Portlets">Benutzerdefinierte Portlets</msg>
   <msg key="deco_theme_description">eine Art-Deco-Oberfläche</msg>
   <msg key="deco_theme_name">Deco</msg>
   <msg key="Go_back">Zurück</msg>
   <msg key="Hide_in_main_navigation">Diese Seite verbergen</msg>
   <msg key="kelp_theme_description">Knowledge E-Learning Portal Beschreibung</msg>
   <msg key="kelp_theme_name">KELP</msg>
-  <msg key="lt_-_Note_custom_portlet">Custom portlets sind ein wenig instabil und nicht voll flexibel. Sie können jedoch trotzdem Custom Portlets jeder Zeit zu dem Template hinzufügen und es wird bei allen Verknüpften Portalen (Benutzer, Klassen, usw.) hinzugefügt. Sie können diese ändern und die Änderungen werden in allen Portalen sich wiederfinden. Ebenso können Klassen und Community custom portlets die durch ein Template hinzugefügt wurden manuell vom Kursadministrator angepasst werden, aber Sie können das immer übergenen wenn Sie das custom portlet über das Haupt Template (hier) hinzufügen.</msg>
+  <msg key="lt_-_Note_custom_portlet">- Hinweis: Benutzerdefinierte Portlets sind ziemlich empfindlich und nicht unbegrenzt flexibel; auf jeden Fall können Sie benutzerdefinierte Portlets jederzeit in die Vorlage einfügen und sie werden dann allen zugehörigen (Benutzer-, Klassen- usw.) Portalen hinzugefügt;
+wenn Sie sie bearbeiten, wirkt sich die Änderung ebenfalls in all diesen Portalen aus. In einer Klasse oder Community kann auch der Gruppenadministrator manuell die per Vorlage dazugekommenen benutzerdefinierten Portlets verändern, aber Sie können sich darüber hinwegsetzen, wenn Sie die benutzerdefinierte Portlets mit der Haupt-Vorlage (also hier) bearbeiten.</msg>
   <msg key="lt_Add_This_Portlet_Here">Dieses Portlet hier hinzufügen</msg>
   <msg key="lt_Error_bad_params_n___">Fehler: Falsche Parameter. Bitte informieren Sie den Systemadministrator.</msg>
-  <msg key="lt_Manage_Custom_Portlet">Individuelle Porlets verwalten</msg>
+  <msg key="lt_Manage_Custom_Portlet">Benutzerdefinierte Portlets verwalten</msg>
   <msg key="lt_No_Elements_on_this_p">Keine Elemente auf dieser Seite vorhanden</msg>
   <msg key="lt_None_You_can_not_add_">Es werden bereits alle auf dieser Seite verfügbaren Portlets verwendet.</msg>
   <msg key="lt_Revert_the_entire_por">Layout des Gruppenportals auf die Standardeinstellungen zurücksetzen</msg>
