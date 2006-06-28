@@ -92,12 +92,6 @@ begin
         filename => 'themes/sloan-theme',
         resource_dir => 'themes/sloan-theme');
 
-    theme_id := portal_element_theme.new (
-        name => 'KELP',
-        description => 'Knowledge E-Learning Portal',
-        filename => 'themes/kelp-theme',
-        resource_dir => 'themes/kelp-theme');
-
 end;
 /
 show errors
