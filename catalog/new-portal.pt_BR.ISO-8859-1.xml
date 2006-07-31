@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.2.0a1" locale="pt_BR" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="pt_BR" charset="ISO-8859-1">
 
   <msg key="Add_Page">Adicionar Página</msg>
   <msg key="Bad_direction">Direção Inválida:</msg>
@@ -13,6 +13,9 @@
   <msg key="deco_theme_description">Um tema &quot;Art Deco&quot;</msg>
   <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Voltar</msg>
+  <msg key="Hide_in_main_navigation">Esconder esta Página</msg>
+  <msg key="kelp_theme_description">Portal de Conhecimento E-Learning</msg>
+  <msg key="kelp_theme_name">KELP</msg>
   <msg key="lt_-_Note_custom_portlet">- Observe que portlets customizados para templates de portal possuem limitações consideráveis e ainda não são totalmente flexíveis. De qualquer forma você pode adicioná-los a qualquer momento para um template, e eles serão adicionados em todos os portais relacionados (usuários, grupos, etc.); você poderá editá-los e modificá-los de forma que as alterações serão verificadas em todos os portais; também em grupos &amp; comunidades os portlets customizados adicionados ao template de portal poderão ser manualmente modificadas na administração  correspondente mas você poderá sempre sobrescrevê-los quando editar um portlet customizado por meio dos templates principais (aqui).</msg>
   <msg key="lt_Add_This_Portlet_Here">Adicionar este &quot;Portlet&quot; Aqui</msg>
   <msg key="lt_Error_bad_params_n___">Erro: parâmetros inválidos! \n Por favor notifique o administrador do sistema sobre este erro. Obrigado.</msg>
@@ -29,6 +32,7 @@
   <msg key="Remove_Empty_Page">Remover Página Vazia</msg>
   <msg key="Rename_Page">Renomear Página</msg>
   <msg key="Revert">Reverter</msg>
+  <msg key="Show_in_main_navigation">Mostrar esta Página</msg>
   <msg key="simple_1column_layout_description">Um esquema simples com uma coluna</msg>
   <msg key="simple_1column_layout_name">Uma coluna simples</msg>
   <msg key="simple_2column_layout_description">Um esquema simples com duas colunas</msg>
