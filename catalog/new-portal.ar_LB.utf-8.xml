@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="ar_LB" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="ar_LB" charset="utf-8">
 
   <msg key="Add_Page">أضفْ صفحةً</msg>
   <msg key="Bad_direction">إتّجاه سّيّئ:</msg>
@@ -9,11 +9,14 @@
   <msg key="Change_Theme">غيّر السمة:</msg>
   <msg key="Change_Theme_1">غيّر السمة</msg>
   <msg key="Create_a_new_page">أخلق صفحةً جديدةً</msg>
+  <msg key="Custom_Portlets">Custom Portlets</msg>
   <msg key="deco_theme_description">سمة فنِّ الزخرفة</msg>
   <msg key="deco_theme_name">الزخرفةُ</msg>
   <msg key="Go_back">إرجَعْ</msg>
+  <msg key="lt_-_Note_custom_portlet">- Note custom portlets for portal templates are somewhat fragile and not fully flexible, anyway you can add custom portlets at any time to the template, and will be added to all the portals related (users, classes, etc.), you can edit them and the change will be reflected in all the portals as well, also in the class &amp;amp; community the custom portlets added through the template can be changed manually by the class admin, but you can always override when editing the custom portlet through the main templates (here).</msg>
   <msg key="lt_Add_This_Portlet_Here">أضفْ هذا بورتليت هنا</msg>
   <msg key="lt_Error_bad_params_n___">خطأ، برميترات سيئة!\n رجاءً أشعرْ مدير النظامِ على هذا الخطأ. شكراً لكم</msg>
+  <msg key="lt_Manage_Custom_Portlet">Manage Custom Portlets</msg>
   <msg key="lt_No_Elements_on_this_p">لا عناصرَ على هذه الصفحةِ</msg>
   <msg key="lt_None_You_can_not_add_">لا شيئ. أنت لا تستطيع إضافة أيّ بورتليتس الى هذه الصفحة لأنهم جميعا قيدالإستعمال.</msg>
   <msg key="lt_Revert_the_entire_por">أرجعْ كامل بوابة الإنترنت إلى الترتيبِ الأصلي</msg>

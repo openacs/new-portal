@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="ind_ID" charset="utf-8">
+
+  <msg key="Add_Page">Tambah halaman</msg>
+  <msg key="Bad_direction">arah buruk:</msg>
+  <msg key="Bad_direction_1">Arah Buruk!</msg>
+  <msg key="Change_Page_Layout">Rubah layout halaman</msg>
+  <msg key="Change_page_layout">Rubah Layout Halaman:</msg>
+  <msg key="Change_Theme">Rubah Tema:</msg>
+  <msg key="Change_Theme_1">Rubah Tema</msg>
+  <msg key="Create_a_new_page">Buat halaman baru</msg>
+  <msg key="Go_back">Kembali</msg>
+  <msg key="lt_No_Elements_on_this_p">Tidak ada elemen dihalaman ini</msg>
+  <msg key="lt_None_You_can_not_add_">Tidak ada. anda tidak bisa menambahkan portlets apapun dihalaman ini karena semuanya sedang digunakan</msg>
+  <msg key="lt_You_must_enter_new_na">Anda harus memasukkan nama baru untuk halaman</msg>
+</message_catalog>

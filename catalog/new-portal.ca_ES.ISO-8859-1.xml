@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="ca_ES" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="ca_ES" charset="ISO-8859-1">
 
   <msg key="Add_Page">Afegir pàgina </msg>
   <msg key="Bad_direction">Direcció errònia: </msg>
@@ -9,11 +9,14 @@
   <msg key="Change_Theme">Canviar el tema: </msg>
   <msg key="Change_Theme_1">Canviar el tema</msg>
   <msg key="Create_a_new_page">Crear una pàgina nova </msg>
+  <msg key="Custom_Portlets">Portlets personalitzats</msg>
   <msg key="deco_theme_description">Art deco</msg>
   <msg key="deco_theme_name">deco </msg>
   <msg key="Go_back">Tornar enrere </msg>
+  <msg key="lt_-_Note_custom_portlet">- Tingueu en compte que els portlets personalitzats per a plantilles de portal son fràgils i no gaire flexibles. Tot i això, podeu afegir portlets personalitzats en qualsevol moment a la plantilla, i s'afegirà a tots els portals relacionats (usuaris, classes, etc.). Podeu editar-los i els canvis es reflectiran també en tots els portals. Igualment, l'admin de classe pot canviar en la classe i la comunitat els portlets personalitzats afegits mitjançant la plantilla de manera manual, però sempre els podeu anul·lar editant el portlet personalitzat mitjançant les plantilles principals (aquí). </msg>
   <msg key="lt_Add_This_Portlet_Here">Afegir el portlet ací </msg>
   <msg key="lt_Error_bad_params_n___">Error, paràmetres erronis! \n Per favor, informeu l'administrador del sistema d'aquest error. Gràcies </msg>
+  <msg key="lt_Manage_Custom_Portlet">Gestionar els portlets personalitzats</msg>
   <msg key="lt_No_Elements_on_this_p">No hi ha portlets en aquesta pàgina </msg>
   <msg key="lt_None_You_can_not_add_">Cap. No podeu afegir portlets a aquesta pàgina, ja que tots s'estan utilitzant. </msg>
   <msg key="lt_Revert_the_entire_por">Tornar a la configuració per defecte </msg>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.1.0b1" locale="tr_TR" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="tr_TR" charset="utf-8">
 
   <msg key="Add_Page">Sayfa Ekle</msg>
+  <msg key="Page_1">Sayfa:</msg>
 </message_catalog>

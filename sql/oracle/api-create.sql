@@ -31,6 +31,7 @@ as
         pretty_name                 in portal_pages.pretty_name%TYPE default 'Untitled Page',
         portal_id                   in portal_pages.portal_id%TYPE,
         layout_id                   in portal_pages.layout_id%TYPE default null,
+        hidden_p                    in portal_pages.hidden_p%TYPE default 'f',
         object_type                 in acs_object_types.object_type%TYPE default 'portal_page',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -54,6 +55,7 @@ as
         pretty_name                 in portal_pages.pretty_name%TYPE default 'Untitled Page',
         portal_id                   in portal_pages.portal_id%TYPE,
         layout_id                   in portal_pages.layout_id%TYPE default null,
+        hidden_p                    in portal_pages.hidden_p%TYPE default 'f',
         object_type                 in acs_object_types.object_type%TYPE default 'portal_page',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -88,9 +90,9 @@ as
         where portal_id = portal_page.new.portal_id;
 
         insert into portal_pages
-        (page_id, pretty_name, portal_id, layout_id, sort_key)
+        (page_id, pretty_name, portal_id, layout_id, sort_key, hidden_p)
         values
-        (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key);
+        (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key, hidden_p);
 
         return v_page_id;
 

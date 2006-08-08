@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="es_CO" charset="ISO-8859-1">
+
+  <msg key="Add_Page">Añadir página</msg>
+  <msg key="Bad_direction">Dirección errónea:</msg>
+  <msg key="Bad_direction_1">¡Dirección errónea!</msg>
+  <msg key="Change_Page_Layout">Cambiar la vista de la página</msg>
+  <msg key="Change_page_layout">Cambiar la vista de la página:</msg>
+  <msg key="Change_Theme">Cambiar Tema:</msg>
+  <msg key="Change_Theme_1">Cambiar Tema</msg>
+  <msg key="Create_a_new_page">Crear una página nueva</msg>
+  <msg key="Custom_Portlets">Personalizar Portlets</msg>
+  <msg key="deco_theme_description">Un tema de Art Deco</msg>
+  <msg key="deco_theme_name">deco</msg>
+  <msg key="Go_back">Volver</msg>
+  <msg key="lt_-_Note_custom_portlet">Nota: Los portlets personalizados para las plantillas de los portales son algo frágiles y no muy flexibles, de todas formas puedes agregar un portlet personalizado a la plantilla en cualquier momento, y será agregada a todos los portales(usuarios, classes, etc.), puedes editarlos, y el cambio se verá reflejado en todos los portales, en las clases y comunidades, los portlets personalizados agregados atravéz de la plantilla pueden ser cambiados manualmente por el administrador del curso, pero siempre puedes sobreescribir cuando edites el portlet personalizado atravéz de la plantilla principal (aquí).</msg>
+  <msg key="lt_Add_This_Portlet_Here">Añadir el Portlet aqui</msg>
+  <msg key="lt_Error_bad_params_n___">Error, ¡parámetros erróneos! \n Por favor, informe al administrador del sistema de este error. Gracias.</msg>
+  <msg key="lt_Manage_Custom_Portlet">Administrar Portlets Personalizados</msg>
+  <msg key="lt_No_Elements_on_this_p">No hay elementos en esta página</msg>
+  <msg key="lt_None_You_can_not_add_">Ninguno. No puede añadir portlets a esta página ya que están siendo todos utilizados.</msg>
+  <msg key="lt_Revert_the_entire_por">Volver a la configuración por defecto</msg>
+  <msg key="lt_You_must_enter_new_na">Debe especificar un título nuevo para la página.</msg>
+  <msg key="Move_to_page">Mover a la página</msg>
+  <msg key="nada_theme_description">Sin gráficos</msg>
+  <msg key="nada_theme_name">ninguno</msg>
+  <msg key="Page">Página</msg>
+  <msg key="Page_1">Página:</msg>
+  <msg key="Remove_Empty_Page">Eliminar página vacía</msg>
+  <msg key="Rename_Page">Renombrar página</msg>
+  <msg key="Revert">Volver a configuración por defecto</msg>
+  <msg key="simple_1column_layout_description">Simple disposición a 1 columna</msg>
+  <msg key="simple_1column_layout_name">1 Columna</msg>
+  <msg key="simple_2column_layout_description">Simple disposición a 2 columnas</msg>
+  <msg key="simple_2column_layout_name">2 columnas</msg>
+  <msg key="simple_3column_layout_description">Simple disposición a 3 columnas</msg>
+  <msg key="simple_3column_layout_name">3 columnas</msg>
+  <msg key="simple_red_theme_description">Un simple tema con cabeceras rojas</msg>
+  <msg key="simple_red_theme_name">sencillo</msg>
+  <msg key="sloan_theme_description">El Tema de MIT Sloan</msg>
+  <msg key="sloan_theme_name">Sloan</msg>
+  <msg key="transaction_failed">transacción fallida</msg>
+  <msg key="Unused_Portlets">Portlets sin usar</msg>
+</message_catalog>

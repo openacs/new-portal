@@ -23,7 +23,7 @@
      <div class="portlet-wrap-tr">
         <div class="portlet">
 
-<h2>@name@</h2>
+<h2>@name;noquote@</h2>
 <slave>
 
 	 </div> <!-- portlet -->

@@ -33,7 +33,7 @@
     <td class="element-header-text-plain">
       <big>
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
-          <strong>@name@</strong>
+          <strong>@name;noquote@</strong>
         </if>
         <else>
           <a href=@link@><strong>@name@</strong></a>

@@ -80,6 +80,15 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::configure.get_page_info">
+        <querytext>
+            select pretty_name as pretty_name_unlocalized,
+                   hidden_p
+            from portal_pages
+            where page_id = :page_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::configure.portal_and_page_info_select">
         <querytext>
             select portals.name,
@@ -123,17 +132,21 @@
 
     <fullquery name="portal::configure_dispatch.revert_max_page_id_select">
         <querytext>
-            select max(page_id)
+            select page_id
             from portal_pages
             where portal_id = :portal_id
+	    order by sort_key desc
+	    limit 1
         </querytext>
     </fullquery>
 
     <fullquery name="portal::configure_dispatch.revert_min_page_id_select">
         <querytext>
-            select min(page_id)
+            select page_id
             from portal_pages
             where portal_id = :portal_id
+	    order by sort_key
+	    limit 1
         </querytext>
     </fullquery>
 
@@ -141,7 +154,7 @@
         <querytext>
             select element_id
             from portal_element_map
-            where page_id = :max_page_id
+            where page_id = :page_id
         </querytext>
     </fullquery>
 
@@ -164,25 +177,6 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::configure_dispatch.revert_page_update">
-        <querytext>
-            update portal_pages
-            set pretty_name = :pretty_name,
-                layout_id = :layout_id
-            where page_id = :target_page_id
-        </querytext>
-    </fullquery>
-
-
-    <fullquery name="portal::configure_dispatch.revert_page_update">
-        <querytext>
-            update portal_pages
-            set pretty_name = :pretty_name,
-                layout_id = :layout_id
-            where page_id = :target_page_id
-        </querytext>
-    </fullquery>
-
     <fullquery name="portal::configure_dispatch.hide_all_elements">
         <querytext>
 		update portal_element_map		
@@ -190,7 +184,6 @@
 		 where page_id = :target_page_id
         </querytext>
     </fullquery>
-
 
     <fullquery name="portal::configure_dispatch.revert_get_source_elements">
 	<querytext>
@@ -238,11 +231,36 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::configure_dispatch.revert_source_pages">
+        <querytext>
+            select page_id, sort_key
+            from portal_pages
+            where portal_id = :template_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.revert_set_target_page_sort_key">
+        <querytext>
+            update portal_pages
+            set sort_key = :sort_key
+            where page_id = :page_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.revert_target_pages">
+        <querytext>
+            select page_id, sort_key
+            from portal_pages
+            where portal_id = :portal_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::configure_dispatch.update_theme">
         <querytext>
             update portals
             set theme_id = :theme_id
-            where portal_id = :portal_id
+            where portal_id = :portal_id  or template_id=:portal_id
+            
         </querytext>
     </fullquery>
 
@@ -251,6 +269,14 @@
             select state
             from portal_element_map
             where element_id = :element_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.toggle_tab_visibility">
+        <querytext>
+            update portal_pages
+            set hidden_p = case when hidden_p = 't' then 'f' else 't' end
+            where page_id = :page_id
         </querytext>
     </fullquery>
 
@@ -375,6 +401,24 @@
             from portal_pages pp
             where pp.portal_id = :portal_id
             and pp.sort_key = :template_page_sort_key
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.revert_get_source_page_id">
+        <querytext>
+            select page_id
+            from portal_pages
+            where portal_id = :template_id
+            and sort_key = :sort_key
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.revert_page_update">
+        <querytext>
+            update portal_pages
+            set pretty_name = :pretty_name,
+                layout_id = :layout_id
+            where page_id = :target_page_id
         </querytext>
     </fullquery>
 

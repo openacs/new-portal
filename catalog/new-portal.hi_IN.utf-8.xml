@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="new-portal" package_version="2.2.0b2" locale="hi_IN" charset="utf-8">
+
+  <msg key="Add_Page">प्रष्ठ जोडो</msg>
+  <msg key="Bad_direction">गल्त दिशा:</msg>
+  <msg key="Bad_direction_1">गल्त दिशा!</msg>
+  <msg key="Change_Page_Layout">प्रष्ठ प्रारुप बदले</msg>
+  <msg key="Change_page_layout">प्रष्ठ प्रारुप बदले:</msg>
+  <msg key="Change_Theme">विषय बदले:</msg>
+  <msg key="Change_Theme_1">विषय बदले</msg>
+  <msg key="Create_a_new_page">नया प्रष्ठ बनाये</msg>
+  <msg key="Custom_Portlets">कस्ट्म पोर्टलेटस</msg>
+  <msg key="deco_theme_description">कला साज सजा विषय</msg>
+  <msg key="deco_theme_name">साज सज्जा </msg>
+  <msg key="Go_back">पीछे जाओ </msg>
+  <msg key="lt_-_Note_custom_portlet">नोट कस्ट्म पोर्टलेट्स, पोर्टल के लिये टेम्प्लेट्स कुछ कमजोर और लचीले नही होते। फ़िर भी आप कस्टम पोर्टलेट्स को किसी भी वकत टेम्प्लेट के साथ जोड सकते है और इसका सम्बन्ध सभी पोर्टल्स के साथ हो जायेगा। जेसे उप्भोक्ता क्ष्रेणी आदि। आप इसमे सम्पादन कर सकते है और यह परिवर्तन सभी सम्बन्धित पोर्टलस मे भी हो जाता है। इसके साथ ही क्ष्रेणी और समूह मे टेमप्लेट्स द्वारा जोडा गया कस्टम पोर्टलेट्स क्ष्रेणी सन्चालक द्वारा मेन्युईली बद्ला जा सकता है। लेकिन आप मुख्य टेमप्लेट्स यहा द्वारा कस्टम पोर्टलेट मे सम्पादन कर सकते है। </msg>
+  <msg key="lt_Add_This_Portlet_Here">इस पोर्टलेट को यहा से जोडे</msg>
+  <msg key="lt_Error_bad_params_n___">गल्ती, खराब पारमस! \n
+कर्पया इस गल्ती को सिस्टम एडमिनिस्ट्रटर को अकित करे। धन्यावाद!</msg>
+  <msg key="lt_Manage_Custom_Portlet">कस्टम पोर्टलेट नियन्त्रित करे</msg>
+  <msg key="lt_No_Elements_on_this_p">इस प्रष्ठ पर कोई अन्श नही</msg>
+  <msg key="lt_None_You_can_not_add_">कोई भी नही। आप इस प्रष्ठ पर कोई पोर्टलेट नही जोड सकते क्योकि वे सभी इस्तेमाल मे है। </msg>
+  <msg key="lt_Revert_the_entire_por">सम्पूर्ण पोर्टल को डिफ़ाल्ट वयावस्था मे वापिस लाये</msg>
+  <msg key="lt_You_must_enter_new_na">प्रष्ठ के लिये नया नाम अकित करे</msg>
+  <msg key="Move_to_page">प्रष्ठ पर जाये</msg>
+  <msg key="nada_theme_description">अन-थीम । कोई ग्राफ़िक्स नही । </msg>
+  <msg key="nada_theme_name">नाडा </msg>
+  <msg key="Page">प्रष्ठ</msg>
+  <msg key="Page_1">प्रष्ठ:</msg>
+  <msg key="Remove_Empty_Page">खाली प्रष्ठ को हटाये</msg>
+  <msg key="Rename_Page">प्रष्ठ का पुन: नामाकन करे</msg>
+  <msg key="Revert">वापिस जाये</msg>
+  <msg key="simple_1column_layout_description">साधारण १-खाना प्रारुप</msg>
+  <msg key="simple_1column_layout_name">साधारण १-खाना</msg>
+  <msg key="simple_2column_layout_description">साधारण २-खाना प्रारुप</msg>
+  <msg key="simple_2column_layout_name">साधारण २-खाना</msg>
+  <msg key="simple_3column_layout_description">साधारण ३-खाना प्रारुप</msg>
+  <msg key="simple_3column_layout_name">साधारण ३-खाना</msg>
+  <msg key="simple_red_theme_description">साधारण लाल तालिका आधारित विषय</msg>
+  <msg key="simple_red_theme_name">साधारण</msg>
+  <msg key="sloan_theme_description">एम आई टी सलोअन विषय </msg>
+  <msg key="sloan_theme_name">स्लोअन</msg>
+  <msg key="transaction_failed">सन्चालन असफ़ल</msg>
+  <msg key="Unused_Portlets">अप्रयुक्त पोर्टलेट </msg>
+</message_catalog>

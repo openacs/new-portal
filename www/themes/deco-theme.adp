@@ -36,9 +36,9 @@
     <td align=left valign=middle width=88%  bgcolor="#eeeee7">
       <font face="verdana,arial,helvetica" size="+1">
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
-          <b>@name@</b>
+          <b>@name;noquote@</b>
         </if><else>
-          <a style="text-decoration: none" href=@link@><b>@name@</b></a>
+          <a style="text-decoration: none" href=@link@><b>@name;noquote@</b></a>
         </else>
     </font>
     </td>
