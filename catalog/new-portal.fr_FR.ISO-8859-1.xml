@@ -20,4 +20,5 @@
   <msg key="simple_3column_layout_name">Trois colonnes</msg>
   <msg key="simple_red_theme_name">simple</msg>
   <msg key="Unused_Portlets">Portlets non utilisés</msg>
+  <msg key="when_portlet_shaded">Agrandir pour voir le contenue.</msg>
 </message_catalog>
