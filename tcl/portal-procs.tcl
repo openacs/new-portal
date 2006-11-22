@@ -813,7 +813,7 @@ namespace eval portal {
         } elseif { ![empty_string_p [ns_set get $form "op_add_page"]] } {
                 set pretty_name [ns_set get $form pretty_name]
                 if {[empty_string_p $pretty_name]} {
-                    ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
+                    ad_return_complaint 1 "You must enter a name for the new page."
                 }
                 page_create -pretty_name $pretty_name -portal_id $portal_id
         } elseif { ![empty_string_p [ns_set get $form "op_remove_empty_page"]] } {
