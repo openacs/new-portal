@@ -140,9 +140,9 @@ begin
         object_type   => 'portal_element_theme',
         pretty_name   => 'Portal Element Theme',
         pretty_plural => 'Portal Element Themes',
-        table_name    => 'PORTAL_THEMES',
+        table_name    => 'PORTAL_ELEMENT_THEMES',
         id_column     => 'THEME_ID',
-        package_name  => 'portal_themes'
+        package_name  => 'portal_element_theme'
     );
 end;
 /

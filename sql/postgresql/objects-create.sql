@@ -184,9 +184,9 @@ select  acs_object_type__create_type (
     'Portal Element Theme',
     'Portal Element Themes',
     'acs_object',
-    'PORTAL_THEMES',
+    'PORTAL_ELEMENT_THEMES',
     'THEME_ID',
-    'portal_themes',
+    'portal_element_theme',
     'f',
     null,
     null
