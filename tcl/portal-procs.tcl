@@ -268,14 +268,11 @@ namespace eval portal {
 
         # set up the template, it includes the layout template,
         # which in turn includes the theme, then elements
-        if { [empty_string_p $element_list] } {
-            # The portal has no elements, show anyway (they can configure)
-            set template "<master src=\"@master_template@\">
-            <property name=\"title\">@portal.name@</property>"
-        } else {
+        set template "<master src=\"@master_template@\">
+        <property name=\"title\">@portal.name@</property>"
+        if { ![empty_string_p $element_list] } {
             set element_src "[www_path]/render_styles/${render_style}/render-element"
-            set template "<master src=\"@master_template@\">
-            <property name=\"title\">@portal.name@</property>
+            append template "
             <include src=\"@portal.layout_filename@\"
             element_list=\"@element_list@\"
             element_src=\"@element_src@\"
@@ -1625,8 +1622,12 @@ namespace eval portal {
 
         # apply the path hack to the filename and the resourcedir
         set element(filename) "[www_path]/$element(filename)"
-        # notice no "/" after mount point
-        set element(resource_dir) "[mount_point]$element(resource_dir)"
+
+        # DRB: don't ruin URLs that start with "/", i.e. the form "/resources/package-key/..."
+        if { [string index $element(resource_dir) 0] ne "/" } {
+            # notice no "/" after mount point
+            set element(resource_dir) "[mount_point]$element(resource_dir)"
+        }
 
         return [array get element]
     }
@@ -2343,4 +2344,38 @@ namespace eval portal {
         append html "  </tr>\n$end_html</table>\n"
     }
 
+    ad_proc get_layout_header_stuff {
+        -portal_id
+        -page_num
+    } {
+        Return CSS link statements for the given page's layout.  Done here because
+        the current new-portal implementation doesn't build a master/slave stack
+        down to the layout script level, making impossible to pass the CSS file
+        information as a master template property.
+
+        This is a kludge that should be made obsolete someday ...
+
+        The basic idea is that since CSS must appear in the HEAD portion of a document,
+        it is safe to link to any CSS file we find in the layout's resource_dir.  Given
+        that until now the layout resource_dir has been unused, this should not break
+        any existing code.
+
+        The code assumes the resource_dir (which is a misnomer, they've always been
+        resource URLs - check the use of the theme resource_dir coiumn) is either
+        relative or in proper "/resources/package-key" form.  (the existing code
+        for the theme resource_dir only supports the relative form)
+    } {
+        db_1row get_resource_dir {}
+        if { [string first /resources/ $resource_dir] == 0 } {
+            set l [split $resource_dir /]
+            set path [acs_package_root_dir [lindex $l 2]]/www/resources/[join [lrange $l 3 end] /]
+        } else {
+            set path [acs_package_root_dir new-portal]/www/$resource_dir
+        }
+        foreach file [file tail [glob -nocomplain -directory $path *.css]] {
+            append header_stuff "
+<link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"screen\" />"
+        }
+        return $header_stuff
+    }
 }

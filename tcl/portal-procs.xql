@@ -45,6 +45,7 @@
                    portals.theme_id,
                    portal_layouts.layout_id,
                    portal_layouts.filename as layout_filename,
+                   portal_layouts.resource_dir as layout_resource_dir,
                    portal_pages.page_id
             from portals,
                  portal_pages,
@@ -809,6 +810,16 @@
             from portal_pages
             where portal_id = :portal_id
             and pretty_name = :page_name
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::get_layout_header_stuff.get_resource_dir">
+        <querytext>
+          select l.resource_dir
+          from portal_pages p, portal_layouts l
+          where p.portal_id = :portal_id
+            and p.sort_key = :page_num
+            and l.layout_id = p.layout_id
         </querytext>
     </fullquery>
 
