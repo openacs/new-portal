@@ -107,6 +107,14 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::configure.sub_portals">
+        <querytext>
+            select count(*)
+              from portals
+             where template_id = :portal_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::configure_dispatch.show_here_update_state">
         <querytext>
             update portal_element_map

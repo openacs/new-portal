@@ -618,7 +618,6 @@ namespace eval portal {
         </form>
 	</td></tr></table>
         "
-
         #
         # Revert page chunk
         #
@@ -635,6 +634,22 @@ namespace eval portal {
             </form></center>
 	    </td></tr></table>"
         }
+
+	if { [db_string sub_portals {}] } {
+	    # Portal has other portals using it as a template
+            append template "<p>
+            <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0><tr><td>
+	    <form name=\"op_revert_all\" method=post action=@action_string@>
+            <input type=hidden name=portal_id value=@portal_id@>
+            <input type=hidden name=return_url value=@return_url@>
+            <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_all_portals_us]</h2>
+	    <center>
+            <input type=submit name=\"op_revert_all\" value=\"[_ new-portal.Revert_All]\">
+            <br />
+            <i>[_ new-portal.lt_Note_Please_be_patien]</i>
+            </center></form>
+	    </td></tr></table>"
+	}
 
         #
         # Templating system hacks
@@ -671,7 +686,20 @@ namespace eval portal {
             set edit_p 1
         }
 
-        if { ![empty_string_p [ns_set get $form "op_revert"]] } {
+        
+        if { ![empty_string_p [ns_set get $form "op_revert_all"]] } {
+            set template_id [ns_set get $form "portal_id"]
+            ns_log notice "REVERTING ALL template_id='${template_id}'"
+            set revert_all_set_id [ns_set create]
+
+            ns_set put $revert_all_set_id op_revert "op_revert"
+            set portal_id_list [db_list get_all_portals "select portal_id from portals where template_id=:template_id"]
+            ns_log notice "PORTAL_ID_LIST $portal_id_list"
+            foreach portal_id $portal_id_list {
+                portal::configure_dispatch -portal_id $portal_id -form $revert_all_set_id
+            }
+
+        } elseif { ![empty_string_p [ns_set get $form "op_revert"]] } {
             #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
             #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
 
@@ -1574,7 +1602,7 @@ namespace eval portal {
             } {
 
         global errorInfo
-        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n"
+        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n url = '[ad_conn url]' \n config='[array get config]'\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
         set element(content) "You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
@@ -2365,6 +2393,7 @@ namespace eval portal {
         relative or in proper "/resources/package-key" form.  (the existing code
         for the theme resource_dir only supports the relative form)
     } {
+        set header_stuff ""
         db_1row get_resource_dir {}
         if { [string first /resources/ $resource_dir] == 0 } {
             set l [split $resource_dir /]
