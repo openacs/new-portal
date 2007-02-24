@@ -34,6 +34,11 @@ ad_page_contract {
 # old layouts (in particular custom ones not part of the standard .LRN release)
 # don't number portlets, we check and set a dummy value if it doesn't exist.
 
+# DRB: We're not actually using these numbers after all.  However, the works done, it
+# doesn't hurt anything to keep this code, so in case someone wants to number portlets
+# in the future, the code's already here (trust me, it ain't all that easy to figure out
+# how to do this)
+
 if { ![info exists element_num] } {
     set element_num 0
 } else {

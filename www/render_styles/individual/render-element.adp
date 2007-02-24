@@ -31,6 +31,5 @@
 <property name="user_editable_p">@element.user_editable_p@</property>
 <property name="link_hideable_p">@element.link_hideable_p@</property>
 <property name="hide_links_p">@hide_links_p@</property>
-@element.filename@
 @element.content;noquote@
 </if>
