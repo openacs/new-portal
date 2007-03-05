@@ -94,9 +94,8 @@
         <querytext>
             select portals.name,
                    portals.portal_id,
-                   portal_layouts.filename as template,
                    portal_pages.pretty_name as page_name,
-                   portal_pages.layout_id as layout_id
+                   portal_pages.layout_id
             from portals,
                  portal_layouts,
                  portal_pages
@@ -104,6 +103,14 @@
             and portal_pages.page_id = :page_id
             and portal_pages.portal_id = portals.portal_id
             and portal_pages.layout_id = portal_layouts.layout_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure.layout_id_select">
+        <querytext>
+            select layout_id
+            from portal_layouts
+            where filename = :layout
         </querytext>
     </fullquery>
 

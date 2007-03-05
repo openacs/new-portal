@@ -488,22 +488,30 @@ namespace eval portal {
                 db_1row portal_and_page_info_select {} -column_array portal
 
                 # fake some elements for the <list> in the template
-                foreach region [get_layout_region_list -layout_id $portal(layout_id)] {
+                set regions [get_layout_region_list -layout_id $portal(layout_id)]
+                foreach region $regions {
                     lappend fake_element_ids($region) $portal_id
                 }
 
                 set element_list [array get fake_element_ids]
 
+                # DRB: This is a horrible, short-term (I hope!) hack to allow
+                # the portal config page to work correctly when a page's given
+                # layout is div-based rather than table-based.
+
+                set layout layouts/simple[llength $regions]
+                db_1row layout_id_select {}
+
                 append template "
                 <table class=\"portal-page-config\" bgcolor=#eeeeee border=0 width=\"100%\">
                 <tr valign=middle><td valign=middle>
-                <include src=\"$portal(template)\"
+                <include src=\"$layout\"
                 element_list=\"$element_list\"
                 action_string=@action_string@ portal_id=@portal_id@
                 return_url=\"@return_url@\" element_src=\"@element_src@\"
                 hide_links_p=f
                 page_id=$page_id
-                layout_id=$portal(layout_id)
+                layout_id=$layout_id
                 edit_p=@edit_p@>
                 </td></tr>"
 
