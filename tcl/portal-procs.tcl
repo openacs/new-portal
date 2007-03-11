@@ -474,7 +474,7 @@ namespace eval portal {
             <input type=hidden name=anchor value=$page_id>
             <input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\">
             </form>
-	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/shared/images/spacer.gif\" height=1></td></tr>
+	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=""></td></tr>
 	    </td></tr>"
 
             append template "$page_name_chunk"
@@ -2380,26 +2380,27 @@ namespace eval portal {
         append html "  </tr>\n$end_html</table>\n"
     }
 
-    ad_proc get_layout_header_stuff {
+    ad_proc get_page_header_stuff {
         -portal_id
         -page_num
     } {
-        Return CSS link statements for the given page's layout.  Done here because
+        Return CSS link statements for the given page.  Done here because
         the current new-portal implementation doesn't build a master/slave stack
-        down to the layout script level, making impossible to pass the CSS file
+        down to the layout or portlet script level, making impossible to pass CSS file
         information as a master template property.
 
         This is a kludge that should be made obsolete someday ...
 
         The basic idea is that since CSS must appear in the HEAD portion of a document,
-        it is safe to link to any CSS file we find in the layout's resource_dir.  Given
-        that until now the layout resource_dir has been unused, this should not break
-        any existing code.
+        it is safe to link to any CSS file needed by a portal page.  This includes
+	all CSS files found in the previously unused layout resource_dir, and CSS
+	files returned by the poge's datasource's get CSS operation.
 
-        The code assumes the resource_dir (which is a misnomer, they've always been
-        resource URLs - check the use of the theme resource_dir coiumn) is either
-        relative or in proper "/resources/package-key" form.  (the existing code
-        for the theme resource_dir only supports the relative form)
+        The code assumes the layout's resource_dir (which is a misnomer, they've always been
+        resource URLs - check the use of the theme resource_dir coiumn) and portlet
+	CSS files are either relative or in proper "/resources/package-key" form.
+	
+	(the existing code for the theme resource_dir only supports the relative form)
     } {
         set header_stuff ""
         db_1row get_resource_dir {}
