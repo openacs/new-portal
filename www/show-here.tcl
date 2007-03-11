@@ -37,7 +37,7 @@ foreach element [portal::hidden_elements_list_not_cached -portal_id $portal_id] 
     append show_html "<option value=\"[ad_quotehtml [lindex $element 0]]\">[lang::util::localize [lindex $element 1]]</option>\n"
 }
 
-set imgdir "[portal::mount_point]/place-element-components"        
+set imgdir /resources/new-portal/images
 set location [ad_conn location]
 
 
