@@ -146,7 +146,7 @@ namespace eval portal {
 
         set page_name_list [list "Page 1"]
         set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
-	
+    
         if {![empty_string_p $csv_list]} {
             set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
             set page_name_list [list]
@@ -217,7 +217,7 @@ namespace eval portal {
     } {
         Get the name of this portal
     } {
-	return [lang::util::localize [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]]
+    return [lang::util::localize [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]]
     }
 
     ad_proc -private get_name_not_cached {
@@ -343,7 +343,7 @@ namespace eval portal {
     ad_proc -public configure {
         {-referer ""}
         {-template_p f}
-	{-allow_theme_change_p 1}
+    {-allow_theme_change_p 1}
         portal_id
         return_url
     } {
@@ -427,9 +427,9 @@ namespace eval portal {
         }
 
         append theme_chunk "<input type=submit name=\"op_change_theme\" value=\"[_ new-portal.Change_Theme_1]\"></form>"
-	if {$allow_theme_change_p} {
+    if {$allow_theme_change_p} {
             append template "$theme_chunk"
-	}
+    }
 
         #
         # Per-page template chunks
@@ -437,8 +437,8 @@ namespace eval portal {
 
         set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
-	set last_page [lindex $list_of_page_ids [expr [llength $list_of_page_ids] - 1]]
-	ns_log warning "last_page is $last_page"
+    set last_page [lindex $list_of_page_ids [expr [llength $list_of_page_ids] - 1]]
+    ns_log warning "last_page is $last_page"
         foreach page_id $list_of_page_ids {
 
             set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
@@ -457,7 +457,7 @@ namespace eval portal {
             # Page rename chunk
             #
             set page_name_chunk "<table border=0 width=\"100%\" class=\"portal-page-config\" cellpadding=0 cellspacing=0 border=0>
-	    <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">$page_name</h2></a></td>
+        <tr><td align=\"center\"><a name=$page_id><h2 class=\"portal-page-name\">$page_name</h2></a></td>
             <td align=right><name=$page_id></a>
             <form name=\"op_rename_page\" method=post align=right action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
@@ -474,8 +474,8 @@ namespace eval portal {
             <input type=hidden name=anchor value=$page_id>
             <input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\">
             </form>
-	    <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=""></td></tr>
-	    </td></tr>"
+        <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=""></td></tr>
+        </td></tr>"
 
             append template "$page_name_chunk"
 
@@ -529,18 +529,18 @@ namespace eval portal {
                 # Remove page chunk - don't allow removal of the first page
                 #
 
-		
-		if {! $first_page_p } {
-		    
-		    append template "<tr><td> <include src=\"show-here\" portal_id=$portal_id
-		    action_string=@action_string@
-		    region=1
-		    page_id=$page_id
-		    anchor=$page_id
-		    return_url=@return_url@></tr></td>"
-		    
-		    
-		    
+        
+        if {! $first_page_p } {
+            
+            append template "<tr><td> <include src=\"show-here\" portal_id=$portal_id
+            action_string=@action_string@
+            region=1
+            page_id=$page_id
+            anchor=$page_id
+            return_url=@return_url@></tr></td>"
+            
+            
+            
                     append template "
                     <tr valign=middle><td valign=middle>
                     <center>
@@ -552,7 +552,7 @@ namespace eval portal {
                     </center>
                     </td>
                     </tr>"
-		}
+        }
 
                 #
                 # Layout change chunk - only shown when there are no visible elements on the page
@@ -610,11 +610,11 @@ namespace eval portal {
         set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
         append template "
-	<p>
+    <p>
         <table class=\"portal-page-config\" border=0 cellspacing=0 cellpadding=0>
             <tr><td><h2 class=\"portal-page-name\">[_ new-portal.Create_a_new_page]</h2></tr></td>
-	<tr><td>
-	<a name=add_a_new_page></a>
+    <tr><td>
+    <a name=add_a_new_page></a>
         <form name=\"op_add_page\" method=post action=@action_string@>
         <input type=hidden name=portal_id value=@portal_id@>
         <input type=hidden name=return_url value=@return_url@#$page_id>
@@ -622,9 +622,9 @@ namespace eval portal {
         <center>
          <input type=text name=pretty_name value=\"[_ new-portal.Page] $new_page_num\">
         <input type=submit name=\"op_add_page\" value=\"[_ new-portal.Add_Page]\">
-	<center>
+    <center>
         </form>
-	</td></tr></table>
+    </td></tr></table>
         "
         #
         # Revert page chunk
@@ -633,31 +633,31 @@ namespace eval portal {
         if {![empty_string_p [get_portal_template_id $portal_id]]} {
             append template "<p>
             <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0><tr><td>
-	    <form name=\"op_revert\" method=post action=@action_string@>
+        <form name=\"op_revert\" method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_the_entire_por]</h2>
-	    <center>
+        <center>
             <input type=submit name=\"op_revert\" value=\"[_ new-portal.Revert]\">
             </form></center>
-	    </td></tr></table>"
+        </td></tr></table>"
         }
 
-	if { [db_string sub_portals {}] } {
-	    # Portal has other portals using it as a template
+    if { [db_string sub_portals {}] } {
+        # Portal has other portals using it as a template
             append template "<p>
             <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0><tr><td>
-	    <form name=\"op_revert_all\" method=post action=@action_string@>
+        <form name=\"op_revert_all\" method=post action=@action_string@>
             <input type=hidden name=portal_id value=@portal_id@>
             <input type=hidden name=return_url value=@return_url@>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_all_portals_us]</h2>
-	    <center>
+        <center>
             <input type=submit name=\"op_revert_all\" value=\"[_ new-portal.Revert_All]\">
             <br />
             <i>[_ new-portal.lt_Note_Please_be_patien]</i>
             </center></form>
-	    </td></tr></table>"
-	}
+        </td></tr></table>"
+    }
 
         #
         # Templating system hacks
@@ -719,27 +719,27 @@ namespace eval portal {
             
             # revert pages
 
-	    # Roel - 03-10-2005, fix for revert problems
-	    # This fix tries to match the target portal with the
-	    # template before the revert via the pages' sort keys
-	                
-	    # First, create source pages that aren't in the target portal
- 	    db_foreach revert_source_pages {} {
-		if { ! [db_0or1row revert_get_target_page_id {}] } {
+        # Roel - 03-10-2005, fix for revert problems
+        # This fix tries to match the target portal with the
+        # template before the revert via the pages' sort keys
+                    
+        # First, create source pages that aren't in the target portal
+         db_foreach revert_source_pages {} {
+        if { ! [db_0or1row revert_get_target_page_id {}] } {
                     set pretty_name "portal revert dummy page $sort_key"
-		    set page_id [page_create \
-				     -pretty_name $pretty_name \
-				     -portal_id $portal_id]
-		    
-		    # Now set the page's sort_key
-		    db_dml revert_set_target_page_sort_key {}
-		}
-	    }
-	    
-	    # Second, delete target pages that aren't in the source
-	    # portal
- 	    db_foreach revert_target_pages {} {
-		if { ! [db_0or1row revert_get_source_page_id {}] } {
+            set page_id [page_create \
+                     -pretty_name $pretty_name \
+                     -portal_id $portal_id]
+            
+            # Now set the page's sort_key
+            db_dml revert_set_target_page_sort_key {}
+        }
+        }
+        
+        # Second, delete target pages that aren't in the source
+        # portal
+         db_foreach revert_target_pages {} {
+        if { ! [db_0or1row revert_get_source_page_id {}] } {
                     set move_to_page_id [db_string revert_min_page_id_select {}]
                     
                     db_foreach revert_move_elements_for_del {} {
@@ -750,45 +750,45 @@ namespace eval portal {
                     }
 
                     page_delete -page_id $page_id
-		}
-	    }
+        }
+        }
             
             # now that they have the same number of pages, get to it
             foreach source_page_id \
                 [list_pages_tcl_list -portal_id $template_id] {
-		    
-		    db_1row revert_get_source_page_info {}
+            
+            db_1row revert_get_source_page_info {}
 
-		    set target_page_id [db_string revert_get_target_page_id {}]
-		    
-		    db_dml revert_page_update {}
-		    
-		    # First, hide all elements.  
-		    # If there are new content portlets that are not
-		    # in the default template, this will ensure they don't come
-		    # up.
+            set target_page_id [db_string revert_get_target_page_id {}]
+            
+            db_dml revert_page_update {}
+            
+            # First, hide all elements.  
+            # If there are new content portlets that are not
+            # in the default template, this will ensure they don't come
+            # up.
 
-		    db_dml hide_all_elements {
-			update portal_element_map
-			set  state = 'hidden'
-			where page_id = :target_page_id
-		    }
+            db_dml hide_all_elements {
+            update portal_element_map
+            set  state = 'hidden'
+            where page_id = :target_page_id
+            }
 
-		    # revert elements in two steps like "swap"
-		    db_foreach revert_get_source_elements {} {
-			# the element might not be on the target page...
-			set target_element_id \
+            # revert elements in two steps like "swap"
+            db_foreach revert_get_source_elements {} {
+            # the element might not be on the target page...
+            set target_element_id \
                             [db_string revert_get_target_element {} -default {}]
-			
-			# now, lets check if this is one new applet
-			# added, that was not originally mapped
-			# usually with custom portlets
-			
-			if ![empty_string_p $target_element_id] {
-			    db_dml revert_element_update {}
-			}
-		    }
-		}
+            
+            # now, lets check if this is one new applet
+            # added, that was not originally mapped
+            # usually with custom portlets
+            
+            if ![empty_string_p $target_element_id] {
+                db_dml revert_element_update {}
+            }
+            }
+        }
         } elseif { ![empty_string_p [ns_set get $form "op_rename"]] } {
                 portal::update_name $portal_id [ns_set get $form new_name]
 
@@ -1067,7 +1067,7 @@ namespace eval portal {
         {-link_all 0}
         {-extra_td_html ""}
         {-table_html_args ""}
-	{-extra_td_selected_p 0}
+    {-extra_td_selected_p 0}
     } {
         Wraps portal::dimensional to create a dotlrn navbar
 
@@ -1091,7 +1091,7 @@ namespace eval portal {
                 -pre_html $pre_html \
                 -post_html $post_html \
                 -extra_td_html $extra_td_html \
-		-extra_td_selected_p $extra_td_selected_p \
+        -extra_td_selected_p $extra_td_selected_p \
                 -table_html_args $table_html_args \
                 $ad_dim_struct \
                 $link]
@@ -1439,7 +1439,7 @@ namespace eval portal {
 
         db_dml update {}
 
-	util_memoize_flush "portal::element_params_not_cached $element_id"
+    util_memoize_flush "portal::element_params_not_cached $element_id"
 
         # ns_log notice "aks81 [get_element_param $element_id $key]"
         return 1
@@ -1483,7 +1483,7 @@ namespace eval portal {
     } {
         db_dml insert {}
 
-	util_memoize_flush "portal::element_params_not_cached $element_id"
+    util_memoize_flush "portal::element_params_not_cached $element_id"
 
     }
 
@@ -1497,7 +1497,7 @@ namespace eval portal {
         db_dml delete {}
 
         # DRB: Remove the cached copy of this element, too.
-	util_memoize_flush "portal::element_params_not_cached $element_id"
+    util_memoize_flush "portal::element_params_not_cached $element_id"
 
     }
 
@@ -1528,9 +1528,9 @@ namespace eval portal {
     }
 
     ad_proc -private element_params_not_cached element_id {
-	Return a list of lists of key value pairs for this portal element.
+    Return a list of lists of key value pairs for this portal element.
     } {
-	return [db_list_of_lists params_select {}]
+    return [db_list_of_lists params_select {}]
     }
 
     ad_proc -private get_element_id_from_unique_param {
@@ -1569,13 +1569,13 @@ namespace eval portal {
         db_1row element_select {} -column_array element
 
         # get the element's params
-	set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
-	if [llength $element_params] {
-	    foreach param $element_params {
-		set key [lindex $param 0]
-		set value [lindex $param 1]
-		lappend config($key) $value
-	    }
+    set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
+    if [llength $element_params] {
+        foreach param $element_params {
+        set key [lindex $param 0]
+        set value [lindex $param 1]
+        lappend config($key) $value
+        }
         } else {
             # this element has no config, set up some defaults
             set config(shaded_p) "f"
@@ -2067,7 +2067,7 @@ namespace eval portal {
 
         if {[llength $element_id_list] == 0} {
             db_transaction {
-		# Tell portal to add this element to the page
+        # Tell portal to add this element to the page
                 set element_id [add_element \
                         -portal_id $portal_id \
                         -portlet_name $portlet_name \
@@ -2270,10 +2270,10 @@ namespace eval portal {
         {-td_align "center"}
         {-extra_td_html ""}
         {-table_html_args "border=0 cellspacing=0 cellpadding=3 width=100%"}
-	{-class_html ""}
+    {-class_html ""}
         {-pre_html ""}
         {-post_html ""}
-	{-extra_td_selected_p 0}
+    {-extra_td_selected_p 0}
         option_list
         {url {}}
         {options_set ""}
@@ -2284,17 +2284,17 @@ namespace eval portal {
         if {[empty_string_p $option_list]} {
             return
         }
-	
+    
         if {[empty_string_p $options_set]} {
             set options_set [ns_getform]
         }
-	
+    
         if {[empty_string_p $url]} {
             set url [ad_conn url]
         }
-	
+    
         set html "\n<table $table_html_args>\n"
-	
+    
         if {!$no_header_p} {
             foreach option $option_list {
                 append html "<tr>    <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
@@ -2302,35 +2302,35 @@ namespace eval portal {
         }
     
         append html "  <tr>\n"
-	
+    
         foreach option $option_list {
-	    
+        
             if {!$no_bars_p} {
                 append html "\["
             }
-	    
-	    
-	    if { $names_in_cells_p } {
-		set pre_td_html "<td class=\"navbar\">"
-		set pre_selected_td_html "<td class=\"navbar-selected\">"
-		set post_html "$post_html</a></td>"
-		set end_html ""
-		set break_html ""
-		set post_selected_html "$post_html"
-	    } else {
-		append html "    <td align=$td_align>"
-		set td_html ""
-		set pre_selected_td_html "<strong>"
-		set post_selected_html "</strong>$post_html"
-		set end_html ""
-		set td_html ""
-		post_html "$post_html</a>"
-		if {!$no_bars_p} {
-		    set break_html " | "
-		} else {
-		    append break_html " &nbsp; "
-		}
-	    }
+        
+        
+        if { $names_in_cells_p } {
+        set pre_td_html "<td class=\"navbar\">"
+        set pre_selected_td_html "<td class=\"navbar-selected\">"
+        set post_html "$post_html</a></td>"
+        set end_html ""
+        set break_html ""
+        set post_selected_html "$post_html"
+        } else {
+        append html "    <td align=$td_align>"
+        set td_html ""
+        set pre_selected_td_html "<strong>"
+        set post_selected_html "</strong>$post_html"
+        set end_html ""
+        set td_html ""
+        post_html "$post_html</a>"
+        if {!$no_bars_p} {
+            set break_html " | "
+        } else {
+            append break_html " &nbsp; "
+        }
+        }
 
             # find out what the current option value is.
             # check if a default is set otherwise the first value is used
@@ -2342,7 +2342,7 @@ namespace eval portal {
                     set option_val $options_set_val
                 }
             }
-	    
+        
             set first_p 1
             foreach option_value [lindex $option 3] {
                 set thisoption_name [lindex $option_value 0]
@@ -2356,10 +2356,10 @@ namespace eval portal {
 
                 if {$first_p} {
                     set first_p 0
-		} else {
-		    append html $break_html
+        } else {
+            append html $break_html
                 }
-		
+        
                 if {([string equal $option_val $thisoption_name] == 1 && !$link_all) || !$thisoption_link_p} {
                     append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
                 } else {
@@ -2370,11 +2370,11 @@ namespace eval portal {
             if {!$no_bars_p} {
                 append html "\]"
             }
-	    if {$extra_td_selected_p} {
-		append html "${pre_selected_td_html}${pre_html}$extra_td_html${post_html}\n"
-	    } else {
-		append html "${pre_td_html}$extra_td_html${post_html}\n"
-	    }
+        if {$extra_td_selected_p} {
+        append html "${pre_selected_td_html}${pre_html}$extra_td_html${post_html}\n"
+        } else {
+        append html "${pre_td_html}$extra_td_html${post_html}\n"
+        }
         }
 
         append html "  </tr>\n$end_html</table>\n"
@@ -2393,26 +2393,28 @@ namespace eval portal {
 
         The basic idea is that since CSS must appear in the HEAD portion of a document,
         it is safe to link to any CSS file needed by a portal page.  This includes
-	all CSS files found in the previously unused layout resource_dir, and CSS
-	files returned by the poge's datasource's get CSS operation.
+        all CSS files found in the previously unused layout resource_dir, and the
+        new datasource css_dir column.
 
         The code assumes the layout's resource_dir (which is a misnomer, they've always been
         resource URLs - check the use of the theme resource_dir coiumn) and portlet
-	CSS files are either relative or in proper "/resources/package-key" form.
-	
-	(the existing code for the theme resource_dir only supports the relative form)
+        CSS files are either relative or in proper "/resources/package-key" form.
+    
     } {
         set header_stuff ""
-        db_1row get_resource_dir {}
-        if { [string first /resources/ $resource_dir] == 0 } {
-            set l [split $resource_dir /]
-            set path [acs_package_root_dir [lindex $l 2]]/www/resources/[join [lrange $l 3 end] /]
-        } else {
-            set path [acs_package_root_dir new-portal]/www/$resource_dir
-        }
-        foreach file [file tail [glob -nocomplain -directory $path *.css]] {
-            append header_stuff "
-<link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"screen\" />"
+        foreach resource_dir [db_list \
+	                     -cache_key portal::get_page_header_stuff_$portal_id \
+	                     get_resource_dirs {}] {
+            if { [string first /resources/ $resource_dir] == 0 } {
+                set l [split $resource_dir /]
+                set path [acs_package_root_dir [lindex $l 2]]/www/resources/[join [lrange $l 3 end] /]
+            } else {
+                set path [acs_package_root_dir new-portal]/www/$resource_dir
+            }
+            foreach file [file tail [glob -nocomplain -directory $path *.css]] {
+                append header_stuff "
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"screen\" />"
+            }
         }
         return $header_stuff
     }

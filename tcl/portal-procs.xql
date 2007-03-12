@@ -828,13 +828,21 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::get_layout_header_stuff.get_resource_dir">
+    <fullquery name="portal::get_page_header_stuff.get_resource_dirs">
         <querytext>
           select l.resource_dir
           from portal_pages p, portal_layouts l
           where p.portal_id = :portal_id
             and p.sort_key = :page_num
             and l.layout_id = p.layout_id
+          union
+          select distinct(pd.css_dir)
+	  from portal_element_map pem, portal_datasources pd, portal_pages pp
+	  where pp.portal_id = :portal_id
+            and pp.sort_key = :page_num
+            and pem.page_id = pp.page_id
+	    and pem.datasource_id = pd.datasource_id
+            and pd.css_dir is not null
         </querytext>
     </fullquery>
 

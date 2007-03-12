@@ -26,6 +26,6 @@ ad_proc -private new-portal::after_upgrade {
 
                 db_dml update_type {}
 
-	    }
-	}
+            }
+    }
 }

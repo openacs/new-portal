@@ -43,7 +43,8 @@ create table portal_datasources (
     name                            varchar(200)
                                     constraint p_datasources_name_nn
                                     not null,
-    pretty_name                     varchar(200)
+    pretty_name                     varchar(200),
+    css_dir                         varchar(200)
 );
 
 -- A default configuration for a ds will be stored here, to be copied

@@ -509,6 +509,7 @@ as
         datasource_id               in portal_datasources.datasource_id%TYPE default null,
         name                        in portal_datasources.name%TYPE default null,
         description                 in portal_datasources.description%TYPE default null,
+        css_dir                     in portal_datasources.css_dir%TYPE default null,
         object_type                 in acs_object_types.object_type%TYPE default 'portal_datasource',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -539,6 +540,7 @@ as
         datasource_id               in portal_datasources.datasource_id%TYPE default null,
         name                        in portal_datasources.name%TYPE default null,
         description                 in portal_datasources.description%TYPE default null,
+        css_dir                     in portal_datasources.css_dir%TYPE default null,
         object_type                 in acs_object_types.object_type%TYPE default 'portal_datasource',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -559,9 +561,9 @@ as
         );
 
         insert into portal_datasources
-        (datasource_id, name, description)
+        (datasource_id, name, description, css_dir)
         values
-        (v_datasource_id, name, description);
+        (v_datasource_id, name, description, css_dir);
 
         return v_datasource_id;
 
