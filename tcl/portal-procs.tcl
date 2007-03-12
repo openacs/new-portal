@@ -2413,7 +2413,7 @@ namespace eval portal {
             }
             foreach file [file tail [glob -nocomplain -directory $path *.css]] {
                 append header_stuff "
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"all\" />"
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"all\">"
             }
         }
         return $header_stuff
