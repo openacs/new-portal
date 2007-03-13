@@ -474,7 +474,7 @@ namespace eval portal {
             <input type=hidden name=anchor value=$page_id>
             <input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\">
             </form>
-        <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=""></td></tr>
+        <tr height=1><td colspan=2 class=\"bottom-border\" height=\"1\"><img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=\"\"></td></tr>
         </td></tr>"
 
             append template "$page_name_chunk"
