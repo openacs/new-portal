@@ -854,6 +854,7 @@ namespace eval portal {
                 page_delete -page_id $page_id
         } elseif { ![empty_string_p [ns_set get $form "op_change_page_layout"]] } {
                 set_layout_id \
+		    -portal_id $portal_id \
                     -page_id [ns_set get $form page_id] \
                     -layout_id [ns_set get $form layout_id]
         } elseif { ![empty_string_p [ns_set get $form "op_rename_page"]] } {
@@ -1984,12 +1985,14 @@ namespace eval portal {
     }
 
     ad_proc -private set_layout_id {
+        {-portal_id:required}
         {-page_id:required}
         {-layout_id:required}
     } {
         Updates a page's layout.
     } {
         db_dml update_layout_id {}
+	db_flush_cache -cache_key_pattern portal::get_page_header_stuff_${portal_id}_*
     }
 
     ad_proc -private get_layout_id {
@@ -2403,7 +2406,7 @@ namespace eval portal {
     } {
         set header_stuff ""
         foreach resource_dir [db_list \
-	                     -cache_key portal::get_page_header_stuff_$portal_id \
+	                     -cache_key portal::get_page_header_stuff_${portal_id}_$page_num \
 	                     get_resource_dirs {}] {
             if { [string first /resources/ $resource_dir] == 0 } {
                 set l [split $resource_dir /]
