@@ -32,23 +32,45 @@ ad_page_contract {
 set num_regions [portal::get_layout_region_count -layout_id $layout_id]
 
 template::multirow create element_multi \
-        element_id \
-        name \
-        sort_key \
-        state \
-        hideable_p 
+    element_id \
+    name \
+    sort_key \
+    state \
+    hideable_p \
+    page_id \
+    hide_remove_url \
+    move_up_url \
+    move_down_url \
+    move_right_wa_url \
+    move_left_wa_url \
+    move_right_url
 
 set region_count 0
 
 db_foreach select_elements_by_region {} {
     set name [lang::util::localize "$name"]    
+
+    # URLs for actions
+    set hide_remove_url [export_vars -base $action_string {{anchor $page_id} {op_hide 1} portal_id element_id return_url}]
+    set move_up_url [export_vars -base $action_string {{anchor $page_id} {op_swap 1} {direction up} portal_id region element_id page_id return_url}]
+    set move_down_url [export_vars -base $action_string {{anchor $page_id} {op_swap 1} {direction down} portal_id region element_id page_id return_url}]
+    set move_right_wa_url [export_vars -base $action_string {{anchor $page_id} {op_move 1} {direction right} portal_id element_id region return_url}]
+    set move_left_wa_url [export_vars -base $action_string {{anchor $page_id} {op_move 1} {direction left} portal_id element_id region return_url}]
+    set move_right_url [export_vars -base $action_string {{op_move 1} {direction right} portal_id element_id region return_url}]
+
     template::multirow append element_multi \
 	    $element_id \
-            $name \
-            $sort_key \
-            $state \
-            [portal::hideable_p -element_id $element_id] \
-            $page_id
+        $name \
+        $sort_key \
+        $state \
+        [portal::hideable_p -element_id $element_id] \
+        $page_id \
+        $hide_remove_url \
+        $move_up_url \
+        $move_down_url \
+        $move_right_wa_url \
+        $move_left_wa_url \
+        $move_right_url
 
     incr region_count
 }

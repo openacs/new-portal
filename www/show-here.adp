@@ -17,10 +17,10 @@
             @show_html;noquote@
         </select>
     <input type=submit name="op_show_here" value="#new-portal.lt_Add_This_Portlet_Here#">
+</form>
 </if>
 <else>
     <span class="small">#new-portal.lt_None_You_can_not_add_#</span>
 </else>
-</form>
 </div>
 </div>
