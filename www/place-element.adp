@@ -37,22 +37,22 @@
             <!-- hide/remove link and arrows begin - refactor with tempate -->
 
             <!-- hide_remove_url -->
-            <a href="@element_multi.hide_remove_url@">
-                <img src="@imgdir@/delete.gif" border=0 alt="remove portlet">
+            <a href="@element_multi.hide_remove_url@" title="#new-portal.remove_portlet#">
+                <img src="@imgdir@/delete.gif" border=0 alt="#new-portal.remove#">
             </a>
 
             <if @element_multi:rowcount gt 1>
                 <if @element_multi.rownum@ gt 1>
                     <!-- move_up_url -->
-                    <a href="@element_multi.move_up_url@">
-                        <img border="0" src="@imgdir@/arrow-up.gif" alt="move up">
+                    <a href="@element_multi.move_up_url@" title="#new-portal.move_portlet_up#">
+                        <img border="0" src="@imgdir@/arrow-up.gif" alt="#new-portal.move_up#">
                     </a>
                 </if>
 
                 <if @element_multi:rowcount@ gt @element_multi.rownum@>
                     <!-- move_down_url -->
-                    <a href="@element_multi.move_down_url@">
-                        <img border="0" src="@imgdir@/arrow-down.gif" alt="move down">
+                    <a href="@element_multi.move_down_url@" title="#new-portal.move_portlet_down#">
+                        <img border="0" src="@imgdir@/arrow-down.gif" alt="#new-portal.move_down#">
                     </a>
                 </if>
             </if>
@@ -60,26 +60,26 @@
             <if @num_regions@ gt 1>
                 <if @region@ eq 1>
                     <!-- move_right_with_anchor_url -->
-                    <a href="@element_multi.move_right_wa_url@">
-                        <img border="0" src="@imgdir@/arrow-right.gif" alt="move right">
+                    <a href="@element_multi.move_right_wa_url@" title="#new-portal.move_portlet_right#">
+                        <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
                 </if>
 
                 <if @region@ gt 1 and @region@ lt @num_regions@>
                     <!-- move_left_with_anchor_url -->
-                    <a href="@element_multi.move_left_wa_url@">
-                        <img border="0" src="@imgdir@/arrow-left.gif" alt="move left">
+                    <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
+                        <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
                     <!-- move_right_url -->
-                    <a href="@element_multi.move_right_url@">
-                        <img border="0" src="@imgdir@/arrow-right.gif" alt="move right">
+                    <a href="@element_multi.move_right_url@" title="#new-portal.move_portlet_right#">
+                        <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
                 </if>
 
                 <if @region@ eq @num_regions@>
                     <!-- move_left_with_anchor_url -->
-                    <a href="@element_multi.move_left_wa_url@">
-                        <img border="0" src="@imgdir@/arrow-left.gif" alt="move left">
+                    <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
+                        <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
                 </if>
             </if>

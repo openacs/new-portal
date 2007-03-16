@@ -383,7 +383,7 @@ ad_proc -public portal::configure {
     }
 
     if {[empty_string_p $referer]} {
-        set return_text "<a href=\"@return_url@\">[_ new-portal.Go_back]</a>"
+        set return_text "<a href=\"@return_url@\" title=\"[_ new-portal.Go_back]\">[_ new-portal.Go_back]</a>"
     } else {
         set return_text ""
         set return_url $referer
