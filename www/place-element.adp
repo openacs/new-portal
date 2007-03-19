@@ -37,50 +37,64 @@
             <!-- hide/remove link and arrows begin - refactor with tempate -->
 
             <!-- hide_remove_url -->
+            <span class="screen-reader-only">[</span>
             <a href="@element_multi.hide_remove_url@" title="#new-portal.remove_portlet#">
                 <img src="@imgdir@/delete.gif" border=0 alt="#new-portal.remove#">
             </a>
+            <span class="screen-reader-only">]</span>
 
             <if @element_multi:rowcount gt 1>
                 <if @element_multi.rownum@ gt 1>
                     <!-- move_up_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_up_url@" title="#new-portal.move_portlet_up#">
                         <img border="0" src="@imgdir@/arrow-up.gif" alt="#new-portal.move_up#">
                     </a>
+                <span class="screen-reader-only">]</span>
                 </if>
 
                 <if @element_multi:rowcount@ gt @element_multi.rownum@>
                     <!-- move_down_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_down_url@" title="#new-portal.move_portlet_down#">
                         <img border="0" src="@imgdir@/arrow-down.gif" alt="#new-portal.move_down#">
                     </a>
+                <span class="screen-reader-only">]</span>
                 </if>
             </if>
 
             <if @num_regions@ gt 1>
                 <if @region@ eq 1>
                     <!-- move_right_with_anchor_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_right_wa_url@" title="#new-portal.move_portlet_right#">
                         <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
+                <span class="screen-reader-only">]</span>
                 </if>
 
                 <if @region@ gt 1 and @region@ lt @num_regions@>
                     <!-- move_left_with_anchor_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
                         <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
+                <span class="screen-reader-only">]</span>
                     <!-- move_right_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_right_url@" title="#new-portal.move_portlet_right#">
                         <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
+                <span class="screen-reader-only">]</span>
                 </if>
 
                 <if @region@ eq @num_regions@>
                     <!-- move_left_with_anchor_url -->
+                <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
                         <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
+                <span class="screen-reader-only">]</span>
                 </if>
             </if>
         </if>
