@@ -123,6 +123,7 @@
             select portal_page__new(
                 null,
                 :pretty_name,
+                :accesskey,
                 :portal_id,
                 :layout_id,
                 'f',

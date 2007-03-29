@@ -173,6 +173,8 @@ create table portal_pages (
                                     default 'Untitled Page'
                                     constraint portal_pages_pretty_name_nn
                                     not null,
+    accesskey                       char(1)
+                                    default null,
     portal_id                       integer
                                     constraint portal_pages_portal_id_fk
                                     references portals (portal_id)

@@ -29,6 +29,7 @@ as
     function new (
         page_id                     in portal_pages.page_id%TYPE default null,
         pretty_name                 in portal_pages.pretty_name%TYPE default 'Untitled Page',
+        accesskey                   in portal_pages.accesskey%TYPE default null,
         portal_id                   in portal_pages.portal_id%TYPE,
         layout_id                   in portal_pages.layout_id%TYPE default null,
         hidden_p                    in portal_pages.hidden_p%TYPE default 'f',
@@ -53,6 +54,7 @@ as
     function new (
         page_id                     in portal_pages.page_id%TYPE default null,
         pretty_name                 in portal_pages.pretty_name%TYPE default 'Untitled Page',
+        accesskey                   in portal_pages.accesskey%TYPE default null,
         portal_id                   in portal_pages.portal_id%TYPE,
         layout_id                   in portal_pages.layout_id%TYPE default null,
         hidden_p                    in portal_pages.hidden_p%TYPE default 'f',
@@ -90,9 +92,9 @@ as
         where portal_id = portal_page.new.portal_id;
 
         insert into portal_pages
-        (page_id, pretty_name, portal_id, layout_id, sort_key, hidden_p)
+        (page_id, pretty_name, accesskey, portal_id, layout_id, sort_key, hidden_p)
         values
-        (v_page_id, pretty_name, portal_id, v_layout_id, v_sort_key, hidden_p);
+        (v_page_id, pretty_name, accesskey, portal_id, v_layout_id, v_sort_key, hidden_p);
 
         return v_page_id;
 
