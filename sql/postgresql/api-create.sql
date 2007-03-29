@@ -195,6 +195,7 @@ begin
         v_page_id := portal_page__new(
             null,
             p_default_page_name,
+            null,
             v_portal_id,
             v_layout_id,
             ''f'',

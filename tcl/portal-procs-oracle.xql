@@ -122,7 +122,7 @@
             begin
                 :1 := portal_page.new(
                     pretty_name => :pretty_name,
-                    access_key => :access_key,
+                    accesskey => :accesskey,
                     portal_id => :portal_id,
                     layout_id => :layout_id
                 );

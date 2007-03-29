@@ -145,6 +145,7 @@ ad_proc -public portal::create {
     # and first page layout from it, overriding any other params
 
     set page_name_list [list "Page 1"]
+    set page_accesskey_list [list "1"]
     set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
     
     if {![empty_string_p $csv_list]} {
@@ -162,7 +163,7 @@ ad_proc -public portal::create {
     }
 
     set default_page_name [lindex $page_name_list 0]
-    set default_access_key [lindex $page_accesskey_list 0]
+    set default_accesskey [lindex $page_accesskey_list 0]
     set layout_name [lindex $layout_name_list 0]
 
     # get the default layout_id - simple2
@@ -193,7 +194,7 @@ ad_proc -public portal::create {
             for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
                 portal::page_create -portal_id $portal_id \
                     -pretty_name [lindex $page_name_list $i] \
-                    -access_key [lindex $page_accesskey_list $i] \
+                    -accesskey [lindex $page_accesskey_list $i] \
                     -layout_name [lindex $layout_name_list $i]
             }
         }
@@ -1074,7 +1075,7 @@ ad_proc -public portal::page_create {
     {-layout_name ""}
     {-pretty_name:required}
     {-portal_id:required}
-    {-access_key ""}
+    {-accesskey ""}
 } {
     Appends a new blank page for the given portal_id.
 
