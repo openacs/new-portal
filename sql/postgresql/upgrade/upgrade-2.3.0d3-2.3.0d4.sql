@@ -1,8 +1,8 @@
-alter table portal_pages add accesskey char(1) default null;
+alter table portal_pages add accesskey varchar(200) default null;
 
 select define_function_args('portal_page__new','page_id,pretty_name,accesskey,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-drop function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer);
+--drop function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer);
 
 create or replace function portal_page__new (integer,char,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
 returns integer as '

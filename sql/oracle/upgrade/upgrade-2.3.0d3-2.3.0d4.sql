@@ -1,4 +1,4 @@
-alter table add accesskey char(1) default null;
+alter table add accesskey varchar(200) default null;
 
 create or replace package portal_page
 as

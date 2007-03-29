@@ -25,7 +25,7 @@
 
 select define_function_args('portal_page__new','page_id,pretty_name,accesskey,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_page__new (integer,char,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
+create function portal_page__new (integer,varchar,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_page_id                       alias for $1;
