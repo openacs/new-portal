@@ -164,6 +164,7 @@ as
         layout_id                   in portal_layouts.layout_id%TYPE default null,
         template_id                 in portals.template_id%TYPE default null,
         default_page_name           in portal_pages.pretty_name%TYPE default 'Main Page',
+        default_accesskey           in portal_pages.accesskey%TYPE default null,
         object_type                 in acs_object_types.object_type%TYPE default 'portal',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -187,6 +188,7 @@ as
         layout_id                   in portal_layouts.layout_id%TYPE default null,
         template_id                 in portals.template_id%TYPE default null,
         default_page_name           in portal_pages.pretty_name%TYPE default 'Main Page',
+        default_accesskey           in portal_pages.accesskey%TYPE default null,
         object_type                 in acs_object_types.object_type%TYPE default 'portal',
         creation_date               in acs_objects.creation_date%TYPE default sysdate,
         creation_user               in acs_objects.creation_user%TYPE default null,
@@ -239,6 +241,7 @@ as
             v_page_id := portal_page.new (
                 portal_id => v_portal_id,
                 pretty_name => default_page_name,
+                accesskey => default_accesskey,
                 layout_id => v_layout_id,
                 creation_date => creation_date,
                 creation_user => creation_user,
@@ -270,6 +273,7 @@ as
                 v_page_id := portal_page.new(
                     portal_id => v_portal_id,
                     pretty_name => page.pretty_name,
+                    accesskey => page.accesskey,
                     layout_id => page.layout_id
                 );
 

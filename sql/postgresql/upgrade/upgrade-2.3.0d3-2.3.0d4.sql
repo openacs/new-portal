@@ -2,7 +2,7 @@ alter table portal_pages add accesskey varchar(200) default null;
 
 select define_function_args('portal_page__new','page_id,pretty_name,accesskey,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
---drop function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer);
+drop function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer);
 
 create or replace function portal_page__new (integer,char,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
@@ -55,7 +55,9 @@ begin
 
 end;' language 'plpgsql';
 
-create or replace function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamptz,integer,varchar,integer)
+select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,default_accesskey,object_type;portal,creation_date,creation_user,creation_ip,context_id');
+
+create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_portal_id                     alias for $1;
@@ -64,11 +66,12 @@ declare
     p_layout_id                     alias for $4;
     p_template_id                   alias for $5;
     p_default_page_name             alias for $6;
-    p_object_type                   alias for $7;
-    p_creation_date                 alias for $8;
-    p_creation_user                 alias for $9;
-    p_creation_ip                   alias for $10;
-    p_context_id                    alias for $11;
+    p_default_accesskey             alias for $7;
+    p_object_type                   alias for $8;
+    p_creation_date                 alias for $9;
+    p_creation_user                 alias for $10;
+    p_creation_ip                   alias for $11;
+    p_context_id                    alias for $12;
     v_portal_id                     portals.portal_id%TYPE;
     v_theme_id                      portals.theme_id%TYPE;
     v_layout_id                     portal_layouts.layout_id%TYPE;
@@ -118,7 +121,7 @@ begin
         v_page_id := portal_page__new(
             null,
             p_default_page_name,
-            null,
+            p_default_accesskey,
             v_portal_id,
             v_layout_id,
             ''f'',
@@ -153,6 +156,7 @@ begin
             v_page_id := portal_page__new(
             null,
             v_page.pretty_name,
+            v_page.accesskey,
             v_portal_id,
             v_page.layout_id,
             ''f'',

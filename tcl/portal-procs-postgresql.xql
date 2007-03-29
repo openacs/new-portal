@@ -12,6 +12,7 @@
                 :layout_id,
                 :template_id,
                 :default_page_name,
+                :default_accesskey,
                 'portal',
                 now(),
                 null,

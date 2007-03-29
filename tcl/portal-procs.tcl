@@ -129,7 +129,8 @@ ad_proc -public portal::create {
     {-template_id ""}
     {-layout_name ""}
     {-theme_name ""}
-    {-default_page_name ""}
+    {-default_page_name "Page 1"}
+    {-default_accesskey "1"}
     {-context_id ""}
     {-csv_list ""}
     user_id
@@ -144,8 +145,8 @@ ad_proc -public portal::create {
     # page_name2, layout2...", we get the required first page_name
     # and first page layout from it, overriding any other params
 
-    set page_name_list [list "Page 1"]
-    set page_accesskey_list [list "1"]
+    set page_name_list [list $default_page_name]
+    set page_accesskey_list [list $default_accesskey]
     set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
     
     if {![empty_string_p $csv_list]} {
