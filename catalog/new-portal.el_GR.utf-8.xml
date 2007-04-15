@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="new-portal" package_version="2.3.0a2" locale="el_GR" charset="utf-8">
+
+  <msg key="Add_Page">Προσθήκη Σελίδας</msg>
+  <msg key="Change_Theme">Αλλαγή θέματος:</msg>
+  <msg key="Change_Theme_1">Αλλαγή Θέματος</msg>
+  <msg key="Create_a_new_page">Δημιουργία νέας σελίδας</msg>
+  <msg key="Go_back">Πίσω</msg>
+  <msg key="Hide_in_main_navigation">Απόκρυψη σελίδας</msg>
+  <msg key="lt_None_You_can_not_add_">Κανένα. Όλα χρησιμοποιούνται.</msg>
+  <msg key="lt_Revert_the_entire_por">Επαναφορά των πάντων στην τυπική τους διαρύθμιση</msg>
+  <msg key="Move_to_page">Μεταφορά στη σελίδα</msg>
+  <msg key="Page">Σελίδα</msg>
+  <msg key="Rename_Page">Μετονομασία Σελίδας</msg>
+  <msg key="Revert">Επαναφορά</msg>
+  <msg key="Unused_Portlets">Portlets που δεν χρησιμοποιήσατε</msg>
+</message_catalog>
