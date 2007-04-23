@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.3.0a2" locale="el_GR" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.3.0" locale="el_GR" charset="utf-8">
 
   <msg key="Add_Page">Προσθήκη Σελίδας</msg>
   <msg key="Change_Theme">Αλλαγή θέματος:</msg>
