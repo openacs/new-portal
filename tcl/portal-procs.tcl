@@ -1708,7 +1708,10 @@ ad_proc -private portal::evaluate_element {
     set element(link_hideable_p) $config(link_hideable_p)
 
     # apply the path hack to the filename and the resourcedir
-    set element(filename) "[www_path]/$element(filename)"
+    # Only do this if the element filename does not start with "/packages"
+    if {[string first "/packages" $element(filename)] < 0} {
+	set element(filename) "[www_path]/$element(filename)"
+    }
 
     # DRB: don't ruin URLs that start with "/", i.e. the form "/resources/package-key/..."
     if { [string index $element(resource_dir) 0] ne "/" } {
