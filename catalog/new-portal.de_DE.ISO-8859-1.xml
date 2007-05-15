@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.2.0" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.3.0" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="Add_Page">Seite hinzufügen</msg>
   <msg key="Bad_direction">Falsche Richtung:</msg>
@@ -46,4 +46,5 @@ wenn Sie sie bearbeiten, wirkt sich die Änderung ebenfalls in all diesen Portale
   <msg key="sloan_theme_name">MIT Sloan</msg>
   <msg key="transaction_failed">Transaktion fehlgeschlagen</msg>
   <msg key="Unused_Portlets">Nicht verwendete Portlets</msg>
+  <msg key="when_portlet_shaded">Maximieren Sie das Fenster, um den Inhalt zu sehen.</msg>
 </message_catalog>

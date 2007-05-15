@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.2.0" locale="es_ES" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.3.0" locale="es_ES" charset="ISO-8859-1">
 
   <msg key="Add_Page">Añadir página</msg>
   <msg key="Bad_direction">Dirección errónea:</msg>
@@ -24,12 +24,22 @@
   <msg key="lt_None_You_can_not_add_">Ninguno. No puede añadir portlets a esta página ya que están siendo utilizados todos.</msg>
   <msg key="lt_Revert_the_entire_por">Volver a la configuración por defecto</msg>
   <msg key="lt_You_must_enter_new_na">Debe especificar un título para la página.</msg>
+  <msg key="move_down">Mover abajo</msg>
+  <msg key="move_left">Mover a la izquierda</msg>
+  <msg key="move_portlet_down">Mover el portlet hacía abajo</msg>
+  <msg key="move_portlet_left">Mover el portlet hacía la izquierda</msg>
+  <msg key="move_portlet_right">Mover el portlet hacía la derecha</msg>
+  <msg key="move_portlet_up">Mover el portlet arriba</msg>
+  <msg key="move_right">Mover a la derecha</msg>
   <msg key="Move_to_page">Mover a</msg>
+  <msg key="move_up">Mover arriba</msg>
   <msg key="nada_theme_description">Sin gráficos</msg>
   <msg key="nada_theme_name">ninguno</msg>
   <msg key="Page">Página</msg>
   <msg key="Page_1">Página:</msg>
+  <msg key="remove">Borrar</msg>
   <msg key="Remove_Empty_Page">Eliminar página vacía</msg>
+  <msg key="remove_portlet">Borrar el portlet</msg>
   <msg key="Rename_Page">Renombrar página</msg>
   <msg key="Revert">Volver a configuración por defecto</msg>
   <msg key="Show_in_main_navigation">Mostrar esta página</msg>
@@ -45,4 +55,5 @@
   <msg key="sloan_theme_name">Sloan</msg>
   <msg key="transaction_failed">Transacción fallida</msg>
   <msg key="Unused_Portlets">Portlets disponibles</msg>
+  <msg key="when_portlet_shaded">Maximice la ventana para ver el contenido.</msg>
 </message_catalog>

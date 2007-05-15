@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="new-portal" package_version="2.2.0" locale="fr_FR" charset="ISO-8859-1">
+<message_catalog package_key="new-portal" package_version="2.3.0" locale="fr_FR" charset="ISO-8859-1">
 
   <msg key="Add_Page">Ajouter</msg>
   <msg key="Change_Page_Layout">Changer la mise en page</msg>
@@ -20,4 +20,5 @@
   <msg key="simple_3column_layout_name">Trois colonnes</msg>
   <msg key="simple_red_theme_name">simple</msg>
   <msg key="Unused_Portlets">Portlets non utilisés</msg>
+  <msg key="when_portlet_shaded">Agrandir pour voir le contenue.</msg>
 </message_catalog>

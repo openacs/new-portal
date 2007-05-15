@@ -23,21 +23,22 @@
 -- @version $Id$
 --
 
-select define_function_args('portal_page__new','page_id,pretty_name,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
+select define_function_args('portal_page__new','page_id,pretty_name,accesskey,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
+create function portal_page__new (integer,varchar,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_page_id                       alias for $1;
     p_pretty_name                   alias for $2;
-    p_portal_id                     alias for $3;
-    p_layout_id                     alias for $4;
-    p_hidden_p                      alias for $5;
-    p_object_type                   alias for $6;
-    p_creation_date                 alias for $7;
-    p_creation_user                 alias for $8;
-    p_creation_ip                   alias for $9;
-    p_context_id                    alias for $10;
+    p_accesskey                     alias for $3;
+    p_portal_id                     alias for $4;
+    p_layout_id                     alias for $5;
+    p_hidden_p                      alias for $6;
+    p_object_type                   alias for $7;
+    p_creation_date                 alias for $8;
+    p_creation_user                 alias for $9;
+    p_creation_ip                   alias for $10;
+    p_context_id                    alias for $11;
     v_page_id                       portal_pages.page_id%TYPE;
     v_layout_id                     portal_pages.layout_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
@@ -67,9 +68,9 @@ begin
     where portal_id = p_portal_id;
 
     insert into portal_pages
-    (page_id, pretty_name, portal_id, layout_id, sort_key, hidden_p)
+    (page_id, pretty_name, accesskey, portal_id, layout_id, sort_key, hidden_p)
     values
-    (v_page_id, p_pretty_name, p_portal_id, v_layout_id, v_sort_key, p_hidden_p);
+    (v_page_id, p_pretty_name, p_accesskey, p_portal_id, v_layout_id, v_sort_key, p_hidden_p);
 
     return v_page_id;
 
@@ -129,9 +130,9 @@ begin
 
 end;' language 'plpgsql';
 
-select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,object_type;portal,creation_date,creation_user,creation_ip,context_id');
+select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,default_accesskey,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
-create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamptz,integer,varchar,integer)
+create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_portal_id                     alias for $1;
@@ -140,11 +141,12 @@ declare
     p_layout_id                     alias for $4;
     p_template_id                   alias for $5;
     p_default_page_name             alias for $6;
-    p_object_type                   alias for $7;
-    p_creation_date                 alias for $8;
-    p_creation_user                 alias for $9;
-    p_creation_ip                   alias for $10;
-    p_context_id                    alias for $11;
+    p_default_accesskey             alias for $7;
+    p_object_type                   alias for $8;
+    p_creation_date                 alias for $9;
+    p_creation_user                 alias for $10;
+    p_creation_ip                   alias for $11;
+    p_context_id                    alias for $12;
     v_portal_id                     portals.portal_id%TYPE;
     v_theme_id                      portals.theme_id%TYPE;
     v_layout_id                     portal_layouts.layout_id%TYPE;
@@ -194,6 +196,7 @@ begin
         v_page_id := portal_page__new(
             null,
             p_default_page_name,
+            p_default_accesskey,
             v_portal_id,
             v_layout_id,
             ''f'',
@@ -228,6 +231,7 @@ begin
             v_page_id := portal_page__new(
             null,
             v_page.pretty_name,
+            v_page.accesskey,
             v_portal_id,
             v_page.layout_id,
             ''f'',
@@ -491,7 +495,41 @@ begin
     return 0;
 end;' language 'plpgsql';
 
-select define_function_args('portal_datasource__new','datasource_id,name,description,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
+select define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
+
+create function portal_datasource__new (integer,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
+returns integer as '
+declare
+    p_datasource_id                 alias for $1; -- default null
+    p_name                          alias for $2; -- default null
+    p_description                   alias for $3; -- default null
+    p_css_dir                       alias for $4;
+    p_object_type                   alias for $5; -- default ''portal_datasource''
+    p_creation_date                 alias for $6; -- default now()
+    p_creation_user                 alias for $7; -- default null
+    p_creation_ip                   alias for $8; -- default null
+    p_context_id                    alias for $9; -- default null
+    v_datasource_id                 portal_datasources.datasource_id%TYPE;
+begin
+
+    v_datasource_id := acs_object__new(
+        p_datasource_id,
+        p_object_type,
+        p_creation_date,
+        p_creation_user,
+        p_creation_ip,
+        p_context_id,
+        ''t''
+    );
+
+    insert into portal_datasources
+    (datasource_id, name, description, css_dir)
+    values
+    (v_datasource_id, p_name, p_description, p_css_dir);
+
+    return v_datasource_id;
+
+end;' language 'plpgsql';
 
 create function portal_datasource__new (integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
@@ -507,24 +545,20 @@ declare
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
 begin
 
-    v_datasource_id := acs_object__new(
-        p_datasource_id,
-        p_object_type,
-        p_creation_date,
-        p_creation_user,
-        p_creation_ip,
-        p_context_id,
-        ''t''
-    );
-
-    insert into portal_datasources
-    (datasource_id, name, description)
-    values
-    (v_datasource_id, p_name, p_description);
+    v_datasource_id := portal_datasource__new(null,
+				  p_name,
+				  p_description,
+                                  null,
+				  p_object_type,
+				  p_creation_date,
+				  p_creation_user,
+				  p_creation_ip,
+				  p_context_id);
 
     return v_datasource_id;
 
 end;' language 'plpgsql';
+
 
 create function portal_datasource__new (varchar,varchar)
 returns integer as '
@@ -537,6 +571,30 @@ begin
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
 				  p_description,
+                                  null,
+				  ''portal_datasource'',
+				  now(),
+				  null,
+				  null,
+				  null);
+
+    return v_datasource_id;
+
+end;' language 'plpgsql';
+
+create function portal_datasource__new (varchar,varchar,varchar)
+returns integer as '
+declare
+    p_name                          alias for $1; -- default null
+    p_description                   alias for $2; -- default null
+    p_css_dir                       alias for $3;
+    v_datasource_id                 portal_datasources.datasource_id%TYPE;
+begin
+
+    v_datasource_id := portal_datasource__new(null,
+				  p_name,
+				  p_description,
+                                  p_css_dir,
 				  ''portal_datasource'',
 				  now(),
 				  null,

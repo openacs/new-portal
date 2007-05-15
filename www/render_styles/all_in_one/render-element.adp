@@ -30,7 +30,5 @@
 <property name="link_hideable_p">@element.link_hideable_p@</property>
 <property name="hide_links_p">@hide_links_p@</property>
 
-<div id="admin-portlet">
 <h1>@element.name@</h1>
 @element.content;noquote@
-</div>

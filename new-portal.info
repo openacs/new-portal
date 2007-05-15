@@ -8,18 +8,20 @@
     <singleton-p>t</singleton-p>
     <auto-mount>portal</auto-mount>
 
-    <version name="2.2.1a1" url="http://openacs.org/repository/download/apm/new-portal-2.2.1a1.apm">
+    <version name="2.3.0" url="http://openacs.org/repository/download/apm/new-portal-2.3.0.apm">
         <owner url="http://openacs.org">OpenACS</owner>
         <summary>Portals.</summary>
-        <release-date>2006-12-02</release-date>
+        <release-date>2007-04-22</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
         <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
-        <provides url="new-portal" version="2.2.1a1"/>
-        <requires url="acs-kernel" version="5.2.2"/>
+        <provides url="new-portal" version="2.3.0"/>
+        <requires url="acs-kernel" version="5.3.1a1"/>
 
         <callbacks>
+          <callback type="after-upgrade"  proc="new-portal::after_upgrade"/>
         </callbacks>
+
         <parameters>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="css_path"  default="css/default.css" description="The path to the stylesheet for this portal." section_name="Look and Feel"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="default_theme_name"  default="#new-portal.deco_theme_name#" description="the default theme"/>

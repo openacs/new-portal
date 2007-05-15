@@ -96,7 +96,7 @@ db_foreach select_elements_by_region {
     
 
 
-set dir "[portal::mount_point]/place-element-components"
+set dir /resources/new-portal/images
 
 append show_html ""
         

@@ -26,8 +26,24 @@ ad_page_contract {
     region:onevalue
 }
 
-# we get element_id, action_string, theme_id, region, portal_id,
+# we get element_id, element_num, element_first_num, action_string, theme_id, region, portal_id,
 # edit_p, return_url, hide_links_p, page_id, and layout_id from the layout_template
+
+# DRB: With the creation of the accessible Zen theme, portlets are numbered for the
+# convenience of reading devices.  The numbering is done by the layout template.  Since
+# old layouts (in particular custom ones not part of the standard .LRN release)
+# don't number portlets, we check and set a dummy value if it doesn't exist.
+
+# DRB: We're not actually using these numbers after all.  However, the works done, it
+# doesn't hurt anything to keep this code, so in case someone wants to number portlets
+# in the future, the code's already here (trust me, it ain't all that easy to figure out
+# how to do this)
+
+if { ![info exists element_num] } {
+    set element_num 0
+} else {
+    incr element_num $element_first_num
+}
 
 if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -edit_p $edit_p $element_id $theme_id] }  errmsg ]  } { 
     # An uncaught error happened when trying to evaluate the element.

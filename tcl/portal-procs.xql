@@ -45,6 +45,7 @@
                    portals.theme_id,
                    portal_layouts.layout_id,
                    portal_layouts.filename as layout_filename,
+                   portal_layouts.resource_dir as layout_resource_dir,
                    portal_pages.page_id
             from portals,
                  portal_pages,
@@ -93,9 +94,8 @@
         <querytext>
             select portals.name,
                    portals.portal_id,
-                   portal_layouts.filename as template,
                    portal_pages.pretty_name as page_name,
-                   portal_pages.layout_id as layout_id
+                   portal_pages.layout_id
             from portals,
                  portal_layouts,
                  portal_pages
@@ -103,6 +103,22 @@
             and portal_pages.page_id = :page_id
             and portal_pages.portal_id = portals.portal_id
             and portal_pages.layout_id = portal_layouts.layout_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure.layout_id_select">
+        <querytext>
+            select layout_id
+            from portal_layouts
+            where filename = :layout
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure.sub_portals">
+        <querytext>
+            select count(*)
+              from portals
+             where template_id = :portal_id
         </querytext>
     </fullquery>
 
@@ -809,6 +825,24 @@
             from portal_pages
             where portal_id = :portal_id
             and pretty_name = :page_name
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::get_page_header_stuff.get_resource_dirs">
+        <querytext>
+          select l.resource_dir
+          from portal_pages p, portal_layouts l
+          where p.portal_id = :portal_id
+            and p.sort_key = :page_num
+            and l.layout_id = p.layout_id
+          union
+          select distinct(pd.css_dir)
+	  from portal_element_map pem, portal_datasources pd, portal_pages pp
+	  where pp.portal_id = :portal_id
+            and pp.sort_key = :page_num
+            and pem.page_id = pp.page_id
+	    and pem.datasource_id = pd.datasource_id
+            and pd.css_dir is not null
         </querytext>
     </fullquery>
 

@@ -11,6 +11,7 @@
                     layout_id => :layout_id,
                     template_id => :template_id,
                     default_page_name => :default_page_name,
+                    default_accesskey => :default_accesskey,
                     theme_id => :theme_id,
                     context_id => :context_id
                 );
@@ -122,6 +123,7 @@
             begin
                 :1 := portal_page.new(
                     pretty_name => :pretty_name,
+                    accesskey => :accesskey,
                     portal_id => :portal_id,
                     layout_id => :layout_id
                 );
