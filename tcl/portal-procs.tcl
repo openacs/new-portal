@@ -105,9 +105,7 @@ ad_proc -private portal::mount_point_no_cache {} {
     Sometimes we need to know this for like <include>ing
     templates from tcl
 } {
-    return [site_nodes::get_info -return param \
-                -param url \
-                -package_key [package_key]]
+    return [site_node::get_url_from_object_id -object_id [get_package_id]]
 }
 
 ad_proc -public portal::mount_point {} {
