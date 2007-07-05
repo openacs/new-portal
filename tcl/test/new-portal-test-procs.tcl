@@ -38,20 +38,18 @@ aa_register_case -cats api create_portal_from_template {
 				  -last_name $user_info_2 \
 				  -email "${user_info_2}@test.test"]
 	    
-	    set template_id [dotlrn::get_portal_id_from_type -type user]
-
 	    
 	    set portal_id_2 [portal::create  -template_id $template_id $test_user_2(user_id)]
 
 	    # make sure the pages exist and are in the same order
-            set correct_page_count [db_list_of_lists count_correct_pages "
-	        select p1.sort_key, p1.pretty_name, p2.sort_key from portal_pages p1, portal_pages p2
+            set correct_page_count [db_string count_correct_pages "
+	        select count(*) from portal_pages p1, portal_pages p2
                 where p1.portal_id = :template_id
                 and p2.portal_id = :portal_id_2
                 and p1.pretty_name = p2.pretty_name
                 "]
-	    aa_log "$correct_page_count"
-#            aa_true "Pages in correct order" [expr {$correct_page_count == 3}]
+
+            aa_true "Pages in correct order" [expr {$correct_page_count == 3}]
 	}
 
 }
