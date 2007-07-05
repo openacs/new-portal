@@ -132,7 +132,7 @@ end;' language 'plpgsql';
 
 select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,default_accesskey,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
-create function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
+create or replace function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
 returns integer as '
 declare
     p_portal_id                     alias for $1;
@@ -226,6 +226,7 @@ begin
         for v_page in select *
                       from portal_pages
                       where portal_id = p_template_id
+		      order by sort_key
         loop
 
             v_page_id := portal_page__new(
