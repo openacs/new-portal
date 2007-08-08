@@ -180,4 +180,24 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::configure_dispatch.revert_max_page_id_select">
+        <querytext>
+            select page_id
+            from portal_pages
+            where portal_id = :portal_id
+            order by sort_key desc
+            limit 1
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.revert_min_page_id_select">
+        <querytext>
+            select page_id
+            from portal_pages
+            where portal_id = :portal_id
+            order by sort_key
+            limit 1
+        </querytext>
+    </fullquery>
+
 </queryset>
