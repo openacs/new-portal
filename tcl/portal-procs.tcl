@@ -603,18 +603,18 @@ ad_proc -public portal::configure {
                     append layout_chunk ">$one_layout_chunk"
                 }
 
-                append layout_chunk "</label><br/>"
+                append layout_chunk "</label><br>"
             }
 
 
             append template "
             <tr>
              <td>
-              <br/>
+              <br>
               <form method=post action=@action_string@>
                <small>
                 <b>[_ new-portal.Change_page_layout]</b>
-                <br/>
+                <br>
                 <input type=hidden name=portal_id value=$portal_id>
                 <input type=hidden name=page_id value=$page_id>
                 <input type=hidden name=return_url value=\"@return_url@\">
@@ -640,7 +640,7 @@ ad_proc -public portal::configure {
 
     set new_page_num [expr [page_count -portal_id $portal_id] + 1]
 
-    append template "<br/>
+    append template "<br>
     <table class=\"portal-page-config\" border=0 cellspacing=0 cellpadding=0>
      <tr>
       <td>
@@ -668,7 +668,7 @@ ad_proc -public portal::configure {
     #
 
     if {![empty_string_p [get_portal_template_id $portal_id]]} {
-        append template "<br/>
+        append template "<br>
         <table class=\"portal-page-config\" width=\"100%\" cellpadding=0 border=0 cellspacing=0>
          <tr>
           <td>
@@ -687,7 +687,7 @@ ad_proc -public portal::configure {
 
     if { [db_string sub_portals {}] } {
         # Portal has other portals using it as a template
-        append template "<br/>
+        append template "<br>
         <table class=\"portal-page-config\" width=100% cellpadding=0 border=0 cellspacing=0>
          <tr>
           <td>
