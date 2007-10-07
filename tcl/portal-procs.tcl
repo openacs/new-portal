@@ -145,7 +145,11 @@ ad_proc -public portal::create {
 
     set page_name_list [list $default_page_name]
     set page_accesskey_list [list $default_accesskey]
-    set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
+    if { [string eq $layout_name ""] } {
+        set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
+    } else {
+        set layout_name_list [list $layout_name]
+    }
     
     if {![empty_string_p $csv_list]} {
         set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]

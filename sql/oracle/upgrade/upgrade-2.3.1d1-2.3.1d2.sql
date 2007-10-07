@@ -1,3 +1,7 @@
+-- Yes we have to reload all the packages to ensure there are no
+-- dependency issues (please correct me if this is not applicable to 
+-- Oracle 9 and 10) DAVEB
+
 --
 --  Copyright (C) 2001, 2002 MIT
 --
