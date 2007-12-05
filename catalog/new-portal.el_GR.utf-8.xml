@@ -1,17 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<message_catalog package_key="new-portal" package_version="2.3.0" locale="el_GR" charset="utf-8">
+<message_catalog package_key="new-portal" package_version="2.3.1" locale="el_GR" charset="utf-8">
 
   <msg key="Add_Page">Προσθήκη Σελίδας</msg>
+  <msg key="Bad_direction">Λάθος κατεύθυνση:</msg>
+  <msg key="Bad_direction_1">Λάθος κατεύθυνση!</msg>
+  <msg key="Change_Page_Layout">Αλλαγή εμφάνισης σελίδας</msg>
+  <msg key="Change_page_layout">Αλλαγή εμφάνισης σελίδας:</msg>
   <msg key="Change_Theme">Αλλαγή θέματος:</msg>
   <msg key="Change_Theme_1">Αλλαγή Θέματος</msg>
   <msg key="Create_a_new_page">Δημιουργία νέας σελίδας</msg>
+  <msg key="Custom_Portlets">Προσωπικές πύλες</msg>
+  <msg key="deco_theme_description">Ένα θέμα Art Deco </msg>
+  <msg key="deco_theme_name">deco</msg>
   <msg key="Go_back">Πίσω</msg>
   <msg key="Hide_in_main_navigation">Απόκρυψη σελίδας</msg>
+  <msg key="kelp_theme_description">Γνωσιακή πύλη E-Learning </msg>
+  <msg key="kelp_theme_name">KELP</msg>
+  <msg key="lt_-_Note_custom_portlet">- Σημειώστε ότι οι προσωπικές πύλες για πρότυπα πυλών είναι πολύ ευαίσθητες και όχι πλήρως ευέλικτες, μπορείτε σε κάθε περίπτωση να προσθέσετε προσωπικές πύλες στο πρότυπο σας, να τις επεξεργαστείτε και οι αλλαγές σας να ενσωματωθούν  παντού. </msg>
+  <msg key="lt_Add_This_Portlet_Here">Προσθήκη αυτής της πύλης εδώ</msg>
+  <msg key="lt_Error_bad_params_n___">Σφάλμα, λάθος παράμετροι! \n Παρακαλούμε ειδοποιήστε τον διαχειριστή συστήματος για αυτό το σφάλμα. Ευχαριστούμε</msg>
+  <msg key="lt_Manage_Custom_Portlet">Διαχείριση προσωπικών πυλών</msg>
+  <msg key="lt_No_Elements_on_this_p">Δεν υπάρχουν στοιχεία στη σελίδα</msg>
   <msg key="lt_None_You_can_not_add_">Κανένα. Όλα χρησιμοποιούνται.</msg>
   <msg key="lt_Revert_the_entire_por">Επαναφορά των πάντων στην τυπική τους διαρύθμιση</msg>
+  <msg key="lt_You_must_enter_new_na">Πρέπει να δώσετε νέο όνομα στη σελίδα.</msg>
+  <msg key="move_down">Μετακίνηση κάτω</msg>
+  <msg key="move_left">Μετακίνηση αριστερά</msg>
+  <msg key="move_portlet_down">Μετακίνηση πύλης κάτω</msg>
+  <msg key="move_portlet_left">Μετακίνηση πύλης αριστερά</msg>
+  <msg key="move_portlet_right">Μετακίνηση πύλης δεξιά</msg>
+  <msg key="move_portlet_up">Μετακίνηση πύλης επάνω</msg>
+  <msg key="move_right">Μετακίνηση δεξιά</msg>
   <msg key="Move_to_page">Μεταφορά στη σελίδα</msg>
+  <msg key="move_up">Μετακίνηση επάνω</msg>
+  <msg key="nada_theme_description">Κανένα θέμα. Καθόλου γραφικά.</msg>
+  <msg key="nada_theme_name">nada</msg>
   <msg key="Page">Σελίδα</msg>
+  <msg key="Page_1">Σελίδα:</msg>
+  <msg key="remove">Διαγραφή</msg>
+  <msg key="Remove_Empty_Page">Διαγραφή κενής σελίδας</msg>
+  <msg key="remove_portlet">Διαγραφή πύλης</msg>
   <msg key="Rename_Page">Μετονομασία Σελίδας</msg>
   <msg key="Revert">Επαναφορά</msg>
+  <msg key="Show_in_main_navigation">Εμφάνιση της σελίδας</msg>
+  <msg key="simple_1column_layout_description">Απλή διάταξη μιας στήλης </msg>
+  <msg key="simple_1column_layout_name">Απλή μια στήλη</msg>
+  <msg key="simple_2column_layout_description">Απλή διάταξη δύο στηλών </msg>
+  <msg key="simple_2column_layout_name">Απλή δύο στηλών</msg>
+  <msg key="simple_3column_layout_description">Απλή διάταξη τριών στηλών </msg>
+  <msg key="simple_3column_layout_name">Απλή τριών στηλών </msg>
+  <msg key="simple_red_theme_description">Απλό θέμα κόκκινης βάσης </msg>
+  <msg key="simple_red_theme_name">απλό</msg>
+  <msg key="sloan_theme_description">Θέμα MIT Sloan </msg>
+  <msg key="sloan_theme_name">Sloan</msg>
+  <msg key="transaction_failed">αποτυχία διενέργειας</msg>
   <msg key="Unused_Portlets">Portlets που δεν χρησιμοποιήσατε</msg>
+  <msg key="when_portlet_shaded">Μεγιστοποίηση παραθύρου εμφάνισης περιεχομένου</msg>
 </message_catalog>
