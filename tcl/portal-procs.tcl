@@ -289,7 +289,8 @@ ad_proc -public portal::render {
             edit_p=@edit_p@
             hide_links_p=@hide_links_p@
             page_id=@page_id@
-            layout_id=@portal.layout_id@>"
+            layout_id=@portal.layout_id@
+            resource_dir=@portal.layout_resource_dir@>"
     }
 
     # Necessary hack to work around the acs-templating system
@@ -2438,41 +2439,22 @@ ad_proc portal::dimensional {
     append html "  </tr>\n$end_html</table>\n"
 }
 
-ad_proc portal::get_page_header_stuff {
-    -portal_id
-    -page_num
+ad_proc portal::set_page_css {
+    resource_dir
 } {
-    Return CSS link statements for the given page.  Done here because
-    the current new-portal implementation doesn't build a master/slave stack
-    down to the layout or portlet script level, making impossible to pass CSS file
-    information as a master template property.
-
-    This is a kludge that should be made obsolete someday ...
-
-    The basic idea is that since CSS must appear in the HEAD portion of a document,
-    it is safe to link to any CSS file needed by a portal page.  This includes
-    all CSS files found in the previously unused layout resource_dir, and the
-    new datasource css_dir column.
-
-    The code assumes the layout's resource_dir (which is a misnomer, they've always been
-                                                resource URLs - check the use of the theme resource_dir coiumn) and portlet
-    CSS files are either relative or in proper "/resources/package-key" form.
-    
+    Set the CSS in the HTML head tag for the given resource dir.
+    This proc is to be called from the layout templates.
 } {
-    set header_stuff ""
-    foreach resource_dir [db_list \
-                              -cache_key portal::get_page_header_stuff_${portal_id}_$page_num \
-                              get_resource_dirs {}] {
-        if { [string first /resources/ $resource_dir] == 0 } {
-            set l [split $resource_dir /]
-            set path [acs_package_root_dir [lindex $l 2]]/www/resources/[join [lrange $l 3 end] /]
-        } else {
-            set path [acs_package_root_dir new-portal]/www/$resource_dir
-        }
-        foreach file [file tail [glob -nocomplain -directory $path *.css]] {
-            append header_stuff "
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"$resource_dir/$file\" media=\"all\">"
-        }
+
+    if { [string first /resources/ $resource_dir] == 0 } {
+        set l [split $resource_dir /]
+        set path [acs_package_root_dir [lindex $l 2]]/www/resources/[join [lrange $l 3 end] /]
+    } else {
+        set path [acs_package_root_dir new-portal]/www/$resource_dir
     }
-    return $header_stuff
+
+    foreach file [file tail [glob -nocomplain -directory $path *.css]] {
+        template::head::add_css -href $resource_dir/$file
+    }
+
 }
