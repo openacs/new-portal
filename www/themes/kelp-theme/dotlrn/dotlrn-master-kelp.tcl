@@ -305,38 +305,8 @@ if { $make_navbar_p } {
 }
 
 
-if { ![info exists header_stuff] } {
-    set header_stuff ""
-}
-
 if { [info exists text] } {
     set text [lang::util::localize $text]
-}
-
-# Focus
-multirow create attribute key value
-
-if { ![template::util::is_nil focus] } {
-    # Handle elements wohse name contains a dot
-    if { [regexp {^([^.]*)\.(.*)$} $focus match form_name element_name] } {
-
-        # Add safety code to test that the element exists '
-        set header_stuff "$header_stuff
-          <script language=\"JavaScript\">
-            function acs_focus( form_name, element_name ){
-                if (document.forms == null) return;
-                if (document.forms\[form_name\] == null) return;
-                if (document.forms\[form_name\].elements\[element_name\] == null) return;
-                if (document.forms\[form_name\].elements\[element_name\].type == 'hidden') return;
-
-                document.forms\[form_name\].elements\[element_name\].focus();
-            }
-          </script>
-        "
-        
-        template::multirow append \
-                attribute onload "javascript:acs_focus('${form_name}', '${element_name}')"
-    }
 }
 
 # Developer-support support
@@ -559,11 +529,7 @@ switch $scope_name {
     }
 }
     
-set header_customized_css "
-
-<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
-<STYLE TYPE=\"text/css\">
-
+template::head::add_style -style "
 $recolor_css
 
 .page-body {
@@ -571,8 +537,5 @@ $recolor_css
     COLOR: $header_font_color;
     FONT-FAMILY: $header_font;
 }
-
-</STYLE>
-
 "
-	
+template::head::add_css -href "/resources/dotlrn/dotlrn-master-kelp.css"

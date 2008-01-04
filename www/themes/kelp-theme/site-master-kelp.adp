@@ -8,10 +8,6 @@
   <if @focus@ not nil>
     <property name="focus">@focus;noquote@</property>
   </if>
-   <property name="header_stuff">
-    <link rel="stylesheet" type="text/css" href="@css_url@" media="all">
-    @header_stuff;noquote@
-  </property> 
 
 
 <!-- Header -->

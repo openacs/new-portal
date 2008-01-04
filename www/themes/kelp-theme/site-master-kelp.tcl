@@ -1,15 +1,10 @@
 # Expects properties:
 #   title
 #   focus
-#   header_stuff
 #   section
 
 if { ![info exists section] } {
     set section {}
-}
-
-if { ![info exists header_stuff] } {
-    set header_stuff {}
 }
 
 if { [template::util::is_nil subnavbar_link] } {
@@ -17,7 +12,7 @@ if { [template::util::is_nil subnavbar_link] } {
 }
 
 # Where to find the stylesheet
-set css_url "/resources/acs-subsite/site-master.css"
+template::head::add_css -href "/resources/acs-subsite/site-master.css"
 
 # Get system name
 set system_name [ad_system_name]

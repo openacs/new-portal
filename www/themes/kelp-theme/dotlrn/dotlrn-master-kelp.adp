@@ -1,10 +1,4 @@
 <master src="/www/site-master-kelp">
-  <property name="header_stuff">
-     <link rel="stylesheet" type="text/css" href="/resources/dotlrn/dotlrn-master-kelp.css" media="all">
-     <link rel="stylesheet" type="text/css" href="/resources/calendar/calendar.css" media="all">
-     @header_stuff;noquote@
-     @header_customized_css;noquote@ 
-  </property>
   <if @context@ not nil>
      <property name="context">@context;noquote@</property>
   </if>
