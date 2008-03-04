@@ -23,6 +23,8 @@
   <msg key="lt_Manage_Custom_Portlet">Manage Custom Portlets</msg>
   <msg key="lt_No_Elements_on_this_p">No Elements on this page</msg>
   <msg key="lt_None_You_can_not_add_">None. You can not add any portlets to this page because they are all in use.</msg>
+  <msg key="lt_Note_Please_be_patien">Note: Please be patient</msg>
+  <msg key="lt_Revert_all_portals_us">Revert all portals using this template</msg>
   <msg key="lt_Revert_the_entire_por">Revert the entire portal to the default arrangement</msg>
   <msg key="lt_You_must_enter_new_na">You must enter new name for the page.</msg>
   <msg key="move_down">Move Down</msg>
@@ -43,6 +45,7 @@
   <msg key="remove_portlet">Remove Portlet</msg>
   <msg key="Rename_Page">Rename Page</msg>
   <msg key="Revert">Revert</msg>
+  <msg key="Revert_All">Revert All</msg>
   <msg key="Show_in_main_navigation">Show this Page</msg>
   <msg key="simple_1column_layout_description">A simple 1-column layout</msg>
   <msg key="simple_1column_layout_name">Simple 1-Column</msg>
