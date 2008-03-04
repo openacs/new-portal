@@ -146,7 +146,9 @@ ad_proc -public portal::create {
     set page_name_list [list $default_page_name]
     set page_accesskey_list [list $default_accesskey]
     if { [string eq $layout_name ""] } {
-        set layout_name_list [list "#new-portal.simple_2column_layout_name#"]
+        set layout_name_list [list [parameter::get_from_package_key \
+                                       -package_key new-portal \
+                                       -parameter default_layout]]
     } else {
         set layout_name_list [list $layout_name]
     }
@@ -2054,7 +2056,7 @@ ad_proc -private portal::set_layout_id {
 ad_proc -private portal::get_layout_id {
     {-page_num ""}
     {-page_id ""}
-    {-layout_name "#new-portal.simple_2column_layout_name#"}
+    {-layout_name ""}
     {portal_id ""}
 } {
     Get the layout_id of a layout template for a portal page.
@@ -2063,6 +2065,11 @@ ad_proc -private portal::get_layout_id {
     @param portal_id The portal_id.
     @return A layout_id.
 } {
+    if { $layout_name eq "" } {
+        set layout_name [parameter::get_from_package_key \
+                            -package_key new-portal \
+                            -parameter default_layout]
+    }
     if { ![empty_string_p $page_num] } {
         db_1row get_layout_id_num_select {}
     } elseif { ![empty_string_p $page_id] } {

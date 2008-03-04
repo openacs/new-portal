@@ -8,14 +8,14 @@
     <singleton-p>t</singleton-p>
     <auto-mount>portal</auto-mount>
 
-    <version name="2.4.0d1" url="http://openacs.org/repository/download/apm/new-portal-2.4.0d1.apm">
+    <version name="2.4.0d2" url="http://openacs.org/repository/download/apm/new-portal-2.4.0d2.apm">
         <owner url="http://openacs.org">OpenACS</owner>
         <summary>Portals.</summary>
         <release-date>2008-01-08</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
         <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
-        <provides url="new-portal" version="2.4.0d1"/>
+        <provides url="new-portal" version="2.4.0d2"/>
         <requires url="acs-kernel" version="5.3.1a1"/>
 
         <callbacks>
@@ -25,6 +25,7 @@
         <parameters>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="css_path"  default="css/default.css" description="The path to the stylesheet for this portal." section_name="Look and Feel"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="default_theme_name"  default="#new-portal.deco_theme_name#" description="the default theme"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="default_layout"  default="#new-portal.simple_2column_layout_name#" description="the default layout for new pages"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="full_cache"  default="0" description="The number of seconds to cache a fully rendered portal." section_name="Performance"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="local_remove_p"  default="0" description="When editing, render elements in immutable regions instead of merely displaying their names." section_name="Portal Editing"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="log_datasource_errors_p"  default="1" description="Create an entry in the error log whenever an error occurs while evaluating a datasource." section_name="Debug"/>
