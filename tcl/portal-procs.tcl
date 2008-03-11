@@ -2465,3 +2465,23 @@ ad_proc portal::set_page_css {
     }
 
 }
+
+ad_proc portal::portlet_visible_p {
+    -portal_id
+    -portlet_name
+} {
+    Check if a portlet is on a portal
+
+    @param portal_id ID of portal to check
+    @param portlet_name Name of the portlet to look for
+
+    @return 0 if portlet does not exist, 1 if it exists
+
+} {
+    set ds_id [get_datasource_id $portlet_name]
+    if {[db_string portlet_visible "" -default 0]} {
+        return 1
+    } else {
+        return 0
+    }
+}
