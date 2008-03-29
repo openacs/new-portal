@@ -18,20 +18,21 @@
 
 %>
 
-<form name="op_move_to_page" method=post action=@action_string@>
-<input type=hidden name=portal_id value=@portal_id@>
-<input type=hidden name=return_url value=@return_url@>
+<form name="op_move_to_page" method=post action=@action_string@ class="inline-form">
+<div><input type=hidden name=portal_id value=@portal_id@></div>
+<div><input type=hidden name=return_url value=@return_url@></div>
 
 <if @other_page_avail_p@ ne 0>
-  <input type=hidden name=element_id value=@element_id@>
-  <input type=hidden name=anchor value=@page_id@>
-  <input type=submit name="op_move_to_page" value="#new-portal.Move_to_page#">
+  <div><input type=hidden name=element_id value=@element_id@></div>
+  <div><input type=hidden name=anchor value=@page_id@></div>
+  <div><input type=submit name="op_move_to_page" value="#new-portal.Move_to_page#"></div>
+  <div>
   <select name=page_id>
   <multiple name=pages>
   <option value=@pages.page_id@><%= [lang::util::localize "@pages.pretty_name@"] %></option>
   </multiple>
   </select>
-
+  </div>
 </if>
 
 </form>

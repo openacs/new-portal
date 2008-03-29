@@ -22,7 +22,7 @@
 
 <table border="0" width="100%">
   <tr>
-    <td valign="top" width="33%">
+    <td valign="top" style="width:33%">
       <list name="element_ids_1">
         <include src="@element_src@"
                  element_id="@element_ids_1:item@"
@@ -38,7 +38,7 @@
         <br>
       </list>
     </td>
-    <td valign="top" width="33%">
+    <td valign="top" style="width:33%">
       <list name="element_ids_2">
         <include src="@element_src@"
                  element_id="@element_ids_2:item@"
@@ -54,7 +54,7 @@
         <br>
       </list>
     </td>
-    <td valign="top" width="33%">
+    <td valign="top" style="width:33%">
       <list name="element_ids_3">
         <include src="@element_src@"
                  element_id="@element_ids_3:item@"
