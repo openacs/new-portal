@@ -425,7 +425,7 @@ ad_proc -public portal::configure {
         set name [ns_set get $theme name]
         set description [ns_set get $theme description]
 
-        append theme_chunk "<label><input type=radio name=theme_id value=$theme_id"
+        append theme_chunk "<div><label><input type=radio name=theme_id value=$theme_id"
         set one_theme_chunk "&nbsp;$name - $description"
 
         if {$current_theme_id == $theme_id } {
@@ -433,7 +433,7 @@ ad_proc -public portal::configure {
         } else {
             append theme_chunk ">$one_theme_chunk"
         }
-        append theme_chunk "</label><br>\n"
+        append theme_chunk "</label></div>"
     }
 
     append theme_chunk "<div><input type=submit name=\"op_change_theme\" value=\"[_ new-portal.Change_Theme_1]\"></div></form>"
