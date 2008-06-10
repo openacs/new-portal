@@ -22,6 +22,8 @@
   <msg key="lt_Manage_Custom_Portlet">Administrar Portlets Personalizados</msg>
   <msg key="lt_No_Elements_on_this_p">No hay portlets en esta página</msg>
   <msg key="lt_None_You_can_not_add_">Ninguno. No puede añadir portlets a esta página ya que están siendo utilizados todos.</msg>
+  <msg key="lt_Note_Please_be_patien">Nota: por favor, sea paciente</msg>
+  <msg key="lt_Revert_all_portals_us">Revertir todos los portales a esta plantilla</msg>
   <msg key="lt_Revert_the_entire_por">Volver a la configuración por defecto</msg>
   <msg key="lt_You_must_enter_new_na">Debe especificar un título para la página.</msg>
   <msg key="move_down">Mover abajo</msg>
@@ -42,6 +44,7 @@
   <msg key="remove_portlet">Borrar el portlet</msg>
   <msg key="Rename_Page">Renombrar página</msg>
   <msg key="Revert">Volver a configuración por defecto</msg>
+  <msg key="Revert_All">Revertir todo</msg>
   <msg key="Show_in_main_navigation">Mostrar esta página</msg>
   <msg key="simple_1column_layout_description">Composición a 1 columna</msg>
   <msg key="simple_1column_layout_name">Sencilla a 1 columna</msg>
