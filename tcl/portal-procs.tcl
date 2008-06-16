@@ -493,7 +493,7 @@ ad_proc -public portal::configure {
           </td>
          </tr>
          <tr>
-          <td colspan=2 class=\"bottom-border\" style=\"height:1\">
+          <td colspan=2 class=\"bottom-border\">
            <img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=\"\">
           </td>
          </tr>
