@@ -699,7 +699,7 @@ ad_proc -public portal::configure {
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_all_portals_us]</h2>
             <div style=\"text-align:center\">
              <input type=submit name=\"op_revert_all\" value=\"[_ new-portal.Revert_All]\">
-             <br />
+             <br>
              <i>[_ new-portal.lt_Note_Please_be_patien]</i>
             </div>
            </form>
