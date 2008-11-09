@@ -406,9 +406,7 @@ ad_proc -public portal::configure {
 
     set template "
         <master src=\"@master_template@\">
-        <p>
-        $return_text
-        <p>"
+        <p>$return_text</p>"
 
     #
     # Theme selection chunk
@@ -416,10 +414,10 @@ ad_proc -public portal::configure {
 
     set theme_chunk "
             <form method=post action=@action_string@>
-            <input type=hidden name=portal_id value=@portal_id@>
-            <input type=hidden name=return_url value=\"@return_url@\">
-            <strong>[_ new-portal.Change_Theme]</strong>
-            <br>"
+            <div><input type=hidden name=portal_id value=@portal_id@></div>
+            <div><input type=hidden name=return_url value=\"@return_url@\"></div>
+            <p><strong>[_ new-portal.Change_Theme]</strong></p>"
+
     set current_theme_id [portal::get_theme_id -portal_id $portal_id]
 
     foreach theme [get_theme_info_not_cached] {
@@ -427,7 +425,7 @@ ad_proc -public portal::configure {
         set name [ns_set get $theme name]
         set description [ns_set get $theme description]
 
-        append theme_chunk "<label><input type=radio name=theme_id value=$theme_id"
+        append theme_chunk "<div><label><input type=radio name=theme_id value=$theme_id"
         set one_theme_chunk "&nbsp;$name - $description"
 
         if {$current_theme_id == $theme_id } {
@@ -435,10 +433,10 @@ ad_proc -public portal::configure {
         } else {
             append theme_chunk ">$one_theme_chunk"
         }
-        append theme_chunk "</label><br>\n"
+        append theme_chunk "</label></div>"
     }
 
-    append theme_chunk "<input type=submit name=\"op_change_theme\" value=\"[_ new-portal.Change_Theme_1]\"></form>"
+    append theme_chunk "<div><input type=submit name=\"op_change_theme\" value=\"[_ new-portal.Change_Theme_1]\"></div></form>"
     if {$allow_theme_change_p} {
         append template "$theme_chunk"
     }
@@ -464,7 +462,7 @@ ad_proc -public portal::configure {
             set tab_toggle_label [lang::util::localize "\#new-portal.Hide_in_main_navigation\#"]
         }
         
-        append template "<table bgcolor=\"#eeeeee\" border=0 width=\"100%\">"
+        append template "<table style=\"background-color:#eeeeee\" border=0 width=\"100%\">"
 
         #
         # Page rename chunk
@@ -477,25 +475,25 @@ ad_proc -public portal::configure {
           </td>
           <td align=right>
            <a name=$page_id></a>
-           <form name=\"op_rename_page\" method=post action=@action_string@>
-            <input type=hidden name=portal_id value=@portal_id@>
-            <input type=hidden name=page_id value=$page_id>
-            <input type=hidden name=return_url value=\"@return_url@#$page_id\">
-            <input type=hidden name=anchor value=$page_id>
-            <input type=submit name=\"op_rename_page\" value=\"[_ new-portal.Rename_Page]\">
-            <input type=text name=pretty_name value=\"[ad_quotehtml $page_name]\">
+           <form name=\"op_rename_page\" method=post action=@action_string@ class=\"inline-form\">
+            <div><input type=hidden name=portal_id value=@portal_id@></div>
+            <div><input type=hidden name=page_id value=$page_id></div>
+            <div><input type=hidden name=return_url value=\"@return_url@#$page_id\"></div>
+            <div><input type=hidden name=anchor value=$page_id></div>
+            <div><input type=submit name=\"op_rename_page\" value=\"[_ new-portal.Rename_Page]\"></div>
+            <div><input type=text name=pretty_name value=\"[ad_quotehtml $page_name]\"></div>
            </form>
            <form name=\"op_toggle_tab_visibility\" method=post action=@action_string@>
-            <input type=hidden name=portal_id value=@portal_id@>
-            <input type=hidden name=page_id value=$page_id>
-            <input type=hidden name=return_url value=\"@return_url@#$page_id\">
-            <input type=hidden name=anchor value=$page_id>
-            <input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\">
+            <div><input type=hidden name=portal_id value=@portal_id@></div>
+            <div><input type=hidden name=page_id value=$page_id></div>
+            <div><input type=hidden name=return_url value=\"@return_url@#$page_id\"></div>
+            <div><input type=hidden name=anchor value=$page_id></div>
+            <div><input type=submit name=\"op_toggle_tab_visibility\" value=\"$tab_toggle_label\"></div>
            </form>
           </td>
          </tr>
          <tr>
-          <td colspan=2 class=\"bottom-border\" height=\"1\">
+          <td colspan=2 class=\"bottom-border\">
            <img src=\"/resources/acs-subsite/spacer.gif\" height=1 alt=\"\">
           </td>
          </tr>
@@ -529,7 +527,7 @@ ad_proc -public portal::configure {
             append template "
             <tr>
              <td>
-              <table class=\"portal-page-config\" bgcolor=\"#eeeeee\" border=0 width=\"100%\">
+              <table class=\"portal-page-config\" style=\"background-color:#eeeeee\" border=0 width=\"100%\">
                <tr valign=middle>
                 <td valign=middle>
                  <include src=\"$layout\"
@@ -580,13 +578,13 @@ ad_proc -public portal::configure {
                 append template "
                 <tr valign=middle>
                  <td valign=middle>
-                  <center>
+                  <div style=\"text-align:center\">
                    [_ new-portal.lt_No_Elements_on_this_p]
                    <form method=post action=@action_string@>
                     [export_vars -form { portal_id page_id return_url { anchor $page_id } }]
-                    <input type=submit name=\"op_remove_empty_page\" value=\"[_ new-portal.Remove_Empty_Page]\">
+                    <div><input type=submit name=\"op_remove_empty_page\" value=\"[_ new-portal.Remove_Empty_Page]\"></div>
                    </form>
-                  </center>
+                  </div>
                  </td>
                 </tr>"
             }
@@ -601,8 +599,8 @@ ad_proc -public portal::configure {
                 set layout_id [ns_set get $layout layout_id]
                 set layout_name [ns_set get $layout layout_name]
                 set layout_description [ns_set get $layout layout_description]
-                set one_layout_chunk "<small>&nbsp;$layout_name - $layout_description</small>"
-                append layout_chunk "<label><input type=radio name=layout_id value=$layout_id"
+                set one_layout_chunk "&nbsp;$layout_name - $layout_description"
+                append layout_chunk "<div><label><input type=radio name=layout_id value=$layout_id"
 
                 if {$page_layout_id == $layout_id} {
                     append layout_chunk " checked><b>$one_layout_chunk</b>"
@@ -610,7 +608,7 @@ ad_proc -public portal::configure {
                     append layout_chunk ">$one_layout_chunk"
                 }
 
-                append layout_chunk "</label><br>"
+                append layout_chunk "</label></div>"
             }
 
 
@@ -619,16 +617,13 @@ ad_proc -public portal::configure {
              <td>
               <br>
               <form method=post action=@action_string@>
-               <small>
-                <b>[_ new-portal.Change_page_layout]</b>
-                <br>
-                <input type=hidden name=portal_id value=$portal_id>
-                <input type=hidden name=page_id value=$page_id>
-                <input type=hidden name=return_url value=\"@return_url@\">
-                <input type=hidden name=anchor value=$page_id>
+                <p><b>[_ new-portal.Change_page_layout]</b></p>
+                <div><input type=hidden name=portal_id value=$portal_id></div>
+                <div><input type=hidden name=page_id value=$page_id></div>
+                <div><input type=hidden name=return_url value=\"@return_url@\"></div>
+                <div><input type=hidden name=anchor value=$page_id></div>
                 $layout_chunk
-                <input type=submit name=\"op_change_page_layout\" value=\"[_ new-portal.Change_Page_Layout]\">
-               </small>
+                <div><input type=submit name=\"op_change_page_layout\" value=\"[_ new-portal.Change_Page_Layout]\"></div>
               </form>
              </td>
             </tr>"
@@ -658,13 +653,13 @@ ad_proc -public portal::configure {
      <td>
       <a name=add_a_new_page></a>
        <form name=\"op_add_page\" method=post action=@action_string@>
-        <input type=hidden name=portal_id value=@portal_id@>
-        <input type=hidden name=return_url value=\"@return_url@#$page_id\">
-        <input type=hidden name=anchor value=add_a_new_page>
-        <center>
+        <div><input type=hidden name=portal_id value=@portal_id@></div>
+        <div><input type=hidden name=return_url value=\"@return_url@#$page_id\"></div>
+        <div><input type=hidden name=anchor value=add_a_new_page></div>
+        <div style=\"text-align:center\">
          <input type=text name=pretty_name value=\"[_ new-portal.Page] $new_page_num\">
          <input type=submit name=\"op_add_page\" value=\"[_ new-portal.Add_Page]\">
-        </center>
+        </div>
        </form>
       </td>
      </tr>
@@ -680,12 +675,12 @@ ad_proc -public portal::configure {
          <tr>
           <td>
            <form name=\"op_revert\" method=post action=@action_string@>
-            <input type=hidden name=portal_id value=@portal_id@>
-            <input type=hidden name=return_url value=\"@return_url@\">
+            <div><input type=hidden name=portal_id value=@portal_id@></div>
+            <div><input type=hidden name=return_url value=\"@return_url@\"></div>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_the_entire_por]</h2>
-            <center>
+            <div style=\"text-align:center\">
              <input type=submit name=\"op_revert\" value=\"[_ new-portal.Revert]\">
-            </center>
+            </div>
            </form>
           </td>
          </tr>
@@ -699,14 +694,14 @@ ad_proc -public portal::configure {
          <tr>
           <td>
            <form name=\"op_revert_all\" method=post action=@action_string@>
-            <input type=hidden name=portal_id value=@portal_id@>
-            <input type=hidden name=return_url value=\"@return_url@\">
+            <div><input type=hidden name=portal_id value=@portal_id@></div>
+            <div><input type=hidden name=return_url value=\"@return_url@\"></div>
             <h2 class=\"portal-page-name\">[_ new-portal.lt_Revert_all_portals_us]</h2>
-            <center>
+            <div style=\"text-align:center\">
              <input type=submit name=\"op_revert_all\" value=\"[_ new-portal.Revert_All]\">
-             <br />
+             <br>
              <i>[_ new-portal.lt_Note_Please_be_patien]</i>
-            </center>
+            </div>
            </form>
           </td>
          </tr>

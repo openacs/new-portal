@@ -34,13 +34,11 @@
     <tbody>
     <tr>
     <td align=left valign=middle width=88%  bgcolor="#eeeee7">
-      <font face="verdana,arial,helvetica" size="+1">
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
           <b>@name;noquote@</b>
         </if><else>
           <a style="text-decoration: none" href=@link@><b>@name;noquote@</b></a>
         </else>
-    </font>
     </td>
 		<if @user_editable_p@ eq "t">	
                   <td align=right width="7%">
@@ -78,11 +76,11 @@
 <tr>
 <td align="left" valign="middle" bgcolor="#ffffff">
 <br>
-<font face="verdana,arial,helvetica" color="#333333">
+<div style="font-family:verdana,arial,helvetica; color:#333333">
 <!-- Content: '@name@' begin -->
 <slave>
 <!-- Content: '@name@' end @dir@ -->
-</font>
+</div>
 </td>
 </tr>
 <tr>

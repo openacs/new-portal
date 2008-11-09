@@ -23,9 +23,9 @@
 
 <if @element_multi.rownum@ eq 1>
     <form method=post action=@action_string@>
-        <input type=hidden name=portal_id value=@portal_id@>
-        <input type=hidden name=region value=@region@>
-        <input type=hidden name=page_id value=@page_id@>
+        <div><input type=hidden name=portal_id value=@portal_id@></div>
+        <div><input type=hidden name=region value=@region@></div>
+        <div><input type=hidden name=page_id value=@page_id@></div>
 </if>
   <div class="portlet-header">
     <div class="portlet-title">
@@ -39,7 +39,7 @@
             <!-- hide_remove_url -->
             <span class="screen-reader-only">[</span>
             <a href="@element_multi.hide_remove_url@" title="#new-portal.remove_portlet#">
-                <img src="@imgdir@/delete.gif" border=0 alt="#new-portal.remove#">
+                <img src="@imgdir@/delete.gif" style="border:0" alt="#new-portal.remove#">
             </a>
             <span class="screen-reader-only">]</span>
 
@@ -48,7 +48,7 @@
                     <!-- move_up_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_up_url@" title="#new-portal.move_portlet_up#">
-                        <img border="0" src="@imgdir@/arrow-up.gif" alt="#new-portal.move_up#">
+                        <img style="border:0" src="@imgdir@/arrow-up.gif" alt="#new-portal.move_up#">
                     </a>
                 <span class="screen-reader-only">]</span>
                 </if>
@@ -57,7 +57,7 @@
                     <!-- move_down_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_down_url@" title="#new-portal.move_portlet_down#">
-                        <img border="0" src="@imgdir@/arrow-down.gif" alt="#new-portal.move_down#">
+                        <img style="border:0" src="@imgdir@/arrow-down.gif" alt="#new-portal.move_down#">
                     </a>
                 <span class="screen-reader-only">]</span>
                 </if>
@@ -68,7 +68,7 @@
                     <!-- move_right_with_anchor_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_right_wa_url@" title="#new-portal.move_portlet_right#">
-                        <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
+                        <img style="border:0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
                 <span class="screen-reader-only">]</span>
                 </if>
@@ -77,13 +77,13 @@
                     <!-- move_left_with_anchor_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
-                        <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
+                        <img style="border:0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
                 <span class="screen-reader-only">]</span>
                     <!-- move_right_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_right_url@" title="#new-portal.move_portlet_right#">
-                        <img border="0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
+                        <img style="border:0" src="@imgdir@/arrow-right.gif" alt="#new-portal.move_right#">
                     </a>
                 <span class="screen-reader-only">]</span>
                 </if>
@@ -92,7 +92,7 @@
                     <!-- move_left_with_anchor_url -->
                 <span class="screen-reader-only">[</span>
                     <a href="@element_multi.move_left_wa_url@" title="#new-portal.move_portlet_left#">
-                        <img border="0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
+                        <img style="border:0" src="@imgdir@/arrow-left.gif" alt="#new-portal.move_left#">
                     </a>
                 <span class="screen-reader-only">]</span>
                 </if>
