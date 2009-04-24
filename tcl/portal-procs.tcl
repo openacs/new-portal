@@ -1156,12 +1156,14 @@ ad_proc -public portal::add_element {
     {-portal_id:required}
     {-portlet_name:required}
     {-force_region ""}
+    {-sort_key ""}
     {-page_name ""}
     {-pretty_name ""}
 } {
     Add an element to a portal given a datasource name. Used for procs
     that have no knowledge of regions
 
+    @param sort_key If provided will be used to insert the element. Other elements won't be reordered
     @return the id of the new element
 } {
     if {[empty_string_p $pretty_name]} {
@@ -1225,6 +1227,7 @@ ad_proc -public portal::add_element {
                 -page_name $page_name \
                 -layout_id $layout_id \
                 -pretty_name $pretty_name \
+                -sort_key $sort_key \
                 $portal_id \
                 $portlet_name \
                 $min_region \
@@ -1264,6 +1267,7 @@ ad_proc -private portal::add_element_to_region {
     {-layout_id:required}
     {-page_name ""}
     {-pretty_name ""}
+    {-sort_key ""}
     portal_id
     ds_name
     region
@@ -1271,6 +1275,7 @@ ad_proc -private portal::add_element_to_region {
     Add an element to a portal in a region, given a datasource name
 
     @return the id of the new element
+    @param sort_key If set will be used to insert the element. The other elements won't be reordered
     @param portal_id
     @param ds_name
 } {
@@ -1302,6 +1307,13 @@ ad_proc -private portal::add_element_to_region {
 
     } else {
         # no template, or the template dosen't have this D
+
+        # sort_key will be used only on insert
+        if { $sort_key eq "" } {
+            set sort_key [db_string get_sort_key {} -default "1"]
+            set sort_key [ad_decode $sort_key "" "1" $sort_key]
+        }
+
         db_transaction {
             set new_element_id [db_nextval acs_object_id_seq]
             db_dml insert {}
@@ -2101,6 +2113,7 @@ ad_proc -public portal::add_element_parameters {
     {-pretty_name ""}
     {-extra_params ""}
     {-force_region ""}
+    {-sort_key ""}
     {-param_action "overwrite"}
 } {
     A helper proc for portlet "add_self_to_page" procs.
@@ -2112,11 +2125,13 @@ ad_proc -public portal::add_element_parameters {
     IMPROVE ME: refactor
 
     @return element_id The new element's id
+
     @param portal_id The page to add the portlet to
     @param portlet_name The name of the portlet to add
-    @param key the key for the value (defaults to package_id)
     @param value the value of the key
+    @param key the key for the value (defaults to package_id)
     @param extra_params a list of extra key/value pairs to insert or append
+    @param sort_key If set, will be used to insert a new element. Other elements of the region won't be reordered
 } {
 
     if {[empty_string_p $param_action]} {
@@ -2134,7 +2149,8 @@ ad_proc -public portal::add_element_parameters {
                                 -portlet_name $portlet_name \
                                 -pretty_name $pretty_name \
                                 -page_name $page_name \
-                                -force_region $force_region
+                                -force_region $force_region \
+                                -sort_key $sort_key
                            ]
 
             # There is already a value for the param which is overwritten

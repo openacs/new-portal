@@ -79,14 +79,9 @@
     <fullquery name="portal::add_element_to_region.insert">
         <querytext>
             insert into portal_element_map
-            (element_id, name, pretty_name, page_id, datasource_id, region,
-             sort_key)
+            (element_id, name, pretty_name, page_id, datasource_id, region, sort_key)
             values
-            (:new_element_id, :ds_name, :pretty_name, :page_id, :ds_id, :region,
-             nvl((select max(sort_key) + 1
-                  from portal_element_map
-                  where region = :region
-                  and page_id = :page_id), 1))
+            (:new_element_id, :ds_name, :pretty_name, :page_id, :ds_id, :region, :sort_key)
         </querytext>
     </fullquery>
 
