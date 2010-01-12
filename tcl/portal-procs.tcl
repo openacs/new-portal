@@ -264,8 +264,12 @@ ad_proc -public portal::render {
     }
 
     # get the portal and layout
-    db_1row portal_select {} -column_array portal
-    set page_id $portal(page_id)
+    if {[db_0or1row portal_select {} -column_array portal]} {
+        set page_id $portal(page_id)
+    } else {
+        ad_return_complaint 1 "[_ new-portal.Page_not_found]"
+        ad_script_abort
+    }
 
     db_foreach element_select {} -column_array entry {
         # put the element IDs into buckets by region...

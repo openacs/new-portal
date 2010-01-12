@@ -40,6 +40,7 @@
   <msg key="nada_theme_name">nada</msg>
   <msg key="Page">Page</msg>
   <msg key="Page_1">Page:</msg>
+  <msg key="Page_not_found">The page you were trying to access does not exists in your portal configuration.</msg>
   <msg key="remove">Remove</msg>
   <msg key="Remove_Empty_Page">Remove Empty Page</msg>
   <msg key="remove_portlet">Remove Portlet</msg>
