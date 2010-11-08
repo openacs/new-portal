@@ -249,7 +249,7 @@ begin
                            where page_id = v_page.page_id
             loop
 
-                select acs_object_id_seq.nextval
+                select nextval(''t_acs_object_id_seq'')
                 into v_new_element_id
                 from dual;
 
@@ -266,7 +266,7 @@ begin
                              where element_id = v_element.element_id
                 loop
 
-                    select acs_object_id_seq.nextval
+                    select nextval(''t_acs_object_id_seq'')
                     into v_new_parameter_id
                     from dual;
 
@@ -632,7 +632,7 @@ begin
     insert into portal_datasource_def_params
     (parameter_id, datasource_id, config_required_p, configured_p, key, value)
     values
-    (acs_object_id_seq.nextval, p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
+    (nextval(''t_acs_object_id_seq''), p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
 
     return 0;
 
