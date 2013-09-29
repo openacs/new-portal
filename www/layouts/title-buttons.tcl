@@ -27,5 +27,5 @@ ad_page_contract {
 # should this come from the template or something?  how does it work?
 set title(resource_dir) "/packages/portal/www/templates/components/simple-element"
 
-set title_noshade_p [ad_parameter title_noshade_p]
-set title_nomove_p [ad_parameter title_nomove_p]
+set title_noshade_p [parameter::get -parameter title_noshade_p]
+set title_nomove_p [parameter::get -parameter title_nomove_p]

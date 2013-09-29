@@ -179,7 +179,7 @@ ad_proc -public portal::create {
 
     # get the default theme name from param, if no theme given
     if {[empty_string_p $theme_name]} {
-        set theme_name [ad_parameter -package_id [get_package_id] default_theme_name]
+        set theme_name [parameter::get -package_id [get_package_id] -parameter default_theme_name]
     }
 
     set theme_id [get_theme_id_from_name -theme_name $theme_name]
@@ -251,10 +251,10 @@ ad_proc -public portal::render {
     @return Fully rendered portal as an html string
     @param portal_id
 } {
-    ad_require_permission $portal_id portal_read_portal
-    set edit_p [ad_permission_p $portal_id portal_edit_portal]
+    permission::require_permission -object_id $portal_id -privilege portal_read_portal
+    set edit_p [permission::permission_p -object_id $portal_id -privilege portal_edit_portal]
 
-    set master_template [ad_parameter master_template]
+    set master_template [parameter::get -parameter master_template]
 
     # if no page_num set, render page 0
     if {[empty_string_p $page_id] && [empty_string_p $page_num]} {
@@ -349,8 +349,8 @@ ad_proc -private portal::update_name {
     @param new_name
 } {
 
-    ad_require_permission $portal_id portal_read_portal
-    ad_require_permission $portal_id portal_edit_portal
+    permission::require_permission -object_id $portal_id -privilege portal_read_portal
+    permission::require_permission -object_id $portal_id -privilege portal_edit_portal
 
     db_dml update {}
 }
@@ -380,7 +380,7 @@ ad_proc -public portal::configure {
                     -privilege portal_edit_portal]
 
     if {!$edit_p} {
-        ad_require_permission $portal_id portal_admin_portal
+        permission::require_permission -object_id $portal_id -privilege portal_admin_portal
         set edit_p 1
     }
 
@@ -388,7 +388,7 @@ ad_proc -public portal::configure {
     # Set up some whole page stuff
     #
 
-    set master_template [ad_parameter master_template]
+    set master_template [parameter::get -parameter master_template]
     set action_string [generate_action_string]
 
     if { $template_p == "f" } {
@@ -743,7 +743,7 @@ ad_proc -public portal::configure_dispatch {
         ]
 
     if {!$edit_p} {
-        ad_require_permission $portal_id portal_admin_portal
+        permission::require_permission -object_id $portal_id -privilege portal_admin_portal
         set edit_p 1
     }
 
@@ -1343,8 +1343,8 @@ ad_proc -private portal::swap_element {
     @param dir either up or down
 } {
 
-    ad_require_permission $portal_id portal_read_portal
-    ad_require_permission $portal_id portal_edit_portal
+    permission::require_permission -object_id $portal_id -privilege portal_read_portal
+    permission::require_permission -object_id $portal_id -privilege portal_edit_portal
 
     # get this element's sk
     db_1row get_my_sort_key_and_page_id {}
@@ -1396,8 +1396,8 @@ ad_proc -private portal::move_element {
     @param direction up or down
 } {
 
-    ad_require_permission $portal_id portal_read_portal
-    ad_require_permission $portal_id portal_edit_portal
+    permission::require_permission -object_id $portal_id -privilege portal_read_portal
+    permission::require_permission -object_id $portal_id -privilege portal_edit_portal
 
     if { $direction == "right" } {
         set target_region [expr $region + 1]
@@ -1818,8 +1818,8 @@ ad_proc -public portal::configure_element {
     if { [db_0or1row select {}] } {
         # passed in element_id is good, do they have perms?
         if {[empty_string_p $noconn]} {
-            ad_require_permission $portal_id portal_read_portal
-            ad_require_permission $portal_id portal_edit_portal
+            permission::require_permission -object_id $portal_id -privilege portal_read_portal
+            permission::require_permission -object_id $portal_id -privilege portal_edit_portal
         }
     } else {
         ad_returnredirect $return_url
@@ -1840,7 +1840,7 @@ ad_proc -public portal::configure_element {
             }
 
             # Set up some template vars, including the form target
-            set master_template [ad_parameter master_template]
+            set master_template [parameter::get -parameter master_template]
             set action_string [generate_action_string]
 
             # the <include> sources /www/place-element.tcl
@@ -1965,7 +1965,7 @@ ad_proc -private portal::make_datasource_unavailable {portal_id ds_id} {
     @param portal_id
     @param ds_id
 } {
-    # ad_require_permission $portal_id portal_admin_portal
+    # permission::require_permission -object_id $portal_id -privilege portal_admin_portal
     db_dml delete {}
 }
 
@@ -1975,7 +1975,7 @@ ad_proc -private portal::toggle_datasource_availability {portal_id ds_id} {
     @param portal_id
     @param ds_id
 } {
-    ad_require_permission $portal_id portal_admin_portal
+    permission::require_permission -object_id $portal_id -privilege portal_admin_portal
 
     if { [db_0or1row select {}] } {
         [make_datasource_unavailable $portal_id $ds_id]

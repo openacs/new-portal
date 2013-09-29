@@ -42,7 +42,7 @@
 #
 # $Id$
 
-set user_id [ad_get_user_id] 
+set user_id [ad_conn user_id] 
 set community_id [dotlrn_community::get_community_id]
 set dotlrn_url [dotlrn::get_url]
 
@@ -150,7 +150,7 @@ if {$have_comm_id_p} {
 }
 
 # Set up some basic stuff
-set user_id [ad_get_user_id]
+set user_id [ad_conn user_id]
 if { [ad_conn untrusted_user_id] == 0 } {
     set user_name {}
 } else {
