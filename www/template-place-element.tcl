@@ -73,7 +73,7 @@ db_foreach select_elements_by_region {
     and region not like 'i%'"
     
     # Set up the form target
-    set target_stub [lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]
+    set target_stub [lindex [ns_conn urlv] [ns_conn urlc]-1]
     set show_avail_p 0
     set show_html ""
     

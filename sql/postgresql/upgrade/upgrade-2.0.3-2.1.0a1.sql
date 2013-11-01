@@ -1,14 +1,22 @@
 -- fixes bug where you couldn't delete and emply page - 476
 
-create or replace function portal_page__delete(integer)
-returns integer as '
-declare
-    p_page_id                       alias for $1;
+
+
+-- added
+select define_function_args('portal_page__delete','page_id');
+
+--
+-- procedure portal_page__delete/1
+--
+CREATE OR REPLACE FUNCTION portal_page__delete(
+   p_page_id integer
+) RETURNS integer AS $$
+DECLARE
     v_portal_id                     portal_pages.portal_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
     v_curr_sort_key                 portal_pages.sort_key%TYPE;
     v_page_count_from_0             integer;
-begin
+BEGIN
 
     -- IMPORTANT: sort keys MUST be an unbroken sequence from 0 to max(sort_key)
 
@@ -50,6 +58,7 @@ begin
 
     return 0;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 

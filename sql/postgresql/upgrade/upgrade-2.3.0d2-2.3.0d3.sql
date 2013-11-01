@@ -1,21 +1,31 @@
 alter table portal_datasources add column css_dir varchar(200);
 
-select define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
 
-create or replace function portal_datasource__new (integer,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1; -- default null
-    p_name                          alias for $2; -- default null
-    p_description                   alias for $3; -- default null
-    p_css_dir                       alias for $4;
-    p_object_type                   alias for $5; -- default ''portal_datasource''
-    p_creation_date                 alias for $6; -- default now()
-    p_creation_user                 alias for $7; -- default null
-    p_creation_ip                   alias for $8; -- default null
-    p_context_id                    alias for $9; -- default null
+-- old define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id')
+-- new
+select define_function_args('portal_datasource__new','datasource_id;null,name;null,description;null,css_dir,object_type;portal_datasource,creation_date;now(),creation_user;null,creation_ip;null,context_id;null');
+
+
+
+
+--
+-- procedure portal_datasource__new/9
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_datasource_id integer,     -- default null
+   p_name varchar,              -- default null
+   p_description varchar,       -- default null
+   p_css_dir varchar,
+   p_object_type varchar,       -- default 'portal_datasource'
+   p_creation_date timestamptz, -- default now()
+   p_creation_user integer,     -- default null
+   p_creation_ip varchar,       -- default null
+   p_context_id integer         -- default null
+
+) RETURNS integer AS $$
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := acs_object__new(
         p_datasource_id,
@@ -24,7 +34,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     insert into portal_datasources
@@ -34,21 +44,31 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create or replace function portal_datasource__new (integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1; -- default null
-    p_name                          alias for $2; -- default null
-    p_description                   alias for $3; -- default null
-    p_object_type                   alias for $4; -- default ''portal_datasource''
-    p_creation_date                 alias for $5; -- default now()
-    p_creation_user                 alias for $6; -- default null
-    p_creation_ip                   alias for $7; -- default null
-    p_context_id                    alias for $8; -- default null
+
+
+--
+-- procedure portal_datasource__new/8
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_datasource_id integer,     -- default null
+   p_name varchar,              -- default null
+   p_description varchar,       -- default null
+   p_object_type varchar,       -- default 'portal_datasource'
+   p_creation_date timestamptz, -- default now()
+   p_creation_user integer,     -- default null
+   p_creation_ip varchar,       -- default null
+   p_context_id integer         -- default null
+
+) RETURNS integer AS $$
+--
+-- portal_datasource__new/8 maybe obsolete, when we define proper defaults for /9
+--
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
@@ -62,23 +82,33 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 
-create or replace function portal_datasource__new (varchar,varchar,varchar)
-returns integer as '
-declare
-    p_name                          alias for $1; -- default null
-    p_description                   alias for $2; -- default null
-    p_css_dir                       alias for $3;
+
+
+--
+-- procedure portal_datasource__new/3
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_name varchar,        -- default null
+   p_description varchar, -- default null
+   p_css_dir varchar
+
+) RETURNS integer AS $$
+--
+-- portal_datasource__new/3 maybe obsolete, when we define proper defaults for /9
+--
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
 				  p_description,
                                   p_css_dir,
-				  ''portal_datasource'',
+				  'portal_datasource',
 				  now(),
 				  null,
 				  null,
@@ -86,5 +116,6 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 

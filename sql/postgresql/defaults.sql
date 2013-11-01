@@ -21,79 +21,86 @@
 -- @version $Id$
 --
 
-create function inline_0 ()
-returns integer as '
-declare
+
+
+--
+-- procedure inline_0/0
+--
+CREATE OR REPLACE FUNCTION inline_0(
+
+) RETURNS integer AS $$
+DECLARE
     layout_id                       portal_layouts.layout_id%TYPE;
-begin
+BEGIN
 
     -- two-column layout, without a header.
     layout_id := portal_layout__new(
-        ''#new-portal.simple_2column_layout_name#'',
-        ''#new-portal.simple_2column_layout_description#'',
-        ''layouts/simple2'',
-        ''layouts/components/simple2''
+        '#new-portal.simple_2column_layout_name#',
+        '#new-portal.simple_2column_layout_description#',
+        'layouts/simple2',
+        'layouts/components/simple2'
     );
 
     -- the supported regions for that layout.
-    perform portal_layout__add_region(layout_id, ''1'');
-    perform portal_layout__add_region(layout_id, ''2'');
+    perform portal_layout__add_region(layout_id, '1');
+    perform portal_layout__add_region(layout_id, '2');
 
     -- one-column layout, without a header.
     layout_id := portal_layout__new(
-        ''#new-portal.simple_1column_layout_name#'',
-        ''#new-portal.simple_1column_layout_description#'',
-        ''layouts/simple1'',
-        ''layouts/components/simple1''
+        '#new-portal.simple_1column_layout_name#',
+        '#new-portal.simple_1column_layout_description#',
+        'layouts/simple1',
+        'layouts/components/simple1'
     );
 
     -- the supported regions for that layout.
-    perform portal_layout__add_region(layout_id, ''1'');
+    perform portal_layout__add_region(layout_id, '1');
 
     -- same as above, only, three columns.
     layout_id := portal_layout__new(
-        ''#new-portal.simple_3column_layout_name#'',
-        ''#new-portal.simple_3column_layout_description#'',
-        ''layouts/simple3'',
-        ''layouts/components/simple3''
+        '#new-portal.simple_3column_layout_name#',
+        '#new-portal.simple_3column_layout_description#',
+        'layouts/simple3',
+        'layouts/components/simple3'
     );
 
-    perform portal_layout__add_region(layout_id, ''1'');
-    perform portal_layout__add_region(layout_id, ''2'');
-    perform portal_layout__add_region(layout_id, ''3'');
+    perform portal_layout__add_region(layout_id, '1');
+    perform portal_layout__add_region(layout_id, '2');
+    perform portal_layout__add_region(layout_id, '3');
 
     -- Now, some element themes.
     perform portal_element_theme__new(
-        ''#new-portal.simple_red_theme_name#'',
-        ''#new-portal.simple_red_theme_description#'',
-        ''themes/simple-theme'',
-        ''themes/simple-theme''
+        '#new-portal.simple_red_theme_name#',
+        '#new-portal.simple_red_theme_description#',
+        'themes/simple-theme',
+        'themes/simple-theme'
     );
 
     perform portal_element_theme__new(
-        ''#new-portal.nada_theme_name#'',
-        ''#new-portal.nada_theme_description#'',
-        ''themes/nada-theme'',
-        ''themes/nada-theme''
+        '#new-portal.nada_theme_name#',
+        '#new-portal.nada_theme_description#',
+        'themes/nada-theme',
+        'themes/nada-theme'
     );
 
     perform portal_element_theme__new(
-        ''#new-portal.deco_theme_name#'',
-        ''#new-portal.deco_theme_description#'',
-        ''themes/deco-theme'',
-        ''themes/deco-theme''
+        '#new-portal.deco_theme_name#',
+        '#new-portal.deco_theme_description#',
+        'themes/deco-theme',
+        'themes/deco-theme'
     );
 
     perform portal_element_theme__new (
-              ''#new-portal.sloan_theme_name#'',    -- name
-              ''#new-portal.sloan_theme_description#'', -- description
-              ''themes/sloan-theme'', -- filename
-              ''themes/sloan-theme'' -- directory
+              '#new-portal.sloan_theme_name#',    -- name
+              '#new-portal.sloan_theme_description#', -- description
+              'themes/sloan-theme', -- filename
+              'themes/sloan-theme' -- directory
             );
 
     return 0;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select inline_0();
 

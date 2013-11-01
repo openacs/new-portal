@@ -17,7 +17,7 @@ template::head::add_css -href "/resources/acs-subsite/site-master.css"
 # Get system name
 set system_name [ad_system_name]
 set system_url [ad_url]
-if { [string equal [ad_conn url] "/"] } {
+if {[ad_conn url] eq "/"} {
     set system_url ""
 }
 
@@ -29,7 +29,7 @@ if { $untrusted_user_id != 0 } {
     set user_name [person::name -person_id $untrusted_user_id]
     set pvt_home_url [ad_pvt_home]
     set pvt_home_name [ad_pvt_home_name]
-    if [empty_string_p $pvt_home_name] {
+    if {$pvt_home_name eq ""} {
 	set pvt_home_name [_ acs-subsite.Your_Account]
     }
     set logout_url [ad_get_logout_url]
@@ -77,7 +77,7 @@ if { $num_of_locales > 1 } {
 }
 
 # Curriculum bar
-if { [empty_string_p [site_node::get_package_url -package_key curriculum]] } {
+if { [site_node::get_package_url -package_key curriculum] eq "" } {
     set curriculum_bar_p 0
 } else {
     set curriculum_bar_p 1

@@ -69,7 +69,7 @@ set extra_spaces "<img src=\"/resources/dotlrn/spacer.gif\" border=0 width=15>"
 set td_align "align=\"center\" valign=\"top\""
 
 
-if {![empty_string_p $community_id]} {
+if {$community_id ne ""} {
     set have_comm_id_p 1
 } else {
     set have_comm_id_p 0
@@ -79,7 +79,7 @@ if {![empty_string_p $community_id]} {
 
 # navbar vars
 set show_navbar_p 1
-if {[exists_and_not_null no_navbar_p] && $no_navbar_p} {
+if {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p} {
     set show_navbar_p 0
 } 
 
@@ -97,7 +97,7 @@ if {![info exists link_control_panel]} {
     set link_control_panel 1
 }
 
-if { ![string equal [ad_conn package_key] [dotlrn::package_key]] } {
+if { [ad_conn package_key] ne [dotlrn::package_key] } {
     # Peter M: We are in a package (an application) that may or may not be under a dotlrn instance 
     # (i.e. in a news instance of a class)
     # and we want all links in the navbar to be active so the user can return easily to the class homepage
@@ -157,11 +157,11 @@ if { [ad_conn untrusted_user_id] == 0 } {
     set user_name [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name]
 }
 
-if {![exists_and_not_null title]} {
+if {(![info exists title] || $title eq "")} {
     set title [ad_system_name]
 }
 
-if {[empty_string_p [dotlrn_community::get_parent_community_id -package_id [ad_conn package_id]]]} {
+if {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] eq ""]} {
     set parent_comm_p 0
 } else {
     set parent_comm_p 1
@@ -171,7 +171,7 @@ set community_id [dotlrn_community::get_community_id]
 
 set control_panel_text [_ "dotlrn.control_panel"]
 
-if {![empty_string_p $community_id]} {
+if {$community_id ne ""} {
     # in a community or just under one in a mounted package like /calendar 
     set comm_type [dotlrn_community::get_community_type_from_community_id $community_id]
     set control_panel_text [_ acs-subsite.Admin]
@@ -181,7 +181,7 @@ if {![empty_string_p $community_id]} {
 	set comm_type [dotlrn_community::get_community_type_from_community_id [dotlrn_community::get_parent_id -community_id $community_id]]
     }
 
-    if {$comm_type == "dotlrn_club"} {
+    if {$comm_type eq "dotlrn_club"} {
 	    #community colors
 	    set scope_name "comm"
 	    set scope_main_color "#"
@@ -223,7 +223,7 @@ if {![empty_string_p $community_id]} {
         -attribute_name header_font
     ]
 
-    if {![empty_string_p $community_header_font]} {
+    if {$community_header_font ne ""} {
 	set header_font "$community_header_font,$header_font"
     }
 
@@ -244,7 +244,7 @@ if {![empty_string_p $community_id]} {
         -attribute_name header_logo_item_id
     ]
 
-    if {![empty_string_p $header_logo_item_id]} {
+    if {$header_logo_item_id ne ""} {
 
 	# Need filename
         set header_img_url "[dotlrn_community::get_community_url $community_id]/file-storage/download/?version_id=$header_logo_item_id" 
@@ -256,13 +256,13 @@ if {![empty_string_p $community_id]} {
         -attribute_name header_logo_alt_text
     ]
 
-    if {![empty_string_p $header_logo_alt_text]} {
+    if {$header_logo_alt_text ne ""} {
         set header_img_alt_text $header_logo_alt_text
     } 
 
     set text [dotlrn::user_context_bar -community_id $community_id]
 
-    if { [string equal [ad_conn package_key] [dotlrn::package_key]] } {
+    if {[ad_conn package_key] eq [dotlrn::package_key]} {
         set text "<span class=\"header-text\">$text</span>"
     }
 

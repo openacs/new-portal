@@ -40,11 +40,11 @@ ad_proc -public portal::datasource_call {
 } {
     Call a particular ds op
 } {
-    if {[empty_string_p $datasource_name]} {
+    if {$datasource_name eq ""} {
         set datasource_name [get_datasource_name $ds_id]
     }
 
-    return [acs_sc_call portal_datasource $op $list_args $datasource_name]
+    return [acs_sc::invoke -contract portal_datasource -operation $op -call_args $list_args -impl $datasource_name]
 }
 
 ad_proc -public portal::list_datasources {
@@ -52,7 +52,7 @@ ad_proc -public portal::list_datasources {
 } {
     Lists the datasources available to a portal or in general
 } {
-    if {[empty_string_p $portal_id]} {
+    if {$portal_id eq ""} {
         # List all applets
         return [db_list select_all_datasources {}]
     } else {
@@ -145,7 +145,7 @@ ad_proc -public portal::create {
 
     set page_name_list [list $default_page_name]
     set page_accesskey_list [list $default_accesskey]
-    if { [string eq $layout_name ""] } {
+    if {$layout_name eq ""} {
         set layout_name_list [list [parameter::get_from_package_key \
                                        -package_key new-portal \
                                        -parameter default_layout]]
@@ -153,7 +153,7 @@ ad_proc -public portal::create {
         set layout_name_list [list $layout_name]
     }
     
-    if {![empty_string_p $csv_list]} {
+    if {$csv_list ne ""} {
         set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
         set page_name_list [list]
         set page_accesskey_list [list]
@@ -161,9 +161,10 @@ ad_proc -public portal::create {
 
         # seperate name and layout
         foreach item $page_name_and_layout_list {
-            lappend page_name_list [lindex [split $item ","] 0]
-            lappend layout_name_list [lindex [split $item ","] 1]
-            lappend page_accesskey_list [lindex [split $item ","] 2]
+	    lassign [split $item ","] page_name layout_name page_accesskey
+            lappend page_name_list $page_name
+            lappend layout_name_list $layout_name
+            lappend page_accesskey_list $page_accesskey
         }
     }
 
@@ -173,12 +174,12 @@ ad_proc -public portal::create {
 
     # get the default layout_id - simple2
     set layout_id [get_layout_id]
-    if {![empty_string_p $layout_name]} {
+    if {$layout_name ne ""} {
         set layout_id [get_layout_id -layout_name $layout_name]
     }
 
     # get the default theme name from param, if no theme given
-    if {[empty_string_p $theme_name]} {
+    if {$theme_name eq ""} {
         set theme_name [parameter::get -package_id [get_package_id] -parameter default_theme_name]
     }
 
@@ -194,7 +195,7 @@ ad_proc -public portal::create {
         permission::grant -party_id $user_id -object_id $portal_id -privilege portal_admin_portal
 
         # ignore the csv list if we have a template
-        if {![empty_string_p $csv_list] && [empty_string_p $template_id]} {
+        if {$csv_list ne "" && $template_id eq ""} {
             # if there are more pages in the csv_list, create them
             for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
                 portal::page_create -portal_id $portal_id \
@@ -257,9 +258,9 @@ ad_proc -public portal::render {
     set master_template [parameter::get -parameter master_template]
 
     # if no page_num set, render page 0
-    if {[empty_string_p $page_id] && [empty_string_p $page_num]} {
+    if {$page_id eq "" && $page_num eq ""} {
         set sort_key 0
-    } elseif {![empty_string_p $page_num]} {
+    } elseif {$page_num ne ""} {
         set sort_key $page_num
     }
 
@@ -284,7 +285,7 @@ ad_proc -public portal::render {
     # which in turn includes the theme, then elements
     set template "<master src=\"@master_template@\">
         <property name=\"title\">@portal.name@</property>"
-    if { ![empty_string_p $element_list] } {
+    if { $element_list ne "" } {
         set element_src "[www_path]/render_styles/${render_style}/render-element"
         append template "
             <include src=\"@portal.layout_filename@\"
@@ -397,7 +398,7 @@ ad_proc -public portal::configure {
         set element_src "[portal::www_path]/template-place-element"
     }
 
-    if {[empty_string_p $referer]} {
+    if {$referer eq ""} {
         set return_text "<a href=\"@return_url@\" title=\"[_ new-portal.Go_back]\">[_ new-portal.Go_back]</a>"
     } else {
         set return_text ""
@@ -451,7 +452,7 @@ ad_proc -public portal::configure {
 
     set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
-    set last_page [lindex $list_of_page_ids [expr [llength $list_of_page_ids] - 1]]
+    set last_page [lindex $list_of_page_ids [llength $list_of_page_ids]-1]
     ns_log warning "last_page is $last_page"
     foreach page_id $list_of_page_ids {
 
@@ -460,7 +461,7 @@ ad_proc -public portal::configure {
         db_1row get_page_info {} 
         set page_name [lang::util::localize $pretty_name_unlocalized]
         set page_layout_id [portal::get_layout_id -page_id $page_id]
-        if { [string equal $hidden_p t] } {
+        if {$hidden_p == "t"} {
             set tab_toggle_label [lang::util::localize "\#new-portal.Show_in_main_navigation\#"]
         } else {
             set tab_toggle_label [lang::util::localize "\#new-portal.Hide_in_main_navigation\#"]
@@ -644,7 +645,7 @@ ad_proc -public portal::configure {
     # New page chunk
     #
 
-    set new_page_num [expr [page_count -portal_id $portal_id] + 1]
+    set new_page_num [expr {[page_count -portal_id $portal_id] + 1}]
 
     append template "<br>
     <table class=\"portal-page-config\" border=0 cellspacing=0 cellpadding=0>
@@ -673,7 +674,7 @@ ad_proc -public portal::configure {
     # Revert page chunk
     #
 
-    if {![empty_string_p [get_portal_template_id $portal_id]]} {
+    if {[get_portal_template_id $portal_id] ne ""} {
         append template "<br>
         <table class=\"portal-page-config\" width=\"100%\" cellpadding=0 border=0 cellspacing=0>
          <tr>
@@ -717,7 +718,7 @@ ad_proc -public portal::configure {
     #
 
     set __adp_stub "[get_server_root][www_path]/."
-    set {master_template} \"master\"
+    set master_template \"master\"
 
     set code [template::adp_compile -string $template]
     set output [template::adp_eval code]
@@ -748,7 +749,7 @@ ad_proc -public portal::configure_dispatch {
     }
 
     
-    if { ![empty_string_p [ns_set get $form "op_revert_all"]] } {
+    if { [ns_set get $form "op_revert_all"] ne "" } {
         set template_id [ns_set get $form "portal_id"]
         ns_log notice "REVERTING ALL template_id='${template_id}'"
         set revert_all_set_id [ns_set create]
@@ -760,7 +761,7 @@ ad_proc -public portal::configure_dispatch {
             portal::configure_dispatch -portal_id $portal_id -form $revert_all_set_id
         }
 
-    } elseif { ![empty_string_p [ns_set get $form "op_revert"]] } {
+    } elseif { [ns_set get $form "op_revert"] ne "" } {
         #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
         #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
 
@@ -837,25 +838,25 @@ ad_proc -public portal::configure_dispatch {
                     # added, that was not originally mapped
                     # usually with custom portlets
                     
-                    if ![empty_string_p $target_element_id] {
+                    if {$target_element_id ne ""} {
                         db_dml revert_element_update {}
                     }
                 }
             }
-    } elseif { ![empty_string_p [ns_set get $form "op_rename"]] } {
+    } elseif { [ns_set get $form "op_rename"] ne "" } {
         portal::update_name $portal_id [ns_set get $form new_name]
 
-    } elseif { ![empty_string_p [ns_set get $form "op_swap"]] } {
+    } elseif { [ns_set get $form "op_swap"] ne "" } {
         portal::swap_element $portal_id \
             [ns_set get $form element_id] \
             [ns_set get $form region] \
             [ns_set get $form direction]
-    } elseif { ![empty_string_p [ns_set get $form "op_move"]] } {
+    } elseif { [ns_set get $form "op_move"] ne "" } {
         portal::move_element $portal_id \
             [ns_set get $form element_id] \
             [ns_set get $form region] \
             [ns_set get $form direction]
-    } elseif { ![empty_string_p [ns_set get $form "op_show_here"]] } {
+    } elseif { [ns_set get $form "op_show_here"] ne "" } {
         set region [ns_set get $form region]
         set element_id [ns_set get $form element_id]
         set page_id [ns_set get $form page_id]
@@ -865,20 +866,20 @@ ad_proc -public portal::configure_dispatch {
             db_dml show_here_update_sk {}
             db_dml show_here_update_state {}
         }
-    } elseif { ![empty_string_p [ns_set get $form "op_move_to_page"]] } {
+    } elseif { [ns_set get $form "op_move_to_page"] ne "" } {
         portal::move_element_to_page \
             -page_id [ns_set get $form page_id] \
             -element_id [ns_set get $form element_id]
-    } elseif { ![empty_string_p [ns_set get $form "op_hide"]] } {
+    } elseif { [ns_set get $form "op_hide"] ne "" } {
         set element_id_list [list]
 
         # iterate through the set, destructive!
-        while { [expr [ns_set find $form "element_id"] + 1 ] } {
+        while { [ns_set find $form "element_id"] + 1 } {
             lappend element_id_list [ns_set get $form "element_id"]
             ns_set delkey $form "element_id"
         }
 
-        if {! [empty_string_p $element_id_list] } {
+        if {$element_id_list ne "" } {
             db_transaction {
                 foreach element_id $element_id_list {
                     db_dml hide_update {}
@@ -892,39 +893,39 @@ ad_proc -public portal::configure_dispatch {
                 }
             }
         }
-    } elseif { ![empty_string_p [ns_set get $form "op_change_theme"]] } {
+    } elseif { [ns_set get $form "op_change_theme"] ne "" } {
         set theme_id [ns_set get $form theme_id]
 
         db_dml update_theme {}
-    } elseif { ![empty_string_p [ns_set get $form "op_add_page"]] } {
+    } elseif { [ns_set get $form "op_add_page"] ne "" } {
         set pretty_name [ns_set get $form pretty_name]
-        if {[empty_string_p $pretty_name]} {
+        if {$pretty_name eq ""} {
             ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
         }
         page_create -pretty_name $pretty_name -portal_id $portal_id
-    } elseif { ![empty_string_p [ns_set get $form "op_remove_empty_page"]] } {
+    } elseif { [ns_set get $form "op_remove_empty_page"] ne "" } {
         set page_id [ns_set get $form page_id]
         page_delete -page_id $page_id
-    } elseif { ![empty_string_p [ns_set get $form "op_change_page_layout"]] } {
+    } elseif { [ns_set get $form "op_change_page_layout"] ne "" } {
         set_layout_id \
             -portal_id $portal_id \
             -page_id [ns_set get $form page_id] \
             -layout_id [ns_set get $form layout_id]
-    } elseif { ![empty_string_p [ns_set get $form "op_rename_page"]] } {
+    } elseif { [ns_set get $form "op_rename_page"] ne "" } {
         set pretty_name [ns_set get $form pretty_name]
         set page_id [ns_set get $form page_id]
 
-        if {[empty_string_p $pretty_name]} {
+        if {$pretty_name eq ""} {
             ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
         }
         set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
-    } elseif { ![empty_string_p [ns_set get $form "op_toggle_tab_visibility"]] } {
+    } elseif { [ns_set get $form "op_toggle_tab_visibility"] ne "" } {
         set page_id [ns_set get $form page_id]
         db_dml toggle_tab_visibility {}
-    } elseif { ![empty_string_p [ns_set get $form "op_toggle_pinned"]] } {
+    } elseif { [ns_set get $form "op_toggle_pinned"] ne "" } {
         set element_id [ns_set get $form element_id]
 
-        if {[db_string toggle_pinned_select {}] == "full"} {
+        if {[db_string toggle_pinned_select {}] eq "full"} {
 
             db_dml toggle_pinned_update_pin {}
 
@@ -935,10 +936,10 @@ ad_proc -public portal::configure_dispatch {
         } else {
             db_dml toggle_pinned_update_unpin {}
         }
-    } elseif { ![empty_string_p [ns_set get $form "op_toggle_hideable"]] } {
+    } elseif { [ns_set get $form "op_toggle_hideable"] ne "" } {
         set element_id [ns_set get $form element_id]
         toggle_element_param -element_id $element_id -key "hideable_p"
-    } elseif { ![empty_string_p [ns_set get $form "op_toggle_shadeable"]] } {
+    } elseif { [ns_set get $form "op_toggle_shadeable"] ne "" } {
         set element_id [ns_set get $form element_id]
         toggle_element_param -element_id $element_id -key "shadeable_p"
     }
@@ -1003,12 +1004,12 @@ ad_proc -public portal::get_page_id {
     @param portal_id
     @param sort_key - optional, defaults to page 0
 } {
-    if { ![empty_string_p $page_name] } {
+    if { $page_name ne "" } {
         # Get page by page_name
 
         set page_id [db_string get_page_id_from_name {} -default ""]
 
-        if { [empty_string_p $page_id] } {
+        if { $page_id eq "" } {
             if { $create_p } {
                 # there is no page by that name in the portal, create it
                 return [portal::page_create \
@@ -1088,7 +1089,7 @@ ad_proc -public portal::page_create {
     @param portal_id
 } {
     # get the layout_id
-    if {![empty_string_p $layout_name]} {
+    if {$layout_name ne ""} {
         set layout_id [get_layout_id -layout_name $layout_name]
     } else {
         set layout_id [get_layout_id]
@@ -1170,7 +1171,7 @@ ad_proc -public portal::add_element {
     @param sort_key If provided will be used to insert the element. Other elements won't be reordered
     @return the id of the new element
 } {
-    if {[empty_string_p $pretty_name]} {
+    if {$pretty_name eq ""} {
         set pretty_name $portlet_name
     }
 
@@ -1190,7 +1191,7 @@ ad_proc -public portal::add_element {
         lappend region_list $region
     }
 
-    if {[empty_string_p $force_region]} {
+    if {$force_region eq ""} {
         # find the "best" region to put it in
         foreach region $region_list {
             db_1row region_count {}
@@ -1247,10 +1248,10 @@ ad_proc -public portal::remove_element {
     or 2. the portal_id and the datasource_name which will remove all elements of
     that datasource on the portal. An element_id overrides all other params
 } {
-    if {![empty_string_p $element_id]} {
+    if {$element_id ne ""} {
         db_dml delete {}
     } else {
-        if {[empty_string_p $portal_id] && [empty_string_p $portlet_name]} {
+        if {$portal_id eq "" && $portlet_name eq ""} {
             ad_return_complaint 1 "portal::remove_element [_ new-portal.lt_Error_bad_params_n___]"
         }
 
@@ -1287,7 +1288,7 @@ ad_proc -private portal::add_element_to_region {
     # XXX AKS: The whole issue of datasource/portlet naming must
     # be cleaned up! FIXME
 
-    if {[empty_string_p $pretty_name]} {
+    if {$pretty_name eq ""} {
         set pretty_name $ds_name
     }
 
@@ -1349,12 +1350,12 @@ ad_proc -private portal::swap_element {
     # get this element's sk
     db_1row get_my_sort_key_and_page_id {}
 
-    if { $dir == "up" } {
+    if { $dir eq "up" } {
         # get the sort_key and id of the element above
         if {[db_0or1row get_prev_sort_key {}] == 0} {
             return
         }
-    } elseif { $dir == "down"} {
+    } elseif { $dir eq "down"} {
         # get the sort_key and id of the element below
         if {[db_0or1row get_next_sort_key {}] == 0} {
             return
@@ -1399,10 +1400,10 @@ ad_proc -private portal::move_element {
     permission::require_permission -object_id $portal_id -privilege portal_read_portal
     permission::require_permission -object_id $portal_id -privilege portal_edit_portal
 
-    if { $direction == "right" } {
-        set target_region [expr $region + 1]
-    } elseif { $direction == "left" } {
-        set target_region [expr $region - 1]
+    if { $direction eq "right" } {
+        set target_region [expr {$region + 1}]
+    } elseif { $direction eq "left" } {
+        set target_region [expr {$region - 1}]
     } else {
         ad_return_complaint 1 "portal::move_element [_ new-portal.Bad_direction_1]"
     }
@@ -1428,7 +1429,7 @@ ad_proc -private portal::move_element_to_page {
 } {
     Moves a PE to the given page
 } {
-    if {[empty_string_p $region]} {
+    if {$region eq ""} {
         set curr_reg [get_element_region -element_id $element_id]
     } else {
         set curr_reg $region
@@ -1637,10 +1638,9 @@ ad_proc -private portal::evaluate_element {
 
     # get the element's params
     set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
-    if [llength $element_params] {
+    if {[llength $element_params]} {
         foreach param $element_params {
-            set key [lindex $param 0]
-            set value [lindex $param 1]
+	    lassign $param key value
             lappend config($key) $value
         }
     } else {
@@ -1817,7 +1817,7 @@ ad_proc -public portal::configure_element {
 
     if { [db_0or1row select {}] } {
         # passed in element_id is good, do they have perms?
-        if {[empty_string_p $noconn]} {
+        if {$noconn eq ""} {
             permission::require_permission -object_id $portal_id -privilege portal_read_portal
             permission::require_permission -object_id $portal_id -privilege portal_edit_portal
         }
@@ -1832,7 +1832,7 @@ ad_proc -public portal::configure_element {
             set html_string [datasource_call $datasource_id "Edit" \
                                  [list $element_id]]
 
-            if { $html_string == "" } {
+            if { $html_string eq "" } {
                 ns_log Error "portal::configure_element op = edit, but
                     portlet's edit proc returned null string"
 
@@ -1877,7 +1877,7 @@ ad_proc -public portal::configure_element {
         "hide" {
             db_dml hide_update {}
 
-            if {![empty_string_p $return_url]} {
+            if {$return_url ne ""} {
                 ad_returnredirect $return_url
             }
         }
@@ -1995,7 +1995,7 @@ ad_proc -private portal::generate_action_string {
     current location with "-2" appended to the name of the
     page.
 } {
-    return "[lindex [ns_conn urlv] [expr [ns_conn urlc] - 1]]-2"
+    return "[lindex [ns_conn urlv] [ns_conn urlc]-1]-2"
 }
 
 ad_proc -private portal::get_element_ids_by_ds {portal_id ds_name} {
@@ -2081,11 +2081,11 @@ ad_proc -private portal::get_layout_id {
                             -package_key new-portal \
                             -parameter default_layout]
     }
-    if { ![empty_string_p $page_num] } {
+    if { $page_num ne "" } {
         db_1row get_layout_id_num_select {}
-    } elseif { ![empty_string_p $page_id] } {
+    } elseif { $page_id ne "" } {
         db_1row get_layout_id_page_select {}
-    } elseif { ![empty_string_p $layout_name] } {
+    } elseif { $layout_name ne "" } {
         db_1row get_layout_id_name_select {}
     } else {
         ad_return_complaint 1 "portal::get_layout_id bad params!"
@@ -2138,7 +2138,7 @@ ad_proc -public portal::add_element_parameters {
     @param sort_key If set, will be used to insert a new element. Other elements of the region won't be reordered
 } {
 
-    if {[empty_string_p $param_action]} {
+    if {$param_action eq ""} {
         set param_action "overwrite"
     }
 
@@ -2160,13 +2160,13 @@ ad_proc -public portal::add_element_parameters {
             # There is already a value for the param which is overwritten
             set_element_param $element_id $key $value
 
-            if {![empty_string_p $extra_params]} {
+            if {$extra_params ne ""} {
                 check_key_value_list $extra_params
 
                 for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
                     set_element_param $element_id \
                         [lindex $extra_params $x] \
-                        [lindex $extra_params [expr $x + 1]]
+                        [lindex $extra_params $x+1]
                 }
             }
         }
@@ -2174,25 +2174,25 @@ ad_proc -public portal::add_element_parameters {
         db_transaction {
             set element_id [lindex $element_id_list 0]
 
-            if {[string equal $param_action "append"]} {
+            if {$param_action eq "append"} {
                 add_element_param_value -element_id $element_id -key $key -value $value
-            } elseif {[string equal $param_action "overwrite"]} {
+            } elseif {$param_action eq "overwrite"} {
                 set_element_param $element_id $key $value
             } else {
                 error "portal::add_element_parameters error: bad param action! $param_action 1"
             }
 
-            if {![empty_string_p $extra_params]} {
+            if {$extra_params ne ""} {
                 check_key_value_list $extra_params
 
                 for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
-                    if {[string equal $param_action "append"]} {
+                    if {$param_action eq "append"} {
                         add_element_param_value \
                             -element_id $element_id \
                             -key [lindex $extra_params $x] \
-                            -value [lindex $extra_params [expr $x + 1]]
-                    } elseif {[string equal $param_action "overwrite"]} {
-                        set_element_param $element_id [lindex $extra_params $x] [lindex $extra_params [expr $x + 1]]
+                            -value [lindex $extra_params $x+1]
+                    } elseif {$param_action eq "overwrite"} {
+                        set_element_param $element_id [lindex $extra_params $x] [lindex $extra_params $x+1]
                     } else {
                         error "portal::add_element_parameters error: bad param action! $param_action 2"
                     }
@@ -2236,14 +2236,14 @@ ad_proc -public portal::remove_element_parameters {
                 -key $key \
                 -value $value
 
-            if {![empty_string_p $extra_params]} {
+            if {$extra_params ne ""} {
                 check_key_value_list $extra_params
 
                 for {set x 0} {$x < [llength $extra_params]} {incr x 2} {
 
                     remove_element_param_value -element_id $element_id \
                         -key [lindex $extra_params $x] \
-                        -value [lindex $extra_params [expr $x + 1]]
+                        -value [lindex $extra_params $x+1]
                 }
             }
         }
@@ -2266,7 +2266,7 @@ ad_proc -private portal::check_key_value_list {
 } {
     rat-simple consistency check for the above 2 procs
 } {
-    if {[expr [llength $list_to_check] % 2] != 0} {
+    if {[llength $list_to_check] % 2 != 0} {
         ns_log error "portal::check_key_value_list bad var list_to_check!"
         ad_return_complaint 1 "portal::check_key_value_list bad var list_to_check!"
     }
@@ -2280,7 +2280,7 @@ ad_proc -public portal::show_proc_helper {
     hides ugly templating calls for portlet "show" procs
 } {
 
-    if { $template_src == ""} {
+    if { $template_src eq ""} {
         set template_src $package_key
     }
 
@@ -2362,15 +2362,15 @@ ad_proc portal::dimensional {
 } {
     An enhanced ad_dimensional. see that proc for usage details
 } {
-    if {[empty_string_p $option_list]} {
+    if {$option_list eq ""} {
         return
     }
     
-    if {[empty_string_p $options_set]} {
+    if {$options_set eq ""} {
         set options_set [ns_getform]
     }
     
-    if {[empty_string_p $url]} {
+    if {$url eq ""} {
         set url [ad_conn url]
     }
     
@@ -2417,9 +2417,9 @@ ad_proc portal::dimensional {
         # check if a default is set otherwise the first value is used
         set option_key [lindex $option 0]
         set option_val [lindex $option 2]
-        if {![empty_string_p $options_set]} {
+        if {$options_set ne ""} {
             set options_set_val [ns_set get $options_set $option_key]
-            if { ![empty_string_p $options_set_val] } {
+            if { $options_set_val ne "" } {
                 set option_val $options_set_val
             }
         }
@@ -2441,7 +2441,7 @@ ad_proc portal::dimensional {
                 append html $break_html
             }
             
-            if {([string equal $option_val $thisoption_name] == 1 && !$link_all) || !$thisoption_link_p} {
+            if {($option_val eq $thisoption_name && !$link_all) || !$thisoption_link_p} {
                 append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
             } else {
                 append html "${pre_td_html}<a href=\"$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]\">${pre_html}${thisoption_value}${post_html}\n"

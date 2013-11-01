@@ -30,15 +30,15 @@ ad_page_contract {
     return_url:onevalue
 }
 
-if {![exists_and_not_null action_string]} {
+if {(![info exists action_string] || $action_string eq "")} {
     set action_string ""
 }
 
-if {![exists_and_not_null theme_id]} {
+if {(![info exists theme_id] || $theme_id eq "")} {
     set theme_id ""
 }
 
-if {![exists_and_not_null return_url]} {
+if {(![info exists return_url] || $return_url eq "")} {
     set return_url ""
 }
 

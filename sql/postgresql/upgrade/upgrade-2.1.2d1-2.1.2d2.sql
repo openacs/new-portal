@@ -21,23 +21,29 @@ drop function portal_page__new (integer,varchar,integer,integer,varchar,timestam
 
 select define_function_args('portal_page__new','page_id,pretty_name,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_page__new (integer,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_page_id                       alias for $1;
-    p_pretty_name                   alias for $2;
-    p_portal_id                     alias for $3;
-    p_layout_id                     alias for $4;
-    p_hidden_p                      alias for $5;
-    p_object_type                   alias for $6;
-    p_creation_date                 alias for $7;
-    p_creation_user                 alias for $8;
-    p_creation_ip                   alias for $9;
-    p_context_id                    alias for $10;
+
+
+--
+-- procedure portal_page__new/10
+--
+CREATE OR REPLACE FUNCTION portal_page__new(
+   p_page_id integer,
+   p_pretty_name varchar,
+   p_portal_id integer,
+   p_layout_id integer,
+   p_hidden_p char,
+   p_object_type varchar, -- default 'portal_page'
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+
+) RETURNS integer AS $$
+DECLARE
     v_page_id                       portal_pages.page_id%TYPE;
     v_layout_id                     portal_pages.layout_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
-begin
+BEGIN
 
     v_page_id := acs_object__new(
         null,
@@ -46,7 +52,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     if p_layout_id is null then
@@ -69,22 +75,31 @@ begin
 
     return v_page_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create or replace function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_portal_id                     alias for $1;
-    p_name                          alias for $2;
-    p_theme_id                      alias for $3;
-    p_layout_id                     alias for $4;
-    p_template_id                   alias for $5;
-    p_default_page_name             alias for $6;
-    p_object_type                   alias for $7;
-    p_creation_date                 alias for $8;
-    p_creation_user                 alias for $9;
-    p_creation_ip                   alias for $10;
-    p_context_id                    alias for $11;
+
+
+-- added
+select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,object_type,creation_date,creation_user,creation_ip,context_id');
+
+--
+-- procedure portal__new/11
+--
+CREATE OR REPLACE FUNCTION portal__new(
+   p_portal_id integer,
+   p_name varchar,
+   p_theme_id integer,
+   p_layout_id integer,
+   p_template_id integer,
+   p_default_page_name varchar,
+   p_object_type varchar,
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+) RETURNS integer AS $$
+DECLARE
     v_portal_id                     portals.portal_id%TYPE;
     v_theme_id                      portals.theme_id%TYPE;
     v_layout_id                     portal_layouts.layout_id%TYPE;
@@ -94,7 +109,7 @@ declare
     v_param                         record;
     v_new_element_id                integer;
     v_new_parameter_id              integer;
-begin
+BEGIN
 
     v_portal_id := acs_object__new(
         p_portal_id,
@@ -103,7 +118,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     if p_template_id is null then
@@ -136,8 +151,8 @@ begin
             p_default_page_name,
             v_portal_id,
             v_layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -170,8 +185,8 @@ begin
             v_page.pretty_name,
             v_portal_id,
             v_page.layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -222,4 +237,5 @@ begin
 
     return v_portal_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;

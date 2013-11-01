@@ -25,24 +25,30 @@
 
 select define_function_args('portal_page__new','page_id,pretty_name,accesskey,portal_id,layout_id,hidden_p,object_type;portal_page,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_page__new (integer,varchar,varchar,integer,integer,char,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_page_id                       alias for $1;
-    p_pretty_name                   alias for $2;
-    p_accesskey                     alias for $3;
-    p_portal_id                     alias for $4;
-    p_layout_id                     alias for $5;
-    p_hidden_p                      alias for $6;
-    p_object_type                   alias for $7;
-    p_creation_date                 alias for $8;
-    p_creation_user                 alias for $9;
-    p_creation_ip                   alias for $10;
-    p_context_id                    alias for $11;
+
+
+--
+-- procedure portal_page__new/11
+--
+CREATE OR REPLACE FUNCTION portal_page__new(
+   p_page_id integer,
+   p_pretty_name varchar,
+   p_accesskey varchar,
+   p_portal_id integer,
+   p_layout_id integer,
+   p_hidden_p char,
+   p_object_type varchar, -- default 'portal_page'
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+
+) RETURNS integer AS $$
+DECLARE
     v_page_id                       portal_pages.page_id%TYPE;
     v_layout_id                     portal_pages.layout_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
-begin
+BEGIN
 
     v_page_id := acs_object__new(
         null,
@@ -51,7 +57,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     if p_layout_id is null then
@@ -74,19 +80,25 @@ begin
 
     return v_page_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_page__delete','page_id');
 
-create function portal_page__delete(integer)
-returns integer as '
-declare
-    p_page_id                       alias for $1;
+
+
+--
+-- procedure portal_page__delete/1
+--
+CREATE OR REPLACE FUNCTION portal_page__delete(
+   p_page_id integer
+) RETURNS integer AS $$
+DECLARE
     v_portal_id                     portal_pages.portal_id%TYPE;
     v_sort_key                      portal_pages.sort_key%TYPE;
     v_curr_sort_key                 portal_pages.sort_key%TYPE;
     v_page_count_from_0             integer;
-begin
+BEGIN
 
     -- IMPORTANT: sort keys MUST be an unbroken sequence from 0 to max(sort_key)
 
@@ -128,25 +140,32 @@ begin
 
     return 0;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,default_accesskey,object_type;portal,creation_date,creation_user,creation_ip,context_id');
 
-create or replace function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_portal_id                     alias for $1;
-    p_name                          alias for $2;
-    p_theme_id                      alias for $3;
-    p_layout_id                     alias for $4;
-    p_template_id                   alias for $5;
-    p_default_page_name             alias for $6;
-    p_default_accesskey             alias for $7;
-    p_object_type                   alias for $8;
-    p_creation_date                 alias for $9;
-    p_creation_user                 alias for $10;
-    p_creation_ip                   alias for $11;
-    p_context_id                    alias for $12;
+
+
+--
+-- procedure portal__new/12
+--
+CREATE OR REPLACE FUNCTION portal__new(
+   p_portal_id integer,
+   p_name varchar,
+   p_theme_id integer,
+   p_layout_id integer,
+   p_template_id integer,
+   p_default_page_name varchar,
+   p_default_accesskey varchar,
+   p_object_type varchar, -- default 'portal'
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+
+) RETURNS integer AS $$
+DECLARE
     v_portal_id                     portals.portal_id%TYPE;
     v_theme_id                      portals.theme_id%TYPE;
     v_layout_id                     portal_layouts.layout_id%TYPE;
@@ -156,7 +175,7 @@ declare
     v_param                         record;
     v_new_element_id                integer;
     v_new_parameter_id              integer;
-begin
+BEGIN
 
     v_portal_id := acs_object__new(
         p_portal_id,
@@ -165,7 +184,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     if p_template_id is null then
@@ -199,8 +218,8 @@ begin
             p_default_accesskey,
             v_portal_id,
             v_layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -235,8 +254,8 @@ begin
             v_page.accesskey,
             v_portal_id,
             v_page.layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -249,7 +268,7 @@ begin
                            where page_id = v_page.page_id
             loop
 
-                select nextval(''t_acs_object_id_seq'')
+                select nextval('t_acs_object_id_seq')
                 into v_new_element_id
                 from dual;
 
@@ -266,7 +285,7 @@ begin
                              where element_id = v_element.element_id
                 loop
 
-                    select nextval(''t_acs_object_id_seq'')
+                    select nextval('t_acs_object_id_seq')
                     into v_new_parameter_id
                     from dual;
 
@@ -287,16 +306,22 @@ begin
 
     return v_portal_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal__delete','portal_id');
 
-create function portal__delete (integer)
-returns integer as '
-declare
-    p_portal_id                     alias for $1;
+
+
+--
+-- procedure portal__delete/1
+--
+CREATE OR REPLACE FUNCTION portal__delete(
+   p_portal_id integer
+) RETURNS integer AS $$
+DECLARE
     v_page                          record;
-begin
+BEGIN
 
     for v_page in select page_id
                   from portal_pages
@@ -309,25 +334,32 @@ begin
 
     return 0;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_element_theme__new','theme_id,name,description,filename,resource_dir,object_type;portal_element_theme,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_element_theme__new (integer,varchar,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_theme_id                      alias for $1;
-    p_name                          alias for $2;
-    p_description                   alias for $3;
-    p_filename                      alias for $4;
-    p_resource_dir                  alias for $5;
-    p_object_type                   alias for $6;
-    p_creation_date                 alias for $7;
-    p_creation_user                 alias for $8;
-    p_creation_ip                   alias for $9;
-    p_context_id                    alias for $10;
+
+
+--
+-- procedure portal_element_theme__new/10
+--
+CREATE OR REPLACE FUNCTION portal_element_theme__new(
+   p_theme_id integer,
+   p_name varchar,
+   p_description varchar,
+   p_filename varchar,
+   p_resource_dir varchar,
+   p_object_type varchar, -- default 'portal_element_theme'
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+
+) RETURNS integer AS $$
+DECLARE
     v_theme_id                      portal_element_themes.theme_id%TYPE;
-begin
+BEGIN
 
     v_theme_id := acs_object__new(
         p_theme_id,
@@ -336,7 +368,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     insert
@@ -347,17 +379,26 @@ begin
 
     return v_theme_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create function portal_element_theme__new (varchar,varchar,varchar,varchar)
-returns integer as '
-declare
-    p_name                          alias for $1;
-    p_description                   alias for $2;
-    p_filename                      alias for $3;
-    p_resource_dir                  alias for $4;
+
+
+--
+-- procedure portal_element_theme__new/4
+--
+CREATE OR REPLACE FUNCTION portal_element_theme__new(
+   p_name varchar,
+   p_description varchar,
+   p_filename varchar,
+   p_resource_dir varchar
+) RETURNS integer AS $$
+--
+-- portal_element_theme__new/4 maybe obsolete, when we define proper defaults for /10
+--
+DECLARE
     v_theme_id                      portal_element_themes.theme_id%TYPE;
-begin
+BEGIN
 
     v_theme_id := portal_element_theme__new(
         null,
@@ -365,7 +406,7 @@ begin
         p_description,
         p_filename,
         p_resource_dir,
-        ''portal_element_theme'',
+        'portal_element_theme',
         now(),
         null,
         null,
@@ -374,37 +415,50 @@ begin
 
     return v_theme_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_element_theme__delete','theme_id');
 
-create or replace function portal_element_theme__delete (integer)
-returns integer as '
-declare
-    p_theme_id                      alias for $1;
-begin
+
+
+--
+-- procedure portal_element_theme__delete/1
+--
+CREATE OR REPLACE FUNCTION portal_element_theme__delete(
+   p_theme_id integer
+) RETURNS integer AS $$
+DECLARE
+BEGIN
     PERFORM acs_object__delete(p_theme_id);
 
     return (0);
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_layout__new','layout_id,name,description,filename,resource_dir,object_type;portal_layout,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_layout__new (integer,varchar,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_layout_id                     alias for $1;
-    p_name                          alias for $2;
-    p_description                   alias for $3;
-    p_filename                      alias for $4;
-    p_resource_dir                  alias for $5;
-    p_object_type                   alias for $6;
-    p_creation_date                 alias for $7;
-    p_creation_user                 alias for $8;
-    p_creation_ip                   alias for $9;
-    p_context_id                    alias for $10;
+
+
+--
+-- procedure portal_layout__new/10
+--
+CREATE OR REPLACE FUNCTION portal_layout__new(
+   p_layout_id integer,
+   p_name varchar,
+   p_description varchar,
+   p_filename varchar,
+   p_resource_dir varchar,
+   p_object_type varchar, -- default 'portal_layout'
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+
+) RETURNS integer AS $$
+DECLARE
     v_layout_id                     portal_layouts.layout_id%TYPE;
-begin
+BEGIN
 
     v_layout_id := acs_object__new(
         p_layout_id,
@@ -413,7 +467,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     insert into portal_layouts
@@ -423,17 +477,26 @@ begin
 
     return v_layout_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create function portal_layout__new (varchar,varchar,varchar,varchar)
-returns integer as '
-declare
-    p_name                          alias for $1;
-    p_description                   alias for $2;
-    p_filename                      alias for $3;
-    p_resource_dir                  alias for $4;
+
+
+--
+-- procedure portal_layout__new/4
+--
+CREATE OR REPLACE FUNCTION portal_layout__new(
+   p_name varchar,
+   p_description varchar,
+   p_filename varchar,
+   p_resource_dir varchar
+) RETURNS integer AS $$
+--
+-- portal_layout__new/4 maybe obsolete, when we define proper defaults for /10
+--
+DECLARE
     v_layout_id                     portal_layouts.layout_id%TYPE;
-begin
+BEGIN
 
     v_layout_id := portal_layout__new(
         null,
@@ -441,7 +504,7 @@ begin
         p_description,
         p_filename,
         p_resource_dir,
-        ''portal_layout'',
+        'portal_layout',
         now(),
         null,
         null,
@@ -450,28 +513,41 @@ begin
 
     return v_layout_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_layout__delete','layout_id');
 
-create or replace function portal_layout__delete(integer)
-returns integer as '
-declare
-    p_layout_id                     alias for $1;
-begin
+
+
+--
+-- procedure portal_layout__delete/1
+--
+CREATE OR REPLACE FUNCTION portal_layout__delete(
+   p_layout_id integer
+) RETURNS integer AS $$
+DECLARE
+BEGIN
     perform acs_object__delete(layout_id);
     return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_layout__add_region','layout_id,region,immutable_p;f');
 
-create function portal_layout__add_region (integer,varchar,char)
-returns integer as '
-declare
-    p_layout_id                     alias for $1;
-    p_region                        alias for $2;
-    p_immutable_p                   alias for $3;
-begin
+
+
+--
+-- procedure portal_layout__add_region/3
+--
+CREATE OR REPLACE FUNCTION portal_layout__add_region(
+   p_layout_id integer,
+   p_region varchar,
+   p_immutable_p char -- default 'f'
+
+) RETURNS integer AS $$
+DECLARE
+BEGIN
     insert
     into portal_supported_regions
     (layout_id, region, immutable_p)
@@ -479,39 +555,59 @@ begin
     (p_layout_id, p_region, p_immutable_p);
 
     return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create function portal_layout__add_region (integer,varchar)
-returns integer as '
-declare
-    p_layout_id                     alias for $1;
-    p_region                        alias for $2;
-begin
+
+
+--
+-- procedure portal_layout__add_region/2
+--
+CREATE OR REPLACE FUNCTION portal_layout__add_region(
+   p_layout_id integer,
+   p_region varchar
+) RETURNS integer AS $$
+--
+-- portal_layout__add_region/2 maybe obsolete, when we define proper defaults for /3
+--
+DECLARE
+BEGIN
     insert
     into portal_supported_regions
     (layout_id, region, immutable_p)
     values
-    (p_layout_id, p_region, ''f'');
+    (p_layout_id, p_region, 'f');
 
     return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-select define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id');
 
-create function portal_datasource__new (integer,varchar,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1; -- default null
-    p_name                          alias for $2; -- default null
-    p_description                   alias for $3; -- default null
-    p_css_dir                       alias for $4;
-    p_object_type                   alias for $5; -- default ''portal_datasource''
-    p_creation_date                 alias for $6; -- default now()
-    p_creation_user                 alias for $7; -- default null
-    p_creation_ip                   alias for $8; -- default null
-    p_context_id                    alias for $9; -- default null
+-- old define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id')
+-- new
+select define_function_args('portal_datasource__new','datasource_id;null,name;null,description;null,css_dir,object_type;portal_datasource,creation_date;now(),creation_user;null,creation_ip;null,context_id;null');
+
+
+
+
+--
+-- procedure portal_datasource__new/9
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_datasource_id integer,     -- default null
+   p_name varchar,              -- default null
+   p_description varchar,       -- default null
+   p_css_dir varchar,
+   p_object_type varchar,       -- default 'portal_datasource'
+   p_creation_date timestamptz, -- default now()
+   p_creation_user integer,     -- default null
+   p_creation_ip varchar,       -- default null
+   p_context_id integer         -- default null
+
+) RETURNS integer AS $$
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := acs_object__new(
         p_datasource_id,
@@ -520,7 +616,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     insert into portal_datasources
@@ -530,21 +626,31 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create function portal_datasource__new (integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1; -- default null
-    p_name                          alias for $2; -- default null
-    p_description                   alias for $3; -- default null
-    p_object_type                   alias for $4; -- default ''portal_datasource''
-    p_creation_date                 alias for $5; -- default now()
-    p_creation_user                 alias for $6; -- default null
-    p_creation_ip                   alias for $7; -- default null
-    p_context_id                    alias for $8; -- default null
+
+
+--
+-- procedure portal_datasource__new/8
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_datasource_id integer,     -- default null
+   p_name varchar,              -- default null
+   p_description varchar,       -- default null
+   p_object_type varchar,       -- default 'portal_datasource'
+   p_creation_date timestamptz, -- default now()
+   p_creation_user integer,     -- default null
+   p_creation_ip varchar,       -- default null
+   p_context_id integer         -- default null
+
+) RETURNS integer AS $$
+--
+-- portal_datasource__new/8 maybe obsolete, when we define proper defaults for /9
+--
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
@@ -558,22 +664,32 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 
-create function portal_datasource__new (varchar,varchar)
-returns integer as '
-declare
-    p_name                          alias for $1; -- default null
-    p_description                   alias for $2; -- default null
+
+
+--
+-- procedure portal_datasource__new/2
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_name varchar,       -- default null
+   p_description varchar -- default null
+
+) RETURNS integer AS $$
+--
+-- portal_datasource__new/2 maybe obsolete, when we define proper defaults for /9
+--
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
 				  p_description,
                                   null,
-				  ''portal_datasource'',
+				  'portal_datasource',
 				  now(),
 				  null,
 				  null,
@@ -581,22 +697,32 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
-create function portal_datasource__new (varchar,varchar,varchar)
-returns integer as '
-declare
-    p_name                          alias for $1; -- default null
-    p_description                   alias for $2; -- default null
-    p_css_dir                       alias for $3;
+
+
+--
+-- procedure portal_datasource__new/3
+--
+CREATE OR REPLACE FUNCTION portal_datasource__new(
+   p_name varchar,        -- default null
+   p_description varchar, -- default null
+   p_css_dir varchar
+
+) RETURNS integer AS $$
+--
+-- portal_datasource__new/3 maybe obsolete, when we define proper defaults for /9
+--
+DECLARE
     v_datasource_id                 portal_datasources.datasource_id%TYPE;
-begin
+BEGIN
 
     v_datasource_id := portal_datasource__new(null,
 				  p_name,
 				  p_description,
                                   p_css_dir,
-				  ''portal_datasource'',
+				  'portal_datasource',
 				  now(),
 				  null,
 				  null,
@@ -604,36 +730,49 @@ begin
 
     return v_datasource_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_datasource__delete','datasource_id');
 
-create function portal_datasource__delete (integer)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1;
-begin
+
+
+--
+-- procedure portal_datasource__delete/1
+--
+CREATE OR REPLACE FUNCTION portal_datasource__delete(
+   p_datasource_id integer
+) RETURNS integer AS $$
+DECLARE
+BEGIN
     perform acs_object__delete(p_datasource_id);
     return 0;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 select define_function_args('portal_datasource__set_def_param','datasource_id,config_required_p,configured_p,key,value');
 
-create function portal_datasource__set_def_param (integer,varchar,varchar,varchar,varchar)
-returns integer as '
-declare
-    p_datasource_id                 alias for $1;
-    p_config_required_p             alias for $2;
-    p_configured_p                  alias for $3;
-    p_key                           alias for $4;
-    p_value                         alias for $5;
-begin
+
+
+--
+-- procedure portal_datasource__set_def_param/5
+--
+CREATE OR REPLACE FUNCTION portal_datasource__set_def_param(
+   p_datasource_id integer,
+   p_config_required_p varchar,
+   p_configured_p varchar,
+   p_key varchar,
+   p_value varchar
+) RETURNS integer AS $$
+DECLARE
+BEGIN
 
     insert into portal_datasource_def_params
     (parameter_id, datasource_id, config_required_p, configured_p, key, value)
     values
-    (nextval(''t_acs_object_id_seq''), p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
+    (nextval('t_acs_object_id_seq'), p_datasource_id, p_config_required_p, p_configured_p, p_key, p_value);
 
     return 0;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;

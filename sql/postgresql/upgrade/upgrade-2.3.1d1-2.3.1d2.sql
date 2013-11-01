@@ -1,20 +1,28 @@
 -- Create portal pages in the correct order.
 
-create or replace function portal__new (integer,varchar,integer,integer,integer,varchar,varchar,varchar,timestamptz,integer,varchar,integer)
-returns integer as '
-declare
-    p_portal_id                     alias for $1;
-    p_name                          alias for $2;
-    p_theme_id                      alias for $3;
-    p_layout_id                     alias for $4;
-    p_template_id                   alias for $5;
-    p_default_page_name             alias for $6;
-    p_default_accesskey             alias for $7;
-    p_object_type                   alias for $8;
-    p_creation_date                 alias for $9;
-    p_creation_user                 alias for $10;
-    p_creation_ip                   alias for $11;
-    p_context_id                    alias for $12;
+
+
+-- added
+select define_function_args('portal__new','portal_id,name,theme_id,layout_id,template_id,default_page_name,default_accesskey,object_type,creation_date,creation_user,creation_ip,context_id');
+
+--
+-- procedure portal__new/12
+--
+CREATE OR REPLACE FUNCTION portal__new(
+   p_portal_id integer,
+   p_name varchar,
+   p_theme_id integer,
+   p_layout_id integer,
+   p_template_id integer,
+   p_default_page_name varchar,
+   p_default_accesskey varchar,
+   p_object_type varchar,
+   p_creation_date timestamptz,
+   p_creation_user integer,
+   p_creation_ip varchar,
+   p_context_id integer
+) RETURNS integer AS $$
+DECLARE
     v_portal_id                     portals.portal_id%TYPE;
     v_theme_id                      portals.theme_id%TYPE;
     v_layout_id                     portal_layouts.layout_id%TYPE;
@@ -24,7 +32,7 @@ declare
     v_param                         record;
     v_new_element_id                integer;
     v_new_parameter_id              integer;
-begin
+BEGIN
 
     v_portal_id := acs_object__new(
         p_portal_id,
@@ -33,7 +41,7 @@ begin
         p_creation_user,
         p_creation_ip,
         p_context_id,
-        ''t''
+        't'
     );
 
     if p_template_id is null then
@@ -67,8 +75,8 @@ begin
             p_default_accesskey,
             v_portal_id,
             v_layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -103,8 +111,8 @@ begin
             v_page.accesskey,
             v_portal_id,
             v_page.layout_id,
-            ''f'',
-            ''portal_page'',
+            'f',
+            'portal_page',
             p_creation_date,
             p_creation_user,
             p_creation_ip,
@@ -155,4 +163,5 @@ begin
 
     return v_portal_id;
 
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
