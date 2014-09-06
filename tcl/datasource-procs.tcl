@@ -73,7 +73,7 @@ namespace eval portal::datasource {
 
                 if { ![regexp {^([^ \t:]+)(?::([a-zA-Z0-9_,(|)]*))} \
                            $param match param_name flags] } {
-                    ad_return -code error "Parameter name '$param' doesn't have the right format. It must be var\[:flag\[,flag ...\]\]"
+                    return -code error "Parameter name '$param' doesn't have the right format. It must be var\[:flag\[,flag ...\]\]"
                 }
 
                 # set defaults for attributes
@@ -85,7 +85,7 @@ namespace eval portal::datasource {
                     switch -exact $flag {
                         configured { set configured_p t }
                         config_required { set config_required_p t}
-                        default { ad_return -code error "\"$flag\" is not a legal portal datasource attribute" }
+                        default { return -code error "\"$flag\" is not a legal portal datasource attribute" }
                     }
                 }
 
