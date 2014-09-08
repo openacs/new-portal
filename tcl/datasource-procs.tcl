@@ -18,7 +18,7 @@ ad_library {
 
     portal datasource procs
 
-    @version $Id$
+    @cvs-id $Id$
 
 }
 
