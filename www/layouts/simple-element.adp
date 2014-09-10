@@ -19,10 +19,10 @@
 %>
 
 <!-- Element: '@name@' begin (application/x-ats) -->
-    <table border=0 bgcolor=#CC0000 cellpadding=1 cellspacing=0 width=100% class="portal_border">
+    <table border="0" bgcolor="#CC0000" cellpadding="1" cellspacing="0" width="100%" class="portal_border">
     <tr>
       <td>
-        <table border=0 cellpadding=3 cellspacing=0 width=100%>
+        <table border=0 cellpadding=3 cellspacing=0 width="100%">
 	  <tr>
             <td class="portal_header" bgcolor="#CC0000">
               @name@
