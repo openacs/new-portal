@@ -8,7 +8,7 @@
     <singleton-p>t</singleton-p>
     <auto-mount>portal</auto-mount>
 
-    <version name="2.8.1b1" url="http://openacs.org/repository/download/apm/new-portal-2.8.1b1.apm">
+    <version name="2.8.1b2" url="http://openacs.org/repository/download/apm/new-portal-2.8.1b2.apm">
         <owner url="http://openacs.org">OpenACS</owner>
         <summary>Portals.</summary>
         <release-date>2011-10-30</release-date>
@@ -16,8 +16,8 @@
         <maturity>2</maturity>
         <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
-        <provides url="new-portal" version="2.8.1b1"/>
-        <requires url="acs-kernel" version="5.8.1b1"/>
+        <provides url="new-portal" version="2.8.1b2"/>
+        <requires url="acs-kernel" version="5.8.1b2"/>
 
         <callbacks>
           <callback type="after-upgrade"  proc="new-portal::after_upgrade"/>
