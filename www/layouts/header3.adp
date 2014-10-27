@@ -19,9 +19,9 @@
 %>
 
   <!-- A simple 2-column thingy. -->
-  <table border=0 width=100%>
+  <table border="0" width="100%">
     <tr>
-      <td colspan=3 valign=top>
+      <td colspan="3" valign="top">
         <list name="element_ids_i1">
           <include src="@element_src@" element_id="@element_ids_i1@" region="i1"><br>
         </list>

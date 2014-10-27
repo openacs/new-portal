@@ -14,7 +14,7 @@ ad_library {
 ad_proc -public -callback search::datasource -impl portal_datasource {} {
 
     @author openacs@dirkgomez.de
-    @creation_date 2005-06-13
+    @creation-date 2005-06-13
 
     returns a datasource for the search package
     this is the content that will be indexed by the full text
@@ -50,7 +50,7 @@ ad_proc -public -callback search::datasource -impl portal_datasource {} {
 ad_proc -public -callback search::url -impl portal_datasource {} {
 
     @author openacs@dirkgomez.de
-    @creation_date 2005-06-13
+    @creation-date 2005-06-13
 
     returns a url for a portal to the search package
 

@@ -22,7 +22,7 @@ ad_library {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date Sept 2001
-    @version $Id$
+    @cvs-id $Id$
 
 }
 
@@ -268,7 +268,7 @@ ad_proc -public portal::render {
     if {[db_0or1row portal_select {} -column_array portal]} {
         set page_id $portal(page_id)
     } else {
-        ad_return_complaint 1 "[_ new-portal.Page_not_found]"
+        return_complaint 1 [_ new-portal.Page_not_found]
         ad_script_abort
     }
 
@@ -900,7 +900,7 @@ ad_proc -public portal::configure_dispatch {
     } elseif { [ns_set get $form "op_add_page"] ne "" } {
         set pretty_name [ns_set get $form pretty_name]
         if {$pretty_name eq ""} {
-            ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
+            ad_return_complaint 1 [_ new-portal.lt_You_must_enter_new_na]
         }
         page_create -pretty_name $pretty_name -portal_id $portal_id
     } elseif { [ns_set get $form "op_remove_empty_page"] ne "" } {
@@ -916,7 +916,7 @@ ad_proc -public portal::configure_dispatch {
         set page_id [ns_set get $form page_id]
 
         if {$pretty_name eq ""} {
-            ad_return_complaint 1 "[_ new-portal.lt_You_must_enter_new_na]"
+            ad_return_complaint 1 [_ new-portal.lt_You_must_enter_new_na]
         }
         set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
     } elseif { [ns_set get $form "op_toggle_tab_visibility"] ne "" } {
@@ -1768,7 +1768,7 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
               errmsg ] } {
         global errorInfo
         ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$errorInfo\n\n"
-        ad_return -error
+        #ad_return -error
         ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <P> $errmsg\n\n"
 
     }
