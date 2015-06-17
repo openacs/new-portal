@@ -23,14 +23,14 @@
 		  <div id="scheda-container-top">
 			 <div id="scheda-titolo">@name@</div>		
 				<div id="scheda-valori">
-                    <if @user_editable_p@ eq "t"><a href=configure-element?element_id=@element_id@&op=edit>&nbsp;<img borde	r=0 src="@dir@/00_headport_puls_edit.png" alt="edit"></a></if>
-                    <if @shadeable_p@ eq "t"><a href=configure-element?element_id=@element_id@&op=shade>
-	                   <if @shaded_p@ eq "f">&nbsp;<img border=0 src="@dir@/00_headport_puls_min.png" alt="shade"></a></if> 	
+                    <if @user_editable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=edit">&nbsp;<img borde	r=0 src="@dir@/00_headport_puls_edit.png" alt="edit"></a></if>
+                    <if @shadeable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=shade">
+	                   <if @shaded_p@ eq "f">&nbsp;<img border="0" src="@dir@/00_headport_puls_min.png" alt="shade"></a></if> 	
 		               <else>
-		               &nbsp;<img border=0 src="@dir@/00_headport_puls_max.png" alt="unshade"></a>
+		               &nbsp;<img border="0" src="@dir@/00_headport_puls_max.png" alt="unshade"></a>
 		               </else>
                   </if>
-                  <if @hideable_p@ eq "t"><a href=configure-element?element_id=@element_id@&op=hide>&nbsp;<img border=0 src="@dir@/00_headport_puls_chiudi.png" alt="hide"></a></if>
+                  <if @hideable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=hide">&nbsp;<img border="0" src="@dir@/00_headport_puls_chiudi.png" alt="hide"></a></if>
 			</div>		 
 			</div>
 			<%	 
@@ -50,43 +50,43 @@
                    %>
 
                    <if @name@ eq @groups_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_group.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_group.jpg" alt="hide"></div>
 		   </if>
 
                    <if @name@ eq @lorsm_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_lobj.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_lobj.jpg" alt="hide"></div>
 		     </if>
 
                    <if @name@ eq @subgroups_name@>
-                    <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_group.jpg" alt="hide"></div>
+                    <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_group.jpg" alt="hide"></div>
 		   </if>
                    
 		   <if @name@ eq @forums_name@>
-                    <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_forum.jpg" alt="hide"></div>
+                    <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_forum.jpg" alt="hide"></div>
 		   </if> 
                    
 		   <if @name@ eq @faqs_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_faq.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_faq.jpg" alt="hide"></div>
 		   </if> 
                    
 		   <if @name@ eq @day_summary_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
 		   </if> 
                    
 		   <if @name@ eq @full_calendar_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
 		   </if>
 
                    <if @name@ eq @calendar_name@>
-                     <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
+                     <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_calendar.jpg" alt="hide"></div>
 		   </if>
 
                     <if @name@ eq @survey_name@>
-                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
+                      <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
 		    </if>
                     
 		    <if @name@ eq @documents_name@>
-                      <div id="scheda-immagine"><img border=0 src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
+                      <div id="scheda-immagine"><img border="0" src="resources/00_headport_imm_vuoto.jpg" alt="hide"></div>
 		    </if>         	
 
                   <div id="scheda-contenuto"><slave></div>

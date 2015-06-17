@@ -22,10 +22,10 @@
 
 
 
-<img src="@title.resource_dir@/minimize.gif" alt="Minimize" border=0>
-<img src="@title.resource_dir@/up.gif" alt="Move Up" border=0>
-<img src="@title.resource_dir@/down.gif" alt="Move Down" border=0>
-<img src="@title.resource_dir@/close.gif" alt="Remove" border=0>
+<img src="@title.resource_dir@/minimize.gif" alt="Minimize" border="0">
+<img src="@title.resource_dir@/up.gif" alt="Move Up" border="0">
+<img src="@title.resource_dir@/down.gif" alt="Move Down" border="0">
+<img src="@title.resource_dir@/close.gif" alt="Remove" border="0">
 
 <!--
 In this file, display title buttons.

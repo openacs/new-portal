@@ -18,7 +18,7 @@
 
 %>
 
-<table border=0>
+<table border="0">
  <tr>
     <td bgcolor="#c7d7ef">
       &nbsp;

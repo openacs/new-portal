@@ -33,32 +33,32 @@
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
     <tr>
-    <td align=left valign=middle width=88%  bgcolor="#eeeee7">
+    <td align="left" valign="middle" width="88%"  bgcolor="#eeeee7">
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
           <b>@name;noquote@</b>
         </if><else>
-          <a style="text-decoration: none" href=@link@><b>@name;noquote@</b></a>
+          <a style="text-decoration: none" href="@link@"><b>@name;noquote@</b></a>
         </else>
     </td>
 		<if @user_editable_p@ eq "t">	
-                  <td align=right width="7%">
+                  <td align="right" width="7%">
 
-			<a href=configure-element?element_id=@element_id@&op=edit><img border=0 src="@dir@/edit.gif" alt="edit"></a></td>
+			<a href="configure-element?element_id=@element_id@&amp;op=edit"><img border="0" src="@dir@/edit.gif" alt="edit"></a></td>
 		</if>
 
 		<if @shadeable_p@ eq "t">		
-                  <td align=right width="7%">
-		    <a href=configure-element?element_id=@element_id@&op=shade>
+                  <td align="right" width="7%">
+		    <a href="configure-element?element_id=@element_id@&amp;op=shade">
 		    <if @shaded_p@ eq "f">	
-		    <img border=0 src="@dir@/shade.gif" alt="shade"></a></td>
+		    <img border="0" src="@dir@/shade.gif" alt="shade"></a></td>
 		    </if><else>
-		    <img border=0 src="@dir@/unshade.gif" alt="unshade"></a></td>
+		    <img border="0" src="@dir@/unshade.gif" alt="unshade"></a></td>
 		    </else>
 		</if>
 
 		<if @hideable_p@ eq "t">		
-                  <td align=right width="7%">
-			<a href=configure-element?element_id=@element_id@&op=hide><img border=0 src="@dir@/x.gif" alt="hide"></a></td>
+                  <td align="right" width="7%">
+			<a href="configure-element?element_id=@element_id@&amp;op=hide"><img border="0" src="@dir@/x.gif" alt="hide"></a></td>
 		</if>
 
                 </tr>

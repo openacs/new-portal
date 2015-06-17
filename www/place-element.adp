@@ -23,9 +23,9 @@
 
 <if @element_multi.rownum@ eq 1>
     <form method=post action=@action_string@>
-        <div><input type=hidden name=portal_id value=@portal_id@></div>
-        <div><input type=hidden name=region value=@region@></div>
-        <div><input type=hidden name=page_id value=@page_id@></div>
+        <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
+        <div><input type="hidden" name="region" value="@region@"></div>
+        <div><input type="hidden" name="page_id" value="@page_id@"></div>
 </if>
   <div class="portlet-header">
     <div class="portlet-title">

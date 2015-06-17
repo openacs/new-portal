@@ -36,7 +36,7 @@
           <strong>@name;noquote@</strong>
         </if>
         <else>
-          <a href=@link@><strong>@name@</strong></a>
+          <a href="@link@"><strong>@name@</strong></a>
         </else>
       </big>
     </td>
@@ -44,11 +44,11 @@
     <td class="element-header-buttons-plain">
           
       <if @user_editable_p@ eq "t">	
-          <a href=configure-element?element_id=@element_id@&op=edit>[edit]</a>
+          <a href="configure-element?element_id=@element_id@&amp;op=edit">[edit]</a>
       </if>
   
       <if @shadeable_p@ eq "t">		
-        <a href=configure-element?element_id=@element_id@&op=shade>
+        <a href="configure-element?element_id=@element_id@&amp;op=shade">
           <if @shaded_p@ eq "f">
             [shade]</a>
           </if>
@@ -58,7 +58,7 @@
       </if>
   
       <if @hideable_p@ eq "t">		
-        <a href=configure-element?element_id=@element_id@&op=hide> [hide]</a>
+        <a href="configure-element?element_id=@element_id@&amp;op=hide"> [hide]</a>
       </if>
   
     </td>

@@ -23,7 +23,7 @@
 <property name=referer>@referer@</property>
 <property name=name>@name@</property>
 
-<a href=@page_url@?&portal_id=@portal_id@&referer=@referer@&anchor=#custom>#new-portal.lt_Manage_Custom_Portlet#</a>
+<a href="@page_url@?&amp;portal_id=@portal_id@&amp;referer=@referer@&amp;anchor=#custom">#new-portal.lt_Manage_Custom_Portlet#</a>
 
 @rendered_page;noquote@
 <hr>

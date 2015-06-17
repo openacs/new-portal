@@ -22,18 +22,18 @@
     <table border="0" bgcolor="#CC0000" cellpadding="1" cellspacing="0" width="100%" class="portal_border">
     <tr>
       <td>
-        <table border=0 cellpadding=3 cellspacing=0 width="100%">
+        <table border="0" cellpadding="3" cellspacing="0" width="100%">
 	  <tr>
             <td class="portal_header" bgcolor="#CC0000">
               @name@
             </td>
-            <td align=right class="portal_header" bgcolor="#CC0000">
+            <td align="right" class="portal_header" bgcolor="#CC0000">
 		<!-- include title buttons here -->
             </td>
 	  </tr>
 
           <tr>
-            <td class="portal_body" colspan=2 bgcolor="#ffffff">
+            <td class="portal_body" colspan="2" bgcolor="#ffffff">
 <!-- Content: '@name@' begin -->
 	      <slave>
 <!-- Content: '@name@' end -->

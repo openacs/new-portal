@@ -20,9 +20,9 @@
 
   <!-- A simple 1-column thingy. -->
 
-  <table border=0 width="100%">
+  <table border="0" width="100%">
     <tr>
-      <td valign=top style="width:50%">
+      <td valign="top" style="width:50%">
         <list name="element_ids_1">
           <include src="@element_src@" 
           element_id="@element_ids_1:item@" 

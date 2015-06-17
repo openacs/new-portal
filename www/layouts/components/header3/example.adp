@@ -18,9 +18,9 @@
 
 %>
 
-<table border=0>
+<table border="0">
   <tr>
-    <td colspan=3 bgcolor="#bebebe" height="5%">
+    <td colspan="3" bgcolor="#bebebe" height="5%">
 	&nbsp;
     </td>
   </tr>

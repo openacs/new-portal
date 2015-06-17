@@ -33,20 +33,20 @@
   <td class="element-header-buttons" align="right">
     <if @user_editable_p@ eq "t">   
       <a href="configure-element?element_id=@element_id@&amp;op=edit">
-        <img border=0 src="@dir@/e.gif" alt="edit"></a>
+        <img border="0" src="@dir@/e.gif" alt="edit"></a>
     </if>
     <if @shadeable_p@ eq "t">		
       <a href="configure-element?element_id=@element_id@&amp;op=shade">
         <if @shaded_p@ eq "f">
-          <img border=0 src="@dir@/shade.gif" alt="shade"></a>
+          <img border="0" src="@dir@/shade.gif" alt="shade"></a>
 	</if>
 	<else>
-          <img border=0 src="@dir@/unshade.gif" alt="shade"></a>
+          <img border="0" src="@dir@/unshade.gif" alt="shade"></a>
 	</else>
     </if>
     <if @hideable_p@ eq "t">		
       <a href="configure-element?element_id=@element_id@&amp;op=hide">
-      <img border=0  src="@dir@/x.gif" alt="hide"></a>
+      <img border="0"  src="@dir@/x.gif" alt="hide"></a>
     </if>
     <if @user_editable_p@ eq "f" and @shadeable_p@ eq "f" and 
      @hideable_p@ eq "f">
