@@ -72,8 +72,7 @@ ad_context_bar_multirow -- $context_tmp
 # change locale
 set num_of_locales [llength [lang::system::get_locales]]
 if { $num_of_locales > 1 } {
-    set change_locale_url \
-        "/acs-lang/?[export_vars { { package_id "[ad_conn package_id]" } }]"
+    set change_locale_url [export_vars -base /acs-lang { { package_id "[ad_conn package_id]" } }]
 }
 
 # Curriculum bar

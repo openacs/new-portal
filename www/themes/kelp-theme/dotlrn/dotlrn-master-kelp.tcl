@@ -322,7 +322,7 @@ if {$ds_enabled_p} {
     set ds_link {}
 }
 
-set change_locale_url "/acs-lang/?[export_vars { { package_id "[ad_conn package_id]" } }]"
+set change_locale_url [export_vars -base /acs-lang { { package_id "[ad_conn package_id]" } }]
 
 # Hack for title and context bar outside of dotlrn
 
