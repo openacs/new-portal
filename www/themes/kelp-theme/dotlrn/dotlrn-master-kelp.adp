@@ -1,11 +1,11 @@
 <master src="/www/site-master-kelp">
   <if @context@ not nil>
-     <property name="context">@context;noquote@</property>
+     <property name="context">@context;literal@</property>
   </if>
-  <else><if @context_bar@ not nil><property name="context_bar">@context_bar;noquote@</property></if></else>
-  <if @focus@ not nil><property name="focus">@focus;noquote@</property></if>
-  <if @doc_type@ not nil><property name="doc_type">@doc_type;noquote@</property></if>
-  <if @title@ not nil><property name="title">@title;noquote@</property></if>
+  <else><if @context_bar@ not nil><property name="context_bar">@context_bar;literal@</property></if></else>
+  <if @focus@ not nil><property name="focus">@focus;literal@</property></if>
+  <if @doc_type@ not nil><property name="doc_type">@doc_type;literal@</property></if>
+  <if @title@ not nil><property name="doc(title)">@title;literal@</property></if>
 
 
 

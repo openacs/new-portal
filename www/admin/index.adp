@@ -19,7 +19,7 @@
 %>
 
 <master>
-<property name="title">Welcome to Portals</property>
+<property name="doc(title)">Welcome to Portals</property>
 
 <P>
 

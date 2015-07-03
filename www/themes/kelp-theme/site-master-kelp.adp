@@ -1,12 +1,12 @@
 <master src="/www/blank-master">
   <if @title@ not nil>
-    <property name="title">@title;noquote@</property>
+    <property name="doc(title)">@title;literal@</property>
   </if>
   <if @signatory@ not nil>
-    <property name="signatory">@signatory;noquote@</property>
+    <property name="signatory">@signatory;literal@</property>
   </if>
   <if @focus@ not nil>
-    <property name="focus">@focus;noquote@</property>
+    <property name="focus">@focus;literal@</property>
   </if>
 
 
