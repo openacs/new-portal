@@ -89,11 +89,11 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggl
 </form>
 
     <include src=place-element-other-page &="element_multi" 
-             target_stub=@target_stub@
-             portal_id=@portal_id@
-             page_id=@element_multi.page_id@
-             return_url=@return_url@
-             action_string=@action_string@>
+             target_stub="@target_stub;literal@"
+             portal_id="@portal_id;literal@"
+             page_id="@element_multi.page_id;literal@"
+             return_url="@return_url;literal@"
+             action_string="@action_string;literal@">
 
 
 </multiple>

@@ -104,11 +104,11 @@
      </form>
    </if>
    <div class="portlet">
-     <include src=place-element-other-page &="element_multi" portal_id=@portal_id@ page_id=@page_id@ action_string=@action_string@ anchor=@page_id@ return_url=@return_url@>
+     <include src=place-element-other-page &="element_multi" portal_id="@portal_id;literal@" page_id="@page_id;literal@" action_string="@action_string;literal@" anchor="@page_id;literal@" return_url="@return_url;literal@">
    </div>
   </multiple>
 </div> <!-- portlet-wrapper -->
 
-<include src="show-here" portal_id=@portal_id@ action_string=@action_string@ region=@region@ page_id=@page_id@ anchor=@page_id@    return_url=@return_url@>
+<include src="show-here" portal_id="@portal_id;literal@" action_string="@action_string;literal@" region="@region;literal@" page_id="@page_id;literal@" anchor="@page_id;literal@"    return_url="@return_url;literal@">
 
 

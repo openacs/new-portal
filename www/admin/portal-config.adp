@@ -30,4 +30,4 @@
 
 <a name="custom"><h2></a>#new-portal.Custom_Portlets#</h2>
 <p> #new-portal.lt_-_Note_custom_portlet#</p>
-<include src="/packages/static-portlet/www/static-admin-portlet" package_id="@portal_id@" template_portal_id="@portal_id@" return_url="@return_url@">
+<include src="/packages/static-portlet/www/static-admin-portlet" package_id="@portal_id;literal@" template_portal_id="@portal_id;literal@" return_url="@return_url;literal@">

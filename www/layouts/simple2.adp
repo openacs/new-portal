@@ -24,33 +24,33 @@
   <tr>
     <td class="leftColumn" valign="top">
       <list name="element_ids_1">
-        <include src="@element_src@"
-                 element_id="@element_ids_1:item@"
-                 action_string="@action_string@"
-                 theme_id="@theme_id@"
+        <include src="@element_src;literal@"
+                 element_id="@element_ids_1:item;literal@"
+                 action_string="@action_string;literal@"
+                 theme_id="@theme_id;literal@"
                  region="1"
-                 portal_id="@portal_id@"
-                 edit_p="@edit_p@"
-                 return_url="@return_url@"
-                 hide_links_p="@hide_links_p@"
-                 page_id="@page_id@"
-                 layout_id="@layout_id@">
+                 portal_id="@portal_id;literal@"
+                 edit_p="@edit_p;literal@"
+                 return_url="@return_url;literal@"
+                 hide_links_p="@hide_links_p;literal@"
+                 page_id="@page_id;literal@"
+                 layout_id="@layout_id;literal@">
         <br>
       </list>
     </td>
     <td class="rightColumn" valign="top">
       <list name="element_ids_2">
-        <include src="@element_src@"
-                 element_id="@element_ids_2:item@"
-                 action_string="@action_string@"
-                 theme_id="@theme_id@"
+        <include src="@element_src;literal@"
+                 element_id="@element_ids_2:item;literal@"
+                 action_string="@action_string;literal@"
+                 theme_id="@theme_id;literal@"
                  region="2"
-                 portal_id="@portal_id@"
-                 edit_p="@edit_p@"
-                 return_url="@return_url@"
-                 hide_links_p="@hide_links_p@"
-                 page_id="@page_id@"
-                 layout_id="@layout_id@">
+                 portal_id="@portal_id;literal@"
+                 edit_p="@edit_p;literal@"
+                 return_url="@return_url;literal@"
+                 hide_links_p="@hide_links_p;literal@"
+                 page_id="@page_id;literal@"
+                 layout_id="@layout_id;literal@">
         <br>
       </list>
     </td>
