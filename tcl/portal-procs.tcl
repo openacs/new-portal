@@ -1684,9 +1684,7 @@ ad_proc -private portal::evaluate_element {
               errmsg \
              ] \
          } {
-
-        global errorInfo
-        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n url = '[ad_conn url]' \n config='[array get config]'\n"
+        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$::errorInfo\n\n url = '[ad_conn url]' \n config='[array get config]'\n"
         # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
 
         set element(content) "You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
@@ -1775,8 +1773,7 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
                      [datasource_call \
                           $element(datasource_id) "Show" [list [array get config] ]] } \
               errmsg ] } {
-        global errorInfo
-        ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$errorInfo\n\n"
+        ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$::errorInfo\n\n"
         #ad_return -error
         ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <P> $errmsg\n\n"
 
@@ -1919,10 +1916,9 @@ ad_proc -private portal::get_datasource_name { ds_id } {
     if { ![catch {db_1row select {}} errmsg] } {
         return $name
     } else {
-        global errorInfo
         set error_text "portal::get_datasource_name error! No datasource with id \"$ds_id\" found"
         ns_log Error $error_text
-        ns_log Error "$errorInfo"
+        ns_log Error "$::errorInfo"
         ad_return_complaint 1 $error_text
     }
 }
@@ -1936,10 +1932,9 @@ ad_proc -private portal::get_datasource_id { ds_name } {
     if { ![catch {db_1row select {}} errmsg] } {
         return $datasource_id
     } else {
-        global errorInfo
         set error_text "portal::get_datasource_name error! No datasource with name \"$ds_name\" found"
         ns_log Error $error_text
-        ns_log Error "$errorInfo"
+        ns_log Error "$::errorInfo"
         ad_return_complaint 1 $error_text
     }
 }
