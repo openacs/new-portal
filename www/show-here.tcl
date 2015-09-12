@@ -42,3 +42,9 @@ set location [ad_conn location]
 
 
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

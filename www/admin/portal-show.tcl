@@ -32,3 +32,9 @@ set name "[portal::get_name $portal_id]"
 set html "[portal::navbar -portal_id $portal_id] [portal::render -page_num $page_num $portal_id]"
 
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

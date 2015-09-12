@@ -40,3 +40,9 @@ if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] }
 
 ad_return_template
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

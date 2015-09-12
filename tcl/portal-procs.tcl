@@ -2507,3 +2507,9 @@ ad_proc portal::portlet_visible_p {
         return 0
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

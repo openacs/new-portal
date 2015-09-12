@@ -539,3 +539,9 @@ $recolor_css
 }
 "
 template::head::add_css -href "/resources/dotlrn/dotlrn-master-kelp.css"
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
