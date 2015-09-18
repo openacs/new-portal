@@ -34,7 +34,7 @@ append show_html "<select name=element_id>"
 ns_log notice "portal_id = $portal_id"
 foreach element [portal::hidden_elements_list_not_cached -portal_id $portal_id] {
     set show_avail_p 1
-    append show_html "<option value=\"[ad_quotehtml [lindex $element 0]]\">[lang::util::localize [lindex $element 1]]</option>\n"
+    append show_html "<option value=\"[ns_quotehtml [lindex $element 0]]\">[lang::util::localize [lindex $element 1]]</option>\n"
 }
 
 set imgdir /resources/new-portal/images

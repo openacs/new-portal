@@ -494,7 +494,7 @@ ad_proc -public portal::configure {
             <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
             <div><input type="hidden" name="anchor" value="$page_id"></div>
             <div><input type="submit" name="op_rename_page" value="[_ new-portal.Rename_Page]"></div>
-            <div><input type="text" name="pretty_name" value="[ad_quotehtml $page_name]"></div>
+            <div><input type="text" name="pretty_name" value="[ns_quotehtml $page_name]"></div>
 	    </form>
 	    <form name="op_toggle_tab_visibility" method="post" action="@action_string@">
             <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
@@ -2433,7 +2433,7 @@ ad_proc portal::dimensional {
             set thisoption_name [lindex $option_value 0]
             # We allow portal page names to have embedded message catalog keys
             # that we localize on the fly
-            set thisoption_value [ad_quotehtml [lang::util::localize [lindex $option_value 1]]]
+            set thisoption_value [ns_quotehtml [lang::util::localize [lindex $option_value 1]]]
             set thisoption_link_p 1
             if {[llength $option_value] > 3} {
                 set thisoption_link_p [lindex $option_value 3]
