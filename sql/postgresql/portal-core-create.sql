@@ -161,6 +161,7 @@ create table portals (
                                     constraint portal_template_id_fk
                                     references portals (portal_id)
 );
+create index portals_template_id_idx on portals(template_id);
 
 -- Support for multi-page portals (think my.yahoo.com)
 create table portal_pages (
@@ -198,6 +199,7 @@ create table portal_pages (
 );
 
 create index portal_pages_prtl_page_idx on portal_pages (portal_id, page_id);
+
 
 -- PE are fully owned by one and only one portal. They are not
 -- "objects" that live on after their portal is gone. One way to think
