@@ -66,18 +66,14 @@ create table portal_datasource_def_params (
                                     on delete cascade
                                     constraint p_ds_def_prms_element_id_nn
                                     not null,
-    config_required_p               char(1)
-                                    default 'f'
+    config_required_p               boolean
+                                    default false
                                     constraint p_ds_def_prms_cfg_req_p_nn
-                                    not null
-                                    constraint p_ds_def_prms_cfg_req_p_ck
-                                    check (config_required_p in ('t', 'f')),
-    configured_p                    char(1)
-                                    default 'f'
+                                    not null,
+    configured_p                    boolean
+                                    default false
                                     constraint p_ds_def_prms_configured_p_nn
-                                    not null
-                                    constraint p_ds_def_prms_configured_p_ck
-                                    check (configured_p in ('t', 'f')),
+                                    not null,
     key                             varchar(200)
                                     not null,
     value                           varchar(200)
@@ -111,11 +107,9 @@ create table portal_supported_regions (
     region                          varchar(20)
                                     constraint p_spprtd_rgns_immtble_p_nn
                                     not null,
-    immutable_p                     char(1)
+    immutable_p                     boolean
                                     constraint p_spprtd_rgns_immtble_p_nn
-                                    not null
-                                    constraint p_spprtd_rgns_immtble_p_ck
-                                    check (immutable_p in ('t', 'f')),
+                                    not null,
     constraint portal_supported_regions_pk
     primary key (layout_id, region)
 );
@@ -189,11 +183,10 @@ create table portal_pages (
     sort_key                        integer
                                     constraint portal_pages_sort_key_nn
                                     not null,
-    hidden_p                        char(1)
-                                    default 'f'
+    hidden_p                        boolean
+                                    default false
                                     constraint portal_pages_hidden_p_nn
-                                    not null
-                                    check (hidden_p in ('t','f')),
+                                    not null,
     constraint portal_pages_srt_key_un
     unique (portal_id, sort_key)
 );
@@ -257,18 +250,14 @@ create table portal_element_parameters (
                                     on delete cascade
                                     constraint p_element_prms_element_id_nn
                                     not null,
-    config_required_p               char(1)
-                                    default 'f'
+    config_required_p               boolean
+                                    default false
                                     constraint p_element_prms_cfg_req_p_nn
-                                    not null
-                                    constraint p_element_prms_cfg_req_p_ck
-                                    check (config_required_p in ('t', 'f')),
-    configured_p                    char(1)
-                                    default 'f'
+                                    not null,
+    configured_p                    boolean
+                                    default false
                                     constraint p_element_prms_configured_p_nn
-                                    not null
-                                    constraint p_element_prms_configured_p_ck
-                                    check (configured_p in ('t', 'f')),
+                                    not null,
     key                             varchar(50)
                                     constraint p_element_prms_key_nn
                                     not null,
