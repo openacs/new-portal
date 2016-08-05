@@ -106,7 +106,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggl
 <input type="hidden" name="portal_id" value="@portal_id@">
 <input type="hidden" name="page_id" value="@page_id@">
 <input type="hidden" name="region" value="@region@">
-<input type="hidden" name=return_url value=@return_url@
+<input type="hidden" name="return_url" value="@return_url@">
 <input type="hidden" name="anchor" value="@page_id@">
 </form>
 

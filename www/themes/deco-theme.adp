@@ -35,9 +35,9 @@
     <tr>
     <td align="left" valign="middle" width="88%"  bgcolor="#eeeee7">
 	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
-          <b>@name;noquote@</b>
+          <strong>@name;noquote@</strong>
         </if><else>
-          <a style="text-decoration: none" href="@link@"><b>@name;noquote@</b></a>
+          <a style="text-decoration: none" href="@link@"><strong>@name;noquote@</strong></a>
         </else>
     </td>
 		<if @user_editable_p@ eq "t">	
