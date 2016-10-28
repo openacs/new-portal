@@ -197,7 +197,7 @@ ad_proc -public portal::create {
         # ignore the csv list if we have a template
         if {$csv_list ne "" && $template_id eq ""} {
             # if there are more pages in the csv_list, create them
-            for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
+            for {set i 1} {$i < [llength $page_name_list]} {incr i} {
                 portal::page_create -portal_id $portal_id \
                     -pretty_name [lindex $page_name_list $i] \
                     -accesskey [lindex $page_accesskey_list $i] \
