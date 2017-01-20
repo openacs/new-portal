@@ -105,6 +105,6 @@
    </div> <!-- container-shadows-des -->
 <!--  [ CONTAINER ] Added by www.sii.it -->
 
-<if @curriculum_bar_p@ true>
+<if @curriculum_bar_p;literal@ true>
   <p><include src="/packages/curriculum/lib/bar" />
 </if>

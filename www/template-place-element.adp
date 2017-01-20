@@ -72,7 +72,7 @@ User Movable? Yes, Unpinned [<a href="@target_stub@-2?portal_id=@portal_id@&amp;
 
 <BR>
 
-<if @element_multi.hideable_p@ eq "t">
+<if @element_multi.hideable_p;literal@ true>
 User Hideable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggle_hideable=1&amp;element_id=@element_multi.element_id@&amp;return_url=@return_url@&amp;anchor=@page_id@">don't allow hiding</a>]
 </if>
 <else>User Hideable? No [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggle_hideable=1&amp;element_id=@element_multi.element_id@&amp;return_url=@return_url@&amp;anchor=@page_id@">allow hiding</a>]
@@ -80,7 +80,7 @@ User Hideable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggle
 
 <BR>
 
-<if @element_multi.shadeable_p@ eq "t">
+<if @element_multi.shadeable_p;literal@ true>
 User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggle_shadeable=1&amp;element_id=@element_multi.element_id@&amp;return_url=@return_url@&amp;anchor=@page_id@&amp;anchor=@page_id@">don't allow shading</nobr></a>]
 </if>
 <else>User Shadeable? No [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggle_shadeable=1&amp;element_id=@element_multi.element_id@&amp;return_url=@return_url@&amp;anchor=@page_id@">allow shading</a>]

@@ -31,20 +31,20 @@
   </td>
   
   <td class="element-header-buttons" align="right">
-    <if @user_editable_p@ eq "t">   
+    <if @user_editable_p;literal@ true>   
       <a href="configure-element?element_id=@element_id@&amp;op=edit">
         <img border="0" src="@dir@/e.gif" alt="edit"></a>
     </if>
-    <if @shadeable_p@ eq "t">		
+    <if @shadeable_p;literal@ true>		
       <a href="configure-element?element_id=@element_id@&amp;op=shade">
-        <if @shaded_p@ eq "f">
+        <if @shaded_p;literal@ false>
           <img border="0" src="@dir@/shade.gif" alt="shade"></a>
 	</if>
 	<else>
           <img border="0" src="@dir@/unshade.gif" alt="shade"></a>
 	</else>
     </if>
-    <if @hideable_p@ eq "t">		
+    <if @hideable_p;literal@ true>		
       <a href="configure-element?element_id=@element_id@&amp;op=hide">
       <img border="0"  src="@dir@/x.gif" alt="hide"></a>
     </if>

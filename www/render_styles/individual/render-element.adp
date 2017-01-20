@@ -18,7 +18,7 @@
 
 %>
 
-<if @empty_p@ eq 0>
+<if @empty_p;literal@ false>
 <master src="@element.filename@">
 <property name="name">@element.name;literal@</property>
 <property name="dir">@element.resource_dir;literal@</property>
