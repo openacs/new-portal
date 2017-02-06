@@ -460,7 +460,7 @@ ad_proc -public portal::configure {
     set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
     set last_page [lindex $list_of_page_ids [llength $list_of_page_ids]-1]
-    ns_log warning "last_page is $last_page"
+    #ns_log warning "last_page is $last_page"
     foreach page_id $list_of_page_ids {
 
         set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
