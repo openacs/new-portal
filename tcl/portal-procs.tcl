@@ -1678,17 +1678,19 @@ ad_proc -private portal::evaluate_element {
                            -datasource_name $element(ds_name) \
                            $element(datasource_id) \
                            "Show" \
-                           [list [array get config]]
-                      ]\
-                  } \
-              errmsg \
-             ] \
-         } {
-        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$::errorInfo\n\n url = '[ad_conn url]' \n config='[array get config]'\n"
-        # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
-
-        set element(content) "You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
-
+                           [list [array get config]]]
+    } errmsg ]} {
+        set errorCode $::errorCode
+        set errorInfo $::errorInfo
+        set element(content) ""
+        if {[ad_exception $errorCode] eq "ad_script_abort"} {
+            #ad_log notice "*** portal::evaluate_element callback ended with script_abort"
+        } else {
+            ad_log error "*** portal::evaluate_element callback Error! *** errormsg: $errmsg\n$errorInfo, config='[array get config]'\n"
+            append element(content) "You have found a bug in our code. " \
+                "<p>Please notify the webmaster and include the following text. Thank You." \
+                "<p><pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
+        }
     }
 
     # trim the element's content
@@ -1696,7 +1698,7 @@ ad_proc -private portal::evaluate_element {
 
     # We use the actual pretty name from the DB (ben)
     # FIXME: this is not as good as it should be
-    if {$element(ds_name) == $element(pretty_name)} {
+    if {$element(ds_name) eq $element(pretty_name)} {
 
         set element(name) \
             [datasource_call \
