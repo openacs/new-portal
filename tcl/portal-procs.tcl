@@ -159,7 +159,7 @@ ad_proc -public portal::create {
         set page_accesskey_list [list]
         set layout_name_list [list]
 
-        # seperate name and layout
+        # separate name and layout
         foreach item $page_name_and_layout_list {
 	    lassign [split $item ","] page_name layout_name page_accesskey
             lappend page_name_list $page_name
@@ -1477,7 +1477,7 @@ ad_proc -private portal::hideable_p_not_cached {
 ad_proc -private portal::hidden_elements_list {
     {-portal_id:required}
 } {
-    Returns a list of "hidden" element avaliable to a portal. Use a 1 second cache here
+    Returns a list of "hidden" element available to a portal. Use a 1 second cache here
     to fake a per-connection cache.
 } {
     return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id" 1]

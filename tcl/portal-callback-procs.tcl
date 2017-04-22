@@ -40,7 +40,7 @@ ad_proc -public -callback search::datasource -impl portal_datasource {} {
     }
 
     return [list object_id $object_id \
-                title {TODO the_communites_title} \
+                title {TODO the_communities_title} \
                 content $bodies \
                 keywords {} \
                 storage_type text \
