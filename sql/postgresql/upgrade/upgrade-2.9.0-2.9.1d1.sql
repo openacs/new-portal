@@ -34,7 +34,7 @@ ALTER TABLE portal_datasource_def_params
       ALTER COLUMN config_required_p SET DEFAULT false;
 
 ALTER TABLE portal_pages
-      DROP constraint portal_pages_hidden_p_check,
+      DROP constraint portal_pages_hidden_p_ck,
       ALTER COLUMN hidden_p DROP DEFAULT,
       ALTER COLUMN hidden_p TYPE boolean
       USING hidden_p::boolean,
