@@ -103,7 +103,7 @@ ad_proc -private portal::www_path {} {
 ad_proc -private portal::mount_point_no_cache {} {
     Returns the mount point of the portal package.
     Sometimes we need to know this for like <include>ing
-    templates from tcl
+    templates from Tcl
 } {
     return [site_node::get_url_from_object_id -object_id [get_package_id]]
 }
@@ -1110,9 +1110,9 @@ ad_proc -public portal::page_create {
 ad_proc -public portal::list_pages_tcl_list {
     {-portal_id:required}
 } {
-    Returns a tcl list of the page_ids for the given portal_id
+    Returns a Tcl list of the page_ids for the given portal_id
 
-    @return tcl list of the pages
+    @return Tcl list of the pages
     @param portal_id
 } {
     set foo [list]
