@@ -158,6 +158,8 @@ create table portals (
     template_id                     constraint template_id_fk
                                     references portals (portal_id)
 );
+create index portals_template_id_idx on portals(template_id);
+
 
 -- Support for multi-page portals (think my.yahoo.com)
 create table portal_pages (

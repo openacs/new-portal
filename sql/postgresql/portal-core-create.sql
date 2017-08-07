@@ -66,18 +66,14 @@ create table portal_datasource_def_params (
                                     on delete cascade
                                     constraint p_ds_def_prms_element_id_nn
                                     not null,
-    config_required_p               char(1)
-                                    default 'f'
+    config_required_p               boolean
+                                    default false
                                     constraint p_ds_def_prms_cfg_req_p_nn
-                                    not null
-                                    constraint p_ds_def_prms_cfg_req_p_ck
-                                    check (config_required_p in ('t', 'f')),
-    configured_p                    char(1)
-                                    default 'f'
+                                    not null,
+    configured_p                    boolean
+                                    default false
                                     constraint p_ds_def_prms_configured_p_nn
-                                    not null
-                                    constraint p_ds_def_prms_configured_p_ck
-                                    check (configured_p in ('t', 'f')),
+                                    not null,
     key                             varchar(200)
                                     not null,
     value                           varchar(200)
@@ -111,11 +107,9 @@ create table portal_supported_regions (
     region                          varchar(20)
                                     constraint p_spprtd_rgns_immtble_p_nn
                                     not null,
-    immutable_p                     char(1)
+    immutable_p                     boolean
                                     constraint p_spprtd_rgns_immtble_p_nn
-                                    not null
-                                    constraint p_spprtd_rgns_immtble_p_ck
-                                    check (immutable_p in ('t', 'f')),
+                                    not null,
     constraint portal_supported_regions_pk
     primary key (layout_id, region)
 );
@@ -161,6 +155,7 @@ create table portals (
                                     constraint portal_template_id_fk
                                     references portals (portal_id)
 );
+create index portals_template_id_idx on portals(template_id);
 
 -- Support for multi-page portals (think my.yahoo.com)
 create table portal_pages (
@@ -188,16 +183,16 @@ create table portal_pages (
     sort_key                        integer
                                     constraint portal_pages_sort_key_nn
                                     not null,
-    hidden_p                        char(1)
-                                    default 'f'
+    hidden_p                        boolean
+                                    default false
                                     constraint portal_pages_hidden_p_nn
-                                    not null
-                                    check (hidden_p in ('t','f')),
+                                    not null,
     constraint portal_pages_srt_key_un
     unique (portal_id, sort_key)
 );
 
 create index portal_pages_prtl_page_idx on portal_pages (portal_id, page_id);
+
 
 -- PE are fully owned by one and only one portal. They are not
 -- "objects" that live on after their portal is gone. One way to think
@@ -255,18 +250,14 @@ create table portal_element_parameters (
                                     on delete cascade
                                     constraint p_element_prms_element_id_nn
                                     not null,
-    config_required_p               char(1)
-                                    default 'f'
+    config_required_p               boolean
+                                    default false
                                     constraint p_element_prms_cfg_req_p_nn
-                                    not null
-                                    constraint p_element_prms_cfg_req_p_ck
-                                    check (config_required_p in ('t', 'f')),
-    configured_p                    char(1)
-                                    default 'f'
+                                    not null,
+    configured_p                    boolean
+                                    default false
                                     constraint p_element_prms_configured_p_nn
-                                    not null
-                                    constraint p_element_prms_configured_p_ck
-                                    check (configured_p in ('t', 'f')),
+                                    not null,
     key                             varchar(50)
                                     constraint p_element_prms_key_nn
                                     not null,

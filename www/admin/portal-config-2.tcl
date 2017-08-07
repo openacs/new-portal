@@ -32,3 +32,9 @@ portal::configure_dispatch -portal_id $portal_id -form $form
 
 ad_returnredirect "portal-config?portal_id=$portal_id&referer=$return_url#$anchor"
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

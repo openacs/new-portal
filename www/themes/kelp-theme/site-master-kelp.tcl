@@ -93,3 +93,9 @@ set whos_online_url "[subsite::get_element -element url]shared/whos-online"
 #----------------------------------------------------------------------
 
 util_get_user_messages -multirow "user_messages"
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

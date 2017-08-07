@@ -50,8 +50,7 @@ if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -e
     # If the error is in the element's "show" proc, the error will
     # be shown in the content of the portlet. This is for errors other
     # than with the "show" proc. It hides the entire PE
-    global errorInfo
-    ns_log error "\n\n *** Error in portal/www/render_sytles_/indiviudal/render-element.tcl \n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errmsg\n\n$errorInfo"
+    ns_log error "\n\n *** Error in portal/www/render_sytles_/indiviudal/render-element.tcl \n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errmsg\n\n$::errorInfo"
     array set element {content {}}
 
 } else {
@@ -66,3 +65,9 @@ if {$element(content) eq ""} {
     set empty_p 0
 } 
 
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

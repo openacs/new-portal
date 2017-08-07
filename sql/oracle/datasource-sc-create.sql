@@ -74,7 +74,7 @@ begin
     );
 
     -- Link: Where is the href target for this PE?
-    -- ** not currently implimented ***
+    -- ** not currently implemented ***
     foo := acs_sc_msg_type.new(
         msg_type_name => 'portal_datasource.Link.InputType',
         msg_type_spec => ''
@@ -161,7 +161,7 @@ begin
     );
 
     -- Edit: the datasources' edit html
-    -- ** not currently implimented **
+    -- ** not currently implemented **
     foo := acs_sc_msg_type.new(
         msg_type_name => 'portal_datasource.Edit.InputType',
         msg_type_spec => 'element_id:integer'

@@ -89,3 +89,9 @@ foreach element [portal::hidden_elements_list_not_cached -portal_id $portal_id] 
 
 set imgdir /resources/new-portal/images
 set location [ad_conn location]
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -23,14 +23,14 @@
 		  <div id="scheda-container-top">
 			 <div id="scheda-titolo">@name@</div>		
 				<div id="scheda-valori">
-                    <if @user_editable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=edit">&nbsp;<img borde	r=0 src="@dir@/00_headport_puls_edit.png" alt="edit"></a></if>
-                    <if @shadeable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=shade">
-	                   <if @shaded_p@ eq "f">&nbsp;<img border="0" src="@dir@/00_headport_puls_min.png" alt="shade"></a></if> 	
+                    <if @user_editable_p;literal@ true><a href="configure-element?element_id=@element_id@&amp;op=edit">&nbsp;<img borde	r=0 src="@dir@/00_headport_puls_edit.png" alt="edit"></a></if>
+                    <if @shadeable_p;literal@ true><a href="configure-element?element_id=@element_id@&amp;op=shade">
+	                   <if @shaded_p;literal@ false>&nbsp;<img border="0" src="@dir@/00_headport_puls_min.png" alt="shade"></a></if> 	
 		               <else>
 		               &nbsp;<img border="0" src="@dir@/00_headport_puls_max.png" alt="unshade"></a>
 		               </else>
                   </if>
-                  <if @hideable_p@ eq "t"><a href="configure-element?element_id=@element_id@&amp;op=hide">&nbsp;<img border="0" src="@dir@/00_headport_puls_chiudi.png" alt="hide"></a></if>
+                  <if @hideable_p;literal@ true><a href="configure-element?element_id=@element_id@&amp;op=hide">&nbsp;<img border="0" src="@dir@/00_headport_puls_chiudi.png" alt="hide"></a></if>
 			</div>		 
 			</div>
 			<%	 

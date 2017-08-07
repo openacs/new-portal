@@ -271,7 +271,7 @@
     <fullquery name="portal::configure_dispatch.toggle_tab_visibility">
         <querytext>
             update portal_pages
-            set hidden_p = case when hidden_p = 't' then 'f' else 't' end
+            set hidden_p = case when hidden_p = true then false else true end
             where page_id = :page_id
         </querytext>
     </fullquery>

@@ -103,7 +103,7 @@ ad_proc -private portal::www_path {} {
 ad_proc -private portal::mount_point_no_cache {} {
     Returns the mount point of the portal package.
     Sometimes we need to know this for like <include>ing
-    templates from tcl
+    templates from Tcl
 } {
     return [site_node::get_url_from_object_id -object_id [get_package_id]]
 }
@@ -159,7 +159,7 @@ ad_proc -public portal::create {
         set page_accesskey_list [list]
         set layout_name_list [list]
 
-        # seperate name and layout
+        # separate name and layout
         foreach item $page_name_and_layout_list {
 	    lassign [split $item ","] page_name layout_name page_accesskey
             lappend page_name_list $page_name
@@ -197,7 +197,7 @@ ad_proc -public portal::create {
         # ignore the csv list if we have a template
         if {$csv_list ne "" && $template_id eq ""} {
             # if there are more pages in the csv_list, create them
-            for {set i 1} {$i < [expr [llength $page_name_list]]} {incr i} {
+            for {set i 1} {$i < [llength $page_name_list]} {incr i} {
                 portal::page_create -portal_id $portal_id \
                     -pretty_name [lindex $page_name_list $i] \
                     -accesskey [lindex $page_accesskey_list $i] \
@@ -228,7 +228,7 @@ ad_proc -public portal::get_name {
 } {
     Get the name of this portal
 } {
-    return [lang::util::localize [util_memoize "portal::get_name_not_cached -portal_id $portal_id"]]
+    return [lang::util::localize [util_memoize [list portal::get_name_not_cached -portal_id $portal_id]]]
 }
 
 ad_proc -private portal::get_name_not_cached {
@@ -460,7 +460,7 @@ ad_proc -public portal::configure {
     set list_of_page_ids [list_pages_tcl_list -portal_id $portal_id]
 
     set last_page [lindex $list_of_page_ids [llength $list_of_page_ids]-1]
-    ns_log warning "last_page is $last_page"
+    #ns_log warning "last_page is $last_page"
     foreach page_id $list_of_page_ids {
 
         set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
@@ -494,7 +494,7 @@ ad_proc -public portal::configure {
             <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
             <div><input type="hidden" name="anchor" value="$page_id"></div>
             <div><input type="submit" name="op_rename_page" value="[_ new-portal.Rename_Page]"></div>
-            <div><input type="text" name="pretty_name" value="[ad_quotehtml $page_name]"></div>
+            <div><input type="text" name="pretty_name" value="[ns_quotehtml $page_name]"></div>
 	    </form>
 	    <form name="op_toggle_tab_visibility" method="post" action="@action_string@">
             <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
@@ -1110,9 +1110,9 @@ ad_proc -public portal::page_create {
 ad_proc -public portal::list_pages_tcl_list {
     {-portal_id:required}
 } {
-    Returns a tcl list of the page_ids for the given portal_id
+    Returns a Tcl list of the page_ids for the given portal_id
 
-    @return tcl list of the pages
+    @return Tcl list of the pages
     @param portal_id
 } {
     set foo [list]
@@ -1477,7 +1477,7 @@ ad_proc -private portal::hideable_p_not_cached {
 ad_proc -private portal::hidden_elements_list {
     {-portal_id:required}
 } {
-    Returns a list of "hidden" element avaliable to a portal. Use a 1 second cache here
+    Returns a list of "hidden" element available to a portal. Use a 1 second cache here
     to fake a per-connection cache.
 } {
     return [util_memoize "portal::hidden_elements_list_not_cached -portal_id $portal_id" 1]
@@ -1678,19 +1678,19 @@ ad_proc -private portal::evaluate_element {
                            -datasource_name $element(ds_name) \
                            $element(datasource_id) \
                            "Show" \
-                           [list [array get config]]
-                      ]\
-                  } \
-              errmsg \
-             ] \
-         } {
-
-        global errorInfo
-        ns_log error "*** portal::evaluate_element callback Error! ***\n\n $errmsg\n\n$errorInfo\n\n url = '[ad_conn url]' \n config='[array get config]'\n"
-        # ad_return_complaint 1 "*** portal::render_element show callback Error! *** <P> $errmsg\n\n"
-
-        set element(content) "You have found a bug in our code. <P>Please notify the webmaster and include the following text. Thank You.<P> <pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
-
+                           [list [array get config]]]
+    } errmsg ]} {
+        set errorCode $::errorCode
+        set errorInfo $::errorInfo
+        set element(content) ""
+        if {[ad_exception $errorCode] eq "ad_script_abort"} {
+            #ad_log notice "*** portal::evaluate_element callback ended with script_abort"
+        } else {
+            ad_log error "*** portal::evaluate_element callback Error! *** errormsg: $errmsg\n$errorInfo, config='[array get config]'\n"
+            append element(content) "You have found a bug in our code. " \
+                "<p>Please notify the webmaster and include the following text. Thank You." \
+                "<p><pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
+        }
     }
 
     # trim the element's content
@@ -1698,7 +1698,7 @@ ad_proc -private portal::evaluate_element {
 
     # We use the actual pretty name from the DB (ben)
     # FIXME: this is not as good as it should be
-    if {$element(ds_name) == $element(pretty_name)} {
+    if {$element(ds_name) eq $element(pretty_name)} {
 
         set element(name) \
             [datasource_call \
@@ -1775,8 +1775,7 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
                      [datasource_call \
                           $element(datasource_id) "Show" [list [array get config] ]] } \
               errmsg ] } {
-        global errorInfo
-        ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$errorInfo\n\n"
+        ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$::errorInfo\n\n"
         #ad_return -error
         ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <P> $errmsg\n\n"
 
@@ -1919,10 +1918,9 @@ ad_proc -private portal::get_datasource_name { ds_id } {
     if { ![catch {db_1row select {}} errmsg] } {
         return $name
     } else {
-        global errorInfo
         set error_text "portal::get_datasource_name error! No datasource with id \"$ds_id\" found"
         ns_log Error $error_text
-        ns_log Error "$errorInfo"
+        ns_log Error "$::errorInfo"
         ad_return_complaint 1 $error_text
     }
 }
@@ -1936,10 +1934,9 @@ ad_proc -private portal::get_datasource_id { ds_name } {
     if { ![catch {db_1row select {}} errmsg] } {
         return $datasource_id
     } else {
-        global errorInfo
         set error_text "portal::get_datasource_name error! No datasource with name \"$ds_name\" found"
         ns_log Error $error_text
-        ns_log Error "$errorInfo"
+        ns_log Error "$::errorInfo"
         ad_return_complaint 1 $error_text
     }
 }
@@ -2438,7 +2435,7 @@ ad_proc portal::dimensional {
             set thisoption_name [lindex $option_value 0]
             # We allow portal page names to have embedded message catalog keys
             # that we localize on the fly
-            set thisoption_value [ad_quotehtml [lang::util::localize [lindex $option_value 1]]]
+            set thisoption_value [ns_quotehtml [lang::util::localize [lindex $option_value 1]]]
             set thisoption_link_p 1
             if {[llength $option_value] > 3} {
                 set thisoption_link_p [lindex $option_value 3]
@@ -2512,3 +2509,9 @@ ad_proc portal::portlet_visible_p {
         return 0
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

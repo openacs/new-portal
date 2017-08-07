@@ -36,7 +36,7 @@ CREATE OR REPLACE FUNCTION portal_page__new(
    p_accesskey varchar,
    p_portal_id integer,
    p_layout_id integer,
-   p_hidden_p char,
+   p_hidden_p boolean,
    p_object_type varchar, -- default 'portal_page'
    p_creation_date timestamptz,
    p_creation_user integer,
@@ -543,7 +543,7 @@ select define_function_args('portal_layout__add_region','layout_id,region,immuta
 CREATE OR REPLACE FUNCTION portal_layout__add_region(
    p_layout_id integer,
    p_region varchar,
-   p_immutable_p char -- default 'f'
+   p_immutable_p boolean default false
 
 ) RETURNS integer AS $$
 DECLARE
@@ -560,35 +560,7 @@ $$ LANGUAGE plpgsql;
 
 
 
---
--- procedure portal_layout__add_region/2
---
-CREATE OR REPLACE FUNCTION portal_layout__add_region(
-   p_layout_id integer,
-   p_region varchar
-) RETURNS integer AS $$
---
--- portal_layout__add_region/2 maybe obsolete, when we define proper defaults for /3
---
-DECLARE
-BEGIN
-    insert
-    into portal_supported_regions
-    (layout_id, region, immutable_p)
-    values
-    (p_layout_id, p_region, 'f');
-
-    return 0;
-END;
-$$ LANGUAGE plpgsql;
-
-
--- old define_function_args('portal_datasource__new','datasource_id,name,description,css_dir,object_type;portal_datasource,creation_date,creation_user,creation_ip,context_id')
--- new
 select define_function_args('portal_datasource__new','datasource_id;null,name;null,description;null,css_dir,object_type;portal_datasource,creation_date;now(),creation_user;null,creation_ip;null,context_id;null');
-
-
-
 
 --
 -- procedure portal_datasource__new/9
@@ -759,8 +731,8 @@ select define_function_args('portal_datasource__set_def_param','datasource_id,co
 --
 CREATE OR REPLACE FUNCTION portal_datasource__set_def_param(
    p_datasource_id integer,
-   p_config_required_p varchar,
-   p_configured_p varchar,
+   p_config_required_p boolean,
+   p_configured_p boolean,
    p_key varchar,
    p_value varchar
 ) RETURNS integer AS $$

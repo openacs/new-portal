@@ -43,13 +43,13 @@
 
     <td class="element-header-buttons-plain">
           
-      <if @user_editable_p@ eq "t">	
+      <if @user_editable_p;literal@ true>	
           <a href="configure-element?element_id=@element_id@&amp;op=edit">[edit]</a>
       </if>
   
-      <if @shadeable_p@ eq "t">		
+      <if @shadeable_p;literal@ true>		
         <a href="configure-element?element_id=@element_id@&amp;op=shade">
-          <if @shaded_p@ eq "f">
+          <if @shaded_p;literal@ false>
             [shade]</a>
           </if>
           <else>
@@ -57,7 +57,7 @@
           </else>
       </if>
   
-      <if @hideable_p@ eq "t">		
+      <if @hideable_p;literal@ true>		
         <a href="configure-element?element_id=@element_id@&amp;op=hide"> [hide]</a>
       </if>
   

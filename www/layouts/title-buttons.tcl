@@ -29,3 +29,9 @@ set title(resource_dir) "/packages/portal/www/templates/components/simple-elemen
 
 set title_noshade_p [parameter::get -parameter title_noshade_p]
 set title_nomove_p [parameter::get -parameter title_nomove_p]
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

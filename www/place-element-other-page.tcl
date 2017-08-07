@@ -26,3 +26,9 @@ db_foreach other_pages_select {} {
     template::multirow append pages \
             $page_id $pretty_name
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

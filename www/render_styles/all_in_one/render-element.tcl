@@ -37,3 +37,9 @@ if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -e
     # all is ok
     array set element $element_data
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
