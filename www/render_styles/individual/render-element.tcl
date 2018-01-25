@@ -53,7 +53,7 @@ ad_try {
     # If the error is in the element's "show" proc, the error will
     # be shown in the content of the portlet. This is for errors other
     # than with the "show" proc. It hides the entire PE
-    ns_log error "\n\n *** Error in portal/www/render_sytles_/indiviudal/render-element.tcl\n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errorMsg\n\n$::errorInfo"
+    ns_log error "\n\n *** Error in portal/www/render_sytles_/individual/render-element.tcl\n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errorMsg\n\n$::errorInfo"
 
     return -code error "error during rendering portal element $element_id (render_style individual)"
 } on ok {element_data} {
