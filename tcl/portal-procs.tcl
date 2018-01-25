@@ -910,6 +910,7 @@ ad_proc -public portal::configure_dispatch {
         set pretty_name [ns_set get $form pretty_name]
         if {$pretty_name eq ""} {
             ad_return_complaint 1 [_ new-portal.lt_You_must_enter_new_na]
+            ad_script_abort
         }
         page_create -pretty_name $pretty_name -portal_id $portal_id
     } elseif { [ns_set get $form "op_remove_empty_page"] ne "" } {
@@ -926,6 +927,7 @@ ad_proc -public portal::configure_dispatch {
 
         if {$pretty_name eq ""} {
             ad_return_complaint 1 [_ new-portal.lt_You_must_enter_new_na]
+            ad_script_abort
         }
         set_page_pretty_name -pretty_name $pretty_name -page_id $page_id
     } elseif { [ns_set get $form "op_toggle_tab_visibility"] ne "" } {
@@ -1234,6 +1236,7 @@ ad_proc -public portal::add_element {
             # the region asked for was not in the list
             ns_log error "portal::add_element region $force_region not in layout $layout_id"
             ad_return_complaint 1 "portal::add_element region $force_region not in layout $layout_id"
+            ad_script_abort
         }
     }
 
@@ -1262,6 +1265,7 @@ ad_proc -public portal::remove_element {
     } else {
         if {$portal_id eq "" && $portlet_name eq ""} {
             ad_return_complaint 1 "portal::remove_element [_ new-portal.lt_Error_bad_params_n___]"
+            ad_script_abort
         }
 
         set element_ids [portal::get_element_ids_by_ds \
@@ -1372,6 +1376,7 @@ ad_proc -private portal::swap_element {
     } else {
         ad_return_complaint 1 \
             "portal::swap_element: [_ new-portal.Bad_direction] $dir"
+        ad_script_abort
     }
 
     db_transaction {
@@ -1389,6 +1394,7 @@ ad_proc -private portal::swap_element {
         db_dml swap_sort_keys_3 {}
     } on_error {
         ad_return_complaint 1 "portal::swap_element: [_ new-portal.transaction_failed]"
+        ad_script_abort
     }
 }
 
@@ -1415,6 +1421,7 @@ ad_proc -private portal::move_element {
         set target_region [expr {$region - 1}]
     } else {
         ad_return_complaint 1 "portal::move_element [_ new-portal.Bad_direction_1]"
+        ad_script_abort
     }
 
     # get this element's page_id
@@ -1671,26 +1678,26 @@ ad_proc -private portal::evaluate_element {
     # setting editable to false
     set config(user_editable_p) "f"
 
+    #
     # do the callback for the ::show proc
-    # evaulate the datasource.
-    if { [catch { set element(content) \
-                      [datasource_call \
-                           -datasource_name $element(ds_name) \
-                           $element(datasource_id) \
-                           "Show" \
-                           [list [array get config]]]
-    } errmsg ]} {
-        set errorCode $::errorCode
-        set errorInfo $::errorInfo
+    # evaluate the datasource.
+    #
+    ad_try {
+        datasource_call \
+            -datasource_name $element(ds_name) \
+            $element(datasource_id) \
+            "Show" \
+            [list [array get config]]
+
+    } on error {errorMsg} {
+        ad_log error "*** portal::evaluate_element callback Error! *** errormsg: $errorMsg\n config='[array get config]'\n"
         set element(content) ""
-        if {[ad_exception $errorCode] eq "ad_script_abort"} {
-            #ad_log notice "*** portal::evaluate_element callback ended with script_abort"
-        } else {
-            ad_log error "*** portal::evaluate_element callback Error! *** errormsg: $errmsg\n$errorInfo, config='[array get config]'\n"
-            append element(content) "You have found a bug in our code. " \
-                "<p>Please notify the webmaster and include the following text. Thank You." \
-                "<p><pre><small>*** portal::evaluate_element callback Error! ***\n\n $errmsg</small></pre>\n\n"
-        }
+        append element(content) "You have found a bug in our code. " \
+            "<p>Please notify the webmaster and include the following text. Thank You." \
+            "<p><pre><small>*** portal::evaluate_element callback Error! ***\n\n [ns_quotehtml $errorMsg]</small></pre>\n\n"
+        
+    } on ok {content} {
+        set element(content) $content
     }
 
     # trim the element's content
@@ -1770,15 +1777,14 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
     }
 
     # do the callback for the ::show proc
-    # evaulate the datasource.
-    if { [catch {set element(content) \
-                     [datasource_call \
-                          $element(datasource_id) "Show" [list [array get config] ]] } \
-              errmsg ] } {
-        ns_log error "*** portal::evaluate_element_raw callback Error ! ***\n\n $errmsg\n\n$::errorInfo\n\n"
-        #ad_return -error
-        ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <P> $errmsg\n\n"
-
+    # evaluate the datasource.
+    ad_try {
+        datasource_call \
+            $element(datasource_id) "Show" [list [array get config] ]
+    } on error {errorMsg} {
+        ad_log error "*** portal::evaluate_element_raw callback Error ! *** $errorMsg"
+        ad_return_complaint 1 "*** portal::evaluate_element_raw show callback Error! *** <p> [ns_quotehtml $errorMsg]"
+        ad_script_abort
     }
 
     set element(name) \
@@ -1922,6 +1928,7 @@ ad_proc -private portal::get_datasource_name { ds_id } {
         ns_log Error $error_text
         ns_log Error "$::errorInfo"
         ad_return_complaint 1 $error_text
+        ad_script_abort
     }
 }
 
@@ -1935,9 +1942,9 @@ ad_proc -private portal::get_datasource_id { ds_name } {
         return $datasource_id
     } else {
         set error_text "portal::get_datasource_name error! No datasource with name \"$ds_name\" found"
-        ns_log Error $error_text
-        ns_log Error "$::errorInfo"
+        ns_log Error $error_text\n$::errorInfo
         ad_return_complaint 1 $error_text
+        ad_script_abort
     }
 }
 
@@ -2096,6 +2103,7 @@ ad_proc -private portal::get_layout_id {
     } else {
         ad_return_complaint 1 "portal::get_layout_id bad params!"
         ns_log error "portal::get_layout_id bad params!"
+        ad_script_abort
     }
 
     return $layout_id
@@ -2275,6 +2283,7 @@ ad_proc -private portal::check_key_value_list {
     if {[llength $list_to_check] % 2 != 0} {
         ns_log error "portal::check_key_value_list bad var list_to_check!"
         ad_return_complaint 1 "portal::check_key_value_list bad var list_to_check!"
+        ad_script_abort
     }
 }
 
@@ -2329,6 +2338,7 @@ ad_proc -public portal::get_theme_id_from_name {
     } else {
         ns_log error "portal::get_theme_id_from_name_select bad theme_id!"
         ad_return_complaint 1 "portal::get_theme_id_from_name_select bad theme_id!"
+        ad_script_abort
     }
 
 }

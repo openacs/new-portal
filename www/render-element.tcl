@@ -26,15 +26,20 @@ ad_page_contract {
     region:onevalue
 }
 
-# get the complete, evaluated element.
-# if there's an error, report it.
-if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] } errmsg ] } {
+#
+# Get the complete, evaluated element.  if there's an error, report it
+# to the user, when show_datasource_errors_p is true.
+#
+ad_try {
+    portal::evaluate_element $element_id $theme_id
+} on error {errorMsg} {
     if { [parameter::get -parameter show_datasource_errors_p] == 1} {
-	set element(content) "<div class=portal_alert>$errmsg</div>"
+	set element(content) "<div class=portal_alert>[ns_quotehtml $errorMsg]</div>"
     } else {
-	return
+        ad_log Warning "ignoring error in portal element $element_id: $errorMsg"
+        ad_script_abort
     }
-} else {
+} on ok {element_data} {
     array set element $element_data
 }
 
