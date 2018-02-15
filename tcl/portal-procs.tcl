@@ -1837,6 +1837,7 @@ ad_proc -public portal::configure_element {
         }
     } else {
         ad_returnredirect $return_url
+        ad_script_abort
     }
 
     switch $op {
@@ -1851,6 +1852,7 @@ ad_proc -public portal::configure_element {
                     portlet's edit proc returned null string"
 
                 ad_returnredirect $return_url
+                ad_script_abort
             }
 
             # Set up some template vars, including the form target
@@ -1887,12 +1889,14 @@ ad_proc -public portal::configure_element {
                 set_element_param $element_id "shaded_p" "f"
             }
             ad_returnredirect $return_url
+            ad_script_abort
         }
         "hide" {
             db_dml hide_update {}
 
             if {$return_url ne ""} {
                 ad_returnredirect $return_url
+                ad_script_abort
             }
         }
     }
