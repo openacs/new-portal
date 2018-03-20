@@ -111,7 +111,11 @@ ad_proc -private portal::mount_point_no_cache {} {
 ad_proc -public portal::mount_point {} {
     caches the mount point
 } {
-    return [util_memoize portal::mount_point_no_cache]
+    set key ::portal::mount_point
+    if {[info exists $key]} {
+        return [set $key]
+    }
+    return [set $key [portal::mount_point_no_cache]]
 }
 
 ad_proc -public portal::automount_point {} {
