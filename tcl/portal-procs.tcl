@@ -1328,7 +1328,7 @@ ad_proc -private portal::add_element_to_region {
         db_dml template_params_insert {}
 
     } else {
-        # no template, or the template dosen't have this D
+        # no template, or the template doesn't have this D
 
         # sort_key will be used only on insert
         if { $sort_key eq "" } {
