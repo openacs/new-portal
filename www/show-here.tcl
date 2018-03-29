@@ -15,7 +15,7 @@
 #
 
 ad_page_contract {
-    Add porlet form
+    Add portlet form
 
     @author Caroline@meekshome.com
     @creation-date 9/28/2001
