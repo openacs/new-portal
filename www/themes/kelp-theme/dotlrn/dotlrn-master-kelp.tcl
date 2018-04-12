@@ -15,16 +15,16 @@
 #
 # /www/dotlrn-master.tcl
 #
-# This is the "default-master" template for dotlrn sites. 
+# This is the "default-master" template for dotlrn sites.
 #
 # Instructions:
 #
-# 1. Put this file and it's .adp file into the server's /www directory.
+# 1. Put this file and its .adp file into the server's /www directory.
 # That's the one with the "default-master" Tcl and adp files. You don't
 # have to edit or remove the "default-master" files, since they will be
 # ignored by the next step.
 # 
-# 2. Change the "Main Site"'s "DefaultMaster" parameter 
+# 2. Change the "Main Site"'s "DefaultMaster" parameter
 # from "/www/default-master" to "/www/dotlrn-master"
 # at http://yoursite.com/admin/site-map
 #
@@ -34,7 +34,7 @@
 # at the top of the page, the title of the pages, the fonts of the portlets, etc.
 #
 # WARNING: All current portlet themes (table, deco, nada, etc) depend on some
-# of the CSS defined below. Be careful when you edit the CSS below, 
+# of the CSS defined below. Be careful when you edit the CSS below,
 # and check how themes use it.
 #
 #

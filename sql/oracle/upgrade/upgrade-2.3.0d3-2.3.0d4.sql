@@ -228,7 +228,7 @@ as
 
         else
 
-            -- we have a portal as our template. copy it's theme, pages, layouts,
+            -- we have a portal as our template. copy its theme, pages, layouts,
             -- elements, and element params.
             select theme_id
             into v_theme_id
