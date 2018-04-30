@@ -69,7 +69,7 @@ ad_proc -public portal::datasource_dispatch {
     Dispatch an operation to every datasource
 } {
     foreach datasource [list_datasources $portal_id] {
-        # Callback on datasource
+    # Callback on datasource
         datasource_call $datasource $op $list_args
     }
 }
@@ -97,7 +97,7 @@ ad_proc -private portal::www_path {} {
     Returns the path of the www dir of the portal package. We
     need this for stupid template tricks.
 } {
-    return "/packages/[package_key]/www"
+   return "/packages/[package_key]/www"
 }
 
 ad_proc -private portal::mount_point_no_cache {} {
@@ -143,20 +143,20 @@ ad_proc -public portal::create {
     @param user_id
     @param layout_name optional
 } {
-    # if we have a cvs list in the form "page_name1, layout1;
-    # page_name2, layout2...", we get the required first page_name
-    # and first page layout from it, overriding any other params
+# if we have a cvs list in the form "page_name1, layout1;
+# page_name2, layout2...", we get the required first page_name
+# and first page layout from it, overriding any other params
 
     set page_name_list [list $default_page_name]
     set page_accesskey_list [list $default_accesskey]
     if {$layout_name eq ""} {
         set layout_name_list [list [parameter::get_from_package_key \
-                                       -package_key new-portal \
-                                       -parameter default_layout]]
+            -package_key new-portal \
+            -parameter default_layout]]
     } else {
         set layout_name_list [list $layout_name]
     }
-    
+
     if {$csv_list ne ""} {
         set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
         set page_name_list {}
@@ -165,7 +165,7 @@ ad_proc -public portal::create {
 
         # separate name and layout
         foreach item $page_name_and_layout_list {
-	    lassign [split $item ","] page_name layout_name page_accesskey
+            lassign [split $item ","] page_name layout_name page_accesskey
             lappend page_name_list $page_name
             lappend layout_name_list $layout_name
             lappend page_accesskey_list $page_accesskey
@@ -200,7 +200,7 @@ ad_proc -public portal::create {
 
         # ignore the csv list if we have a template
         if {$csv_list ne "" && $template_id eq ""} {
-            # if there are more pages in the csv_list, create them
+        # if there are more pages in the csv_list, create them
             for {set i 1} {$i < [llength $page_name_list]} {incr i} {
                 portal::page_create -portal_id $portal_id \
                     -pretty_name [lindex $page_name_list $i] \
@@ -277,7 +277,7 @@ ad_proc -public portal::render {
     }
 
     db_foreach element_select {} -column_array entry {
-        # put the element IDs into buckets by region...
+    # put the element IDs into buckets by region...
         lappend element_ids($entry(region)) $entry(element_id)
     } if_no_rows {
         set element_ids {}
@@ -288,7 +288,7 @@ ad_proc -public portal::render {
     # set up the template, it includes the layout template,
     # which in turn includes the theme, then elements
     set template "<master src=\"@master_template@\">
-        <property name=\"title\">@portal.name@</property>"
+    <property name=\"title\">@portal.name@</property>"
     if { $element_list ne "" } {
         set element_src "[www_path]/render_styles/${render_style}/render-element"
         append template [subst {
@@ -302,7 +302,7 @@ ad_proc -public portal::render {
             page_id="@page_id@"
             layout_id="@portal.layout_id@"
             resource_dir="@portal.layout_resource_dir@">
-	}]
+        }]
     }
 
     # Necessary hack to work around the acs-templating system
@@ -382,8 +382,8 @@ ad_proc -public portal::configure {
     #
 
     set edit_p [permission::permission_p \
-                    -object_id $portal_id \
-                    -privilege portal_edit_portal]
+        -object_id $portal_id \
+        -privilege portal_edit_portal]
 
     if {!$edit_p} {
         permission::require_permission -object_id $portal_id -privilege portal_admin_portal
@@ -405,8 +405,8 @@ ad_proc -public portal::configure {
 
     if {$referer eq ""} {
         set return_text [subst {
-	    <a href="@return_url@" title="[_ new-portal.Go_back]">[_ new-portal.Go_back]</a>
-	}]
+            <a href="@return_url@" title="[_ new-portal.Go_back]">[_ new-portal.Go_back]</a>
+        }]
     } else {
         set return_text ""
         set return_url $referer
@@ -417,18 +417,18 @@ ad_proc -public portal::configure {
     #
 
     set template "
-        <master src=\"@master_template@\">
-        <p>$return_text</p>"
+    <master src=\"@master_template@\">
+    <p>$return_text</p>"
 
     #
     # Theme selection chunk
     #
 
     set theme_chunk [subst {
-	<form method='post' action="@action_string@">
-	<div><input type="hidden" name="portal_id" value="@portal_id@"></div>
-	<div><input type="hidden" name="return_url" value="@return_url@"></div>
-	<p><strong>[_ new-portal.Change_Theme]</strong></p>
+        <form method='post' action="@action_string@">
+        <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
+        <div><input type="hidden" name="return_url" value="@return_url@"></div>
+        <p><strong>[_ new-portal.Change_Theme]</strong></p>
     }]
 
     set current_theme_id [portal::get_theme_id -portal_id $portal_id]
@@ -450,8 +450,8 @@ ad_proc -public portal::configure {
     }
 
     append theme_chunk [subst {
-	<div><input type="submit" name="op_change_theme" value="[_ new-portal.Change_Theme_1]"></div>
-	</form>
+        <div><input type="submit" name="op_change_theme" value="[_ new-portal.Change_Theme_1]"></div>
+        </form>
     }]
     if {$allow_theme_change_p} {
         append template "$theme_chunk"
@@ -469,7 +469,7 @@ ad_proc -public portal::configure {
 
         set first_page_p [portal::first_page_p -portal_id $portal_id -page_id $page_id]
         # We allow portal page names to have embedded message keys that we localize on the fly
-        db_1row get_page_info {} 
+        db_1row get_page_info {}
         set page_name [lang::util::localize $pretty_name_unlocalized]
         set page_layout_id [portal::get_layout_id -page_id $page_id]
         if {$hidden_p == "t"} {
@@ -477,53 +477,53 @@ ad_proc -public portal::configure {
         } else {
             set tab_toggle_label [lang::util::localize "\#new-portal.Hide_in_main_navigation\#"]
         }
-        
+
         append template "<table style=\"background-color:#eeeeee\" border=0 width=\"100%\">"
 
         #
         # Page rename chunk
         #
         set page_name_chunk [subst {
-	    <table border="0" width="100%" class="portal-page-config" cellpadding="0" cellspacing="0">
-	    <tr>
-	    <td align="center">
-	    <a name="$page_id"></a>
-	    <h2 class="portal-page-name">$page_name</h2>
-	    </td>
-	    <td align="right">
-	    <a name="$page_id"></a>
-	    <form name="op_rename_page" method="post" action="@action_string@" class="inline-form">
+            <table border="0" width="100%" class="portal-page-config" cellpadding="0" cellspacing="0">
+            <tr>
+            <td align="center">
+            <a name="$page_id"></a>
+            <h2 class="portal-page-name">$page_name</h2>
+            </td>
+            <td align="right">
+            <a name="$page_id"></a>
+            <form name="op_rename_page" method="post" action="@action_string@" class="inline-form">
             <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
             <div><input type="hidden" name="page_id" value=$page_id></div>
             <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
             <div><input type="hidden" name="anchor" value="$page_id"></div>
             <div><input type="submit" name="op_rename_page" value="[_ new-portal.Rename_Page]"></div>
             <div><input type="text" name="pretty_name" value="[ns_quotehtml $page_name]"></div>
-	    </form>
-	    <form name="op_toggle_tab_visibility" method="post" action="@action_string@">
+            </form>
+            <form name="op_toggle_tab_visibility" method="post" action="@action_string@">
             <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
             <div><input type="hidden" name="page_id" value="$page_id"></div>
             <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
             <div><input type="hidden" name="anchor" value="$page_id"></div>
             <div><input type="submit" name="op_toggle_tab_visibility" value="$tab_toggle_label"></div>
-           </form>
-	    </td>
-	    </tr>
-	    <tr>
-	    <td colspan="2" class="bottom-border">
-	    <img src="/resources/acs-subsite/spacer.gif" height="1" alt="">
-	    </td>
-	    </tr>
-	    </table>
-	}]
+            </form>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2" class="bottom-border">
+            <img src="/resources/acs-subsite/spacer.gif" height="1" alt="">
+            </td>
+            </tr>
+            </table>
+        }]
 
         append template "<tr><td>$page_name_chunk</td></tr>"
 
         if {[portal::non_hidden_elements_p -page_id $page_id] || $first_page_p} {
 
-            #
-            # Page with non-hidden elements OR the first page of the portal
-            #
+        #
+        # Page with non-hidden elements OR the first page of the portal
+        #
 
             db_1row portal_and_page_info_select {} -column_array portal
 
@@ -543,68 +543,68 @@ ad_proc -public portal::configure {
             db_1row layout_id_select {}
 
             append template [subst {
-            <tr>
-             <td>
-              <table class="portal-page-config" style="background-color:#eeeeee" border="0" width="100%">
-               <tr valign="middle">
+                <tr>
+                <td>
+                <table class="portal-page-config" style="background-color:#eeeeee" border="0" width="100%">
+                <tr valign="middle">
                 <td valign="middle">
-                 <include src="$layout"
-                  element_list="$element_list"
-                  action_string="@action_string@" portal_id="@portal_id@"
-                  return_url="@return_url@" element_src="@element_src@"
-                  hide_links_p="f"
-                  page_id="$page_id"
-                  layout_id="$layout_id"
-                  edit_p="@edit_p@">
+                <include src="$layout"
+                element_list="$element_list"
+                action_string="@action_string@" portal_id="@portal_id@"
+                return_url="@return_url@" element_src="@element_src@"
+                hide_links_p="f"
+                page_id="$page_id"
+                layout_id="$layout_id"
+                edit_p="@edit_p@">
                 </td>
-               </tr>
-              </table>
-             </td>
-		</tr>}]
-		
+                </tr>
+                </table>
+                </td>
+                </tr>}]
 
-            # clear out the region array
+
+                # clear out the region array
             array unset fake_element_ids
         }
 
         if {![portal::non_hidden_elements_p -page_id $page_id]} {
 
-            #
-            # Non first page with all hidden elements
-            #
+        #
+        # Non first page with all hidden elements
+        #
 
-            #
-            # Remove page chunk - don't allow removal of the first page
-            #
+        #
+        # Remove page chunk - don't allow removal of the first page
+        #
 
-            
+
             if {! $first_page_p } {
-                
+
                 append template [subst {
-                <tr>
-                 <td>
-                  <include src="show-here" portal_id="$portal_id"
-                   action_string="@action_string@"
-                   region="1"
-                   page_id="$page_id"
-                   anchor="$page_id"
-                   return_url="@return_url@">
-                 </td>
-		 </tr>
-		}]
-                
+                    <tr>
+                    <td>
+                    <include src="show-here" portal_id="$portal_id"
+                    action_string="@action_string@"
+                    region="1"
+                    page_id="$page_id"
+                    anchor="$page_id"
+                    return_url="@return_url@">
+                    </td>
+                    </tr>
+                }]
+
                 append template [subst {
-                <tr valign="middle">
-                 <td valign="middle">
-                  <div style="text-align:center">
-                   [_ new-portal.lt_No_Elements_on_this_p]
-                   <form method="post" action="@action_string@">
+                    <tr valign="middle">
+                    <td valign="middle">
+                    <div style="text-align:center">
+                    [_ new-portal.lt_No_Elements_on_this_p]
+                    <form method="post" action="@action_string@">
                     [export_vars -form { portal_id page_id return_url { anchor $page_id } }]
                     <div><input type="submit" name="op_remove_empty_page" value="[_ new-portal.Remove_Empty_Page]"></div>
-                   </form>
-                  </div>
-                 </td>
-  	       </tr>}]
+                    </form>
+                    </div>
+                    </td>
+                    </tr>}]
             }
 
             #
@@ -631,10 +631,10 @@ ad_proc -public portal::configure {
 
 
             append template [subst {
-            <tr>
-             <td>
-              <br>
-              <form method="post" action="@action_string@">
+                <tr>
+                <td>
+                <br>
+                <form method="post" action="@action_string@">
                 <p><b>[_ new-portal.Change_page_layout]</b></p>
                 <div><input type="hidden" name="portal_id" value="$portal_id"></div>
                 <div><input type="hidden" name="page_id" value="$page_id"></div>
@@ -642,9 +642,9 @@ ad_proc -public portal::configure {
                 <div><input type="hidden" name="anchor" value="$page_id"></div>
                 $layout_chunk
                 <div><input type="submit" name="op_change_page_layout" value="[_ new-portal.Change_Page_Layout]"></div>
-              </form>
-             </td>
-		</tr>}]
+                </form>
+                </td>
+                </tr>}]
 
         }
 
@@ -661,69 +661,69 @@ ad_proc -public portal::configure {
     set new_page_num [expr {[page_count -portal_id $portal_id] + 1}]
 
     append template [subst {<br>
-    <table class="portal-page-config" border="0" cellspacing="0" cellpadding="0">
-     <tr>
-      <td>
-       <h2 class="portal-page-name">[_ new-portal.Create_a_new_page]</h2>
-      </td>
-     </tr>
-     <tr>
-     <td>
-      <a name="add_a_new_page"></a>
-       <form name="op_add_page" method="post" action="@action_string@">
-        <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
-        <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
-        <div><input type="hidden" name="anchor" value="add_a_new_page"></div>
-        <div style="text-align:center">
-         <input type="text" name="pretty_name" value="[_ new-portal.Page] $new_page_num">
-         <input type="submit" name="op_add_page" value="[_ new-portal.Add_Page]">
-        </div>
-       </form>
-      </td>
-     </tr>
-	</table>}]
+                            <table class="portal-page-config" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                            <td>
+                            <h2 class="portal-page-name">[_ new-portal.Create_a_new_page]</h2>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td>
+                            <a name="add_a_new_page"></a>
+                            <form name="op_add_page" method="post" action="@action_string@">
+                            <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
+                            <div><input type="hidden" name="return_url" value="@return_url@#$page_id"></div>
+                            <div><input type="hidden" name="anchor" value="add_a_new_page"></div>
+                            <div style="text-align:center">
+                            <input type="text" name="pretty_name" value="[_ new-portal.Page] $new_page_num">
+                            <input type="submit" name="op_add_page" value="[_ new-portal.Add_Page]">
+                            </div>
+                            </form>
+                            </td>
+                            </tr>
+                            </table>}]
 
-    #
-    # Revert page chunk
-    #
+                            #
+                            # Revert page chunk
+                            #
 
     if {[get_portal_template_id $portal_id] ne ""} {
         append template [subst {<br>
-        <table class="portal-page-config" width="100%" cellpadding="0" border="0" cellspacing="0">
-         <tr>
-          <td>
-           <form name="op_revert" method="post" action="@action_string@">
-            <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
-            <div><input type="hidden" name="return_url" value="@return_url@"></div>
-            <h2 class="portal-page-name">[_ new-portal.lt_Revert_the_entire_por]</h2>
-            <div style="text-align:center">
-             <input type="submit" name="op_revert" value="[_ new-portal.Revert]">
-            </div>
-           </form>
-          </td>
-         </tr>
-	    </table>}]
+                                <table class="portal-page-config" width="100%" cellpadding="0" border="0" cellspacing="0">
+                                <tr>
+                                <td>
+                                <form name="op_revert" method="post" action="@action_string@">
+                                <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
+                                <div><input type="hidden" name="return_url" value="@return_url@"></div>
+                                <h2 class="portal-page-name">[_ new-portal.lt_Revert_the_entire_por]</h2>
+                                <div style="text-align:center">
+                                <input type="submit" name="op_revert" value="[_ new-portal.Revert]">
+                                </div>
+                                </form>
+                                </td>
+                                </tr>
+                                </table>}]
     }
 
     if { [db_string sub_portals {}] } {
-        # Portal has other portals using it as a template
+    # Portal has other portals using it as a template
         append template [subst {<br>
-        <table class="portal-page-config" width="100%" cellpadding="0" border="0" cellspacing="0">
-         <tr>
-          <td>
-           <form name="op_revert_all" method="post" action="@action_string@">
-            <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
-            <div><input type="hidden" name="return_url" value="@return_url@"></div>
-            <h2 class="portal-page-name">[_ new-portal.lt_Revert_all_portals_us]</h2>
-            <div style="text-align:center">
-             <input type="submit" name="op_revert_all" value="[_ new-portal.Revert_All]">
-             <br>
-             <i>[_ new-portal.lt_Note_Please_be_patien]</i>
-            </div>
-           </form>
-          </td>
-         </tr>
-	    </table>}]
+                                <table class="portal-page-config" width="100%" cellpadding="0" border="0" cellspacing="0">
+                                <tr>
+                                <td>
+                                <form name="op_revert_all" method="post" action="@action_string@">
+                                <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
+                                <div><input type="hidden" name="return_url" value="@return_url@"></div>
+                                <h2 class="portal-page-name">[_ new-portal.lt_Revert_all_portals_us]</h2>
+                                <div style="text-align:center">
+                                <input type="submit" name="op_revert_all" value="[_ new-portal.Revert_All]">
+                                <br>
+                                <i>[_ new-portal.lt_Note_Please_be_patien]</i>
+                                </div>
+                                </form>
+                                </td>
+                                </tr>
+                                </table>}]
     }
 
     #
@@ -752,16 +752,16 @@ ad_proc -public portal::configure_dispatch {
 } {
     set edit_p \
         [permission::permission_p \
-             -object_id $portal_id \
-             -privilege portal_edit_portal
-        ]
+        -object_id $portal_id \
+        -privilege portal_edit_portal
+    ]
 
     if {!$edit_p} {
         permission::require_permission -object_id $portal_id -privilege portal_admin_portal
         set edit_p 1
     }
 
-    
+
     if { [ns_set get $form "op_revert_all"] ne "" } {
         set template_id [ns_set get $form "portal_id"]
         ns_log notice "REVERTING ALL template_id='${template_id}'"
@@ -783,32 +783,32 @@ ad_proc -public portal::configure_dispatch {
         # revert theme
         set theme_id [get_theme_id -portal_id $template_id]
         db_dml revert_theme_update {}
-        
+
         # revert pages
 
         # Roel - 03-10-2005, fix for revert problems
         # This fix tries to match the target portal with the
         # template before the revert via the pages' sort keys
-        
+
         # First, create source pages that aren't in the target portal
         db_foreach revert_source_pages {} {
             if { ! [db_0or1row revert_get_target_page_id {}] } {
                 set pretty_name "portal revert dummy page $sort_key"
                 set page_id [page_create \
-                                 -pretty_name $pretty_name \
-                                 -portal_id $portal_id]
-                
-                # Now set the page's sort_key
-                db_dml revert_set_target_page_sort_key {}
+                                    -pretty_name $pretty_name \
+                                    -portal_id $portal_id]
+
+            # Now set the page's sort_key
+            db_dml revert_set_target_page_sort_key {}
             }
         }
-        
+
         # Second, delete target pages that aren't in the source
         # portal
         db_foreach revert_target_pages {} {
             if { ! [db_0or1row revert_get_source_page_id {}] } {
                 set move_to_page_id [db_string revert_min_page_id_select {}]
-                
+
                 db_foreach revert_move_elements_for_del {} {
                     portal::move_element_to_page \
                         -page_id $move_to_page_id \
@@ -819,43 +819,42 @@ ad_proc -public portal::configure_dispatch {
                 page_delete -page_id $page_id
             }
         }
-        
+
         # now that they have the same number of pages, get to it
-        foreach source_page_id \
-            [list_pages_tcl_list -portal_id $template_id] {
-                
-                db_1row revert_get_source_page_info {}
+        foreach source_page_id [list_pages_tcl_list -portal_id $template_id] {
 
-                set target_page_id [db_string revert_get_target_page_id {}]
-                
-                db_dml revert_page_update {}
-                
-                # First, hide all elements.  
-                # If there are new content portlets that are not
-                # in the default template, this will ensure they don't come
-                # up.
+            db_1row revert_get_source_page_info {}
 
-                db_dml hide_all_elements {
-                    update portal_element_map
-                    set  state = 'hidden'
-                    where page_id = :target_page_id
-                }
+            set target_page_id [db_string revert_get_target_page_id {}]
 
-                # revert elements in two steps like "swap"
-                db_foreach revert_get_source_elements {} {
-                    # the element might not be on the target page...
-                    set target_element_id \
-                        [db_string revert_get_target_element {} -default {}]
-                    
+            db_dml revert_page_update {}
+
+            # First, hide all elements.
+            # If there are new content portlets that are not
+            # in the default template, this will ensure they don't come
+            # up.
+
+            db_dml hide_all_elements {
+                update portal_element_map
+                set  state = 'hidden'
+                where page_id = :target_page_id
+            }
+
+            # revert elements in two steps like "swap"
+            db_foreach revert_get_source_elements {} {
+                # the element might not be on the target page...
+                set target_element_id \
+                    [db_string revert_get_target_element {} -default {}]
+
                     # now, lets check if this is one new applet
                     # added, that was not originally mapped
                     # usually with custom portlets
-                    
-                    if {$target_element_id ne ""} {
-                        db_dml revert_element_update {}
-                    }
+
+                if {$target_element_id ne ""} {
+                    db_dml revert_element_update {}
                 }
             }
+        }
     } elseif { [ns_set get $form "op_rename"] ne "" } {
         portal::update_name $portal_id [ns_set get $form new_name]
 
@@ -1020,25 +1019,25 @@ ad_proc -public portal::get_page_id {
     @param sort_key - optional, defaults to page 0
 } {
     if { $page_name ne "" } {
-        # Get page by page_name
+    # Get page by page_name
 
         set page_id [db_string get_page_id_from_name {} -default ""]
 
         if { $page_id eq "" } {
             if { $create_p } {
-                # there is no page by that name in the portal, create it
+            # there is no page by that name in the portal, create it
                 return [portal::page_create \
-                            -portal_id $portal_id \
-                            -pretty_name $page_name]
+                    -portal_id $portal_id \
+                    -pretty_name $page_name]
             } else {
-                # Call ourselves with portal_id and sort_key 0 to get the first page
+            # Call ourselves with portal_id and sort_key 0 to get the first page
                 return [get_page_id -portal_id $portal_id -sort_key 0]
             }
         } else {
             return $page_id
         }
     } else {
-        # Get page by sort key
+    # Get page by sort key
         return [db_string get_page_id_select {}]
     }
 }
@@ -1103,7 +1102,7 @@ ad_proc -public portal::page_create {
     @return the id of the page
     @param portal_id
 } {
-    # get the layout_id
+# get the layout_id
     if {$layout_name ne ""} {
         set layout_id [get_layout_id -layout_name $layout_name]
     } else {
@@ -1156,16 +1155,16 @@ ad_proc -public portal::navbar {
     set ad_dim_struct "{ page_num [list [_ new-portal.Page_1]] 0 [list $ad_dim_struct] }"
 
     return [dimensional -no_header \
-                -no_bars \
-                -link_all $link_all \
-                -td_align $td_align \
-                -pre_html $pre_html \
-                -post_html $post_html \
-                -extra_td_html $extra_td_html \
-                -extra_td_selected_p $extra_td_selected_p \
-                -table_html_args $table_html_args \
-                $ad_dim_struct \
-                $link]
+        -no_bars \
+        -link_all $link_all \
+        -td_align $td_align \
+        -pre_html $pre_html \
+        -post_html $post_html \
+        -extra_td_html $extra_td_html \
+        -extra_td_selected_p $extra_td_selected_p \
+        -table_html_args $table_html_args \
+        $ad_dim_struct \
+        $link]
 }
 
 #
@@ -1226,7 +1225,7 @@ ad_proc -public portal::add_element {
             set min_region 1
         }
     } else {
-        # verify that the region given is in this layout
+    # verify that the region given is in this layout
         set min_region 0
 
         foreach region $region_list {
@@ -1237,7 +1236,7 @@ ad_proc -public portal::add_element {
         }
 
         if {$min_region == 0} {
-            # the region asked for was not in the list
+        # the region asked for was not in the list
             ns_log error "portal::add_element region $force_region not in layout $layout_id"
             ad_return_complaint 1 "portal::add_element region $force_region not in layout $layout_id"
             ad_script_abort
@@ -1245,14 +1244,14 @@ ad_proc -public portal::add_element {
     }
 
     return [add_element_to_region \
-                -page_name $page_name \
-                -layout_id $layout_id \
-                -pretty_name $pretty_name \
-                -sort_key $sort_key \
-                $portal_id \
-                $portlet_name \
-                $min_region \
-               ]
+        -page_name $page_name \
+        -layout_id $layout_id \
+        -pretty_name $pretty_name \
+        -sort_key $sort_key \
+        $portal_id \
+        $portlet_name \
+        $min_region \
+        ]
 }
 
 ad_proc -public portal::remove_element {
@@ -1273,9 +1272,9 @@ ad_proc -public portal::remove_element {
         }
 
         set element_ids [portal::get_element_ids_by_ds \
-                             $portal_id \
-                             $portlet_name
-                        ]
+            $portal_id \
+            $portlet_name
+        ]
 
         db_transaction {
             foreach element_id $element_ids {
@@ -1302,8 +1301,8 @@ ad_proc -private portal::add_element_to_region {
     @param ds_name
 } {
 
-    # XXX AKS: The whole issue of datasource/portlet naming must
-    # be cleaned up! FIXME
+# XXX AKS: The whole issue of datasource/portlet naming must
+# be cleaned up! FIXME
 
     if {$pretty_name eq ""} {
         set pretty_name $ds_name
@@ -1319,18 +1318,18 @@ ad_proc -private portal::add_element_to_region {
 
         set new_element_id [db_nextval acs_object_id_seq]
         set target_page_id [get_page_id \
-                                -portal_id $portal_id \
-                                -page_name $page_name \
-                                -sort_key $template_page_sort_key
-                           ]
+            -portal_id $portal_id \
+            -page_name $page_name \
+            -sort_key $template_page_sort_key
+        ]
 
         db_dml template_insert {}
         db_dml template_params_insert {}
 
     } else {
-        # no template, or the template doesn't have this D
+    # no template, or the template doesn't have this D
 
-        # sort_key will be used only on insert
+    # sort_key will be used only on insert
         if { $sort_key eq "" } {
             set sort_key [db_string get_sort_key {} -default "1"]
             set sort_key [ad_decode $sort_key "" "1" $sort_key]
@@ -1396,7 +1395,7 @@ ad_proc -private portal::swap_element {
 
         # Set the element to be moved's sort_key to the right value
         db_dml swap_sort_keys_3 {}
-    } on_error {
+        } on_error {
         ad_return_complaint 1 "portal::swap_element: [_ new-portal.transaction_failed]"
         ad_script_abort
     }
@@ -1456,11 +1455,11 @@ ad_proc -private portal::move_element_to_page {
     }
 
     set target_reg_num [get_layout_region_count_not_cached \
-                            -layout_id [get_layout_id -page_id $page_id]
-                       ]
+        -layout_id [get_layout_id -page_id $page_id]
+    ]
 
     if {$curr_reg > $target_reg_num} {
-        # the new page dosent have this region, set to max region
+    # the new page dosent have this region, set to max region
         set region $target_reg_num
     } else {
         set region $curr_reg
@@ -1522,8 +1521,8 @@ ad_proc -private portal::set_element_param {
     @param key
     @param value
 } {
-    #ns_log notice "aks80 set_element_param $element_id / $key / $value / [db_list_of_lists foo {
-    # select * from portal_element_parameters where element_id = :element_id}] "
+#ns_log notice "aks80 set_element_param $element_id / $key / $value / [db_list_of_lists foo {
+# select * from portal_element_parameters where element_id = :element_id}] "
 
     db_dml update {}
 
@@ -1629,14 +1628,14 @@ ad_proc -private portal::get_element_id_from_unique_param {
     If you know that on a given portal there is a _unique_ element
     identified by a parameter value and you want to find said element,
     this is your proc. Will error out if the param is not found (poor-man's
-                                                                 ASSERT)
+    ASSERT)
 } {
     return [db_string select {
         select portal_element_map.element_id
         from portal_element_map, portal_element_parameters
         where portal_element_map.page_id in (select page_id
-                                             from portal_pages
-                                             where portal_id = :portal_id)
+        from portal_pages
+        where portal_id = :portal_id)
         and portal_element_parameters.element_id = portal_element_map.element_id
         and portal_element_parameters.key = :key
         and portal_element_parameters.value = :value
@@ -1660,11 +1659,11 @@ ad_proc -private portal::evaluate_element {
     set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
     if {[llength $element_params]} {
         foreach param $element_params {
-	    lassign $param key value
+            lassign $param key value
             lappend config($key) $value
         }
     } else {
-        # this element has no config, set up some defaults
+    # this element has no config, set up some defaults
         set config(shaded_p) "f"
         set config(shadeable_p) "f"
         set config(hideable_p) "f"
@@ -1699,7 +1698,7 @@ ad_proc -private portal::evaluate_element {
         append element(content) "You have found a bug in our code. " \
             "<p>Please notify the webmaster and include the following text. Thank You." \
             "<p><pre><small>*** portal::evaluate_element callback Error! ***\n\n [ns_quotehtml $errorMsg]</small></pre>\n\n"
-        
+
     } on ok {content} {
         set element(content) $content
     }
@@ -1713,10 +1712,10 @@ ad_proc -private portal::evaluate_element {
 
         set element(name) \
             [datasource_call \
-                 -datasource_name $element(ds_name) \
-                 $element(datasource_id) \
-                 "GetPrettyName" \
-                 [list]]
+            -datasource_name $element(ds_name) \
+            $element(datasource_id) \
+            "GetPrettyName" \
+            [list]]
     } else {
         set element(name) $element(pretty_name)
     }
@@ -1731,12 +1730,12 @@ ad_proc -private portal::evaluate_element {
     # value this returns is ignored
     set element(link) \
         [datasource_call \
-             -datasource_name $element(ds_name) \
-             $element(datasource_id) \
-             "Link" \
-             [list]]
+        -datasource_name $element(ds_name) \
+        $element(datasource_id) \
+        "Link" \
+        [list]]
 
-    # done with callbacks, now set config params
+        # done with callbacks, now set config params
     set element(shadeable_p) $config(shadeable_p)
     set element(shaded_p) $config(shaded_p)
     set element(hideable_p) $config(hideable_p)
@@ -1746,12 +1745,12 @@ ad_proc -private portal::evaluate_element {
     # apply the path hack to the filename and the resourcedir
     # Only do this if the element filename does not start with "/packages"
     if {[string first "/packages" $element(filename)] < 0} {
-	set element(filename) "[www_path]/$element(filename)"
+        set element(filename) "[www_path]/$element(filename)"
     }
 
     # DRB: don't ruin URLs that start with "/", i.e. the form "/resources/package-key/..."
     if { [string index $element(resource_dir) 0] ne "/" } {
-        # notice no "/" after mount point
+    # notice no "/" after mount point
         set element(resource_dir) "[mount_point]$element(resource_dir)"
     }
 
@@ -1772,7 +1771,7 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
     db_foreach params_select {} {
         lappend config($key) $value
     } if_no_rows {
-        # this element has no config, set up some defaults
+    # this element has no config, set up some defaults
         set config(shaded_p) "f"
         set config(shadeable_p) "f"
         set config(hideable_p) "f"
@@ -1793,10 +1792,10 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
 
     set element(name) \
         [datasource_call \
-             $element(datasource_id) "GetPrettyName" [list]]
+        $element(datasource_id) "GetPrettyName" [list]]
 
-    # Peter: we allow the element name to contain embedded message catalog keys
-    # that we localize on the fly
+        # Peter: we allow the element name to contain embedded message catalog keys
+        # that we localize on the fly
     set element(name) [lang::util::localize $element(name)]
 
     # no "Link" for raw elements
@@ -1849,11 +1848,11 @@ ad_proc -public portal::configure_element {
             # Get the edit html by callback
             # Notice that the "edit" proc takes only the element_id
             set html_string [datasource_call $datasource_id "Edit" \
-                                 [list $element_id]]
+                [list $element_id]]
 
             if { $html_string eq "" } {
                 ns_log Error "portal::configure_element op = edit, but
-                    portlet's edit proc returned null string"
+                portlet's edit proc returned null string"
 
                 ad_returnredirect $return_url
                 ad_script_abort
@@ -1874,7 +1873,7 @@ ad_proc -public portal::configure_element {
                 @html_string@
                 <P>
                 </form>
-	    }]
+            }]
             set __adp_stub "[get_server_root][www_path]/."
             set {master_template} \"master\"
 
@@ -1906,7 +1905,7 @@ ad_proc -public portal::configure_element {
     }
 }
 
-ad_proc -private portal::set_pretty_name { 
+ad_proc -private portal::set_pretty_name {
     {-element_id:required}
     {-pretty_name:required}
 } {
@@ -1986,7 +1985,7 @@ ad_proc -private portal::make_datasource_unavailable {portal_id ds_id} {
     @param portal_id
     @param ds_id
 } {
-    # permission::require_permission -object_id $portal_id -privilege portal_admin_portal
+# permission::require_permission -object_id $portal_id -privilege portal_admin_portal
     db_dml delete {}
 }
 
@@ -2099,8 +2098,8 @@ ad_proc -private portal::get_layout_id {
 } {
     if { $layout_name eq "" } {
         set layout_name [parameter::get_from_package_key \
-                            -package_key new-portal \
-                            -parameter default_layout]
+            -package_key new-portal \
+            -parameter default_layout]
     }
     if { $page_num ne "" } {
         db_1row get_layout_id_num_select {}
@@ -2169,15 +2168,15 @@ ad_proc -public portal::add_element_parameters {
 
     if {[llength $element_id_list] == 0} {
         db_transaction {
-            # Tell portal to add this element to the page
+        # Tell portal to add this element to the page
             set element_id [add_element \
-                                -portal_id $portal_id \
-                                -portlet_name $portlet_name \
-                                -pretty_name $pretty_name \
-                                -page_name $page_name \
-                                -force_region $force_region \
-                                -sort_key $sort_key
-                           ]
+                -portal_id $portal_id \
+                -portlet_name $portlet_name \
+                -pretty_name $pretty_name \
+                -page_name $page_name \
+                -force_region $force_region \
+                -sort_key $sort_key
+            ]
 
             # There is already a value for the param which is overwritten
             set_element_param $element_id $key $value
@@ -2275,8 +2274,8 @@ ad_proc -public portal::remove_element_parameters {
     db_transaction {
         foreach element_id $element_ids {
             if {[llength [get_element_param_list \
-                              -element_id $element_id \
-                              -key $key]] == 0} {
+                    -element_id $element_id \
+                -key $key]] == 0} {
                 remove_element -element_id $element_id
             }
         }
@@ -2389,32 +2388,32 @@ ad_proc portal::dimensional {
     if {$option_list eq ""} {
         return
     }
-    
+
     if {$options_set eq ""} {
         set options_set [ns_getform]
     }
-    
+
     if {$url eq ""} {
         set url [ad_conn url]
     }
-    
+
     set html "\n<table $table_html_args>\n"
-    
+
     if {!$no_header_p} {
         foreach option $option_list {
             append html "<tr>    <th bgcolor=\"$th_bgcolor\">[lindex $option 1]</th>\n"
         }
     }
-    
+
     append html "  <tr>\n"
-    
+
     foreach option $option_list {
-        
+
         if {!$no_bars_p} {
             append html "\["
         }
-        
-        
+
+
         if { $names_in_cells_p } {
             set pre_td_html "<td class=\"navbar\">"
             set pre_selected_td_html "<td class=\"navbar-selected\">"
@@ -2439,15 +2438,14 @@ ad_proc portal::dimensional {
 
         # find out what the current option value is.
         # check if a default is set otherwise the first value is used
-        set option_key [lindex $option 0]
-        set option_val [lindex $option 2]
+        lassign $option option_key . option_val
         if {$options_set ne ""} {
             set options_set_val [ns_set get $options_set $option_key]
             if { $options_set_val ne "" } {
                 set option_val $options_set_val
             }
         }
-        
+
         set first_p 1
         foreach option_value [lindex $option 3] {
             set thisoption_name [lindex $option_value 0]
@@ -2464,14 +2462,14 @@ ad_proc portal::dimensional {
             } else {
                 append html $break_html
             }
-            
+
             if {($option_val eq $thisoption_name && !$link_all) || !$thisoption_link_p} {
                 append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
             } else {
-		set href "$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]"
+                set href "$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]"
                 append html [subst {
-		    ${pre_td_html}<a href="[ns_quotehtml $href]">${pre_html}${thisoption_value}${post_html}
-		}]
+                    ${pre_td_html}<a href="[ns_quotehtml $href]">${pre_html}${thisoption_value}${post_html}
+                }]
             }
         }
 
