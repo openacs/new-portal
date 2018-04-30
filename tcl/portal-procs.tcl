@@ -776,7 +776,7 @@ ad_proc -public portal::configure_dispatch {
 
     } elseif { [ns_set get $form "op_revert"] ne "" } {
         #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
-        #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the the middle. The user can just revert again.
+        #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the middle. The user can just revert again.
 
         set template_id [get_portal_template_id $portal_id]
 
@@ -2235,7 +2235,7 @@ ad_proc -public portal::remove_element_parameters {
     A helper proc for portlet "remove_self_from_page" procs.
     The inverse of the above proc.
 
-    Removes the given parameters from all the the portlets
+    Removes the given parameters from all the portlets
     of this type on the given page. If by removing this param,
     there are no more params (say instace_id's) of this type,
     that means that the portlet has become empty and can be
