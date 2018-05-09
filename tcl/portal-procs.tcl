@@ -159,9 +159,9 @@ ad_proc -public portal::create {
 
     if {$csv_list ne ""} {
         set page_name_and_layout_list [split [string trimright $csv_list ";"] ";"]
-        set page_name_list {}
-        set page_accesskey_list {}
-        set layout_name_list {}
+        set page_name_list [list]
+        set page_accesskey_list [list]
+        set layout_name_list [list]
 
         # separate name and layout
         foreach item $page_name_and_layout_list {
@@ -883,7 +883,7 @@ ad_proc -public portal::configure_dispatch {
             -page_id [ns_set get $form page_id] \
             -element_id [ns_set get $form element_id]
     } elseif { [ns_set get $form "op_hide"] ne "" } {
-        set element_id_list {}
+        set element_id_list [list]
 
         # iterate through the set, destructive!
         while { [ns_set find $form "element_id"] + 1 } {
@@ -1120,7 +1120,7 @@ ad_proc -public portal::list_pages_tcl_list {
     @return Tcl list of the pages
     @param portal_id
 } {
-    set foo {}
+    set foo [list]
 
     db_foreach list_pages_tcl_list_select {} {
         lappend foo $page_id
@@ -1146,7 +1146,7 @@ ad_proc -public portal::navbar {
     @param link the relative link to set for hrefs
     @param current_page_link f means that there is no link for the current page
 } {
-    set ad_dim_struct {}
+    set ad_dim_struct [list]
 
     db_foreach list_page_nums_select {} {
         lappend ad_dim_struct [list $page_num $pretty_name [list]]
