@@ -306,7 +306,7 @@ ad_proc -public portal::render {
     }
 
     # Necessary hack to work around the acs-templating system
-    set __adp_stub "[get_server_root][www_path]/."
+    set __adp_stub "[acs_root_dir][www_path]/."
     set {master_template} \"master\"
 
     # Compile and evaluate the template
@@ -730,7 +730,7 @@ ad_proc -public portal::configure {
     # Templating system hacks
     #
 
-    set __adp_stub "[get_server_root][www_path]/."
+    set __adp_stub "[acs_root_dir][www_path]/."
     set master_template \"master\"
 
     set code [template::adp_compile -string $template]
@@ -1874,7 +1874,7 @@ ad_proc -public portal::configure_element {
                 <P>
                 </form>
             }]
-            set __adp_stub "[get_server_root][www_path]/."
+            set __adp_stub "[acs_root_dir][www_path]/."
             set {master_template} \"master\"
 
             set code [template::adp_compile -string $template]
@@ -2320,7 +2320,7 @@ ad_proc -public portal::show_proc_helper {
 
     uplevel 1 {
         set template "<include src=\"$__ts\" cf=\"$__cflist\">"
-        set __adp_stub "[get_server_root]/packages/$__pk/www/."
+        set __adp_stub "[acs_root_dir]/packages/$__pk/www/."
         set code [template::adp_compile -string $template]
         set output [template::adp_eval code]
         return $output
