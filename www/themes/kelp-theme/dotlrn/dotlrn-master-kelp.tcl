@@ -69,29 +69,17 @@ set extra_spaces "<img src=\"/resources/dotlrn/spacer.gif\" border=0 width=15>"
 set td_align "align=\"center\" valign=\"top\""
 
 
-if {$community_id ne ""} {
-    set have_comm_id_p 1
-} else {
-    set have_comm_id_p 0
-}
-
+set have_comm_id_p [expr {$community_id ne ""}]
 
 
 # navbar vars
-set show_navbar_p 1
-if {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p} {
-    set show_navbar_p 0
-} 
+set show_navbar_p [expr {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p ? 0 : 1}]
 
 if {![info exists link_all]} {
     set link_all 0
 }
 
-if {![info exists return_url]} {
-    set link [ad_conn -get extra_url]
-} else {
-    set link $return_url
-}
+set link [expr {[info exists return_url] ? $return_url : [ad_conn -get extra_url]}]
 
 if {![info exists link_control_panel]} {
     set link_control_panel 1
@@ -113,13 +101,7 @@ if {$have_comm_id_p} {
     set text [dotlrn_community::get_community_header_name $community_id] 
     set link [dotlrn_community::get_community_url $community_id]
     set admin_p [dotlrn::user_can_admin_community_p -user_id $user_id -community_id $community_id]
-
-   if { $show_navbar_p } {
-         set make_navbar_p 1
-    } else {
-	set make_navbar_p 0
-
-    }
+    
 } elseif {[parameter::get -parameter community_type_level_p] == 1} {
     set control_panel_text "Administer"
 
@@ -129,12 +111,6 @@ if {$have_comm_id_p} {
     # in a community type
     set text \
             [dotlrn_community::get_community_type_name [dotlrn_community::get_community_type]]
-    
-   if {$show_navbar_p} {
-	set make_navbar_p 1
-    } else {
-	set make_navbar_p 0
-    }
 
 } else {
     # we could be anywhere (maybe under /dotlrn, maybe not)
@@ -142,30 +118,17 @@ if {$have_comm_id_p} {
     set link "[dotlrn::get_url]/"
     set community_id ""
     set text ""
-    set make_navbar_p 1
-    if {$show_navbar_p} {
-    } else {
-    set make_navbar_p 0
-    }
 }
 
 # Set up some basic stuff
 set user_id [ad_conn user_id]
-if { [ad_conn untrusted_user_id] == 0 } {
-    set user_name {}
-} else {
-    set user_name [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name]
-}
+set username [expr {[ad_conn untrusted_user_id] ? [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name] : ""}]
 
-if {(![info exists title] || $title eq "")} {
+if {![info exists title] || $title eq ""} {
     set title [ad_system_name]
 }
 
-if {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] eq ""]} {
-    set parent_comm_p 0
-} else {
-    set parent_comm_p 1
-}
+set parent_comm_p [expr {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] ne ""]}]
 
 set community_id [dotlrn_community::get_community_id]
 
@@ -206,19 +169,8 @@ if {$community_id ne ""} {
 	}
     }
   
-    # DRB: default logo for dotlrn is a JPEG provided by Collaboraid.  This can
-    # be replaced by custom gifs if preferred (as is done by SloanSpace)
-
-    if { [file exists "$header_img_file-$scope_name.jpg"] } {
-        set header_img_url "$header_img_url-$scope_name.jpg"
-    } elseif { [file exists "$header_img_file-$scope_name.gif"] } {
-        set header_img_url "$header_img_url-$scope_name.gif"
-    }
-  
-   # set header_img_url "$header_img_url-$scope_name.gif"
-
-   # font hack
-   set community_header_font [dotlrn_community::get_attribute \
+    # font hack
+    set community_header_font [dotlrn_community::get_attribute \
         -community_id $community_id \
         -attribute_name header_font
     ]
@@ -245,11 +197,15 @@ if {$community_id ne ""} {
     ]
 
     if {$header_logo_item_id ne ""} {
-
 	# Need filename
         set header_img_url "[dotlrn_community::get_community_url $community_id]/file-storage/download/?version_id=$header_logo_item_id" 
-    }
-	
+    } elseif { [file exists "$header_img_file-$scope_name.jpg"] } {
+        # DRB: default logo for dotlrn is a JPEG provided by Collaboraid.  This can
+        # be replaced by custom gifs if preferred (as is done by SloanSpace)
+        set header_img_url "$header_img_url-$scope_name.jpg"
+    } elseif { [file exists "$header_img_file-$scope_name.gif"] } {
+        set header_img_url "$header_img_url-$scope_name.gif"
+    }	
    
     set header_logo_alt_text [dotlrn_community::get_attribute \
         -community_id $community_id \
@@ -285,13 +241,8 @@ if {$community_id ne ""} {
     set text ""
 }
 
-if { $make_navbar_p } {
-    if {$link_control_panel} {
-	set link_control_panel 1
-    } else {
-	set link_control_panel 0
-    }
-    set extra_spaces "<img src=\"/resources/dotlrn/spacer.gif\" border=0 width=15>"    
+if { $show_navbar_p } {
+    set extra_spaces {<img src="/resources/dotlrn/spacer.gif" border="0" width="15">}
     set navbar [dotlrn::portal_navbar \
         -user_id $user_id \
         -link_control_panel $link_control_panel \
@@ -301,7 +252,7 @@ if { $make_navbar_p } {
         -link_all $link_all
     ]
 } else {
-    set navbar "<br>"
+    set navbar {<br>}
 }
 
 
@@ -316,17 +267,13 @@ set ds_enabled_p [parameter::get_from_package_key \
     -default 0
 ]
 
-if {$ds_enabled_p} {
-    set ds_link [ds_link]
-} else {
-    set ds_link {}
-}
+set ds_link [expr {$ds_enabled_p ? [ds_link] : ""}]
 
 set change_locale_url [export_vars -base /acs-lang { { package_id "[ad_conn package_id]" } }]
 
 # Hack for title and context bar outside of dotlrn
 
-set in_dotlrn_p [expr [string match "[dotlrn::get_url]/*" [ad_conn url]]]
+set in_dotlrn_p [expr {[string match "[dotlrn::get_url]/*" [ad_conn url]]}]
 
 if { [info exists context] } {
     set context_bar [eval ad_context_bar $context]
