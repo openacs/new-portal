@@ -52,13 +52,9 @@ ad_proc -public portal::list_datasources {
 } {
     Lists the datasources available to a portal or in general
 } {
-    if {$portal_id eq ""} {
-        # List all applets
-        return [db_list select_all_datasources {}]
-    } else {
-        # List from the DB
-        return [db_list select_datasources {}]
-    }
+    return [expr {$portal_id eq "" ? \
+                      [db_list select_all_datasources {}] : \
+                      [db_list select_datasources {}]}]
 }
 
 ad_proc -public portal::datasource_dispatch {
@@ -69,7 +65,7 @@ ad_proc -public portal::datasource_dispatch {
     Dispatch an operation to every datasource
 } {
     foreach datasource [list_datasources $portal_id] {
-    # Callback on datasource
+        # Callback on datasource
         datasource_call $datasource $op $list_args
     }
 }
@@ -80,47 +76,48 @@ ad_proc -public portal::datasource_dispatch {
 
 # The management is not responsible for the results of multi-mounting
 
-ad_proc -private portal::package_key {} {
+set ::portal::package_key "new-portal"
+ad_proc -deprecated -private portal::package_key {} {
     Returns the package_key
+    DEPRECATED: use threaded cache directly
 } {
-    return "new-portal"
+    return $::portal::package_key
 }
 
-ad_proc -public portal::get_package_id {} {
+set ::portal::get_package_id [apm_package_id_from_key $::portal::package_key]
+ad_proc -deprecated -public portal::get_package_id {} {
     returns the package ID
+    DEPRECATED: use threaded cache directly
 } {
-    return [apm_package_id_from_key [package_key]]
+    return $::portal::get_package_id
 }
 
 # Work around for template::util::url_to_file
-ad_proc -private portal::www_path {} {
+set ::portal::www_path /packages/${::portal::package_key}/www
+ad_proc -deprecated -private portal::www_path {} {
     Returns the path of the www dir of the portal package. We
     need this for stupid template tricks.
+    DEPRECATED: use threaded cache directly    
 } {
-   return "/packages/[package_key]/www"
+   return $::portal::www_path
 }
 
-ad_proc -private portal::mount_point_no_cache {} {
-    Returns the mount point of the portal package.
-    Sometimes we need to know this for like <include>ing
-    templates from Tcl
-} {
-    return [site_node::get_url_from_object_id -object_id [get_package_id]]
-}
-
-ad_proc -public portal::mount_point {} {
+set ::portal::mount_point [site_node::get_url_from_object_id \
+                               -object_id $::portal::get_package_id]
+ad_proc -deprecated -public portal::mount_point {} {
     caches the mount point
+    DEPRECATED: use threaded cache directly    
 } {
-    set key ::portal::mount_point
-    if {[info exists $key]} {
-        return [set $key]
-    }
-    return [set $key [portal::mount_point_no_cache]]
+    return $::portal::mount_point
 }
 
-ad_proc -public portal::automount_point {} {
+set ::portal::automount_point "portal"
+ad_proc -deprecated -public portal::automount_point {} {
     packages such as dotlrn can automount the portal here
-} { return "portal" }
+    DEPRECATED: use threaded cache directly        
+} {
+    return $::portal::automount_point
+}
 
 #
 # Main portal procs
@@ -184,7 +181,7 @@ ad_proc -public portal::create {
 
     # get the default theme name from param, if no theme given
     if {$theme_name eq ""} {
-        set theme_name [parameter::get -package_id [get_package_id] -parameter default_theme_name]
+        set theme_name [parameter::get -package_id $::portal::get_package_id -parameter default_theme_name]
     }
 
     set theme_id [get_theme_id_from_name -theme_name $theme_name]
@@ -290,7 +287,7 @@ ad_proc -public portal::render {
     set template "<master src=\"@master_template@\">
     <property name=\"title\">@portal.name@</property>"
     if { $element_list ne "" } {
-        set element_src "[www_path]/render_styles/${render_style}/render-element"
+        set element_src "${::portal::www_path}/render_styles/${render_style}/render-element"
         append template [subst {
             <include src="@portal.layout_filename@"
             element_list="@element_list@"
@@ -306,7 +303,7 @@ ad_proc -public portal::render {
     }
 
     # Necessary hack to work around the acs-templating system
-    set __adp_stub "[acs_root_dir][www_path]/."
+    set __adp_stub "[acs_root_dir]${::portal::www_path}/."
     set {master_template} \"master\"
 
     # Compile and evaluate the template
@@ -397,11 +394,7 @@ ad_proc -public portal::configure {
     set master_template [parameter::get -parameter master_template]
     set action_string [generate_action_string]
 
-    if { $template_p == "f" } {
-        set element_src "[portal::www_path]/place-element"
-    } else {
-        set element_src "[portal::www_path]/template-place-element"
-    }
+    set element_src ${::portal::www_path}/[expr {$template_p == "f" ? "place-element" : "template-place-element"}]
 
     if {$referer eq ""} {
         set return_text [subst {
@@ -730,7 +723,7 @@ ad_proc -public portal::configure {
     # Templating system hacks
     #
 
-    set __adp_stub "[acs_root_dir][www_path]/."
+    set __adp_stub "[acs_root_dir]${::portal::www_path}/."
     set master_template \"master\"
 
     set code [template::adp_compile -string $template]
@@ -1745,7 +1738,7 @@ ad_proc -private portal::evaluate_element {
     # apply the path hack to the filename and the resourcedir
     # Only do this if the element filename does not start with "/packages"
     if {[string first "/packages" $element(filename)] < 0} {
-        set element(filename) "[www_path]/$element(filename)"
+        set element(filename) "${::portal::www_path}/$element(filename)"
     }
 
     # DRB: don't ruin URLs that start with "/", i.e. the form "/resources/package-key/..."
@@ -1812,7 +1805,7 @@ ad_proc -private portal::evaluate_element_raw { element_id } {
     set element(filename) "themes/raw-theme"
 
     # apply the path hack to the filename and the resourcedir
-    set element(filename) "[www_path]/$element(filename)"
+    set element(filename) "${::portal::www_path}/$element(filename)"
     # notice no "/" after mount point
     # set element(resource_dir) "[mount_point]$element(resource_dir)"
 
@@ -1874,7 +1867,7 @@ ad_proc -public portal::configure_element {
                 <P>
                 </form>
             }]
-            set __adp_stub "[acs_root_dir][www_path]/."
+            set __adp_stub "[acs_root_dir]${::portal::www_path}/."
             set {master_template} \"master\"
 
             set code [template::adp_compile -string $template]
