@@ -32,7 +32,7 @@
     <tr>
     <td class="element-header-text-plain">
       <big>
-        <if @link_hideable_p;literal@ eq "t" and @hide_links_p;literal@ eq "t">
+        <if @link_hideable_p;literal@ true and @hide_links_p;literal@ true>
           <strong>@name;noquote@</strong>
         </if>
         <else>

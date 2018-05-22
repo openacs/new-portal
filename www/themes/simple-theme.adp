@@ -21,7 +21,7 @@
 <table class="element" border="0" cellpadding="1" cellspacing="0" width="100%">
 <tr>
   <td class="element-header-text">
-    <if @link_hideable_p;literal@ eq "t" and @hide_links_p;literal@ eq "t">
+    <if @link_hideable_p;literal@ true and @hide_links_p;literal@ true>
       <big><strong>@name;noquote@</strong></big>
     </if>
     <else>
@@ -48,8 +48,8 @@
       <a href="configure-element?element_id=@element_id@&amp;op=hide">
       <img border="0"  src="@dir@/x.gif" alt="hide"></a>
     </if>
-    <if @user_editable_p;literal@ eq "f" and @shadeable_p;literal@ eq "f" and
-     @hideable_p;literal@ eq "f">
+    <if @user_editable_p;literal@ false and @shadeable_p;literal@ false and
+     @hideable_p;literal@ false>
      &nbsp;
     </if>
   </td>

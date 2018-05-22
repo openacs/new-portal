@@ -98,7 +98,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggl
 
 </multiple>
 
-<if @show_avail_p;literal@ ne 0>
+<if @show_avail_p;literal@ true>
 <form method=post action=@action_string@>
 
 @show_html;noquote@

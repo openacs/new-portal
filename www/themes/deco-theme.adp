@@ -34,7 +34,7 @@
     <tbody>
     <tr>
     <td align="left" valign="middle" width="88%"  bgcolor="#eeeee7">
-	<if @link_hideable_p;literal@ eq "t" and @hide_links_p;literal@ eq "t">
+	<if @link_hideable_p;literal@ true and @hide_links_p;literal@ true>
           <strong>@name;noquote@</strong>
         </if><else>
           <a style="text-decoration: none" href="@link@"><strong>@name;noquote@</strong></a>
