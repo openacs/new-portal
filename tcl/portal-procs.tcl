@@ -76,14 +76,12 @@ ad_proc -public portal::datasource_dispatch {
 
 # The management is not responsible for the results of multi-mounting
 
-set ::portal::package_key "new-portal"
 ad_proc -private portal::package_key {} {
     Returns the package_key
 } {
     return $::portal::package_key
 }
 
-set ::portal::get_package_id [apm_package_id_from_key $::portal::package_key]
 ad_proc -public portal::get_package_id {} {
     returns the package ID
 } {
@@ -91,7 +89,6 @@ ad_proc -public portal::get_package_id {} {
 }
 
 # Work around for template::util::url_to_file
-set ::portal::www_path /packages/${::portal::package_key}/www
 ad_proc -private portal::www_path {} {
     Returns the path of the www dir of the portal package. We
     need this for stupid template tricks.
@@ -102,14 +99,9 @@ ad_proc -private portal::www_path {} {
 ad_proc -public portal::mount_point {} {
     caches the mount point
 } {
-    if {![info exists ::portal::mount_point]} {
-        set ::portal::mount_point [site_node::get_url_from_object_id \
-                                       -object_id $::portal::get_package_id]
-    }    
     return $::portal::mount_point
 }
 
-set ::portal::automount_point "portal"
 ad_proc -public portal::automount_point {} {
     packages such as dotlrn can automount the portal here
 } {
