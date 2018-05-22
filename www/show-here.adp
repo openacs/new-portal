@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="portlet">
-<if @show_avail_p@ ne 0>
+<if @show_avail_p;literal@ ne 0>
     <form method="post" action="@action_string@">
         <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
         <div><input type="hidden" name="region" value="@region@"></div>

@@ -52,7 +52,7 @@
         <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-left.gif" alt="move left"></a>
         <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=right&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-right.gif" alt="move right"></a>
         </if>
-        <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-left.gif" alt="move left"></a>     
+        <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-left.gif" alt="move left"></a>
         </if>
     </if>
 
@@ -88,7 +88,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggl
 
 </form>
 
-    <include src=place-element-other-page &="element_multi" 
+    <include src=place-element-other-page &="element_multi"
              target_stub="@target_stub;literal@"
              portal_id="@portal_id;literal@"
              page_id="@element_multi.page_id;literal@"
@@ -98,7 +98,7 @@ User Shadeable? Yes [<a href="@target_stub@-2?portal_id=@portal_id@&amp;op_toggl
 
 </multiple>
 
-<if @show_avail_p@ ne 0>
+<if @show_avail_p;literal@ ne 0>
 <form method=post action=@action_string@>
 
 @show_html;noquote@

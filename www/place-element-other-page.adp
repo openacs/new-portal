@@ -22,7 +22,7 @@
 <div><input type="hidden" name="portal_id" value="@portal_id@"></div>
 <div><input type="hidden" name="return_url" value="@return_url@"></div>
 
-<if @other_page_avail_p@ ne 0>
+<if @other_page_avail_p;literal@ ne 0>
   <div><input type="hidden" name="element_id" value="@element_id@"></div>
   <div><input type="hidden" name="anchor" value="@page_id@"></div>
   <div><input type="submit" name="op_move_to_page" value="#new-portal.Move_to_page#"></div>
