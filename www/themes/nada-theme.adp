@@ -32,7 +32,7 @@
     <tr>
     <td class="element-header-text-plain">
       <big>
-	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
+        <if @link_hideable_p;literal@ eq "t" and @hide_links_p;literal@ eq "t">
           <strong>@name;noquote@</strong>
         </if>
         <else>
@@ -42,12 +42,12 @@
     </td>
 
     <td class="element-header-buttons-plain">
-          
-      <if @user_editable_p;literal@ true>	
+
+      <if @user_editable_p;literal@ true>
           <a href="configure-element?element_id=@element_id@&amp;op=edit">[edit]</a>
       </if>
-  
-      <if @shadeable_p;literal@ true>		
+
+      <if @shadeable_p;literal@ true>
         <a href="configure-element?element_id=@element_id@&amp;op=shade">
           <if @shaded_p;literal@ false>
             [shade]</a>
@@ -56,17 +56,17 @@
             [unshade]</a>
           </else>
       </if>
-  
-      <if @hideable_p;literal@ true>		
+
+      <if @hideable_p;literal@ true>
         <a href="configure-element?element_id=@element_id@&amp;op=hide"> [hide]</a>
       </if>
-  
+
     </td>
 
     </tr>
 
     </tbody>
-        
+
   </table>
 
 </td>

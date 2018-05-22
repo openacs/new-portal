@@ -34,29 +34,29 @@
     <tbody>
     <tr>
     <td align="left" valign="middle" width="88%"  bgcolor="#eeeee7">
-	<if @link_hideable_p@ eq "t" and @hide_links_p@ eq "t">	
+	<if @link_hideable_p;literal@ eq "t" and @hide_links_p;literal@ eq "t">
           <strong>@name;noquote@</strong>
         </if><else>
           <a style="text-decoration: none" href="@link@"><strong>@name;noquote@</strong></a>
         </else>
     </td>
-		<if @user_editable_p;literal@ true>	
+		<if @user_editable_p;literal@ true>
                   <td align="right" width="7%">
 
 			<a href="configure-element?element_id=@element_id@&amp;op=edit"><img border="0" src="@dir@/edit.gif" alt="edit"></a></td>
 		</if>
 
-		<if @shadeable_p;literal@ true>		
+		<if @shadeable_p;literal@ true>
                   <td align="right" width="7%">
 		    <a href="configure-element?element_id=@element_id@&amp;op=shade">
-		    <if @shaded_p;literal@ false>	
+		    <if @shaded_p;literal@ false>
 		    <img border="0" src="@dir@/shade.gif" alt="shade"></a></td>
 		    </if><else>
 		    <img border="0" src="@dir@/unshade.gif" alt="unshade"></a></td>
 		    </else>
 		</if>
 
-		<if @hideable_p;literal@ true>		
+		<if @hideable_p;literal@ true>
                   <td align="right" width="7%">
 			<a href="configure-element?element_id=@element_id@&amp;op=hide"><img border="0" src="@dir@/x.gif" alt="hide"></a></td>
 		</if>
