@@ -99,11 +99,13 @@ ad_proc -private portal::www_path {} {
    return $::portal::www_path
 }
 
-set ::portal::mount_point [site_node::get_url_from_object_id \
-                               -object_id $::portal::get_package_id]
 ad_proc -public portal::mount_point {} {
     caches the mount point
 } {
+    if {![info exists ::portal::mount_point]} {
+        set ::portal::mount_point [site_node::get_url_from_object_id \
+                                       -object_id $::portal::get_package_id]
+    }    
     return $::portal::mount_point
 }
 
