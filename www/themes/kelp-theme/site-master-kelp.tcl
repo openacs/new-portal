@@ -30,7 +30,7 @@ if { $untrusted_user_id != 0 } {
     set pvt_home_url [ad_pvt_home]
     set pvt_home_name [ad_pvt_home_name]
     if {$pvt_home_name eq ""} {
-	set pvt_home_name [_ acs-subsite.Your_Account]
+        set pvt_home_name [_ acs-subsite.Your_Account]
     }
     set logout_url [ad_get_logout_url]
 
@@ -53,7 +53,7 @@ if { $untrusted_user_id != 0 } {
             set admin_url "[subsite::get_element -element url]admin/"
         }
     }
-} 
+}
 
 if { $untrusted_user_id == 0 } {
     set login_url [ad_get_login_url -return]
