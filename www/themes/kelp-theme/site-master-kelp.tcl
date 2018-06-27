@@ -26,7 +26,7 @@ set sw_admin_p 0
 set user_id [ad_conn user_id]
 set untrusted_user_id [ad_conn untrusted_user_id]
 if { $untrusted_user_id != 0 } {
-    set user_name [acs_user::get_element -user_id $untrusted_user_id -element name]
+    set user_name [person::name -person_id $untrusted_user_id]
     set pvt_home_url [ad_pvt_home]
     set pvt_home_name [ad_pvt_home_name]
     if {$pvt_home_name eq ""} {
