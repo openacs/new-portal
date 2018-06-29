@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author Arjun Sanyal
     @creation-date 9/28/2001
-    @cvs_id $Id$
+    @cvs-id $Id$
 } { }
 
 set form [ns_getform]

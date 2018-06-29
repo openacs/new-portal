@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author Ben Adida
     @creation-date 
-    @cvs_id $Id$
+    @cvs-id $Id$
 } -properties {
     element_id:onevalue
     region:onevalue

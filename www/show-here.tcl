@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Caroline@meekshome.com
     @creation-date 9/28/2001
-    @cvs_id $Id$
+    @cvs-id $Id$
 } -properties {
     region:onevalue
     action_string:onevalue

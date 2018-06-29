@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author Ian Baker (ibaker@arsdigita.com)
     @creation-date 2/14/2001
-    @cvs_id $Id$
+    @cvs-id $Id$
 }
 
 # should this come from the template or something?  how does it work?

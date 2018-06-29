@@ -22,7 +22,7 @@ ad_page_contract {
 
     @author arjun@openforce.net
     @author yon@openforce.net
-    @version $Id$
+    @cvs-id $Id$
 } -properties {
     element_list:onevalue
     element_src:onevalue

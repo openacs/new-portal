@@ -16,7 +16,7 @@
 
 # www/templates/simple2.tcl
 ad_page_contract {
-    @cvs_id $Id$
+    @cvs-id $Id$
 } -properties {
     element_list:onevalue
     element_src:onevalue

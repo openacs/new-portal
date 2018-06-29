@@ -19,7 +19,7 @@ ad_page_contract {
     Place elements in a portal template.
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs_id $Id$
+    @cvs-id $Id$
 } -properties {
     region:onevalue
     action_string:onevalue
