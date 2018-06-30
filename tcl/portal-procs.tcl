@@ -360,7 +360,7 @@ ad_proc -public portal::configure {
     FIXME REFACTOR ME
 
     @param portal_id
-    @return_url
+    @param return_url
 } {
 
     #
