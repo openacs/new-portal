@@ -57,14 +57,6 @@ begin
         datatype       => 'string' 
     ); 
 
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_datasource', 
-        attribute_name => 'CONTENT', 
-        pretty_name    => 'Content', 
-        pretty_plural  => 'Contents', 
-        datatype       => 'string' 
-    ); 
-
 end; 
 / 
 show errors;
@@ -102,14 +94,6 @@ begin
         attribute_name => 'DESCRIPTION', 
         pretty_name    => 'Description', 
         pretty_plural  => 'Descriptions', 
-        datatype       => 'string' 
-    ); 
-
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_layout', 
-        attribute_name => 'TYPE', 
-        pretty_name    => 'Type', 
-        pretty_plural  => 'Types', 
         datatype       => 'string' 
     ); 
 
@@ -166,14 +150,6 @@ begin
         attribute_name => 'DESCRIPTION', 
         pretty_name    => 'Description', 
         pretty_plural  => 'Descriptions', 
-        datatype       => 'string' 
-    ); 
-
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_element_theme', 
-        attribute_name => 'TYPE', 
-        pretty_name    => 'Type', 
-        pretty_plural  => 'Types', 
         datatype       => 'string' 
     ); 
 

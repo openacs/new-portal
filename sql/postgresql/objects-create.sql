@@ -67,22 +67,6 @@ select acs_attribute__create_attribute (
     'f'
 );
 
-select acs_attribute__create_attribute (
-    'portal_datasource',
-    'CONTENT',
-    'string',
-    'Content',
-    'Contents',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
 -- portal_layouts
 select  acs_object_type__create_type (
     'portal_layout',
@@ -120,22 +104,6 @@ select acs_attribute__create_attribute (
     'string',
     'Description',
     'Descriptions',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
-select acs_attribute__create_attribute (
-    'portal_layout',
-    'TYPE',
-    'string',
-    'Type',
-    'Types',
     null,
     null,
     null,
@@ -215,22 +183,6 @@ select acs_attribute__create_attribute (
     'string',
     'Description',
     'Descriptions',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
-select acs_attribute__create_attribute (
-    'portal_element_theme',
-    'TYPE',
-    'string',
-    'Type',
-    'Types',
     null,
     null,
     null,
