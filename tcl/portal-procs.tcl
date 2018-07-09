@@ -2104,11 +2104,7 @@ ad_proc -private portal::exists_p { portal_id } {
     @return 1 on success, 0 on failure
     @param a portal_id
 } {
-    if { [db_0or1row select {} ]} {
-        return 1
-    } else {
-        return 0
-    }
+    return [db_0or1row select {}]
 }
 
 ad_proc -public portal::add_element_parameters {
@@ -2501,11 +2497,7 @@ ad_proc portal::portlet_visible_p {
 
 } {
     set ds_id [get_datasource_id $portlet_name]
-    if {[db_string portlet_visible "" -default 0]} {
-        return 1
-    } else {
-        return 0
-    }
+    return [db_string portlet_visible {}]
 }
 
 # Local variables:

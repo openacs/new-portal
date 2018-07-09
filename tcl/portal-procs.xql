@@ -818,14 +818,13 @@
 
     <fullquery name="portal::portlet_visible_p.portlet_visible">
         <querytext>
-            select 1
+            select exists (select 1
             from portal_element_map,
                  portal_pages
             where portal_pages.portal_id = :portal_id
             and portal_element_map.datasource_id = :ds_id
             and portal_element_map.page_id = portal_pages.page_id
-            and portal_element_map.state <> 'hidden'
-            order by portal_element_map.pretty_name
+            and portal_element_map.state <> 'hidden') from dual
         </querytext>
     </fullquery>
     
