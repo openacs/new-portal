@@ -1294,7 +1294,7 @@ ad_proc -private portal::add_element_to_region {
     set ds_id [get_datasource_id $ds_name]
 
     # First, check if this portal 1) has a portal template and
-    # 2) that that template has an element of this DS in it. If
+    # 2) that template has an element of this DS in it. If
     # so, copy stuff. If not, just insert normally.
     if {[db_0or1row get_template_info_select {}] == 1} {
 

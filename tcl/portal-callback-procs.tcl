@@ -52,7 +52,7 @@ ad_proc -public -callback search::url -impl portal_datasource {} {
     @author openacs@dirkgomez.de
     @creation-date 2005-06-13
 
-    returns a url for a portal to the search package
+    returns a URL for a portal to the search package
 
 } {
     # TODO implement me
