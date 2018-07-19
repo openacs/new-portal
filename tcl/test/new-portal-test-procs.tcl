@@ -49,7 +49,7 @@ aa_register_case -cats api create_portal_from_template {
                 and p1.pretty_name = p2.pretty_name
                 "]
 
-            aa_true "Pages in correct order" [expr {$correct_page_count == 3}]
+            aa_true "Pages in correct order" {$correct_page_count == 3}
 	}
 
 }
