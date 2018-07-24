@@ -2020,7 +2020,7 @@ ad_proc -private portal::get_element_id_by_pretty_name {
 ad_proc -private portal::get_layout_region_count {
     {-layout_id:required}
 } {
-    Get the number of regions (aka columns) this layout supports
+    Get the number of regions (a.k.a. columns) this layout supports
 } {
     return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
 }
