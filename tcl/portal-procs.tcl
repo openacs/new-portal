@@ -311,7 +311,7 @@ ad_proc -private portal::layout_elements {
     and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
     belong in that region. - Ian Baker
 
-    @param element_id_list An [array get]'d array, keys are regions, \
+    @param element_list An [array get]'d array, keys are regions, \
         values are lists of element_ids.
     @param var_stub A name upon which to graft the bits that will be \
         passed to the template.
@@ -730,7 +730,7 @@ ad_proc -public portal::configure_dispatch {
     We get the target region number from the op.
 
     @param portal_id the portal to edit
-    @param formdata an ns_set with all the formdata
+    @param form an ns_set with all the formdata
 } {
     set edit_p \
         [permission::permission_p \
@@ -977,7 +977,7 @@ ad_proc -public portal::template_configure_dispatch {
     Just a wrapper for the configure_dispatch proc
 
     @param portal_id
-    @param formdata an ns_set with all the formdata
+    @param form an ns_set with all the formdata
 } {
     configure_dispatch -template_p "t" $portal_id $form
 }
@@ -1953,10 +1953,10 @@ ad_proc -private portal::datasource_available_p {
     {-portal_id:required}
     {-datasource_id:required}
 } {
-    Check is the given ds is available to the given portal
+    Check if the given datasource is available to the given portal
 
     @param portal_id
-    @param ds_id
+    @param datasource_id
 } {
     return [db_string select {}]
 }
@@ -2102,7 +2102,8 @@ ad_proc -private portal::exists_p { portal_id } {
     Check if a portal by that id exists.
 
     @return 1 on success, 0 on failure
-    @param a portal_id
+
+    @param portal_id A portal Id
 } {
     return [db_0or1row select {}]
 }
