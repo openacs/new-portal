@@ -1043,7 +1043,6 @@ ad_proc -public portal::page_count {
     1 when there's only one page
 
     @param portal_id
-    @param page_id
 } {
     return [db_string page_count_select {}]
 }
@@ -1126,7 +1125,6 @@ ad_proc -public portal::navbar {
     @return the id of the page
     @param portal_id
     @param link the relative link to set for hrefs
-    @param current_page_link f means that there is no link for the current page
 } {
     set ad_dim_struct [list]
 
