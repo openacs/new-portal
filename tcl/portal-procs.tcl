@@ -2296,8 +2296,8 @@ ad_proc -public portal::show_proc_helper {
     ns_log Debug "portal::show_proc_helper - package_key=$package_key, template=$template_src"
 
     uplevel 1 {
-        set template "<include src=\"$__ts\" cf=\"$__cflist\">"
-        set __adp_stub "[acs_root_dir]/packages/$__pk/www/."
+        set template "<include src=\"/packages/$__pk/www/$__ts\" cf=\"$__cflist\">"
+        set __adp_stub [acs_root_dir]
         set code [template::adp_compile -string $template]
         set output [template::adp_eval code]
         return $output
