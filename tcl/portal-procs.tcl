@@ -2283,24 +2283,13 @@ ad_proc -public portal::show_proc_helper {
         set template_src $package_key
     }
 
-    # some stupid upvar tricks to get them set right
-    upvar __ts ts
-    set ts $template_src
-
-    upvar __pk pk
-    set pk $package_key
-
-    upvar __cflist cflist
-    set cflist $config_list
-
     ns_log Debug "portal::show_proc_helper - package_key=$package_key, template=$template_src"
 
-    uplevel 1 {
-        set template [subst {<include src="/packages/$__pk/www/$__ts" cf="$__cflist">}]
-        set __adp_stub [acs_root_dir]
-        set code [template::adp_compile -string $template]
-        return [template::adp_eval code]
-    }
+    set template [subst {<include src="/packages/$package_key/www/$template_src" cf="$config_list">}]
+    set __adp_stub [acs_root_dir]
+    set code [template::adp_compile -string $template]
+    
+    return [template::adp_eval code]
 }
 
 ad_proc -public portal::get_theme_id {
