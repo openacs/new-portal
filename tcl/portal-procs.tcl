@@ -266,7 +266,7 @@ ad_proc -public portal::render {
     # put the element IDs into buckets by region...
         lappend element_ids($entry(region)) $entry(element_id)
     } if_no_rows {
-        set element_ids {}
+        array set element_ids {}
     }
 
     set element_list [array get element_ids]
