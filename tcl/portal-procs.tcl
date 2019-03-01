@@ -1311,8 +1311,11 @@ ad_proc -private portal::add_element_to_region {
 
     # sort_key will be used only on insert
         if { $sort_key eq "" } {
-            set sort_key [db_string get_sort_key {} -default "1"]
-            set sort_key [ad_decode $sort_key "" "1" $sort_key]
+            set sort_key [db_string get_sort_key {
+                select coalesce(max(sort_key), 0) + 1
+                from portal_element_map
+                where region = :region and page_id = :page_id
+            } -default "1"]
         }
 
         db_transaction {

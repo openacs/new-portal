@@ -400,14 +400,6 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="portal::add_element_to_region.get_sort_key">
-      <querytext>
-        select max(sort_key) + 1
-        from portal_element_map
-        where region = :region and page_id = :page_id
-      </querytext>
-    </fullquery>
-
     <fullquery name="portal::configure_dispatch.revert_get_source_page_id">
         <querytext>
             select page_id
