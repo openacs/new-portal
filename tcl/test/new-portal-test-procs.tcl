@@ -13,12 +13,7 @@ aa_register_case -cats api create_portal_from_template {
 
 
 	    # create a test user
-	    set user_info [ns_mktemp userXXXXXX]
-	    array set test_user [auth::create_user \
-				  -username $user_info \
-				  -first_names $user_info \
-				  -last_name $user_info \
-				  -email "${user_info}@test.test"]
+	    array set test_user [acs::test::user::create]
 
 	    set template_id [portal::create $test_user(user_id)]
 
@@ -31,14 +26,8 @@ aa_register_case -cats api create_portal_from_template {
 		-portal_id $template_id
 
 	    # create a portal based on the template
-            set user_info_2 [ns_mktemp userXXXXXX]
-	    array set test_user_2 [auth::create_user \
-				  -username $user_info_2 \
-				  -first_names $user_info_2 \
-				  -last_name $user_info_2 \
-				  -email "${user_info_2}@test.test"]
-	    
-	    
+	    array set test_user_2 [acs::test::user::create]
+
 	    set portal_id_2 [portal::create  -template_id $template_id $test_user_2(user_id)]
 
 	    # make sure the pages exist and are in the same order
