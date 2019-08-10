@@ -199,7 +199,7 @@ create index portal_pages_prtl_page_idx on portal_pages (portal_id, page_id);
 -- of them is a map b/w a portal and a DS, with satellite data of a
 -- theme, a config, a region, etc.
 --
--- No securtiy checks are done here. If you can view and bind to a DS you have
+-- No security checks are done here. If you can view and bind to a DS you have
 -- a PE for it.
 
 create sequence portal_element_map_sk_seq;
