@@ -34,7 +34,7 @@
     <div class="portlet-controls">
     
         <if @element_multi.state@ ne "pinned">
-            <!-- hide/remove link and arrows begin - refactor with tempate -->
+            <!-- hide/remove link and arrows begin - refactor with template -->
 
             <!-- hide_remove_url -->
             <span class="screen-reader-only">[</span>

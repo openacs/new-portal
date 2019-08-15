@@ -189,7 +189,7 @@ create table portal_pages (
                                     not null
                                     constraint portal_pages_hidden_p_ck
                                     check (hidden_p in ('t','f')),
-     -- Two pages on one portal canot have the same sort key
+     -- Two pages on one portal cannot have the same sort key
     constraint portal_pages_sort_key_un
     unique (portal_id, sort_key)
 );
