@@ -1442,7 +1442,9 @@ ad_proc -private portal::move_element_to_page {
     ]
 
     if {$curr_reg > $target_reg_num} {
-    # the new page dosent have this region, set to max region
+        #
+        # The new page does not have this region, set to max region.
+        #
         set region $target_reg_num
     } else {
         set region $curr_reg
@@ -2291,7 +2293,7 @@ ad_proc -public portal::show_proc_helper {
     set template [subst {<include src="/packages/$package_key/www/$template_src" cf="$config_list">}]
     set __adp_stub [acs_root_dir]
     set code [template::adp_compile -string $template]
-    
+
     return [template::adp_eval code]
 }
 
