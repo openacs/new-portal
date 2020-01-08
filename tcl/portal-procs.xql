@@ -30,6 +30,21 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::move_element_to_page.update">
+        <querytext>
+            update portal_element_map
+            set page_id = :page_id,
+                region = :region,
+                sort_key = (select coalesce((select max(sort_key) + 1
+                                             from portal_element_map
+                                             where page_id = :page_id
+                                             and region = :region),
+                                            1)
+                            from dual)
+            where element_id = :element_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::get_name_not_cached.get_name_select">
         <querytext>
             select name
@@ -391,12 +406,36 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="portal::add_element_to_region.insert">
+        <querytext>
+            insert into portal_element_map
+            (element_id, name, pretty_name, page_id, datasource_id, region, sort_key)
+            values
+            (:new_element_id, :ds_name, :pretty_name, :page_id, :ds_id, :region, :sort_key)
+        </querytext>
+    </fullquery>
+
     <fullquery name="portal::add_element_to_region.get_target_page_id">
         <querytext>
             select page_id as target_page_id
             from portal_pages pp
             where pp.portal_id = :portal_id
             and pp.sort_key = :template_page_sort_key
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::configure_dispatch.show_here_update_sk">
+        <querytext>
+            update portal_element_map
+            set region = :region,
+                page_id = :page_id,
+                sort_key = (select coalesce((select max(pem.sort_key) + 1
+                                             from portal_element_map pem
+                                             where pem.page_id = :page_id
+                                             and region = :region),
+                                            1)
+                            from dual)
+            where element_id = :element_id
         </querytext>
     </fullquery>
 
@@ -516,6 +555,20 @@
         <querytext>
             select page_id as my_page_id
             from portal_element_map
+            where element_id = :element_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="portal::move_element.update">
+        <querytext>
+            update portal_element_map
+            set region = :target_region,
+                sort_key = (select coalesce((select max(pem.sort_key) + 1
+                                             from portal_element_map pem
+                                             where page_id = :my_page_id
+                                             and region = :target_region),
+                                            1)
+                            from dual)
             where element_id = :element_id
         </querytext>
     </fullquery>
