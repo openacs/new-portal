@@ -1,4 +1,3 @@
-
 #
 ### Portal immutable properties
 #
@@ -11,3 +10,9 @@ set ::portal::mount_point [site_node::get_url_from_object_id \
 set ::portal::automount_point "portal"
 
 ###
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
