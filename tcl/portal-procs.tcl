@@ -129,7 +129,7 @@ ad_proc -public portal::create {
     @param user_id
     @param layout_name optional
 } {
-# if we have a cvs list in the form "page_name1, layout1;
+# if we have a csv list in the form "page_name1, layout1;
 # page_name2, layout2...", we get the required first page_name
 # and first page layout from it, overriding any other params
 
