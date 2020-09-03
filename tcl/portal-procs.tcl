@@ -2489,15 +2489,15 @@ ad_proc portal::portlet_visible_p {
 
 } {
     set ds_id [get_datasource_id $portlet_name]
-    return [db_string portlet_visible {
-        select case when exists (select 1
-                       from portal_element_map,
-                       portal_pages
-                       where portal_pages.portal_id = :portal_id
-                       and portal_element_map.datasource_id = :ds_id
-                       and portal_element_map.page_id = portal_pages.page_id
-                       and portal_element_map.state <> 'hidden') then 1 else 0 end
-        from dual
+    return [db_0or1row portlet_visible {
+        select 1 from dual where exists
+        (
+         select 1 from portal_element_map,portal_pages
+         where portal_pages.portal_id = :portal_id
+         and portal_element_map.datasource_id = :ds_id
+         and portal_element_map.page_id = portal_pages.page_id
+         and portal_element_map.state <> 'hidden'
+        )
     }]
 }
 
