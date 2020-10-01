@@ -50,7 +50,7 @@ ad_page_contract {
     return_url:localurl,optional
 }
 
-set user_id [ad_conn user_id] 
+set user_id [ad_conn user_id]
 set community_id [dotlrn_community::get_community_id]
 set dotlrn_url [dotlrn::get_url]
 
@@ -69,7 +69,7 @@ set header_font "Arial, Helvetica, sans-serif"
 set header_font_size "medium"
 set header_font_color "black"
 set header_logo_item_id ""
-set header_img_url "/resources/dotlrn/logo" 
+set header_img_url "/resources/dotlrn/logo"
 set header_img_file "[acs_root_dir]/packages/dotlrn/www/resources/logo"
 set header_img_alt_text "Header Logo"
 
@@ -86,7 +86,7 @@ set show_navbar_p [expr {!$no_navbar_p}]
 set link [expr {[info exists return_url] ? $return_url : [ad_conn -get extra_url]}]
 
 if { [ad_conn package_key] ne [dotlrn::package_key] } {
-    # Peter M: We are in a package (an application) that may or may not be under a dotlrn instance 
+    # Peter M: We are in a package (an application) that may or may not be under a dotlrn instance
     # (i.e. in a news instance of a class)
     # and we want all links in the navbar to be active so the user can return easily to the class homepage
     # or to the My Space page
@@ -94,14 +94,14 @@ if { [ad_conn package_key] ne [dotlrn::package_key] } {
 }
 
 if {$have_comm_id_p} {
-    # in a community or just under one in a mounted package like /calendar 
+    # in a community or just under one in a mounted package like /calendar
     # get this comm's info
     set control_panel_text "Administer"
 
-    set text [dotlrn_community::get_community_header_name $community_id] 
+    set text [dotlrn_community::get_community_header_name $community_id]
     set link [dotlrn_community::get_community_url $community_id]
     set admin_p [dotlrn::user_can_admin_community_p -user_id $user_id -community_id $community_id]
-    
+
 } elseif {[parameter::get -parameter community_type_level_p] == 1} {
     set control_panel_text "Administer"
 
@@ -129,7 +129,7 @@ set parent_comm_p [expr {[dotlrn_community::get_parent_community_id -package_id 
 set control_panel_text [_ "dotlrn.control_panel"]
 
 if {$community_id ne ""} {
-    # in a community or just under one in a mounted package like /calendar 
+    # in a community or just under one in a mounted package like /calendar
     set comm_type [dotlrn_community::get_community_type_from_community_id $community_id]
     set control_panel_text [_ acs-subsite.Admin]
 
@@ -162,7 +162,7 @@ if {$community_id ne ""} {
 	    set scope_z_light "#ECF3F0"
 	}
     }
-  
+
     # font hack
     set community_header_font [dotlrn_community::get_attribute \
         -community_id $community_id \
@@ -184,7 +184,7 @@ if {$community_id ne ""} {
         -attribute_name header_font_color
     ]
 
-    # logo hack 
+    # logo hack
     set header_logo_item_id [dotlrn_community::get_attribute \
         -community_id $community_id \
         -attribute_name header_logo_item_id
@@ -192,15 +192,15 @@ if {$community_id ne ""} {
 
     if {$header_logo_item_id ne ""} {
 	# Need filename
-        set header_img_url "[dotlrn_community::get_community_url $community_id]/file-storage/download/?version_id=$header_logo_item_id" 
+        set header_img_url "[dotlrn_community::get_community_url $community_id]/file-storage/download/?version_id=$header_logo_item_id"
     } elseif { [file exists "$header_img_file-$scope_name.jpg"] } {
         # DRB: default logo for dotlrn is a JPEG provided by Collaboraid.  This can
         # be replaced by custom gifs if preferred (as is done by SloanSpace)
         set header_img_url "$header_img_url-$scope_name.jpg"
     } elseif { [file exists "$header_img_file-$scope_name.gif"] } {
         set header_img_url "$header_img_url-$scope_name.gif"
-    }	
-   
+    }
+
     set header_logo_alt_text [dotlrn_community::get_attribute \
         -community_id $community_id \
         -attribute_name header_logo_alt_text
@@ -208,7 +208,7 @@ if {$community_id ne ""} {
 
     if {$header_logo_alt_text ne ""} {
         set header_img_alt_text $header_logo_alt_text
-    } 
+    }
 
     set text [dotlrn::user_context_bar -community_id $community_id]
 
@@ -400,7 +400,7 @@ h1 {
   color: #${color3};
   border-top: 1px solid #${color3};
   border-bottom: 1px solid #${color3};
-  } 
+  }
 
 .portlet ul ul li {
   color: #${color3};
@@ -469,7 +469,7 @@ switch $scope_name {
 	set recolor_css ""
     }
 }
-    
+
 template::head::add_style -style "
 $recolor_css
 
