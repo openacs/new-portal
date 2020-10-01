@@ -13,34 +13,42 @@
 #  details.
 #
 #
-# /www/dotlrn-master.tcl
-#
-# This is the "default-master" template for dotlrn sites.
-#
-# Instructions:
-#
-# 1. Put this file and its .adp file into the server's /www directory.
-# That's the one with the "default-master" Tcl and adp files. You don't
-# have to edit or remove the "default-master" files, since they will be
-# ignored by the next step.
-# 
-# 2. Change the "Main Site"'s "DefaultMaster" parameter
-# from "/www/default-master" to "/www/dotlrn-master"
-# at http://yoursite.com/admin/site-map
-#
-# This tells OpenACS to use these files instead of the "default-master"
-#
-# 3. Edit these files to change the look of the site including the banner
-# at the top of the page, the title of the pages, the fonts of the portlets, etc.
-#
-# WARNING: All current portlet themes (table, deco, nada, etc) depend on some
-# of the CSS defined below. Be careful when you edit the CSS below,
-# and check how themes use it.
-#
-#
-# Author: Arjun Sanyal (arjun@openforce.net), yon@openforce.net
-#
-# $Id$
+ad_page_contract {
+    /www/dotlrn-master.tcl
+
+    This is the "default-master" template for dotlrn sites.
+
+    Instructions:
+
+    1. Put this file and its .adp file into the server's /www directory.
+    That's the one with the "default-master" Tcl and adp files. You don't
+    have to edit or remove the "default-master" files, since they will be
+    ignored by the next step.
+
+    2. Change the "Main Site"'s "DefaultMaster" parameter
+    from "/www/default-master" to "/www/dotlrn-master"
+    at http://yoursite.com/admin/site-map
+
+    This tells OpenACS to use these files instead of the "default-master"
+
+    3. Edit these files to change the look of the site including the banner
+    at the top of the page, the title of the pages, the fonts of the portlets, etc.
+
+    WARNING: All current portlet themes (table, deco, nada, etc) depend on some
+    of the CSS defined below. Be careful when you edit the CSS below,
+    and check how themes use it.
+
+
+    Author: Arjun Sanyal (arjun@openforce.net), yon@openforce.net
+
+    $Id$
+} {
+    {no_navbar_p:boolean,notnull false}
+    {link_all:boolean,notnull false}
+    {link_control_panel:boolean,notnull true}
+    {title:notnull "[ad_system_name]"}
+    return_url:localurl,optional
+}
 
 set user_id [ad_conn user_id] 
 set community_id [dotlrn_community::get_community_id]
@@ -73,17 +81,9 @@ set have_comm_id_p [expr {$community_id ne ""}]
 
 
 # navbar vars
-set show_navbar_p [expr {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p ? 0 : 1}]
-
-if {![info exists link_all]} {
-    set link_all 0
-}
+set show_navbar_p [expr {!$no_navbar_p}]
 
 set link [expr {[info exists return_url] ? $return_url : [ad_conn -get extra_url]}]
-
-if {![info exists link_control_panel]} {
-    set link_control_panel 1
-}
 
 if { [ad_conn package_key] ne [dotlrn::package_key] } {
     # Peter M: We are in a package (an application) that may or may not be under a dotlrn instance 
@@ -124,13 +124,7 @@ if {$have_comm_id_p} {
 set user_id [ad_conn user_id]
 set username [expr {[ad_conn untrusted_user_id] ? [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name] : ""}]
 
-if {![info exists title] || $title eq ""} {
-    set title [ad_system_name]
-}
-
 set parent_comm_p [expr {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] ne ""]}]
-
-set community_id [dotlrn_community::get_community_id]
 
 set control_panel_text [_ "dotlrn.control_panel"]
 
