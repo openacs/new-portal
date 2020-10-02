@@ -2220,6 +2220,7 @@ ad_proc -public portal::remove_element_parameters {
     of this type on the given page. If by removing this param,
     there are no more params (say instace_id's) of this type,
     that means that the portlet has become empty and can be
+    removed.
 
     @param portal_id The portal page to act on
     @param portlet_name The name of the portlet to (maybe) remove
