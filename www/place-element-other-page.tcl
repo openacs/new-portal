@@ -13,16 +13,13 @@
 #  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 #  details.
 #
-ad_page_contract {
+ad_include_contract {
     Moving to other pages
 } {
     element_multi
-    target_stub
     portal_id:integer,notnull
     page_id:integer,notnull
     return_url:localurl
-    anchor
-    action_string
 }
 
 set element_id $element_multi(element_id)

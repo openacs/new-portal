@@ -14,7 +14,7 @@
 #  details.
 #
 
-ad_page_contract {
+ad_include_contract {
     Place elements on the configure page. This template gets its vars
     from the layout template (e.g. simple2.adp) which is sourced
     by portal::configure
