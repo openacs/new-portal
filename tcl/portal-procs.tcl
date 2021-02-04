@@ -757,7 +757,7 @@ ad_proc -public portal::configure_dispatch {
         }
 
     } elseif { [ns_set get $form "op_revert"] ne "" } {
-        #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
+        #Transaction here was causing uncaught deadlocks so it was removed. - CM 9-11-02
         #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the middle. The user can just revert again.
 
         set template_id [get_portal_template_id $portal_id]
@@ -828,7 +828,7 @@ ad_proc -public portal::configure_dispatch {
                 set target_element_id \
                     [db_string revert_get_target_element {} -default {}]
 
-                    # now, lets check if this is one new applet
+                    # now, let's check if this is one new applet
                     # added, that was not originally mapped
                     # usually with custom portlets
 
@@ -2023,7 +2023,7 @@ ad_proc -private portal::get_element_id_by_pretty_name {
 ad_proc -private portal::get_layout_region_count {
     {-layout_id:required}
 } {
-    Get the number of regions (a.k.a. columns) this layout supports
+    Get the number of regions (aka columns) this layout supports
 } {
     return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
 }
