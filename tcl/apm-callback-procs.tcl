@@ -5,9 +5,9 @@ ad_library {
     @author Don Baccus (dhogaza@pacifier.com)
 }
 
-namespace eval new-portal {}
+namespace eval portal {}
 
-ad_proc -private new-portal::after_upgrade {
+ad_proc -private portal::after_upgrade {
     {-from_version_name:required}
     {-to_version_name:required}
 } {

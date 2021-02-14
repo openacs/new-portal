@@ -2,7 +2,7 @@
 
 <queryset>
 
-  <fullquery name="new-portal::after_upgrade.update_type">
+  <fullquery name="portal::after_upgrade.update_type">
     <querytext>
       update acs_object_types
       set package_name = 'portal_element_theme',
