@@ -3,7 +3,10 @@ ad_library {
     Tests for portals
 }
 
-aa_register_case -cats api create_portal_from_template {
+aa_register_case -cats api -procs {
+    portal::create
+    portal::page_create
+} create_portal_from_template {
     Create a portal from a template
 } {
     aa_run_with_teardown \
