@@ -945,7 +945,7 @@ ad_proc -public portal::configure_dispatch {
 # portal template procs - util and configuration
 #
 
-ad_proc -private portal::get_portal_template_id {
+ad_proc -public portal::get_portal_template_id {
     portal_id
 } {
     Returns this portal's template_id or the null string if it
@@ -1495,7 +1495,7 @@ ad_proc -private portal::non_hidden_elements_p {
 
 }
 
-ad_proc -private portal::set_element_param {
+ad_proc -public portal::set_element_param {
     element_id
     key
     value
@@ -1582,7 +1582,7 @@ ad_proc -private portal::remove_all_element_param_values {
     db_dml delete {}
 }
 
-ad_proc -private portal::get_element_param { element_id key } {
+ad_proc -public portal::get_element_param { element_id key } {
     Get an element param. Returns the value of the param.
 
     @return the value of the param
@@ -1599,13 +1599,13 @@ ad_proc -private portal::get_element_param { element_id key } {
     }
 }
 
-ad_proc -private portal::element_params_not_cached element_id {
+ad_proc -public portal::element_params_not_cached element_id {
     Return a list of lists of key value pairs for this portal element.
 } {
     return [db_list_of_lists params_select {}]
 }
 
-ad_proc -private portal::get_element_id_from_unique_param {
+ad_proc -public portal::get_element_id_from_unique_param {
     {-portal_id:required}
     {-key:required}
     {-value:required}
@@ -1890,7 +1890,7 @@ ad_proc -public portal::configure_element {
     }
 }
 
-ad_proc -private portal::set_pretty_name {
+ad_proc -public portal::set_pretty_name {
     {-element_id:required}
     {-pretty_name:required}
 } {
@@ -1924,7 +1924,7 @@ ad_proc -private portal::get_datasource_name { ds_id } {
     }
 }
 
-ad_proc -private portal::get_datasource_id { ds_name } {
+ad_proc -public portal::get_datasource_id { ds_name } {
     Get the ds id from the name
 
     @param ds_name
@@ -2003,14 +2003,14 @@ ad_proc -private portal::generate_action_string {
     return "[lindex [ns_conn urlv] [ns_conn urlc]-1]-2"
 }
 
-ad_proc -private portal::get_element_ids_by_ds {portal_id ds_name} {
+ad_proc -public portal::get_element_ids_by_ds {portal_id ds_name} {
     Get element IDs for a particular portal and a datasource name
 } {
     set ds_id [get_datasource_id $ds_name]
     return [db_list select {}]
 }
 
-ad_proc -private portal::get_element_id_by_pretty_name {
+ad_proc -public portal::get_element_id_by_pretty_name {
     {-portal_id:required}
     {-pretty_name:required}
 } {
