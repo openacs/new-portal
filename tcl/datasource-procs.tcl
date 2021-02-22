@@ -107,7 +107,7 @@ namespace eval portal::datasource {
         }
     }
 
-    ad_proc -private new {
+    ad_proc -public new {
         {-name:required}
         {-description:required}
     } {
@@ -118,7 +118,7 @@ namespace eval portal::datasource {
         return [db_exec_plsql new_datasource {}]
     }
 
-    ad_proc -private set_def_param {
+    ad_proc -public set_def_param {
         {-datasource_id:required}
         {-config_required_p:required}
         {-configured_p:required}
@@ -132,7 +132,7 @@ namespace eval portal::datasource {
         db_exec_plsql set_def_param {}
     }
 
-    ad_proc -private delete {
+    ad_proc -public delete {
         {-name:required}
     } {
 
