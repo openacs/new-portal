@@ -1599,10 +1599,18 @@ ad_proc -public portal::get_element_param { element_id key } {
     }
 }
 
-ad_proc -public portal::element_params_not_cached element_id {
+ad_proc -private portal::element_params_not_cached element_id {
     Return a list of lists of key value pairs for this portal element.
 } {
     return [db_list_of_lists params_select {}]
+}
+
+ad_proc -public portal::element_params {
+    element_id
+} {
+    Return a list of lists of key value pairs for this portal element.
+} {
+    return [util_memoize "portal::element_params_not_cached $element_id" 86400]
 }
 
 ad_proc -public portal::get_element_id_from_unique_param {
@@ -1641,7 +1649,7 @@ ad_proc -private portal::evaluate_element {
     db_1row element_select {} -column_array element
 
     # get the element's params
-    set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
+    set element_params [portal::element_params $element_id]
     if {[llength $element_params]} {
         foreach param $element_params {
             lassign $param key value
