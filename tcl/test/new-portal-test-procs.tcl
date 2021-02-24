@@ -13,6 +13,7 @@ aa_register_case -cats api -procs {
     portal::get_page_pretty_name
     portal::set_page_pretty_name
     portal::first_page_p
+    portal::exists_p
 } create_portal_from_template {
     Create and delete a portal from a template
 } {
@@ -26,6 +27,7 @@ aa_register_case -cats api -procs {
         #
         set template_id [portal::create $test_user(user_id)]
         set first_page  [portal::get_page_id -portal_id $template_id]
+        aa_true "Portal exists" [portal::exists_p $template_id]
         #
         # Create pages
         #
@@ -96,8 +98,7 @@ aa_register_case -cats api -procs {
         # Delete portal
         #
         portal::delete $portal_id_2
-        aa_false "Portal exists after deletion" [db_0or1row portal {
-            select * from portals where portal_id = :portal_id_2
+        aa_false "Portal exists after deletion" [portal::exists_p $portal_id_2]
         }]
     }
 }
