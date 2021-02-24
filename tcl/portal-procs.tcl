@@ -2109,7 +2109,7 @@ ad_proc -private portal::get_layout_id {
     return $layout_id
 }
 
-ad_proc -private portal::exists_p { portal_id } {
+ad_proc -public portal::exists_p { portal_id } {
     Check if a portal by that id exists.
 
     @return 1 on success, 0 on failure
