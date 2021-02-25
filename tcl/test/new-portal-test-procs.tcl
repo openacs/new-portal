@@ -99,7 +99,6 @@ aa_register_case -cats api -procs {
         #
         portal::delete $portal_id_2
         aa_false "Portal exists after deletion" [portal::exists_p $portal_id_2]
-        }]
     }
 }
 
