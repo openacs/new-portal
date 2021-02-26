@@ -31,7 +31,7 @@ aa_register_case -cats api -procs {
         set page1 [portal::get_page_id -portal_id $template_id]
         aa_true "Portal exists" [portal::exists_p $template_id]
         #
-        # Create more pages pages
+        # Create more pages
         #
         set page2 [portal::page_create \
                         -pretty_name "Page 2" \
