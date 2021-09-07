@@ -1,10 +1,9 @@
-# Expects properties:
-#   title
-#   focus
-#   section
-
-if { ![info exists section] } {
-    set section {}
+ad_page_contract {
+    Site Master Kelp
+} {
+    title:optional
+    focus:optional
+    {section ""}
 }
 
 if { [template::util::is_nil subnavbar_link] } {
