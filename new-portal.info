@@ -11,7 +11,7 @@
     <version name="2.10.0" url="http://openacs.org/repository/download/apm/new-portal-2.10.0.apm">
         <owner url="http://openacs.org">OpenACS</owner>
         <summary>Portals.</summary>
-        <release-date>2017-08-06</release-date>
+        <release-date>2021-09-15</release-date>
         <vendor url="http://dotlrn.org">DotLRN Consortium</vendor>
         <maturity>2</maturity>
         <description format="text/plain">New Portal Package a.k.a. NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
