@@ -14,7 +14,7 @@
         <release-date>2021-09-15</release-date>
         <vendor url="http://dotlrn.org">DotLRN Consortium</vendor>
         <maturity>2</maturity>
-        <description format="text/plain">New Portal Package a.k.a. NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
+        <description format="text/plain">New Portal Package aka NPP. Portals are used to aggregate content from different sources within a single page.  Props to Ian Baker for &quot;Portal&quot;.</description>
 
         <provides url="new-portal" version="2.10.0"/>
         <requires url="acs-kernel" version="5.10.0"/>
