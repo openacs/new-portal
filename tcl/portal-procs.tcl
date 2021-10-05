@@ -789,7 +789,12 @@ ad_proc -public portal::configure_dispatch {
         # portal
         db_foreach revert_target_pages {} {
             if { ! [db_0or1row revert_get_source_page_id {}] } {
-                set move_to_page_id [db_string revert_min_page_id_select {}]
+                set move_to_page_id [db_string revert_min_page_id_select {
+                    select min(page_id)
+                    from portal_pages
+                    where portal_id = :portal_id
+                    order by sort_key
+                }]
 
                 db_foreach revert_move_elements_for_del {} {
                     portal::move_element_to_page \
@@ -1351,12 +1356,41 @@ ad_proc -private portal::swap_element {
 
     if { $dir eq "up" } {
         # get the sort_key and id of the element above
-        if {[db_0or1row get_prev_sort_key {}] == 0} {
+        if {[db_0or1row get_prev_sort_key {
+            select sort_key as other_sort_key,
+                   element_id as other_element_id
+            from (select pem.sort_key,
+                         element_id
+                  from portal_element_map pem,
+                       portal_pages pp
+                  where pp.portal_id = :portal_id
+                  and pem.page_id = :my_page_id
+                  and pp.page_id = pem.page_id
+                  and region = :region
+                  and pem.sort_key < :my_sort_key
+                  and state != 'pinned'
+                  order by pem.sort_key desc) as sort_keys
+                  fetch first 1 rows only
+        }] == 0} {
             return
         }
     } elseif { $dir eq "down"} {
         # get the sort_key and id of the element below
-        if {[db_0or1row get_next_sort_key {}] == 0} {
+        if {[db_0or1row get_next_sort_key {
+            select sort_key as other_sort_key,
+                   element_id as other_element_id
+            from (select pem.sort_key,
+                         element_id
+                  from portal_element_map pem, portal_pages pp
+                  where pp.portal_id = :portal_id
+                  and pem.page_id = :my_page_id
+                  and pem.page_id = pp.page_id
+                  and region = :region
+                  and pem.sort_key > :my_sort_key
+                  and state != 'pinned'
+                  order by pem.sort_key) as sort_keys
+                  fetch first 1 rows only
+        }] == 0} {
             return
         }
     } else {
