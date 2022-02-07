@@ -1431,6 +1431,10 @@ ad_proc -private portal::move_element {
     @param region the PEs current region
     @param direction up or down
 } {
+    if {![string is integer -strict $region]} {
+        ad_return_complaint 1 "portal::move_element [_ acs-templating.Invalid_integer]"
+        ad_script_abort
+    }
 
     permission::require_permission -object_id $portal_id -privilege portal_read_portal
     permission::require_permission -object_id $portal_id -privilege portal_edit_portal
