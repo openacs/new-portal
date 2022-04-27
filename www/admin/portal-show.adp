@@ -17,6 +17,6 @@
 %>
 
 <master src="portal-admin-master">
-<property name=referer>@referer@</property>
-<property name=name>@name@</property>
+<property name=referer>@referer;literal@</property>
+<property name=name>@name;literal@</property>
 @html;noquote@
