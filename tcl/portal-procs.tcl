@@ -790,10 +790,11 @@ ad_proc -public portal::configure_dispatch {
         db_foreach revert_target_pages {} {
             if { ! [db_0or1row revert_get_source_page_id {}] } {
                 set move_to_page_id [db_string revert_min_page_id_select {
-                    select min(page_id)
+                    select page_id
                     from portal_pages
                     where portal_id = :portal_id
-                    order by sort_key
+                    order by sort_key asc, page_id asc
+                    fetch first 1 rows only
                 }]
 
                 db_foreach revert_move_elements_for_del {} {
