@@ -2484,7 +2484,7 @@ ad_proc portal::dimensional {
             if {($option_val eq $thisoption_name && !$link_all) || !$thisoption_link_p} {
                 append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
             } else {
-                set href "$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]"
+                set href $url?[export_vars -url -set $options_set [list [list $option_key $thisoption_name]]]
                 append html [subst {
                     ${pre_td_html}<a href="[ns_quotehtml $href]">${pre_html}${thisoption_value}${post_html}
                 }]
