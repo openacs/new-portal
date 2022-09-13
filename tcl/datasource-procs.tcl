@@ -31,17 +31,18 @@ namespace eval portal::datasource {
         -spec:required
     } {
 
-        Create a new portal datasource from a specification.  Why use this to define
-        your portal datasources?  Because calling this procedure from your package's
-        post-install procedure is easier than writing PL/SQL for Oracle and PL/pgSQL
-        for Oracle.
+        Create a new portal datasource from a specification.  Why use
+        this to define your portal datasources?  Because calling this
+        procedure from your package's post-install procedure is easier
+        than writing PL/SQL for Oracle and PL/pgSQL for Oracle.
 
         @param spec The specification (format described below)
 
         @author Don Baccus (dhogaza@pacifier.com)
         @see acs_sc::impl::new_from_spec
 
-        The specification is a list of name-value pairs.  Possible names are
+        The specification is a list of name-value pairs. Possible
+        names are:
 
         name          The name of the new datasource
         owner         The package that owns this portlet
@@ -49,15 +50,15 @@ namespace eval portal::datasource {
         params        A list of param key/attributes and their values
         aliases       Service contract aliases clause for acs_sc::impl::new_from_spec
 
-        Each parameter key can be followed by a comma-separated list of attributes
-        in the familiar style of ad_page_contract or ad_form.  Do not include spaces
-        in the list of attributes.  Only two attributes are allowed - "config_required_p"
-        and "configured_p".
+        Each parameter key can be followed by a comma-separated list
+        of attributes in the familiar style of ad_page_contract or
+        ad_form.  Do not include spaces in the list of attributes.
+        Only two attributes are allowed - "config_required_p" and
+        "configured_p".
 
-        See the portal package documentation for the meaning of these two attributes.
-
+        See the portal package documentation for the meaning of these
+        two attributes.
     } {
-
         array set datasource $spec
 
         # Default datasource description to its name
@@ -111,9 +112,9 @@ namespace eval portal::datasource {
         {-name:required}
         {-description:required}
     } {
+        Add a new datasource
 
         @author Simon Carstensen (simon@bcuni.net)
-
     } {
         return [db_exec_plsql new_datasource {}]
     }
@@ -125,9 +126,9 @@ namespace eval portal::datasource {
         {-key:required}
         {-value:required}
     } {
+        Set def. parameter
 
         @author Simon Carstensen (simon@bcuni.net)
-
     } {
         db_exec_plsql set_def_param {}
     }
@@ -135,9 +136,9 @@ namespace eval portal::datasource {
     ad_proc -public delete {
         {-name:required}
     } {
+        Delete a datasource
 
         @author Don Baccus (dhogaza@pacifier.com)
-
     } {
 
         if { ![db_0or1row get_datasource_id {}] } {
