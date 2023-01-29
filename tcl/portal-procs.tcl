@@ -308,7 +308,7 @@ ad_proc -private portal::layout_elements {
     layout template. This seems pretty kludgy (probably because it is),
     but a template::multirow isn't really well suited to data of this
     shape. It'll setup a set of variables, $var_stub_1 - $var_stub_8
-    and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
+    and $var_stub_i1- $var_stub_i8, each containing the portal_ids that
     belong in that region. - Ian Baker
 
     @param element_list An [array get]'d array, keys are regions, \
