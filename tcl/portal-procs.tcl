@@ -1295,6 +1295,20 @@ ad_proc -private portal::add_element_to_region {
     }
 
     set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
+
+    #
+    # Check, if the page has already an element with the provided
+    # pretty_name. If so, the insert operation below will fail anyhow
+    # with an error. However, when the error case is used with an
+    # exception handler, we do not want to have this error showing up
+    # in the system log.
+    #
+    if {[db_string page_has_element_with_pretty_name {
+        select 1 from portal_element_map where page_id = :page_id and pretty_name = :pretty_name
+        fetch first 1 row only
+    } -default 0]} {
+        error "page $page_name ($page_id) has already an element with pretty_name '$pretty_name'"
+    }
     set ds_id [get_datasource_id $ds_name]
 
     # First, check if this portal 1) has a portal template and
