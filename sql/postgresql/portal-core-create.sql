@@ -79,6 +79,8 @@ create table portal_datasource_def_params (
     value                           varchar(200)
 );
 
+create index portal_datasource_def_params_datasource_id_idx on portal_datasource_def_params(datasource_id);
+
 -- Layouts are the template for the portal page. i.e. 2 cols, 3 cols,
 -- etc. They are globally available. No secret layouts!
 create table portal_layouts (
@@ -199,7 +201,7 @@ create index portal_pages_prtl_page_idx on portal_pages (portal_id, page_id);
 -- of them is a map b/w a portal and a DS, with satellite data of a
 -- theme, a config, a region, etc.
 --
--- No securtiy checks are done here. If you can view and bind to a DS you have
+-- No security checks are done here. If you can view and bind to a DS you have
 -- a PE for it.
 
 create sequence portal_element_map_sk_seq;
@@ -240,6 +242,9 @@ create table portal_element_map (
     unique (page_id, pretty_name)
 );
 
+create index portal_element_map_datasource_id_idx on portal_element_map(datasource_id);
+create index portal_element_map_page_id_idx on portal_element_map(page_id);
+
 create table portal_element_parameters (
     parameter_id                    integer
                                     constraint portal_element_parameters_pk
@@ -265,6 +270,8 @@ create table portal_element_parameters (
 );
 
 create index p_element_prms_element_key_idx on portal_element_parameters (element_id, key);
+create index portal_element_parameters_element_id_idx on portal_element_parameters(element_id);
+create index portal_element_parameters_value_idx on portal_element_parameters(value);
 
 -- This table maps the datasources that are available for portals to
 -- bind to (i.e. creating a PE). This table is required since some DSs

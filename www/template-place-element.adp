@@ -36,23 +36,23 @@
 
     <if @element_multi:rowcount gt 1>
       <if @element_multi.rownum@ gt 1>
-        <a href="@target_stub@-2?portal_id=@portal_id@&amp;region=@region@&amp;op_swap=1&amp;element_id=@element_multi.element_id@&amp;sort_key=@element_multi.sort_key@&amp;direction=up&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-up.gif" alt="move up"></a>
+        <a href="@target_stub@-2?portal_id=@portal_id@&amp;region=@region@&amp;op_swap=1&amp;element_id=@element_multi.element_id@&amp;sort_key=@element_multi.sort_key@&amp;direction=up&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-up" title="move up"></a>
       </if>
       <if @element_multi:rowcount@ gt @element_multi.rownum@>
-        <a href="@target_stub@-2?portal_id=@portal_id@&amp;region=@region@&amp;op_swap=1&amp;element_id=@element_multi.element_id@&amp;sort_key=@element_multi.sort_key@&amp;direction=down&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-down.gif" alt="move down"></a>
+        <a href="@target_stub@-2?portal_id=@portal_id@&amp;region=@region@&amp;op_swap=1&amp;element_id=@element_multi.element_id@&amp;sort_key=@element_multi.sort_key@&amp;direction=down&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-down" title="move down"></a>
       </if>
     </if>
 
     <if @num_regions@ gt 1>
         <if @region@ eq 1>
-        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=right&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-right.gif" alt="move right"></a>
+        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=right&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-right" title="move right"></a>
         </if>
 
         <if @region@ gt 1 and @region@ lt @num_regions@>
-        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-left.gif" alt="move left"></a>
-        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=right&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-right.gif" alt="move right"></a>
+        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-left" title="move left"></a>
+        <a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=right&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-right" title="move right"></a>
         </if>
-        <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><img border="0" src="@dir@/arrow-left.gif" alt="move left"></a>
+        <if @region@ eq @num_regions@><a href="@target_stub@-2?portal_id=@portal_id@&amp;op_move=1&amp;element_id=@element_multi.element_id@&amp;direction=left&amp;region=@region@&amp;return_url=@return_url@&amp;anchor=@page_id@"><adp:icon name="arrow-left" title="move left"></a>
         </if>
     </if>
 

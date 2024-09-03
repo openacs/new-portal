@@ -34,7 +34,7 @@ ad_try {
     # If the error is in the element's "show" proc, the error will
     # be shown in the content of the portlet. This is for errors other
     # than with the "show" proc. 
-    ns_log error "\n\n *** Error in portal/www/render_sytles/all_in_one/render-element.tcl\n Uncaught exception when calling portal::evaluate_element\n with element_id $element_id\n\n ERROR $errorMsg"
+    ns_log error "\n\n *** Error in portal/www/render_styles/all_in_one/render-element.tcl\n Uncaught exception when calling portal::evaluate_element\n with element_id $element_id\n\n ERROR $errorMsg"
     
     return -code error "error during rendering portal element $element_id (render_style all_in_one)"
 } on ok {element_data} {

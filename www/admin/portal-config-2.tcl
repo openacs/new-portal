@@ -21,14 +21,13 @@ ad_page_contract {
     @author Arjun Sanyal
     @creation-date 9/28/2001
     @cvs-id $Id$
-} { }
+} {
+    portal_id:naturalnum,notnull
+    {return_url:localurl ""}
+    {anchor ""}
+}
 
-set form [ns_getform]
-set portal_id [ns_set get $form portal_id]
-set return_url [ns_set get $form return_url]
-set anchor [ns_set get $form anchor]
-
-portal::configure_dispatch -portal_id $portal_id -form $form
+portal::configure_dispatch -portal_id $portal_id -form [ns_getform]
 
 ad_returnredirect "portal-config?portal_id=$portal_id&referer=$return_url#$anchor"
 ad_script_abort

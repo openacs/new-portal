@@ -129,7 +129,7 @@ ad_proc -public portal::create {
     @param user_id
     @param layout_name optional
 } {
-# if we have a cvs list in the form "page_name1, layout1;
+# if we have a csv list in the form "page_name1, layout1;
 # page_name2, layout2...", we get the required first page_name
 # and first page layout from it, overriding any other params
 
@@ -258,7 +258,7 @@ ad_proc -public portal::render {
     if {[db_0or1row portal_select {} -column_array portal]} {
         set page_id $portal(page_id)
     } else {
-        return_complaint 1 [_ new-portal.Page_not_found]
+        ad_return_complaint 1 [_ new-portal.Page_not_found]
         ad_script_abort
     }
 
@@ -308,7 +308,7 @@ ad_proc -private portal::layout_elements {
     layout template. This seems pretty kludgy (probably because it is),
     but a template::multirow isn't really well suited to data of this
     shape. It'll setup a set of variables, $var_stub_1 - $var_stub_8
-    and $var_stub_i1- $var_stub_i8, each contining the portal_ids that
+    and $var_stub_i1- $var_stub_i8, each containing the portal_ids that
     belong in that region. - Ian Baker
 
     @param element_list An [array get]'d array, keys are regions, \
@@ -757,7 +757,7 @@ ad_proc -public portal::configure_dispatch {
         }
 
     } elseif { [ns_set get $form "op_revert"] ne "" } {
-        #Transaction here was causeing uncaught deadlocks so it was removed. - CM 9-11-02
+        #Transaction here was causing uncaught deadlocks so it was removed. - CM 9-11-02
         #It doesn't seem necessary to have a transaction here. Its not a big deal if this fails in the middle. The user can just revert again.
 
         set template_id [get_portal_template_id $portal_id]
@@ -789,7 +789,13 @@ ad_proc -public portal::configure_dispatch {
         # portal
         db_foreach revert_target_pages {} {
             if { ! [db_0or1row revert_get_source_page_id {}] } {
-                set move_to_page_id [db_string revert_min_page_id_select {}]
+                set move_to_page_id [db_string revert_min_page_id_select {
+                    select page_id
+                    from portal_pages
+                    where portal_id = :portal_id
+                    order by sort_key asc, page_id asc
+                    fetch first 1 rows only
+                }]
 
                 db_foreach revert_move_elements_for_del {} {
                     portal::move_element_to_page \
@@ -828,7 +834,7 @@ ad_proc -public portal::configure_dispatch {
                 set target_element_id \
                     [db_string revert_get_target_element {} -default {}]
 
-                    # now, lets check if this is one new applet
+                    # now, let's check if this is one new applet
                     # added, that was not originally mapped
                     # usually with custom portlets
 
@@ -945,7 +951,7 @@ ad_proc -public portal::configure_dispatch {
 # portal template procs - util and configuration
 #
 
-ad_proc -private portal::get_portal_template_id {
+ad_proc -public portal::get_portal_template_id {
     portal_id
 } {
     Returns this portal's template_id or the null string if it
@@ -1289,6 +1295,20 @@ ad_proc -private portal::add_element_to_region {
     }
 
     set page_id [get_page_id -portal_id $portal_id -page_name $page_name]
+
+    #
+    # Check, if the page has already an element with the provided
+    # pretty_name. If so, the insert operation below will fail anyhow
+    # with an error. However, when the error case is used with an
+    # exception handler, we do not want to have this error showing up
+    # in the system log.
+    #
+    if {[db_string page_has_element_with_pretty_name {
+        select 1 from portal_element_map where page_id = :page_id and pretty_name = :pretty_name
+        fetch first 1 row only
+    } -default 0]} {
+        error "page $page_name ($page_id) has already an element with pretty_name '$pretty_name'"
+    }
     set ds_id [get_datasource_id $ds_name]
 
     # First, check if this portal 1) has a portal template and
@@ -1311,8 +1331,11 @@ ad_proc -private portal::add_element_to_region {
 
     # sort_key will be used only on insert
         if { $sort_key eq "" } {
-            set sort_key [db_string get_sort_key {} -default "1"]
-            set sort_key [ad_decode $sort_key "" "1" $sort_key]
+            set sort_key [db_string get_sort_key {
+                select coalesce(max(sort_key), 0) + 1
+                from portal_element_map
+                where region = :region and page_id = :page_id
+            } -default "1"]
         }
 
         db_transaction {
@@ -1348,12 +1371,41 @@ ad_proc -private portal::swap_element {
 
     if { $dir eq "up" } {
         # get the sort_key and id of the element above
-        if {[db_0or1row get_prev_sort_key {}] == 0} {
+        if {[db_0or1row get_prev_sort_key {
+            select sort_key as other_sort_key,
+                   element_id as other_element_id
+            from (select pem.sort_key,
+                         element_id
+                  from portal_element_map pem,
+                       portal_pages pp
+                  where pp.portal_id = :portal_id
+                  and pem.page_id = :my_page_id
+                  and pp.page_id = pem.page_id
+                  and region = :region
+                  and pem.sort_key < :my_sort_key
+                  and state != 'pinned'
+                  order by pem.sort_key desc) as sort_keys
+                  fetch first 1 rows only
+        }] == 0} {
             return
         }
     } elseif { $dir eq "down"} {
         # get the sort_key and id of the element below
-        if {[db_0or1row get_next_sort_key {}] == 0} {
+        if {[db_0or1row get_next_sort_key {
+            select sort_key as other_sort_key,
+                   element_id as other_element_id
+            from (select pem.sort_key,
+                         element_id
+                  from portal_element_map pem, portal_pages pp
+                  where pp.portal_id = :portal_id
+                  and pem.page_id = :my_page_id
+                  and pem.page_id = pp.page_id
+                  and region = :region
+                  and pem.sort_key > :my_sort_key
+                  and state != 'pinned'
+                  order by pem.sort_key) as sort_keys
+                  fetch first 1 rows only
+        }] == 0} {
             return
         }
     } else {
@@ -1394,6 +1446,10 @@ ad_proc -private portal::move_element {
     @param region the PEs current region
     @param direction up or down
 } {
+    if {![string is integer -strict $region]} {
+        ad_return_complaint 1 "portal::move_element [_ acs-templating.Invalid_integer]"
+        ad_script_abort
+    }
 
     permission::require_permission -object_id $portal_id -privilege portal_read_portal
     permission::require_permission -object_id $portal_id -privilege portal_edit_portal
@@ -1439,7 +1495,9 @@ ad_proc -private portal::move_element_to_page {
     ]
 
     if {$curr_reg > $target_reg_num} {
-    # the new page dosent have this region, set to max region
+        #
+        # The new page does not have this region, set to max region.
+        #
         set region $target_reg_num
     } else {
         set region $curr_reg
@@ -1490,7 +1548,7 @@ ad_proc -private portal::non_hidden_elements_p {
 
 }
 
-ad_proc -private portal::set_element_param {
+ad_proc -public portal::set_element_param {
     element_id
     key
     value
@@ -1577,7 +1635,7 @@ ad_proc -private portal::remove_all_element_param_values {
     db_dml delete {}
 }
 
-ad_proc -private portal::get_element_param { element_id key } {
+ad_proc -public portal::get_element_param { element_id key } {
     Get an element param. Returns the value of the param.
 
     @return the value of the param
@@ -1600,7 +1658,15 @@ ad_proc -private portal::element_params_not_cached element_id {
     return [db_list_of_lists params_select {}]
 }
 
-ad_proc -private portal::get_element_id_from_unique_param {
+ad_proc -public portal::element_params {
+    element_id
+} {
+    Return a list of lists of key value pairs for this portal element.
+} {
+    return [util_memoize "portal::element_params_not_cached $element_id" 86400]
+}
+
+ad_proc -public portal::get_element_id_from_unique_param {
     {-portal_id:required}
     {-key:required}
     {-value:required}
@@ -1636,7 +1702,7 @@ ad_proc -private portal::evaluate_element {
     db_1row element_select {} -column_array element
 
     # get the element's params
-    set element_params [util_memoize "portal::element_params_not_cached $element_id" 86400]
+    set element_params [portal::element_params $element_id]
     if {[llength $element_params]} {
         foreach param $element_params {
             lassign $param key value
@@ -1885,7 +1951,7 @@ ad_proc -public portal::configure_element {
     }
 }
 
-ad_proc -private portal::set_pretty_name {
+ad_proc -public portal::set_pretty_name {
     {-element_id:required}
     {-pretty_name:required}
 } {
@@ -1919,7 +1985,7 @@ ad_proc -private portal::get_datasource_name { ds_id } {
     }
 }
 
-ad_proc -private portal::get_datasource_id { ds_name } {
+ad_proc -public portal::get_datasource_id { ds_name } {
     Get the ds id from the name
 
     @param ds_name
@@ -1998,14 +2064,14 @@ ad_proc -private portal::generate_action_string {
     return "[lindex [ns_conn urlv] [ns_conn urlc]-1]-2"
 }
 
-ad_proc -private portal::get_element_ids_by_ds {portal_id ds_name} {
+ad_proc -public portal::get_element_ids_by_ds {portal_id ds_name} {
     Get element IDs for a particular portal and a datasource name
 } {
     set ds_id [get_datasource_id $ds_name]
     return [db_list select {}]
 }
 
-ad_proc -private portal::get_element_id_by_pretty_name {
+ad_proc -public portal::get_element_id_by_pretty_name {
     {-portal_id:required}
     {-pretty_name:required}
 } {
@@ -2018,7 +2084,7 @@ ad_proc -private portal::get_element_id_by_pretty_name {
 ad_proc -private portal::get_layout_region_count {
     {-layout_id:required}
 } {
-    Get the number of regions (a.k.a. columns) this layout supports
+    Get the number of regions (aka columns) this layout supports
 } {
     return [util_memoize "portal::get_layout_region_count_not_cached -layout_id $layout_id"]
 }
@@ -2096,7 +2162,7 @@ ad_proc -private portal::get_layout_id {
     return $layout_id
 }
 
-ad_proc -private portal::exists_p { portal_id } {
+ad_proc -public portal::exists_p { portal_id } {
     Check if a portal by that id exists.
 
     @return 1 on success, 0 on failure
@@ -2215,6 +2281,7 @@ ad_proc -public portal::remove_element_parameters {
     of this type on the given page. If by removing this param,
     there are no more params (say instace_id's) of this type,
     that means that the portlet has become empty and can be
+    removed.
 
     @param portal_id The portal page to act on
     @param portlet_name The name of the portlet to (maybe) remove
@@ -2288,7 +2355,7 @@ ad_proc -public portal::show_proc_helper {
     set template [subst {<include src="/packages/$package_key/www/$template_src" cf="$config_list">}]
     set __adp_stub [acs_root_dir]
     set code [template::adp_compile -string $template]
-    
+
     return [template::adp_eval code]
 }
 
@@ -2431,7 +2498,7 @@ ad_proc portal::dimensional {
             if {($option_val eq $thisoption_name && !$link_all) || !$thisoption_link_p} {
                 append html "${pre_selected_td_html}${pre_html}${thisoption_value}${post_selected_html}\n"
             } else {
-                set href "$url?[export_ns_set_vars url $option_key $options_set]&[ns_urlencode $option_key]=[ns_urlencode $thisoption_name]"
+                set href [export_vars -base $url -set $options_set [list [list $option_key $thisoption_name]]]
                 append html [subst {
                     ${pre_td_html}<a href="[ns_quotehtml $href]">${pre_html}${thisoption_value}${post_html}
                 }]
@@ -2484,7 +2551,16 @@ ad_proc portal::portlet_visible_p {
 
 } {
     set ds_id [get_datasource_id $portlet_name]
-    return [db_string portlet_visible {}]
+    return [db_0or1row portlet_visible {
+        select 1 from dual where exists
+        (
+         select 1 from portal_element_map,portal_pages
+         where portal_pages.portal_id = :portal_id
+         and portal_element_map.datasource_id = :ds_id
+         and portal_element_map.page_id = portal_pages.page_id
+         and portal_element_map.state <> 'hidden'
+        )
+    }]
 }
 
 # Local variables:

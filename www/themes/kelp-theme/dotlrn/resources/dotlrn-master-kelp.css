@@ -790,7 +790,7 @@ div#container-00-gen{
 }
 
 div#container-shadows-sin{
-        white-space:normal; /* corregge l'errore del control panel della classe*/
+        white-space:normal; /* corrects the error of the class control panel */
 	width: 100%;
 	height:100%;
 	background-image:url(01_cont_shadow_sin.png);

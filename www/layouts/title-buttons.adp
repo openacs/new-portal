@@ -23,8 +23,8 @@
 
 
 <img src="@title.resource_dir@/minimize.gif" alt="Minimize" border="0">
-<img src="@title.resource_dir@/up.gif" alt="Move Up" border="0">
-<img src="@title.resource_dir@/down.gif" alt="Move Down" border="0">
+<adp:icon name="arrow-up" title="#new-portal.move_up#">
+<adp:icon name="arrow-down" title="#new-portal.move_down#">
 <img src="@title.resource_dir@/close.gif" alt="Remove" border="0">
 
 <!--
