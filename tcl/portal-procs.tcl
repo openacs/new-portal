@@ -511,11 +511,10 @@ ad_proc -public portal::configure {
 
             # fake some elements for the <list> in the template
             set regions [get_layout_region_list -layout_id $portal(layout_id)]
+            set element_list [list]
             foreach region $regions {
-                lappend fake_element_ids($region) $portal_id
+                lappend element_list $region $portal_id
             }
-
-            set element_list [array get fake_element_ids]
 
             # DRB: This is a horrible, short-term (I hope!) hack to allow
             # the portal config page to work correctly when a page's given
@@ -543,10 +542,6 @@ ad_proc -public portal::configure {
                 </table>
                 </td>
                 </tr>}]
-
-
-                # clear out the region array
-            array unset fake_element_ids
         }
 
         if {![portal::non_hidden_elements_p -page_id $page_id]} {
