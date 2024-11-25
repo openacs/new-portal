@@ -34,7 +34,7 @@ ad_proc -public -callback search::datasource -impl portal_datasource {} {
 	    and name = 'static_portlet'
 	    and pep.element_id = pem.element_id
 	    and pep.key = 'package_id'
-	    and pep.value = spc.package_id
+            and cast(pep.value as integer) = spc.package_id
     } {
 	append bodies [ad_html_text_convert -from text/html -to text/plain -- $body]
     }
@@ -56,7 +56,7 @@ ad_proc -public -callback search::url -impl portal_datasource {} {
 
 } {
     # TODO implement me
-    return "[ad_url][db_string implement_me {}]"
+    return [ad_url]
 }
 
 
